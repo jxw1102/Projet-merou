@@ -1,2 +1,2 @@
-# projet_merou
+# Projet mérou
 Projet mérou
