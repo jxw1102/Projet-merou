@@ -4,3 +4,6 @@
 # Compiled binary
 bin
 
+# Eclipse settings and caches
+.settings
+.cache
