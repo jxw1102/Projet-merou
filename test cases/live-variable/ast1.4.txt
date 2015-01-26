@@ -1,0 +1,34 @@
+TranslationUnitDecl 0x1028254d0 <<invalid sloc>>
+`-FunctionDecl 0x103ca4fa0 <case1.4.cpp:3:1, line:11:1> main 'int (int, char **)'
+  |-ParmVarDecl 0x103ca4e60 <line:3:10, col:14> argc 'int'
+  |-ParmVarDecl 0x103ca4ed0 <col:20, col:27> argv 'char **'
+  `-CompoundStmt 0x103cab788 <col:33, line:11:1>
+    |-DeclStmt 0x103ca50d8 <line:4:5, col:15>
+    | `-VarDecl 0x103ca5060 <col:5, col:13> x 'int'
+    |   `-IntegerLiteral 0x103ca50b8 <col:13> 'int' 50
+    |-DeclStmt 0x103ca5178 <line:5:5, col:15>
+    | `-VarDecl 0x103ca5100 <col:5, col:13> y 'int'
+    |   `-IntegerLiteral 0x103ca5158 <col:13> 'int' 10
+    |-BinaryOperator 0x103ca51d8 <line:6:5, col:9> 'int' lvalue '='
+    | |-DeclRefExpr 0x103ca5190 <col:5> 'int' lvalue Var 0x103ca5060 'x' 'int'
+    | `-IntegerLiteral 0x103ca51b8 <col:9> 'int' 40
+    |-BinaryOperator 0x103ca5248 <line:7:5, col:9> 'int' lvalue '='
+    | |-DeclRefExpr 0x103ca5200 <col:5> 'int' lvalue Var 0x103ca5100 'y' 'int'
+    | `-IntegerLiteral 0x103ca5228 <col:9> 'int' 9
+    |-CompoundAssignOperator 0x103ca52d8 <line:8:5, col:10> 'int' lvalue '+=' ComputeLHSTy='int' ComputeResultTy='int'
+    | |-DeclRefExpr 0x103ca5270 <col:5> 'int' lvalue Var 0x103ca5060 'x' 'int'
+    | `-ImplicitCastExpr 0x103ca52c0 <col:10> 'int' <LValueToRValue>
+    |   `-DeclRefExpr 0x103ca5298 <col:10> 'int' lvalue Var 0x103ca5100 'y' 'int'
+    |-CXXOperatorCallExpr 0x103cab700 <line:9:5, col:28> 'class std::__1::basic_ostream<char>' lvalue
+    | |-ImplicitCastExpr 0x103cab6e8 <col:20> 'class std::__1::basic_ostream<char> &(*)(class std::__1::basic_ostream<char> &(*)(class std::__1::basic_ostream<char> &))' <FunctionToPointerDecay>
+    | | `-DeclRefExpr 0x103cab668 <col:20> 'class std::__1::basic_ostream<char> &(class std::__1::basic_ostream<char> &(*)(class std::__1::basic_ostream<char> &))' lvalue CXXMethod 0x103c36790 'operator<<' 'class std::__1::basic_ostream<char> &(class std::__1::basic_ostream<char> &(*)(class std::__1::basic_ostream<char> &))'
+    | |-CXXOperatorCallExpr 0x103ca8a80 <col:5, col:18> 'class std::__1::basic_ostream<char>' lvalue
+    | | |-ImplicitCastExpr 0x103ca8a68 <col:15> 'class std::__1::basic_ostream<char> &(*)(int)' <FunctionToPointerDecay>
+    | | | `-DeclRefExpr 0x103ca8a18 <col:15> 'class std::__1::basic_ostream<char> &(int)' lvalue CXXMethod 0x103c37560 'operator<<' 'class std::__1::basic_ostream<char> &(int)'
+    | | |-DeclRefExpr 0x103ca5348 <col:5, col:10> 'ostream':'class std::__1::basic_ostream<char>' lvalue Var 0x103ca4830 'cout' 'ostream':'class std::__1::basic_ostream<char>'
+    | | `-ImplicitCastExpr 0x103ca8a00 <col:18> 'int' <LValueToRValue>
+    | |   `-DeclRefExpr 0x103ca5380 <col:18> 'int' lvalue Var 0x103ca5060 'x' 'int'
+    | `-ImplicitCastExpr 0x103cab650 <col:23, col:28> 'basic_ostream<char, struct std::__1::char_traits<char> > &(*)(basic_ostream<char, struct std::__1::char_traits<char> > &)' <FunctionToPointerDecay>
+    |   `-DeclRefExpr 0x103cab610 <col:23, col:28> 'basic_ostream<char, struct std::__1::char_traits<char> > &(basic_ostream<char, struct std::__1::char_traits<char> > &)' lvalue Function 0x103ca8f40 'endl' 'basic_ostream<char, struct std::__1::char_traits<char> > &(basic_ostream<char, struct std::__1::char_traits<char> > &)' (FunctionTemplate 0x103c30f70 'endl')
+    `-ReturnStmt 0x103cab768 <line:10:5, col:12>
+      `-IntegerLiteral 0x103cab748 <col:12> 'int' 0

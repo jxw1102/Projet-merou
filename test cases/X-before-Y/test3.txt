@@ -1,0 +1,29 @@
+TranslationUnitDecl 0x1028254d0 <<invalid sloc>>
+|-FunctionDecl 0x103ca3ee0 <test3.cpp:6:1, col:16> f 'void (int)'
+| |-ParmVarDecl 0x103ca3e60 <col:8, col:12> x 'int'
+| `-CompoundStmt 0x103ca3f88 <col:15, col:16>
+|-FunctionDecl 0x103ca4030 <line:7:1, col:16> g 'void (int)'
+| |-ParmVarDecl 0x103ca3fb0 <col:8, col:12> x 'int'
+| `-CompoundStmt 0x103ca40d8 <col:15, col:16>
+`-FunctionDecl 0x103ca4240 <line:8:1, line:13:1> main 'int (int, char **)'
+  |-ParmVarDecl 0x103ca4100 <line:8:10, col:14> argv 'int'
+  |-ParmVarDecl 0x103ca4170 <col:20, col:27> argc 'char **'
+  `-CompoundStmt 0x103ca4618 <col:33, line:13:1>
+    |-DeclStmt 0x103ca4378 <line:9:5, col:15>
+    | `-VarDecl 0x103ca4300 <col:5, col:13> a 'int'
+    |   `-IntegerLiteral 0x103ca4358 <col:13> 'int' 10
+    |-CallExpr 0x103ca4448 <line:10:2, col:6> 'void'
+    | |-ImplicitCastExpr 0x103ca4430 <col:2> 'void (*)(int)' <FunctionToPointerDecay>
+    | | `-DeclRefExpr 0x103ca4408 <col:2> 'void (int)' lvalue Function 0x103ca3ee0 'f' 'void (int)'
+    | `-IntegerLiteral 0x103ca43e8 <col:4> 'int' 10
+    `-IfStmt 0x103ca45e8 <line:11:2, line:12:7>
+      |-<<<NULL>>>
+      |-BinaryOperator 0x103ca44d8 <line:11:6, col:10> '_Bool' '>'
+      | |-ImplicitCastExpr 0x103ca44c0 <col:6> 'int' <LValueToRValue>
+      | | `-DeclRefExpr 0x103ca4478 <col:6> 'int' lvalue Var 0x103ca4300 'a' 'int'
+      | `-IntegerLiteral 0x103ca44a0 <col:10> 'int' 5
+      |-CallExpr 0x103ca45b8 <line:12:3, col:7> 'void'
+      | |-ImplicitCastExpr 0x103ca45a0 <col:3> 'void (*)(int)' <FunctionToPointerDecay>
+      | | `-DeclRefExpr 0x103ca4578 <col:3> 'void (int)' lvalue Function 0x103ca4030 'g' 'void (int)'
+      | `-IntegerLiteral 0x103ca4558 <col:5> 'int' 13
+      `-<<<NULL>>>

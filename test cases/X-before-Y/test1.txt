@@ -1,0 +1,40 @@
+TranslationUnitDecl 0x1028254d0 <<invalid sloc>>
+|-FunctionDecl 0x103ca3ee0 <test1.cpp:6:1, col:16> f 'void (int)'
+| |-ParmVarDecl 0x103ca3e60 <col:8, col:12> x 'int'
+| `-CompoundStmt 0x103ca3f88 <col:15, col:16>
+|-FunctionDecl 0x103ca4030 <line:7:1, col:16> g 'void (int)'
+| |-ParmVarDecl 0x103ca3fb0 <col:8, col:12> x 'int'
+| `-CompoundStmt 0x103ca40d8 <col:15, col:16>
+`-FunctionDecl 0x103ca4240 <line:8:1, line:17:1> main 'int (int, char **)'
+  |-ParmVarDecl 0x103ca4100 <line:8:10, col:14> argv 'int'
+  |-ParmVarDecl 0x103ca4170 <col:20, col:27> argc 'char **'
+  `-CompoundStmt 0x103ca48d8 <col:33, line:17:1>
+    |-CallExpr 0x103ca43a8 <line:9:2, col:5> 'void'
+    | |-ImplicitCastExpr 0x103ca4390 <col:2> 'void (*)(int)' <FunctionToPointerDecay>
+    | | `-DeclRefExpr 0x103ca4368 <col:2> 'void (int)' lvalue Function 0x103ca3ee0 'f' 'void (int)'
+    | `-IntegerLiteral 0x103ca4348 <col:4> 'int' 5
+    |-DeclStmt 0x103ca4468 <line:10:2, col:11>
+    | `-VarDecl 0x103ca43f0 <col:2, col:10> a 'int'
+    |   `-IntegerLiteral 0x103ca4448 <col:10> 'int' 5
+    |-CallExpr 0x103ca4538 <line:11:2, col:5> 'void'
+    | |-ImplicitCastExpr 0x103ca4520 <col:2> 'void (*)(int)' <FunctionToPointerDecay>
+    | | `-DeclRefExpr 0x103ca44f8 <col:2> 'void (int)' lvalue Function 0x103ca4030 'g' 'void (int)'
+    | `-IntegerLiteral 0x103ca44d8 <col:4> 'int' 6
+    |-CallExpr 0x103ca4620 <line:12:2, col:6> 'void'
+    | |-ImplicitCastExpr 0x103ca4608 <col:2> 'void (*)(int)' <FunctionToPointerDecay>
+    | | `-DeclRefExpr 0x103ca45e0 <col:2> 'void (int)' lvalue Function 0x103ca3ee0 'f' 'void (int)'
+    | `-IntegerLiteral 0x103ca45c0 <col:4> 'int' 10
+    `-IfStmt 0x103ca48a8 <line:13:2, line:16:7>
+      |-<<<NULL>>>
+      |-BinaryOperator 0x103ca46b0 <line:13:6, col:10> '_Bool' '>'
+      | |-ImplicitCastExpr 0x103ca4698 <col:6> 'int' <LValueToRValue>
+      | | `-DeclRefExpr 0x103ca4650 <col:6> 'int' lvalue Var 0x103ca43f0 'a' 'int'
+      | `-IntegerLiteral 0x103ca4678 <col:10> 'int' 5
+      |-CallExpr 0x103ca4790 <line:14:3, col:7> 'void'
+      | |-ImplicitCastExpr 0x103ca4778 <col:3> 'void (*)(int)' <FunctionToPointerDecay>
+      | | `-DeclRefExpr 0x103ca4750 <col:3> 'void (int)' lvalue Function 0x103ca4030 'g' 'void (int)'
+      | `-IntegerLiteral 0x103ca4730 <col:5> 'int' 13
+      `-CallExpr 0x103ca4878 <line:16:3, col:7> 'void'
+        |-ImplicitCastExpr 0x103ca4860 <col:3> 'void (*)(int)' <FunctionToPointerDecay>
+        | `-DeclRefExpr 0x103ca4838 <col:3> 'void (int)' lvalue Function 0x103ca4030 'g' 'void (int)'
+        `-IntegerLiteral 0x103ca4818 <col:5> 'int' 17

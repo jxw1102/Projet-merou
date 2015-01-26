@@ -1,0 +1,36 @@
+`-FunctionDecl 0x103ca4fa0 <test2.cpp:5:1, line:13:1> main 'int (int, char **)'
+  |-ParmVarDecl 0x103ca4e60 <line:5:10, col:14> argv 'int'
+  |-ParmVarDecl 0x103ca4ed0 <col:20, col:27> argc 'char **'
+  `-CompoundStmt 0x103ca5538 <col:33, line:13:1>
+    |-DeclStmt 0x103ca50d8 <line:6:2, col:11>
+    | `-VarDecl 0x103ca5060 <col:2, col:10> a 'int'
+    |   `-IntegerLiteral 0x103ca50b8 <col:10> 'int' 5
+    |-DeclStmt 0x103ca5178 <line:7:2, col:12>
+    | `-VarDecl 0x103ca5100 <col:2, col:10> b 'int'
+    |   `-IntegerLiteral 0x103ca5158 <col:10> 'int' 10
+    |-DeclStmt 0x103ca52a0 <line:8:2, col:15>
+    | `-VarDecl 0x103ca51a0 <col:2, col:14> x 'int'
+    |   `-BinaryOperator 0x103ca5278 <col:10, col:14> 'int' '+'
+    |     |-ImplicitCastExpr 0x103ca5248 <col:10> 'int' <LValueToRValue>
+    |     | `-DeclRefExpr 0x103ca51f8 <col:10> 'int' lvalue Var 0x103ca5060 'a' 'int'
+    |     `-ImplicitCastExpr 0x103ca5260 <col:14> 'int' <LValueToRValue>
+    |       `-DeclRefExpr 0x103ca5220 <col:14> 'int' lvalue Var 0x103ca5100 'b' 'int'
+    `-WhileStmt 0x103ca5510 <line:9:2, line:12:2>
+      |-<<<NULL>>>
+      |-BinaryOperator 0x103ca5380 <line:9:9, col:17> '_Bool' '<'
+      | |-BinaryOperator 0x103ca5338 <col:9, col:13> 'int' '+'
+      | | |-ImplicitCastExpr 0x103ca5308 <col:9> 'int' <LValueToRValue>
+      | | | `-DeclRefExpr 0x103ca52b8 <col:9> 'int' lvalue Var 0x103ca5060 'a' 'int'
+      | | `-ImplicitCastExpr 0x103ca5320 <col:13> 'int' <LValueToRValue>
+      | |   `-DeclRefExpr 0x103ca52e0 <col:13> 'int' lvalue Var 0x103ca5100 'b' 'int'
+      | `-IntegerLiteral 0x103ca5360 <col:17> 'int' 5
+      `-CompoundStmt 0x103ca54e8 <col:20, line:12:2>
+        |-UnaryOperator 0x103ca53d0 <line:10:3, col:4> 'int' postfix '++'
+        | `-DeclRefExpr 0x103ca53a8 <col:3> 'int' lvalue Var 0x103ca5060 'a' 'int'
+        `-BinaryOperator 0x103ca54c0 <line:11:3, col:11> 'int' lvalue '='
+          |-DeclRefExpr 0x103ca53f0 <col:3> 'int' lvalue Var 0x103ca51a0 'x' 'int'
+          `-BinaryOperator 0x103ca5498 <col:7, col:11> 'int' '+'
+            |-ImplicitCastExpr 0x103ca5468 <col:7> 'int' <LValueToRValue>
+            | `-DeclRefExpr 0x103ca5418 <col:7> 'int' lvalue Var 0x103ca5060 'a' 'int'
+            `-ImplicitCastExpr 0x103ca5480 <col:11> 'int' <LValueToRValue>
+              `-DeclRefExpr 0x103ca5440 <col:11> 'int' lvalue Var 0x103ca5100 'b' 'int'
