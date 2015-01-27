@@ -1,7 +1,5 @@
 package ast
 
-class VarDecl {
-    var typename: Type
-    var name: String
-    var value: Expr
+class VarDecl(var name: String, var typename: Type, var value: Expr) {
+    
 }
