@@ -1,0 +1,5 @@
+package cfg
+
+class GraphNode {
+
+}
