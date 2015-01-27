@@ -1,5 +1,0 @@
-package cfg
-
-class GraphNode {
-
-}
