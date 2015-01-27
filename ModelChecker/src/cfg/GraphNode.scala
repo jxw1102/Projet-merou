@@ -1,5 +1,3 @@
 package cfg
 
-class GraphNode {
-
-}
+class GraphNode
