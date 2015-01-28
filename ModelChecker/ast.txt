@@ -1,3 +1,7 @@
+|`FunctionDecl 0x1028724b0 <line:14:1, line:47:1> main 'int (int, char **)'
+| |-ParmVarDecl 0x102872260 <line:14:10, col:14> argc 'int'
+| |-ParmVarDecl 0x1028723a0 <col:20, col:31> argv 'char **':'char **'
+| `-CompoundStmt 0x102879138 <col:34, line:47:1>
 |   |-DeclStmt 0x1028725e8 <line:15:2, col:13>
 |   | `-VarDecl 0x102872570 <col:2, col:12> sum 'int'
 |   |   `-IntegerLiteral 0x1028725c8 <col:12> 'int' 0
