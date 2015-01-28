@@ -1,6 +1,5 @@
 package ast
 
-<<<<<<< HEAD
 import scala.collection.mutable.ArrayBuffer
 
 class Stmt extends ProgramNode {
@@ -12,13 +11,7 @@ class CompoundStmt extends Stmt {
     def addStmt(s: Stmt) = body += s
     def statements: Iterable[Stmt] = body ++ ArrayBuffer()
 }
-=======
-sealed abstract class Stmt extends ProgramNode {
-    override def toGraph = null
-}
 
-sealed abstract class CompoundStmt(var body: List[Stmt])
->>>>>>> 9740ac969fed04ee9070792d7c16d43797f7e80c
 class IfStmt        (val condition: Expr, val body: CompoundStmt, val elseStmt: Option[CompoundStmt]) extends Stmt
 class Identifier    (val name : String) extends Stmt {
     override def toString = name
