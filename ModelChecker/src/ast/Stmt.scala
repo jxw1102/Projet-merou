@@ -1,10 +1,10 @@
 package ast
 
-class Stmt extends ProgramNode {
+sealed abstract class Stmt extends ProgramNode {
     override def toGraph = null
 }
 
-abstract class CompoundStmt(var body: List[Stmt])
+sealed abstract class CompoundStmt(var body: List[Stmt])
 class IfStmt        (val condition: Expr, val body: CompoundStmt, val elseStmt: Option[CompoundStmt]) extends Stmt
 class Identifier    (val name : String) extends Stmt {
     override def toString = name
