@@ -1,0 +1,108 @@
+ packages ##
+fontenc[T1]
+color
+amssymb
+pdfpages
+amsmath
+eurosym
+graphicx
+textcomp
+listings
+epigraph
+setspace
+array
+gensymb
+tikz
+background[some]
+geometry
+babel[francais]
+##
+ commands ##
+##
+ documentSettings ##
+documentClass=report
+alinea=4mm
+chapterName=Partie
+##
+ title[titlePage.bicolorHeaderTemplate] ##
+first_author_name=Zohour \textsc{Abouakil} ~\\ Sofia \textsc{Boutahar} ~\\ David \textsc{Courtinot} ~\\ Xiaowen \textsc{Ji} ~\\ Fabien \textsc{Sauce}
+title_size=0.8
+sup_strip_color=0.80,0.80,0.80
+description=Compte-rendu des décisions prises lors des séances de conception du 26/01 au 28/01
+inf_strip_color=0.00,0.00,0.00
+title=Design review - Itération 1
+##
+> chapter ##
+Représentation AST et CFG
+##
+>> paragraph ##
+Après avoir étudié l'API de Clang, nous sommes arrivés à la conclusion que l'AST comportait bien plus de nuances que ce dont nous avions besoin
+pour construire le CFG. En effet, l'atome pour un CFG est ce qu'on appelle généralement une \textit{instruction} tandis que l'instruction la plus simple
+donne une représentation AST composée de plusieurs noeuds. Nous avons par ailleurs jugé délicat de gérer à la fois le parsing et la liaison des noeuds du graphe.
+C'est pourquoi nous avons pris le parti de transformer l'AST en une suite d'objets de plus haut niveau que ses noeuds originaux, qui donneront lieux soit à des blocs
+du CFG, soit à des macro-blocs contenant un sous-graphe.
+##
+>> section ##
+Représentation intermédiaire de l'AST de Clang
+##
+>>> subsection ##
+Partie \textbf{Decl}
+##
+>>> subsection ##
+Partie \textbf{Stmt}
+##
+>>>> paragraph ##
+Pour cette première itération, on ignore totalement la partie objet de C++ pour se concentrer uniquement sur
+la partie impérative. En s'inspirant de l'API de Clang, nous sommes arrivés au diagramme de classes suivant :
+##
+>>>> image ##
+data/stmt.png;
+Diagramme de classes de la partie (impérative) de \textbf{Stmt};
+0.9
+##
+>>>> paragraph ##
+Il est à noter que notre modélisation ne représente pas rigoureusement un code C++.  Par exemple, nous n'empêchons pas un \textit{if} de contenir d'instruction \textit{break} (parmi d'autres imprécisions...).
+Nous avons estimé que ce genre de raffinement compliquerait inutilement la tâche
+sans rien apporter de plus à l'analyse du CFG. Dans la mesure où le code est déjà vérifié sémantiquement par le compilateur Clang et au vu de nos besoins ultérieurs,
+il apparaît plus sage de tendre vers un modèle simple. Par ailleurs, certaines classes n'ont pas été clairement définies sur le diagramme précédent, car nous avons volontairement
+choisi de les représenter à part sur le diagramme ci-dessous. Enfin, d'autres classes n'ont pas été représentées (\textbf{BreakStmt}, \textbf{ContinueStmt} par soucis de lisibilité).
+##
+>>>> image ##
+data/expr1.png;
+Diagramme de classe partiel de la partie \textbf{Expr};
+0.9
+##
+>>>> paragraph ##
+Pour finir, nous présentons un diagramme plus complet pour \textbf{Expr} mais que nous ne sommes pas certains de conserver, sa complexité étant jugée 
+superflue pour la nature des algorithmes que nous mettrons en place sur ces structures.
+##
+>>>> image ##
+data/expr2.png;
+Diagramme de classe plus fourni (mais toujours incomplet) de la partie \textbf{Expr};
+0.5
+##
+>>>> subsubsection ##
+Remarques importantes :
+##
+>>>>> list ##
+pour représenter fidèlement le CFG de nos programmes, nous devront tenir compte du mécanisme de fail-fast dans l'évaluation des conjonctions/disjonctions.
+L'importance de ce mécanisme pour notre projet est illustrée dans la figure suivante.;
+toutefois, l'ordre d'évaluation des expressions n'étant pas spécifié en C++ (contrairement à Java qui évalue de gauche à droite), nous limiterons ces considérations à des expressions simples. Nous nous désintéresserons donc aussi
+des expressions (booléenes ou non) contenant des sous-expressions à effet de bord (incrémentation, assignations...).
+
+##
+>>>>> image ##
+data/fail-fast.png;
+\`{A} droite, le code considéré. Au centre, le CFG correspondant à la non prise en compte du fail-fast et enfin à droite, prise en compte du fail-fast;
+0.85
+##
+>>>>> paragraph ##
+Comme on peut le constater sur la figure ci-dessus, si l'on cherche à assurer la propriété \textit{\og s est toujours initalisée lorsque g(s) est appelée \fg{}}, le premier CFG ne nous permettra pas de conclure (ou bien il concluera \textbf{true}, à tort) tandis que le second nous permet de dire qu'il existe des exécutions, selon la valeur de a, 
+pour lesquelles $g$ est appelée avec un paramètre non initialisé (si l'on admet que le fils gauche représente toujours un test réussi et que le fils droit représente un test échoué).
+##
+>> section ##
+AST to CFG
+##
+> chapter ##
+Model checking
+##

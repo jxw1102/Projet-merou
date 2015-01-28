@@ -1,0 +1,46 @@
+\select@language {french}
+\contentsline {chapter}{\numberline {I}Project description and objectives}{2}
+\contentsline {section}{\numberline {I.1}Surroundings of the project}{2}
+\contentsline {paragraph}{}{2}
+\contentsline {paragraph}{}{2}
+\contentsline {paragraph}{}{2}
+\contentsline {section}{\numberline {I.2}Project description}{2}
+\contentsline {subsection}{\numberline {I.2.1}Main idea}{2}
+\contentsline {subsection}{\numberline {I.2.2}Related technologies}{2}
+\contentsline {subsection}{\numberline {I.2.3}Project parts}{2}
+\contentsline {subsection}{\numberline {I.2.4}To conclude}{3}
+\contentsline {section}{\numberline {I.3}Final project}{3}
+\contentsline {subsection}{\numberline {I.3.1}Define priorities}{3}
+\contentsline {subsection}{\numberline {I.3.2}Deliverable documents}{3}
+\contentsline {chapter}{\numberline {II}Project organizational}{4}
+\contentsline {section}{\numberline {II.1}Role definition}{4}
+\contentsline {subsubsection}{Project manager}{4}
+\contentsline {paragraph}{}{4}
+\contentsline {subsubsection}{Quality manager}{4}
+\contentsline {paragraph}{}{4}
+\contentsline {subsubsection}{Test manager}{4}
+\contentsline {paragraph}{}{4}
+\contentsline {subsubsection}{Test manager}{4}
+\contentsline {paragraph}{}{4}
+\contentsline {subsubsection}{Configuration manager}{4}
+\contentsline {paragraph}{}{4}
+\contentsline {subsubsection}{Documentation manager}{4}
+\contentsline {paragraph}{}{4}
+\contentsline {subsubsection}{Chain development}{5}
+\contentsline {section}{\numberline {II.2}Development organization}{5}
+\contentsline {paragraph}{}{5}
+\contentsline {subsection}{\numberline {II.2.1}Use of a software development framework : Scrum}{5}
+\contentsline {paragraph}{}{5}
+\contentsline {subsection}{\numberline {II.2.2}Team repartition approach}{5}
+\contentsline {paragraph}{}{5}
+\contentsline {section}{\numberline {II.3}Tasks organization}{5}
+\contentsline {subsection}{\numberline {II.3.1}Tasks definition}{5}
+\contentsline {subsection}{\numberline {II.3.2}Planning}{5}
+\contentsline {chapter}{\numberline {III}Risk management}{8}
+\contentsline {chapter}{\numberline {IV}Code management}{10}
+\contentsline {section}{\numberline {IV.1}Quality management}{10}
+\contentsline {paragraph}{}{10}
+\contentsline {section}{\numberline {IV.2}Test strategy}{10}
+\contentsline {paragraph}{}{10}
+\contentsline {section}{\numberline {IV.3}Configuration management}{10}
+\contentsline {paragraph}{}{10}

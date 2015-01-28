@@ -1,0 +1,35 @@
+\select@language {french}
+\contentsline {chapter}{\numberline {I}Description du projet et objectifs}{2}
+\contentsline {section}{\numberline {I.1}Attentes du client}{2}
+\contentsline {paragraph}{}{2}
+\contentsline {paragraph}{}{2}
+\contentsline {section}{\numberline {I.2}Livrables et priorit\'{e}s}{3}
+\contentsline {paragraph}{}{3}
+\contentsline {paragraph}{}{3}
+\contentsline {chapter}{\numberline {II}Principes d'organisation}{4}
+\contentsline {section}{\numberline {II.1}D\'{e}finition des r\^{o}les}{4}
+\contentsline {subsubsection}{Chef de projet}{4}
+\contentsline {paragraph}{}{4}
+\contentsline {subsubsection}{Superviseur}{4}
+\contentsline {paragraph}{}{4}
+\contentsline {subsubsection}{Responsable qualit\'{e}}{4}
+\contentsline {paragraph}{}{4}
+\contentsline {subsubsection}{Responsable de la validation et des tests}{4}
+\contentsline {paragraph}{}{4}
+\contentsline {section}{\numberline {II.2}Cha\^{i}ne de d\'{e}veloppement}{5}
+\contentsline {subsection}{\numberline {II.2.1}Gestion de la qualit\'{e}}{5}
+\contentsline {paragraph}{}{5}
+\contentsline {subsection}{\numberline {II.2.2}Strat\'{e}gie de tests}{5}
+\contentsline {paragraph}{}{5}
+\contentsline {subsection}{\numberline {II.2.3}Gestion de configuration}{5}
+\contentsline {paragraph}{}{5}
+\contentsline {chapter}{\numberline {III}Planification}{6}
+\contentsline {section}{\numberline {III.1}M\'{e}thode de d\'{e}veloppement et de programmation}{6}
+\contentsline {subsection}{\numberline {III.1.1}Scrum}{6}
+\contentsline {paragraph}{}{6}
+\contentsline {paragraph}{}{6}
+\contentsline {subsection}{\numberline {III.1.2}R\'{e}partition du travail d'impl\'{e}mentation}{6}
+\contentsline {paragraph}{}{6}
+\contentsline {section}{\numberline {III.2}D\'{e}composition en t\^{a}ches}{7}
+\contentsline {section}{\numberline {III.3}Planning}{7}
+\contentsline {chapter}{\numberline {IV}Gestion des risques}{10}

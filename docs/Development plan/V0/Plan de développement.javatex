@@ -1,0 +1,202 @@
+ packages ##
+fontenc[T1]
+color
+amssymb
+pdfpages
+amsmath
+eurosym
+graphicx
+textcomp
+listings
+epigraph
+setspace
+array
+gensymb
+tikz
+background[some]
+geometry
+babel[francais]
+##
+ commands ##
+##
+ documentSettings ##
+documentClass=report
+alinea=4mm
+chapterName=Partie
+##
+ title[titlePage.bicolorHeaderTemplate] ##
+date=23 Janvier 2015
+vertical_strip_color=1.00,0.50,0.50
+first_author_info=Fabien \textsc{Sauce}
+first_author_name=Zohour \textsc{Abouakil} ~\\ Sofia \textsc{Boutahar} ~\\ David \textsc{Courtinot} ~\\ Xiaowen \textsc{Ji} ~\\ Fabien \textsc{Sauce}
+horizontal_strip_color=0.70,0.10,0.10
+title_size=0.7
+sup_strip_color=0.70,0.70,0.70
+description=Recherche de motifs dans un code C++ à l'aide de la logique temporelle
+inf_strip_color=0.00,0.00,0.00
+title=Plan de développement
+description_size=1.2
+##
+> chapter ##
+Description du projet et objectifs
+##
+>> section ##
+Attentes du client
+##
+>>> paragraph ##
+Le client attend une conception d'un prototype permettant la recherche de motifs dans un code
+ C++ afin d'assurer certaines propriétés sur le code vérifiabes par sa syntaxe.
+ Pour cela, différentes analyses seront mises en œuvre pour éviter les dysfonctionnements.
+ Une partie de ces analyses consiste à étudier le code embarqué et à prouver que le code fait bien
+ ce qu'il est censé faire. D'autres analyses consistent à montrer que le code embarqué respecte un
+ certain nombre de règles de programmation. L'analyse consiste donc à rechercher ces motifs dans
+ le code source.
+##
+>>> paragraph ##
+Nous utiliserons pour ce faire la représentation interne du code de Clang afin de construire des graphes que nous pourrons utilise rà l'aide de la logique temporelle.
+Ce travail se décompose donc en deux parties : le model checking (algorithmes de recherche etc) et les étapes de transformation du code vers sa représentation en graphe de flot de contrôle (GFC). 
+Ces deux parties doivent fonctionner aussi bien de façon indépendante que l'une avec l'autre. La chaîne de transformations et de traitements est présentée
+dans la figure ci-dessous :
+##
+>>> image ##
+data/tasks.png;
+Chaîne de transformations et de traitements;
+0.7
+##
+>> section ##
+Livrables et priorités
+##
+>>> paragraph ##
+Les livrables attendu (et donc prioritaires) sont les suivants :
+##
+>>> list ##
+implémentation d'un parser pour l'AST produit par Clang;
+une conversion AST vers un modèle Scala de représentation du code en termes de graphe de fulx de contrôle;
+de façon indépendante des deux items précédents, des algorithmes d'analyse de propriétés de la logique temporelle sur des graphes de flux de contrôle
+quelconques;
+l'ajout à l'item précédent des quantificateurs tels que "il existe"
+##
+>>> paragraph ##
+Les extensions suivantes pourront être ajoutées :
+##
+>>> list ##
+dépliage des appels de fonctions sur une profondeur donnée;
+création d'un langage utilisateur servant d'interface avec le système
+##
+> chapter ##
+Principes d'organisation
+##
+>> section ##
+Définition des rôles
+##
+>>> subsubsection ##
+Chef de projet
+##
+>>>> paragraph ##
+Le chef de projet s'occupe essentiellement des échanges et communications avec l'industriel et les clients. 
+Il a un rôle prépondérant dans l'organisation statique des tâches.
+##
+>>> subsubsection ##
+Superviseur
+##
+>>>> paragraph ##
+Le superviseur a une vue globale du projet sur le plan technique. Il s'assure de l'avancement des tâches simultanées
+et peut réorganiser les effectifs et les objectifs de façon dynamique dans le cas d'un imprévu.
+Le superviseur peut participer à l'écriture du code ou de la documentation mais il ne s'agit
+pas de sa fonction première. Pour finir, il peut varier d'une semaine sur l'autre.
+##
+>>> subsubsection ##
+Responsable qualité
+##
+>>>> paragraph ##
+Le responsable qualité définit des règles de bonne programmation et s'assure qu'elles sont vérifiées par les développeurs.
+Tout code produit passera sous l'oeil attentif du responsable qualité avant d'être validé. Il assure également
+la qualité et la cohérence de tous les documents produits par l'équipe. Il est le seul à pouvoir pousser
+du contenu sur le dépôt Github, ou à autoriser un member un pousser.
+##
+>>> subsubsection ##
+Responsable de la validation et des tests
+##
+>>>> paragraph ##
+Le responsable de la validation est en charge des tests de validation en environnement global écrits par les programmeurs (chaque programmeur a son propre jeu de tests unitaires). Il ne se contente pas de les exécuter,
+il détermine également si ces tests sont suffisamment exhaustifs ou non.
+##
+>> section ##
+Chaîne de développement
+##
+>>> subsection ##
+Gestion de la qualité
+##
+>>>> paragraph ##
+Avant d'être soumis à la validation, tout code produit passe par le responsable qualité. Celui-ci émet, si besoin,
+des recommandations d'amélioration au programmeur. Le cas échéant, le programmeur doit fournir une nouvelle version tenant compte
+des remarques ou défendre ses choix s'il ne souhaite pas modifier son code. Ce va-et-vient se poursuit jusqu'à un consensus entre le programmeur
+et le responsable qualité.
+##
+>>> subsection ##
+Stratégie de tests
+##
+>>>> paragraph ##
+Une fois la qualité du code vérifiée, il est transmis au validateur qui lance les tests, vérifie leur exhaustivité et les complète si besoin.
+Il n'est pas responsable du débugage du code, tout code échouant aux tests est renvoyé à la personne les ayant développé avec un log détaillant les tests en échec.
+##
+>>> subsection ##
+Gestion de configuration
+##
+>>>> paragraph ##
+Une fois les deux étapes précédentes achevées, le validateur effectue ou autorise le dépôt des sources concernées
+sur le gestionnaire de version. Le schéma global de cette organisation est donc le suivant :
+##
+>>>> image ##
+data/cycle_qualite;
+Schéma descriptif de la chaîne de développement;
+0.7
+##
+> chapter ##
+Planification
+##
+>> section ##
+Méthode de développement et de programmation
+##
+>>> subsection ##
+Scrum
+##
+>>>> paragraph ##
+Nous nous efforcerons d'appliquer la méthode Scrum, très utilisée actuellement et reconnue pour son efficacité.
+En somme, nous définissons tout d'abord un \textit{product backlog}, définissant tous les livrables du produit final. Le présent
+document fait office de \textit{backlog}. Par la suite, nous diviserons le projet en trois \textit{sprints} (ou \textit{itérations}).
+Pour chacun d'entre eux, nous définirons le \textit{sprint backlog}, résumant tous les objectifs à atteindre
+à l'issue de cette itération.
+Chaque \textit{sprint} s'étendra sur une période de deux semaines et consistera à améliorer le logiciel
+de façon incrémentale en y intégrant un élément du \textit{product backlog}.
+##
+>>>> paragraph ##
+Après chaque sprint, nous tiendrons une réunion pour faire un bilan de l'avancement, et proposer des améliorations ou rectifications de trajectoire
+(au cours d'une itération, la définition du \textit{sprint backlog} ne peut être modifiée).
+Enfin, chaque journée débutera par un \textit{scrum meeting} où chacun présentera son travail de la veille
+et exposera ses objectifs pour la journée ainsi que les éventuelles difficultés qu'il traverse actuellement.
+##
+>>> subsection ##
+Répartition du travail d'implémentation
+##
+>>>> paragraph ##
+Nous utiliserons une approche s'inspirant de la méthode XP. En effet, nous jugeons que l'ampleur du projet ne nécessite pas
+que chaque membre du groupe programme séparément, et nous estimons que la programmation en binôme est un excellent
+moyen de prévenir les erreurs en amont et gagner beaucoup de temps en tests et débugage. Nous programmerons donc par binôme, et le cinquième du groupe
+développera seul. La composition des groupes pourra varier à mesure que les tâches sont remplies.
+##
+>> section ##
+Décomposition en tâches
+##
+>> section ##
+Planning
+##
+>>> latex ##
+\includepdf[landscape=true,pages={1-2}]{data/planning.pdf}
+##
+> chapter ##
+Gestion des risques
+##
+>> latex ##
+\includepdf[landscape=true,pages={1}]{data/risks.pdf}
+##
