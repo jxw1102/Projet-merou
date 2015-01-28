@@ -3,6 +3,8 @@
 
 # Compiled binary
 bin
+.project.bak
+.classpath.bak
 
 # Eclipse settings and caches
 .settings
