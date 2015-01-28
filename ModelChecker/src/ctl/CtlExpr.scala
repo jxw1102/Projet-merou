@@ -3,7 +3,7 @@ package ctl
 import ast.Identifier
 
 // Parent class of all the class used un CTL 
-abstract class CtlExpr {
+sealed abstract class CtlExpr {
     def AU(that: CtlExpr)  = _AU(this,that)
     def EU(that: CtlExpr)  = _EU(this,that)
     def &&(that : CtlExpr) = And(this,that)
@@ -12,22 +12,22 @@ abstract class CtlExpr {
 }
 
 // Binary Expression
-case class And (left : CtlExpr, right : CtlExpr) extends CtlExpr 
-case class Or  (left : CtlExpr, right : CtlExpr) extends CtlExpr 
-case class _AU (left : CtlExpr, right : CtlExpr) extends CtlExpr 
-case class _EU (left : CtlExpr, right : CtlExpr) extends CtlExpr 
+final case class And (left : CtlExpr, right : CtlExpr) extends CtlExpr 
+final case class Or  (left : CtlExpr, right : CtlExpr) extends CtlExpr 
+final case class _AU (left : CtlExpr, right : CtlExpr) extends CtlExpr 
+final case class _EU (left : CtlExpr, right : CtlExpr) extends CtlExpr 
 
 // Unary Expression
-case class AX  (right : CtlExpr) extends CtlExpr 
-case class EX  (right : CtlExpr) extends CtlExpr 
-case class AG  (right : CtlExpr) extends CtlExpr 
-case class EG  (right : CtlExpr) extends CtlExpr 
-case class AF  (right : CtlExpr) extends CtlExpr 
-case class EF  (right : CtlExpr) extends CtlExpr 
-case class Not (right : CtlExpr) extends CtlExpr 
+final case class AX  (right : CtlExpr) extends CtlExpr 
+final case class EX  (right : CtlExpr) extends CtlExpr 
+final case class AG  (right : CtlExpr) extends CtlExpr 
+final case class EG  (right : CtlExpr) extends CtlExpr 
+final case class AF  (right : CtlExpr) extends CtlExpr 
+final case class EF  (right : CtlExpr) extends CtlExpr 
+final case class Not (right : CtlExpr) extends CtlExpr 
 
 // Predicate
-case class Predicate (varList : List[Identifier]=List()) extends CtlExpr 
+final case class Predicate (varList : List[Identifier]=List()) extends CtlExpr 
 
 // Object 
 object CtlExpr {

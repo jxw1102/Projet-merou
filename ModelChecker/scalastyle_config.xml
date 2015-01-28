@@ -45,39 +45,39 @@
    <parameter name="regex"><![CDATA[[A-Z][A-Za-z]*]]></parameter>
   </parameters>
  </check>
- <check class="org.scalastyle.scalariform.PackageObjectNamesChecker" level="warning" enabled="true">
+ <check class="org.scalastyle.scalariform.PackageObjectNamesChecker" level="warning" enabled="false">
   <parameters>
    <parameter name="regex"><![CDATA[^[a-z][A-Za-z]*$]]></parameter>
   </parameters>
  </check>
  <check class="org.scalastyle.scalariform.EqualsHashCodeChecker" level="warning" enabled="true"></check>
- <check class="org.scalastyle.scalariform.IllegalImportsChecker" level="warning" enabled="true">
+ <check class="org.scalastyle.scalariform.IllegalImportsChecker" level="warning" enabled="false">
   <parameters>
    <parameter name="illegalImports"><![CDATA[sun._,java.awt._]]></parameter>
   </parameters>
  </check>
- <check class="org.scalastyle.scalariform.ParameterNumberChecker" level="warning" enabled="true">
+ <check class="org.scalastyle.scalariform.ParameterNumberChecker" level="warning" enabled="true" maxParameters="5">
   <parameters>
    <parameter name="maxParameters"><![CDATA[8]]></parameter>
   </parameters>
  </check>
  <check class="org.scalastyle.scalariform.MagicNumberChecker" level="warning" enabled="true">
   <parameters>
-   <parameter name="ignore"><![CDATA[-1,0,1,2,3]]></parameter>
+   <parameter name="ignore"><![CDATA[-1,0,1]]></parameter>
   </parameters>
  </check>
- <check class="org.scalastyle.scalariform.NoWhitespaceBeforeLeftBracketChecker" level="warning" enabled="true"></check>
- <check class="org.scalastyle.scalariform.NoWhitespaceAfterLeftBracketChecker" level="warning" enabled="true"></check>
+ <check class="org.scalastyle.scalariform.NoWhitespaceBeforeLeftBracketChecker" level="warning" enabled="false"></check>
+ <check class="org.scalastyle.scalariform.NoWhitespaceAfterLeftBracketChecker" level="warning" enabled="false"></check>
  <check class="org.scalastyle.scalariform.ReturnChecker" level="warning" enabled="true"></check>
  <check class="org.scalastyle.scalariform.NullChecker" level="warning" enabled="true"></check>
- <check class="org.scalastyle.scalariform.NoCloneChecker" level="warning" enabled="true"></check>
- <check class="org.scalastyle.scalariform.NoFinalizeChecker" level="warning" enabled="true"></check>
+ <check class="org.scalastyle.scalariform.NoCloneChecker" level="warning" enabled="false"></check>
+ <check class="org.scalastyle.scalariform.NoFinalizeChecker" level="warning" enabled="false"></check>
  <check class="org.scalastyle.scalariform.CovariantEqualsChecker" level="warning" enabled="true"></check>
  <check class="org.scalastyle.scalariform.StructuralTypeChecker" level="warning" enabled="true"></check>
- <check class="org.scalastyle.file.RegexChecker" level="warning" enabled="true">
+ <check class="org.scalastyle.file.RegexChecker" level="warning" enabled="false">
   <parameters>
-   <parameter name="regex"><![CDATA[null]]></parameter>
-   <customMessage>null is deprecated in scala</customMessage>
+   <parameter name="regex"><![CDATA[]]></parameter>
+   <customMessage></customMessage>
   </parameters>
  </check>
  <check class="org.scalastyle.scalariform.NumberOfTypesChecker" level="warning" enabled="true">
@@ -87,7 +87,7 @@
  </check>
  <check class="org.scalastyle.scalariform.CyclomaticComplexityChecker" level="warning" enabled="true">
   <parameters>
-   <parameter name="maximum"><![CDATA[10]]></parameter>
+   <parameter name="maximum"><![CDATA[20]]></parameter>
   </parameters>
  </check>
  <check class="org.scalastyle.scalariform.UppercaseLChecker" level="warning" enabled="true"></check>
@@ -115,7 +115,7 @@
    <parameter name="maxMethods"><![CDATA[30]]></parameter>
   </parameters>
  </check>
- <check class="org.scalastyle.scalariform.PublicMethodsHaveTypeChecker" level="warning" enabled="true">
+ <check class="org.scalastyle.scalariform.PublicMethodsHaveTypeChecker" level="warning" enabled="false">
   <parameters>
    <parameter name="ignoreOverride"><![CDATA[false]]></parameter>
   </parameters>
@@ -139,7 +139,7 @@
   </parameters>
  </check>
  <check class="org.scalastyle.scalariform.UnderscoreImportChecker" level="warning" enabled="true"></check>
- <check class="org.scalastyle.scalariform.LowercasePatternMatchChecker" level="warning" enabled="true"></check>
+ <check class="org.scalastyle.scalariform.LowercasePatternMatchChecker" level="warning" enabled="false"></check>
  <check class="org.scalastyle.scalariform.MultipleStringLiteralsChecker" level="warning" enabled="true">
   <parameters>
    <parameter name="allowed"><![CDATA[2]]></parameter>
@@ -149,7 +149,7 @@
  <check class="org.scalastyle.scalariform.ImportGroupingChecker" level="warning" enabled="true"></check>
  <check class="org.scalastyle.scalariform.NotImplementedErrorUsage" level="warning" enabled="true"></check>
  <check class="org.scalastyle.scalariform.BlockImportChecker" level="warning" enabled="false"></check>
- <check class="org.scalastyle.scalariform.ProcedureDeclarationChecker" level="warning" enabled="true"></check>
+ <check class="org.scalastyle.scalariform.ProcedureDeclarationChecker" level="warning" enabled="false"></check>
  <check class="org.scalastyle.scalariform.ForBraceChecker" level="warning" enabled="false"></check>
  <check class="org.scalastyle.scalariform.SpaceAfterCommentStartChecker" level="warning" enabled="true"></check>
  <check class="org.scalastyle.scalariform.ScalaDocChecker" level="warning" enabled="false"></check>
