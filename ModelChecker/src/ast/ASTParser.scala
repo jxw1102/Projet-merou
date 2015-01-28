@@ -1,14 +1,19 @@
 package ast
 
+import scala.collection.mutable.ArrayBuffer
+import scala.collection.mutable.ArrayStack
 import scala.io.Source
 import scala.util.matching.Regex
 
-object ASTParser extends App {
+object ASTParser {
     implicit class ExtendedString(s: String) {
-        val regex = "\\w".r
+        val regex = "\\w|(<<<)".r
         def indent = s.indexOf(regex.findFirstIn(s).get)
     }
 
+    var currentLine = 0
+    val lineRangeReg = new Regex("line:(\\d+)(:(\\d+))?|col:(\\d+)", "line0", "", "line1", "col")
+    
     def getCodeRange(line: String) = {
         val matcher = lineRangeReg.findAllIn(line)
         val l       = currentLine
@@ -26,33 +31,50 @@ object ASTParser extends App {
         res
     }
 
-    val lines  = Source.fromFile(args(0)).getLines.toSeq
-    val indent = lines(0).indent
-
-    var currentLine = 0
-    val lineRangeReg = new Regex("line:(\\d+)(:(\\d+))?|col:(\\d+)", "line0", "", "line1", "col")
-    val idReg = "(\\w+) (0x[\\da-f]{9})".r
-
-    lines.takeWhile(_.indent >= indent).foreach(line => {
-        val idMatcher = idReg.findFirstMatchIn(line)
-        val a = idMatcher match {
-            case Some(m) =>
-                ASTNode(line.indent,m.group(1),java.lang.Long.parseLong(m.group(2).substring(2),16),getCodeRange(line).get)
-            case None    =>
-        }
-        println(a)
-    })
+    def main(args: Array[String]) {
+    	val lines  = Source.fromFile(args(0)).getLines.toSeq
+    	val indent = lines(0).indent
+		
+    	val idReg = "(\\w+) (0x[\\da-f]{9})".r
+        
+        var stack = ArrayStack[ASTNode]()
+        var head = OtherASTNode(0, "")
+        stack.push(head)
+    	
+    	lines.takeWhile(_.indent >= indent).foreach(line => {
+    		val idMatcher = idReg.findFirstMatchIn(line)
+            val data = line.substring(line.indent)
+    		val node = idMatcher match {
+    		    case Some(m) =>
+    				ConcreteASTNode(line.indent/2,m.group(1),java.lang.Long.parseLong(m.group(2).substring(2),16),getCodeRange(line).get,data)
+    		    case None    =>
+                    data match {
+                        case "<<<NULL>>>"    =>    NullASTNode(line.indent/2)
+                        case _               =>    OtherASTNode(line.indent/2,data)
+                    }
+    		}
+            
+    	})
+        
+        
+    }
 }
 
-
-case class ASTNode(depth: Int, ofType: String, id: Long, pos: CodeRange)
+abstract class ASTNode(depth: Int)
+case class ConcreteASTNode(depth: Int, ofType: String, id: Long, pos: CodeRange, data: String) extends ASTNode(depth) {
+    val children = ArrayBuffer[ASTNode]()
+}
+case class NullASTNode(depth: Int) extends ASTNode(depth)
+case class OtherASTNode(depth:Int, data: String) extends ASTNode(depth) {
+    val children = ArrayBuffer[ASTNode]()
+}
 
 case class CodeRange(lineMin: Int, lineMax: Int, colMin: Int, colMax: Int) {
     val lineRange = lineMin to lineMax
     val colRange  = colMin  to colMax
 }
 
-abstract class CodePointer
+sealed abstract class CodePointer
 case class LinePointer(val line: Int, val col: Int) extends CodePointer
 case class ColPointer(val col: Int) extends CodePointer
 
