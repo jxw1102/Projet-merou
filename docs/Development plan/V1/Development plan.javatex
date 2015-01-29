@@ -9,6 +9,7 @@ graphicx
 textcomp
 listings
 epigraph
+longtable
 setspace
 array
 gensymb
@@ -22,7 +23,7 @@ babel[francais]
  documentSettings ##
 documentClass=report
 alinea=4mm
-chapterName=Partie
+chapterName=Part
 ##
  title[titlePage.bicolorHeaderTemplate] ##
 date=23 Janvier 2015
@@ -36,6 +37,9 @@ description=Recherche de motifs dans un code C++ à l'aide de la logique tempore
 inf_strip_color=0.00,0.00,0.00
 title=Plan de développement
 description_size=1.2
+##
+> latex ##
+
 ##
 > chapter ##
 Project description and objectives
@@ -170,7 +174,13 @@ Planning
 Risk management
 ##
 >> latex ##
-\includepdf[landscape=true,pages={1}]{data/risks.pdf}
+%\includepdf[landscape=true,pages={1}]{data/risks.png}
+%\newgeometry{left=1.5cm,,right=1.5cm}
+##
+>> image ##
+data/risks.png;
+Analyse des risques;
+0.5
 ##
 > chapter ##
 Code management
@@ -185,7 +195,76 @@ Automated coding style checks
 For ensuring that our coding rules are respected and evaluate the quality of our sources, we have
 used a tool called \textit{Scalastyle} that enables, using an easy-to-use xml configuration file, to check
 some properties on a Scala code. Combined with a specific pulgin, this can be use to generate warnings or errors
-in the IDE the developer is using. Our settings can be found in appendix A.
+in the IDE the developer is using. Our settings are the following :
+##
+>>>> latex ##
+%\newgeometry{left=1.5cm,,right=1.5cm}
+\renewcommand{\arraystretch}{1.2}
+\begin{center}
+\begin{longtable}{|l|l|l|}
+\hline
+\textbf{Rule} & \textbf{Description} & \textbf{Value}  \\
+\hline
+FileLengthChecker & \small{Check the number of lines in a file} & 1500  \\
+\hline
+FileLineLengthChecker & \small{Check the number of characters in a line} & 140 \\
+\hline
+FileTabChecker & \small{Check that there are no tabs in a file} & enabled \\
+\hline
+ClassNamesChecker & \small{Check that class names match a regular}  & \^ [A-Z][A-a-z]*\$ \\
+& \small{expression} & \\
+\hline
+\small{ClassTypeParameterChecker} & \small{Checks that type parameter to a class matches a} & \^[A-Z\_]\$ \\
+& regular expression & \\
+\hline
+FileTabChecker & \small{Check that there are no tabs in a file} & enabled \\
+\hline
+\small{CyclomaticComplexityChecker} & \small{Checks that the cyclomatic complexity of a method} & 12 \\
+&  \small{does exceed a value} & \\
+\hline
+EmptyClassChecker & \small{If a class/trait has no members, the braces are} & enabled \\
+&  \small{unnecessary} & \\
+\hline
+\small{EqualsHashCodeChecker} & \small{Check that if a class implements either equals} & enabled \\ 
+ & \small{or hashCode, it should implement the other} & \\
+\hline
+MagicNumberChecker & \small{Checks for use of magic numbers instead of} & ignore = -1, 0, 1 \\
+& \small{constants (safer)} & \\
+\hline
+MethodLengthChecker & \small{Checks that methods do not exceed a maximum} & 50 \\
+& \small{length} & \\
+\hline
+MethodNamesChecker & \small{Check that method names match a regular} & \^[a-z][A-Za-z0-9]*(\_=)?\$ \\
+\tiny{.} & \small{expression} & \\
+\hline
+\small{MultipleStringLiteralsChecker} & \small{Checks that a string literal does not appear} & allowed = 2 \\
+& \small{multiple times} & \\
+\hline
+\small{NotImplementedErrorUsage} & \small{Checks that the code does not have ??? operators} & enabled \\
+\hline
+NullChecker & \small{Check that null is not used} & enabled \\
+\hline
+\small{NumberOfMethodsInTypeChecker} & \small{Check that a class/trait/object does not have too} & maxMethods = 30 \\
+& \small{many methods} & \\
+\hline
+NumberOfTypesChecker & \small{Checks that there are not too many types} & maxTypes = 20 \\
+& \small{declared in a file} & \\
+\hline
+ObjectNamesChecker & \small{Check that object names match a regular}  & \^[A-Z][A-Za-z]*\$ \\
+& \small{expression} & \\
+\hline
+ParameterNumberChecker & \small{Maximum number of parameters for a method} & maxParameters = 5 \\
+\hline
+RedundantIfChecker & \small{Checks that if expressions are not redundant, ie} & enabled \\
+& \small{easily replaced by a variant of the condition} &  \\
+\hline
+ScalaDocChecker & \small{Checks that the ScalaDoc on documentable}  & enabled \\
+& \small{members is well-formed} & \\
+\hline
+\end{longtable} 
+\end{center}
+% \restoregeometry
+\renewcommand{\arraystretch}{1}
 ##
 >> section ##
 Test strategy
