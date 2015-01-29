@@ -9,10 +9,7 @@
 \usepackage{textcomp}
 \usepackage{listings}
 \usepackage{epigraph}
-<<<<<<< HEAD
 \usepackage{longtable}
-=======
->>>>>>> f70441dc9c662077ee37d70a107543de21584119
 \usepackage{setspace}
 \usepackage{array}
 \usepackage{gensymb}
@@ -23,12 +20,7 @@
 
 
 \begin{document}
-\renewcommand{\contentsname}{Sommaire}
-<<<<<<< HEAD
 \renewcommand{\chaptername}{Part}
-=======
-\renewcommand{\chaptername}{Partie}
->>>>>>> f70441dc9c662077ee37d70a107543de21584119
 \renewcommand{\thechapter}{\Roman{chapter}}
 
 %\usepackage{lmodern}
@@ -49,7 +41,7 @@
 
 \begin{titlepage}
 
-\newgeometry{left=1cm,right=4cm}
+\newgeometry{left=1cm,right=4cm,bottom=0cm}
 \begin{tikzpicture}[overlay,remember picture]
 % the black stripe with the title
 \node[
@@ -61,11 +53,7 @@
   inner xsep=1cm,
   font=\color{white}\bigsf 
   ] 
-<<<<<<< HEAD
- at ([yshift=-2.5cm]current page.north west) (blackrect) {Plan de d\'{e}veloppement};
-=======
- at ([yshift=-2.5cm]current page.north west) (blackrect) {Development plan};
->>>>>>> f70441dc9c662077ee37d70a107543de21584119
+ at ([yshift=-2.5cm]current page.north west) (blackrect) {Development plan - Version 2};
 % the khaki stripe
 \path[fill=sup_strip_color] 
   (blackrect.north west) rectangle ++(\paperwidth,2.5cm);
@@ -89,19 +77,29 @@
 \newenvironment{test}{\begin{center}}{\end{center}}
 \hspace{10pt}
 \begin{minipage}{\linewidth} 
-Recherche de motifs dans un code C++ \`{a} l'aide de la logique temporelle
+\textbf{Reference :} model-checking.dev-plan ~\\
+January $29^{th}$ 2015
 \end{minipage}
+\end{minipage}
+
+\vspace{9cm}
+\begin{minipage}{0.20\linewidth}
+    \begin{flushright}
+       
+        \begin{tabular}{ll}
+	 \textit{Signatures} & \\
+            & \textbf{Quality responsible :} \\
+            & \textbf{Clients :} \\
+        \end{tabular}
+    \end{flushright}
 \end{minipage}
 
 \end{titlepage}
 \restoregeometry
 \tableofcontents
-<<<<<<< HEAD
+\newgeometry{left=2.1cm,right=2.1cm}
 
 \chapter{Project description and objectives}
-=======
-\chapter{Project description and objectives test test}
->>>>>>> f70441dc9c662077ee37d70a107543de21584119
 
 \section{Surroundings of the project}
 
@@ -185,21 +183,11 @@ Recherche de motifs dans un code C++ \`{a} l'aide de la logique temporelle
 ~\\~\\Figure II.1 - Sch\'{e}ma descriptif de la cha\^{i}ne de d\'{e}veloppement
 \end{center}
 
-<<<<<<< HEAD
-\section{Development organization}
-=======
 \section{Development organisation}
->>>>>>> f70441dc9c662077ee37d70a107543de21584119
 
 \paragraph{}
 \hspace{4mm}\textnormal{To secure our evolution we can use :}
 
-<<<<<<< HEAD
-\subsection{Use of a software development framework : Scrum}
-
-\paragraph{}
-\hspace{4mm}\textnormal{}
-=======
 \subsection{Usage of Scrum method}
 
 \paragraph{}
@@ -219,31 +207,10 @@ review the progress and propose improvements or modifications of planning,
  but in the process of a \textit{sprint}, we cannot modify the \textit{sprint backlog}. 
 At last, each day starts with a \textit{scrum meeting}, on the meeting, each 
 team member present his objective of the day and his actual difficulties.}
->>>>>>> f70441dc9c662077ee37d70a107543de21584119
 
 \subsection{Team repartition approach}
 
 \paragraph{}
-<<<<<<< HEAD
-\hspace{4mm}\textnormal{}
-
-\section{Tasks organization}
-
-\subsection{Tasks definition}
-
-\subsection{Planning}
-
-\includepdf[landscape=true,pages={1-2}]{data/planning.pdf}
-\chapter{Risk management}
-
-%\includepdf[landscape=true,pages={1}]{data/risks.png}
-\newgeometry{left=1.5cm,,right=1.5cm}
-\begin{center}
-\includegraphics[scale=0.5]{data/risks.png}
-~\\~\\Figure III.1 - Analyse des risques
-\end{center}
-
-=======
 \hspace{4mm}\textnormal{We will use an approach inspired by the XP (extreme programming) method. 
 In fact, we found it unnecessary that the team members work separately, 
 and we found it excellent to work in pairs, in order to prevent errors and bias 
@@ -263,7 +230,6 @@ will changes as the tasks are completed.}
 \item AST parsing of procedure C++ code\vspace{1mm}
 \item CFG conversion from parsed AST\vspace{1mm}
 \item Model checking with simple properties\vspace{1mm}
-\item \vspace{1mm}
 \end{itemize}
 
 \paragraph{}
@@ -274,7 +240,6 @@ will changes as the tasks are completed.}
 \item AST parsing of object oriented C++ code\vspace{1mm}
 \item CFG conversion from parsed AST\vspace{1mm}
 \item Model checking with simple criteria\vspace{1mm}
-\item \vspace{1mm}
 \end{itemize}
 
 \paragraph{}
@@ -286,9 +251,17 @@ Model checking with complex criteria;}
 \includepdf[landscape=true,pages={1}]{data/planning.pdf}
 \chapter{Risk management}
 
-\includepdf[landscape=true,pages={1}]{data/risks.pdf}
->>>>>>> f70441dc9c662077ee37d70a107543de21584119
-\chapter{Code management}
+\paragraph{}
+\hspace{4mm}\textnormal{}
+
+%\includepdf[landscape=true,pages={1}]{data/risks.png}
+%\newgeometry{left=1.5cm,,right=1.5cm}
+\begin{center}
+\includegraphics[scale=0.5]{data/risks.png}
+~\\~\\Figure III.1 - Analyse des risques
+\end{center}
+
+\chapter{Code and documentation management}
 
 \section{Quality management}
 
@@ -298,7 +271,6 @@ Model checking with complex criteria;}
 \hspace{4mm}\textnormal{For ensuring that our coding rules are respected and evaluate the quality of our sources, we have
 used a tool called \textit{Scalastyle} that enables, using an easy-to-use xml configuration file, to check
 some properties on a Scala code. Combined with a specific pulgin, this can be use to generate warnings or errors
-<<<<<<< HEAD
 in the IDE the developer is using. Our settings are the following :}
 
 %\newgeometry{left=1.5cm,,right=1.5cm}
@@ -368,10 +340,17 @@ ScalaDocChecker & \small{Checks that the ScalaDoc on documentable}  & enabled \\
 \end{center}
 % \restoregeometry
 \renewcommand{\arraystretch}{1}
-=======
-in the IDE the developer is using. Our settings can be found in appendix A.}
+\subsection{Verification by pair}
 
->>>>>>> f70441dc9c662077ee37d70a107543de21584119
+\paragraph{}
+\hspace{4mm}\textnormal{As we have opted for an XP model for the programming aspect of the project,
+we consider that a code has passed the quality test if at least the two members of a pair
+have checked it. This is up to the quality manager to ensure this has been done, otherwise he
+should do it himself.}
+
+\paragraph{}
+\hspace{4mm}\textnormal{This is specific to the code quality checks and does not apply to the rest of the delivrable documents.}
+
 \section{Test strategy}
 
 \paragraph{}
@@ -380,7 +359,9 @@ in the IDE the developer is using. Our settings can be found in appendix A.}
 \section{Configuration management}
 
 \paragraph{}
-\hspace{4mm}\textnormal{}
+\hspace{4mm}\textnormal{All the delivrable documents are managed on a git repository, including documentation and reports.
+Anyone is allowed to commit at anytime, however any push must have been authorized by the quality responsible after the code
+has been thoroughly tested against a set of tests by the test responsible.}
 
 \chapter{Appendices}
 

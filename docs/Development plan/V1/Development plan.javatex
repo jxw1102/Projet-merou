@@ -25,24 +25,22 @@ documentClass=report
 alinea=4mm
 chapterName=Part
 ##
- title[titlePage.bicolorHeaderTemplate] ##
-date=23 Janvier 2015
+ title[titlePage.projet-merouTemplate] ##
+date=January $29^{th}$ 2015
 vertical_strip_color=1.00,0.50,0.50
 first_author_info=Fabien \textsc{Sauce}
+ref=model-checking.dev-plan
 first_author_name=Zohour \textsc{Abouakil} ~\\ Sofia \textsc{Boutahar} ~\\ David \textsc{Courtinot} ~\\ Xiaowen \textsc{Ji} ~\\ Fabien \textsc{Sauce}
 horizontal_strip_color=0.70,0.10,0.10
 title_size=0.7
 sup_strip_color=0.70,0.70,0.70
-description=Recherche de motifs dans un code C++ à l'aide de la logique temporelle
+description=\textbf{Reference} : model-checking.dev-plan ~\\
 inf_strip_color=0.00,0.00,0.00
-title=Development plan
+title=Development plan - Version 2
 description_size=1.2
 ##
-> latex ##
-
-##
 > chapter ##
-Project description and objectives test test
+Project description and objectives
 ##
 >> section ##
 Surroundings of the project
@@ -191,7 +189,6 @@ Sprint 1 backlog:
 AST parsing of procedure C++ code;
 CFG conversion from parsed AST;
 Model checking with simple properties;
-
 ##
 >>>> paragraph ##
 Sprint 2 backlog:
@@ -200,7 +197,6 @@ Sprint 2 backlog:
 AST parsing of object oriented C++ code;
 CFG conversion from parsed AST;
 Model checking with simple criteria;
-
 ##
 >>>> paragraph ##
 Improved CFG conversion from parsed AST;
@@ -215,6 +211,9 @@ Planning
 > chapter ##
 Risk management
 ##
+>> paragraph ##
+
+##
 >> latex ##
 %\includepdf[landscape=true,pages={1}]{data/risks.png}
 %\newgeometry{left=1.5cm,,right=1.5cm}
@@ -225,7 +224,7 @@ Analyse des risques;
 0.5
 ##
 > chapter ##
-Code management
+Code and documentation management
 ##
 >> section ##
 Quality management
@@ -308,6 +307,18 @@ ScalaDocChecker & \small{Checks that the ScalaDoc on documentable}  & enabled \\
 % \restoregeometry
 \renewcommand{\arraystretch}{1}
 ##
+>>> subsection ##
+Verification by pair
+##
+>>>> paragraph ##
+As we have opted for an XP model for the programming aspect of the project,
+we consider that a code has passed the quality test if at least the two members of a pair
+have checked it. This is up to the quality manager to ensure this has been done, otherwise he
+should do it himself.
+##
+>>>> paragraph ##
+This is specific to the code quality checks and does not apply to the rest of the delivrable documents.
+##
 >> section ##
 Test strategy
 ##
@@ -318,7 +329,9 @@ Test strategy
 Configuration management
 ##
 >>> paragraph ##
-
+All the delivrable documents are managed on a git repository, including documentation and reports.
+Anyone is allowed to commit at anytime, however any push must have been authorized by the quality responsible after the code
+has been thoroughly tested against a set of tests by the test responsible.
 ##
 > chapter ##
 Appendices
