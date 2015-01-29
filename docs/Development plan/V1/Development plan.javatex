@@ -156,11 +156,23 @@ including all we need to realise at the end of an iteration. Each
 \textit{sprint} lasts two weeks and lies in improve the software 
 incrementally, so that it is close to \textit{product backlog}.
 ##
+>>>> paragraph ##
+At the end of each \textit{sprint}, we will organise a meeting, in order to 
+review the progress and propose improvements or modifications of planning,
+ but in the process of a \textit{sprint}, we cannot modify the \textit{sprint backlog}. 
+At last, each day starts with a \textit{scrum meeting}, on the meeting, each 
+team member present his objective of the day and his actual difficulties.
+##
 >>> subsection ##
 Team repartition approach
 ##
 >>>> paragraph ##
-
+We will use an approach inspired by the XP (extreme programming) method. 
+In fact, we found it unnecessary that the team members work separately, 
+and we found it excellent to work in pairs, in order to prevent errors and bias 
+of the program structure, so that we can save times of testing and debugging. 
+So four of us work in pairs and the last one works individually. The group 
+will changes as the tasks are completed.
 ##
 >> section ##
 Tasks organisation
@@ -168,11 +180,33 @@ Tasks organisation
 >>> subsection ##
 Tasks definition
 ##
+>>>> paragraph ##
+Sprint 1 backlog:
+##
+>>>> list ##
+AST parsing of procedure C++ code;
+CFG conversion from parsed AST;
+Model checking with simple properties;
+
+##
+>>>> paragraph ##
+Sprint 2 backlog:
+##
+>>>> list ##
+AST parsing of object oriented C++ code;
+CFG conversion from parsed AST;
+Model checking with simple criteria;
+
+##
+>>>> paragraph ##
+Improved CFG conversion from parsed AST;
+Model checking with complex criteria;
+##
 >>> subsection ##
 Planning
 ##
 >>>> latex ##
-\includepdf[landscape=true,pages={1-2}]{data/planning.pdf}
+\includepdf[landscape=true,pages={1}]{data/planning.pdf}
 ##
 > chapter ##
 Risk management
