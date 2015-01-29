@@ -5,6 +5,8 @@ import scala.collection.mutable.ArrayStack
 import scala.io.Source
 import scala.util.matching.Regex
 
+import util.control.Breaks._
+
 object ASTParser {
     implicit class ExtendedString(s: String) {
         val regex = "\\w|(<<<)".r
@@ -37,38 +39,38 @@ object ASTParser {
 		
     	val idReg = "(\\w+) (0x[\\da-f]{9})".r
         
-        var stack = ArrayStack[ASTNode]()
-        var tree = OtherASTNode(0, "")
+        val stack = ArrayStack[ASTNode]()
+        val tree = OtherASTNode(-1, "")
         stack.push(tree)
     	
     	lines.takeWhile(_.indent >= indent).foreach(line => {
-    		val idMatcher = idReg.findFirstMatchIn(line)
-            val data = line.substring(line.indent)
-    		val node: ASTNode = idMatcher match {
-    		    case Some(m) =>
-    				ConcreteASTNode(line.indent/2,m.group(1),java.lang.Long.parseLong(m.group(2).substring(2),16),getCodeRange(line).get,data)
-    		    case None    =>
-                    data match {
-                        case "<<<NULL>>>"    =>    NullASTNode(line.indent/2)
-                        case _               =>    OtherASTNode(line.indent/2,data)
-                    }
+            breakable {
+                val idMatcher = idReg.findFirstMatchIn(line)
+                val data = line.substring(line.indent)
+                val node: ASTNode = idMatcher match {
+                    case Some(m) =>
+                        val codeRange = getCodeRange(line)
+                        if(codeRange == None) {
+                            break
+                        }
+                        ConcreteASTNode(line.indent/2,m.group(1),java.lang.Long.parseLong(m.group(2).substring(2),16),codeRange.get,data)
+                    case None    =>
+                        data match {
+                            case "<<<NULL>>>"    =>    NullASTNode(line.indent/2)
+                            case _               =>    OtherASTNode(line.indent/2,data)
+                        }
+                }
+                while(node.depth <= stack.head.depth) {
+                    stack.pop()
+                }
+                stack.head.children += node
+                stack.push(node)
             }
-            while(node.depth <= stack.head.depth) {
-                stack.pop()
-            }
-            stack.head.children += node
-            stack.push(node)
     	})
         
-        def displayChildren(t: ASTNode) : Unit = {
-            for(n <- t.children) {
-                println("  " * n.depth + n)
-                displayChildren(n)
-            }
-        }
+        ASTNode.displayChildren(tree)
         
-        println(tree)
-        displayChildren(tree)
+        
         
     }
 }
@@ -77,7 +79,21 @@ abstract class ASTNode(_depth: Int) {
     def depth = _depth
     val children = ArrayBuffer[ASTNode]()
 }
-case class ConcreteASTNode(_depth: Int, ofType: String, id: Long, pos: CodeRange, data: String) extends ASTNode(_depth)
+object ASTNode {
+	def displayChildren(t: ASTNode) : Unit = {
+		for(n <- t.children) {
+			println("  " * n.depth + n)
+			displayChildren(n)
+		}
+	}
+    def createAST(t: ASTNode) : Unit = {
+        var node = ProgramNode(t)
+        
+    }
+}
+case class ConcreteASTNode(_depth: Int, ofType: String, id: Long, pos: CodeRange, data: String) extends ASTNode(_depth) {
+    def dataList = data.split(" ")
+}
 case class NullASTNode(_depth: Int) extends ASTNode(_depth)
 case class OtherASTNode(_depth:Int, data: String) extends ASTNode(_depth)
 
