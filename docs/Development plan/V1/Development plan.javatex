@@ -34,11 +34,11 @@ title_size=0.7
 sup_strip_color=0.70,0.70,0.70
 description=Recherche de motifs dans un code C++ à l'aide de la logique temporelle
 inf_strip_color=0.00,0.00,0.00
-title=Plan de développement
+title=Development plan
 description_size=1.2
 ##
 > chapter ##
-Project description and objectives
+Project description and objectives test test
 ##
 >> section ##
 Surroundings of the project
