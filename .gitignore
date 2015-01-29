@@ -9,3 +9,9 @@ bin
 # Eclipse settings and caches
 .settings
 .cache
+
+# Latex files
+docs/**/*.log
+docs/**/*.aux
+docs/**/*.toc
+

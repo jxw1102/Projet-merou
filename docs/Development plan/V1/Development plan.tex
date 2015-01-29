@@ -9,7 +9,10 @@
 \usepackage{textcomp}
 \usepackage{listings}
 \usepackage{epigraph}
+<<<<<<< HEAD
 \usepackage{longtable}
+=======
+>>>>>>> f70441dc9c662077ee37d70a107543de21584119
 \usepackage{setspace}
 \usepackage{array}
 \usepackage{gensymb}
@@ -21,7 +24,11 @@
 
 \begin{document}
 \renewcommand{\contentsname}{Sommaire}
+<<<<<<< HEAD
 \renewcommand{\chaptername}{Part}
+=======
+\renewcommand{\chaptername}{Partie}
+>>>>>>> f70441dc9c662077ee37d70a107543de21584119
 \renewcommand{\thechapter}{\Roman{chapter}}
 
 %\usepackage{lmodern}
@@ -54,7 +61,11 @@
   inner xsep=1cm,
   font=\color{white}\bigsf 
   ] 
+<<<<<<< HEAD
  at ([yshift=-2.5cm]current page.north west) (blackrect) {Plan de d\'{e}veloppement};
+=======
+ at ([yshift=-2.5cm]current page.north west) (blackrect) {Development plan};
+>>>>>>> f70441dc9c662077ee37d70a107543de21584119
 % the khaki stripe
 \path[fill=sup_strip_color] 
   (blackrect.north west) rectangle ++(\paperwidth,2.5cm);
@@ -85,8 +96,12 @@ Recherche de motifs dans un code C++ \`{a} l'aide de la logique temporelle
 \end{titlepage}
 \restoregeometry
 \tableofcontents
+<<<<<<< HEAD
 
 \chapter{Project description and objectives}
+=======
+\chapter{Project description and objectives test test}
+>>>>>>> f70441dc9c662077ee37d70a107543de21584119
 
 \section{Surroundings of the project}
 
@@ -170,19 +185,46 @@ Recherche de motifs dans un code C++ \`{a} l'aide de la logique temporelle
 ~\\~\\Figure II.1 - Sch\'{e}ma descriptif de la cha\^{i}ne de d\'{e}veloppement
 \end{center}
 
+<<<<<<< HEAD
 \section{Development organization}
+=======
+\section{Development organisation}
+>>>>>>> f70441dc9c662077ee37d70a107543de21584119
 
 \paragraph{}
 \hspace{4mm}\textnormal{To secure our evolution we can use :}
 
+<<<<<<< HEAD
 \subsection{Use of a software development framework : Scrum}
 
 \paragraph{}
 \hspace{4mm}\textnormal{}
+=======
+\subsection{Usage of Scrum method}
+
+\paragraph{}
+\hspace{4mm}\textnormal{We will try to use Scrum method, which is actually widely used, and 
+recognised for its effectiveness. At first, we will define a 
+\textit{product backlog} containing all desired functionalities in 
+the final product. In fact, this report is also a part of \textit{product backlog}. 
+Next, we will divide the project into three \textit{sprints} (which means 
+iterations). A \textit{sprint backlog} is defined for each \textit{sprint}, 
+including all we need to realise at the end of an iteration. Each 
+\textit{sprint} lasts two weeks and lies in improve the software 
+incrementally, so that it is close to \textit{product backlog}.}
+
+\paragraph{}
+\hspace{4mm}\textnormal{At the end of each \textit{sprint}, we will organise a meeting, in order to 
+review the progress and propose improvements or modifications of planning,
+ but in the process of a \textit{sprint}, we cannot modify the \textit{sprint backlog}. 
+At last, each day starts with a \textit{scrum meeting}, on the meeting, each 
+team member present his objective of the day and his actual difficulties.}
+>>>>>>> f70441dc9c662077ee37d70a107543de21584119
 
 \subsection{Team repartition approach}
 
 \paragraph{}
+<<<<<<< HEAD
 \hspace{4mm}\textnormal{}
 
 \section{Tasks organization}
@@ -201,6 +243,51 @@ Recherche de motifs dans un code C++ \`{a} l'aide de la logique temporelle
 ~\\~\\Figure III.1 - Analyse des risques
 \end{center}
 
+=======
+\hspace{4mm}\textnormal{We will use an approach inspired by the XP (extreme programming) method. 
+In fact, we found it unnecessary that the team members work separately, 
+and we found it excellent to work in pairs, in order to prevent errors and bias 
+of the program structure, so that we can save times of testing and debugging. 
+So four of us work in pairs and the last one works individually. The group 
+will changes as the tasks are completed.}
+
+\section{Tasks organisation}
+
+\subsection{Tasks definition}
+
+\paragraph{}
+\hspace{4mm}\textnormal{Sprint 1 backlog:}
+
+\vspace{4mm}
+\begin{itemize}
+\item AST parsing of procedure C++ code\vspace{1mm}
+\item CFG conversion from parsed AST\vspace{1mm}
+\item Model checking with simple properties\vspace{1mm}
+\item \vspace{1mm}
+\end{itemize}
+
+\paragraph{}
+\hspace{4mm}\textnormal{Sprint 2 backlog:}
+
+\vspace{4mm}
+\begin{itemize}
+\item AST parsing of object oriented C++ code\vspace{1mm}
+\item CFG conversion from parsed AST\vspace{1mm}
+\item Model checking with simple criteria\vspace{1mm}
+\item \vspace{1mm}
+\end{itemize}
+
+\paragraph{}
+\hspace{4mm}\textnormal{Improved CFG conversion from parsed AST;
+Model checking with complex criteria;}
+
+\subsection{Planning}
+
+\includepdf[landscape=true,pages={1}]{data/planning.pdf}
+\chapter{Risk management}
+
+\includepdf[landscape=true,pages={1}]{data/risks.pdf}
+>>>>>>> f70441dc9c662077ee37d70a107543de21584119
 \chapter{Code management}
 
 \section{Quality management}
@@ -211,6 +298,7 @@ Recherche de motifs dans un code C++ \`{a} l'aide de la logique temporelle
 \hspace{4mm}\textnormal{For ensuring that our coding rules are respected and evaluate the quality of our sources, we have
 used a tool called \textit{Scalastyle} that enables, using an easy-to-use xml configuration file, to check
 some properties on a Scala code. Combined with a specific pulgin, this can be use to generate warnings or errors
+<<<<<<< HEAD
 in the IDE the developer is using. Our settings are the following :}
 
 %\newgeometry{left=1.5cm,,right=1.5cm}
@@ -280,6 +368,10 @@ ScalaDocChecker & \small{Checks that the ScalaDoc on documentable}  & enabled \\
 \end{center}
 % \restoregeometry
 \renewcommand{\arraystretch}{1}
+=======
+in the IDE the developer is using. Our settings can be found in appendix A.}
+
+>>>>>>> f70441dc9c662077ee37d70a107543de21584119
 \section{Test strategy}
 
 \paragraph{}
