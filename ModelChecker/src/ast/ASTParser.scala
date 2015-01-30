@@ -1,6 +1,7 @@
 package ast
 
 import scala.collection.mutable.ArrayBuffer
+import java.lang.Long.parseLong
 import scala.collection.mutable.ArrayStack
 import scala.io.Source
 import scala.util.matching.Regex
@@ -9,8 +10,9 @@ import util.control.Breaks._
 
 object ASTParser {
     implicit class ExtendedString(s: String) {
-        val regex = "\\w|(<<<)".r
+        val regex  = "\\w|(<<<)".r
         def indent = s.indexOf(regex.findFirstIn(s).get)
+        def data   = s.substring(indent)
     }
 
     var currentLine = 0
@@ -35,65 +37,94 @@ object ASTParser {
 
     def main(args: Array[String]) {
     	val lines  = Source.fromFile(args(0)).getLines.toSeq
-    	val indent = lines(0).indent
 		
-    	val idReg = "(\\w+) (0x[\\da-f]{9})".r
+    	val idReg  = "(\\w+) (0x[\\da-f]{9})".r
         
-        val stack = ArrayStack[ASTNode]()
-        val tree = OtherASTNode(-1, "")
+        val stack  = ArrayStack[ASTNode]()
+        val tree   = OtherASTNode(-1, "")
         stack.push(tree)
     	
-    	lines.takeWhile(_.indent >= indent).foreach(line => {
-            breakable {
-                val idMatcher = idReg.findFirstMatchIn(line)
-                val data = line.substring(line.indent)
-                val node: ASTNode = idMatcher match {
-                    case Some(m) =>
-                        val codeRange = getCodeRange(line)
-                        if(codeRange == None) {
-                            break
-                        }
-                        ConcreteASTNode(line.indent/2,m.group(1),java.lang.Long.parseLong(m.group(2).substring(2),16),codeRange.get,data)
-                    case None    =>
-                        data match {
-                            case "<<<NULL>>>"    =>    NullASTNode(line.indent/2)
-                            case _               =>    OtherASTNode(line.indent/2,data)
-                        }
-                }
-                while(node.depth <= stack.head.depth) {
-                    stack.pop()
-                }
-                stack.head.children += node
-                stack.push(node)
-            }
+        // break is usually discouraged in Scala (that's why it is not a keyword)
+        // I propose you a more functional solution
+        lines.map(line => (getCodeRange(line),idReg.findFirstMatchIn(line),line))
+        	.filter(tuple => !tuple._2.isDefined || tuple._1.isDefined)
+        	.foreach(tuple => {
+        		val node = tuple match {
+        			case (Some(codeRange),Some(m),line) =>
+                		ConcreteASTNode(line.indent/2,m.group(1),parseLong(m.group(2).substring(2),16),codeRange,line.data)
+        			case (None,None,line)    =>
+                		line.data match {
+                			case "<<<NULL>>>" => NullASTNode(line.indent/2)
+                			case _            => OtherASTNode(line.indent/2,line.data)
+                		}
+        			case (_,_,line) => throw new ParseFailedException(line)
+        		}	
+            
+        		while(node.depth <= stack.head.depth) stack.pop()
+        		stack.head.children += node
+        		stack.push(node)
     	})
         
-        ASTNode.displayChildren(tree)
-        
-        
-        
+//    	lines.foreach(line => {
+//            breakable {
+//                val idMatcher = idReg.findFirstMatchIn(line)
+//                val data = line.substring(line.indent)
+//                val node: ASTNode = idMatcher match {
+//                    case Some(m) =>
+//                        val codeRange = getCodeRange(line)
+//                        if(codeRange == None) {
+//                            break
+//                        }
+//                        ConcreteASTNode(line.indent/2,m.group(1),java.lang.Long.parseLong(m.group(2).substring(2),16),codeRange.get,data)
+//                    case None    =>
+//                        data match {
+//                            case "<<<NULL>>>"    =>    NullASTNode(line.indent/2)
+//                            case _               =>    OtherASTNode(line.indent/2,data)
+//                        }
+//                }
+//                
+//                while(node.depth <= stack.head.depth) stack.pop()
+//                stack.head.children += node
+//                stack.push(node)
+//            }
+//    	})
+        println(tree.mkString);
     }
 }
 
 abstract class ASTNode(_depth: Int) {
-    def depth = _depth
+    def depth    = _depth
     val children = ArrayBuffer[ASTNode]()
-}
-object ASTNode {
-	def displayChildren(t: ASTNode) : Unit = {
-		for(n <- t.children) {
-			println("  " * n.depth + n)
-			displayChildren(n)
-		}
-	}
-    def createAST(t: ASTNode) : Unit = {
-        var node = ProgramNode(t)
-        
+    
+    // quality check : this is in my opinion a better way to print the tree
+    def mkString = addString(new StringBuilder).toString
+    def addString(sb: StringBuilder): StringBuilder = {
+        sb.append("  " * depth + this + "\n")
+        for (child <- children) child.addString(sb)
+        sb
     }
 }
+
+object ASTNode {
+//    To delete if you agree with my changes
+///////////////////////////////////////////    
+//	def displayChildren(t: ASTNode): Unit = {
+//		for(n <- t.children) {
+//			println("  " * n.depth + n)
+//			displayChildren(n)
+//		}
+//	}
+	
+    def createAST(t: ASTNode): Unit = {
+        var node = ProgramNode(t)
+        // TODO
+    }
+}
+
 case class ConcreteASTNode(_depth: Int, ofType: String, id: Long, pos: CodeRange, data: String) extends ASTNode(_depth) {
     def dataList = data.split(" ")
 }
+
 case class NullASTNode(_depth: Int) extends ASTNode(_depth)
 case class OtherASTNode(_depth:Int, data: String) extends ASTNode(_depth)
 
