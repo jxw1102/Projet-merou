@@ -42,30 +42,41 @@ description_size=1.2
 > chapter ##
 Project description and objectives
 ##
->> section ##
-Surroundings of the project
-##
->>> paragraph ##
-Le projet long à l'ENSEEIHT
-	Organisation du projet
-##
->>> paragraph ##
-Le client c est qui ?? Les noms, leurs fonctions, les motivations du projet
-##
->>> paragraph ##
-Nos motivations -- pas sur
-##
->> section ##
-Project description
-##
->>> subsection ##
-Main idea
-##
->>> subsection ##
-Related technologies
-##
->>> list ##
-Coccinelle ;
+    >> section ##
+    Surroundings of the project
+    ##  
+        >>> paragraph ##
+        To get our ENSEEIHT engineering diploma, it is indispensable to realise a long project that gather together five students to work on a common project. 
+        ##
+        >>> paragraph ##
+        The project started at January 19, and last eight week. At the end of the project we have to cross a defense in front of a jury who will evaluate our work in different aspects :
+        ##  
+        >>> list ##
+        Project management ; 
+        Technical aspect ;
+        Organization;
+        Rapport evaluation; 
+         
+        ##
+        >>> paragraph ##
+        The subject that we work on was chosen by Mr. David Doose and Mr. Julien Brunel two researchers at Aerospace Lab ONERA. They are working on robot development using C++ language. This is why they need checking tools to verify some property on their embedded code.  
+        ##
+        >>> paragraph ##
+        We choose to work on that project because of the originality of the subject, since it is mixing theories computer science and technical advanced principles.
+        Otherwise, studying model checking and temporal logic to verify properties on code was a topic that we studied on ENSEEIHT courses. This project is an opportunity to apply this theory.
+        ##
+    
+    >> section ##
+    Project description
+    ##
+        >>> subsection ##
+        Main idea
+        ##
+        >>> subsection ##
+        Related technologies
+        ##
+        >>> list ##
+        Coccinelle ;
 		Clang;
 ##
 >>> subsection ##
