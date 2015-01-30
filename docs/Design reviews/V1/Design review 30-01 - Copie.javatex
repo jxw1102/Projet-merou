@@ -43,6 +43,12 @@ AST and CFG representations
 
 ##
 >>> subsection ##
+Generation of clang AST
+##
+>>>> paragraph ##
+clang -cc1 -ast-dump simple.cpp
+##
+>>> subsection ##
 Parse the Clang AST file
 ##
 >>> subsection ##
@@ -61,6 +67,12 @@ Partie \textbf{Stmt}
 data/stmt.png;
 ;
 0.9
+##
+>>>>> image ##
+data/decl.png
+Class diagram of the part \textbf{Decl} ;
+1.0
+
 ##
 >>>>> paragraph ##
 
@@ -94,6 +106,16 @@ data/fail-fast.png;
 ##
 >> section ##
 AST to CFG
+##
+>>> paragraph ##
+The class CFGNode is used to represent a node of the Control Flow Graph, 
+
+##
+>>> image ##
+data/CFG.png
+CFG class diagram;
+1.0
+
 ##
 > chapter ##
 Model checking

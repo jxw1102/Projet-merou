@@ -21,20 +21,20 @@ object ASTParser {
         def data      = s.substring(indent)
         def id        = ASTLine.idReg.findFirstMatchIn(s)
         def codeRange = {
-        	val matcher = ASTLine.lineRangeReg.findAllIn(s)
-        			val l   = currentLine
-        			val res = matcher.map(_ => CodePointer.parse(matcher.group(0))).toList match {
-        				case ColPointer (x)                       :: Nil => Some(CodeRange(l,l,x,x))
-        				case ColPointer (x)   :: ColPointer (y)   :: Nil => Some(CodeRange(l,l,x,y))
-        				case ColPointer (x)   :: LinePointer(y,z) :: Nil => Some(CodeRange(l,y,x,z))
-        				case LinePointer(v,w) :: LinePointer(x,y) :: Nil => Some(CodeRange(v,x,w,y))
-        				case LinePointer(x,y) :: ColPointer (z)   :: Nil => Some(CodeRange(x,x,y,z))
-        				case LinePointer(x,y)                     :: Nil => Some(CodeRange(x,x,y,y))
-        				case Nil                                         => None
-        				case _ => throw new ParseFailedException(s)
-        	}
-        	res match { case Some(x) => currentLine = x.lineMax; case None => }
-        	res
+            val matcher = ASTLine.lineRangeReg.findAllIn(s)
+                    val l   = currentLine
+                    val res = matcher.map(_ => CodePointer.parse(matcher.group(0))).toList match {
+                        case ColPointer (x)                       :: Nil => Some(CodeRange(l,l,x,x))
+                        case ColPointer (x)   :: ColPointer (y)   :: Nil => Some(CodeRange(l,l,x,y))
+                        case ColPointer (x)   :: LinePointer(y,z) :: Nil => Some(CodeRange(l,y,x,z))
+                        case LinePointer(v,w) :: LinePointer(x,y) :: Nil => Some(CodeRange(v,x,w,y))
+                        case LinePointer(x,y) :: ColPointer (z)   :: Nil => Some(CodeRange(x,x,y,z))
+                        case LinePointer(x,y)                     :: Nil => Some(CodeRange(x,x,y,y))
+                        case Nil                                         => None
+                        case _ => throw new ParseFailedException(s)
+            }
+            res match { case Some(x) => currentLine = x.lineMax; case None => }
+            res
         }
     }
     
@@ -47,31 +47,31 @@ object ASTParser {
 
     var currentLine = 0
     def main(args: Array[String]) {
-    	val lines  = Source.fromFile(args(0)).getLines.toSeq
+        val lines  = Source.fromFile(args(0)).getLines.toSeq
         val stack  = ArrayStack[ASTNode]()
         val tree   = OtherASTNode(-1, "")
         stack.push(tree)
-    	
+        
         // break is usually discouraged in Scala (that's why it is not a keyword)
         // I propose you a more functional solution
         lines.map(line => (line.codeRange,line.id,line.data,line.indent,line))
-        	.filter(tuple => !tuple._2.isDefined || tuple._1.isDefined)
-        	.foreach(tuple => {
-        		val node = tuple match {
-        			case (Some(codeRange),Some(id),data,indent,_) =>
-                		ConcreteASTNode(indent/2,id.group(1),parseLong(id.group(2).substring(2),16),codeRange,data)
-        			case (None,None,data,indent,_)    =>
-                		data match {
-                			case "<<<NULL>>>" => NullASTNode(indent/2)
-                			case _            => OtherASTNode(indent/2,data)
-                		}
-        			case (_,_,_,_,line) => throw new ParseFailedException(line)
-        		}	
+            .filter(tuple => !tuple._2.isDefined || tuple._1.isDefined)
+            .foreach(tuple => {
+                val node = tuple match {
+                    case (Some(codeRange),Some(id),data,indent,_) =>
+                        ConcreteASTNode(indent/2,id.group(1),parseLong(id.group(2).substring(2),16),codeRange,data)
+                    case (None,None,data,indent,_)    =>
+                        data match {
+                            case "<<<NULL>>>" => NullASTNode(indent/2)
+                            case _            => OtherASTNode(indent/2,data)
+                        }
+                    case (_,_,_,_,line) => throw new ParseFailedException(line)
+                }    
             
-        		while(node.depth <= stack.head.depth) stack.pop()
-        		stack.head.children += node
-        		stack.push(node)
-    	})
+                while(node.depth <= stack.head.depth) stack.pop()
+                stack.head.children += node
+                stack.push(node)
+        })
         println(tree.mkString);
     }
 }

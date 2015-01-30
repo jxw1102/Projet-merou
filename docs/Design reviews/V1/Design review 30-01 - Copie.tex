@@ -19,6 +19,7 @@
 
 
 \begin{document}
+\renewcommand{\contentsname}{Sommaire}
 \renewcommand{\chaptername}{Part}
 \renewcommand{\thechapter}{\Roman{chapter}}
 
@@ -104,6 +105,11 @@ January $30^{th}$ 2015
 
 \section{}
 
+\subsection{Generation of clang AST}
+
+\paragraph{}
+\hspace{4mm}\textnormal{clang -cc1 -ast-dump simple.cpp}
+
 \subsection{Parse the Clang AST file}
 
 \subsection{From ASTNode to ProgramNode}
@@ -152,6 +158,9 @@ January $30^{th}$ 2015
 \hspace{4mm}\textnormal{}
 
 \section{AST to CFG}
+
+\paragraph{}
+\hspace{4mm}\textnormal{}
 
 \chapter{Model checking}
 
