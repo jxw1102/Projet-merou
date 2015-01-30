@@ -1,0 +1,100 @@
+ packages ##
+fontenc[T1]
+color
+amssymb
+pdfpages
+amsmath
+eurosym
+graphicx
+textcomp
+listings
+epigraph
+setspace
+array
+gensymb
+tikz
+background[some]
+geometry
+babel[english]
+##
+ commands ##
+##
+ documentSettings ##
+documentClass=report
+alinea=4mm
+chapterName=Part
+##
+ title[titlePage.projet-merouTemplate] ##
+date=January $30^{th}$ 2015
+ref=model-checking.design
+first_author_name=Zohour \textsc{Abouakil} ~\\ Sofia \textsc{Boutahar} ~\\ David \textsc{Courtinot} ~\\ Xiaowen \textsc{Ji} ~\\ Fabien \textsc{Sauce}
+title_size=0.8
+sup_strip_color=0.80,0.80,0.80
+inf_strip_color=0.00,0.00,0.00
+title=Design review - Iteration 1 - Version 2
+##
+> chapter ##
+AST and CFG representations
+##
+>> paragraph ##
+
+##
+>> section ##
+
+##
+>>> subsection ##
+Parse the Clang AST file
+##
+>>> subsection ##
+From ASTNode to ProgramNode
+##
+>>>> subsubsection ##
+\textbf{Decl} class hierarchy
+##
+>>>> subsubsection ##
+Partie \textbf{Stmt}
+##
+>>>>> paragraph ##
+
+##
+>>>>> image ##
+data/stmt.png;
+;
+0.9
+##
+>>>>> paragraph ##
+
+##
+>>>>> image ##
+data/expr1.png;
+Diagramme de classe partiel de la partie \textbf{Expr};
+0.9
+##
+>>>>> paragraph ##
+
+##
+>>>>> image ##
+data/expr2.png;
+Diagramme de classe plus fourni (mais toujours incomplet) de la partie \textbf{Expr};
+0.5
+##
+>>>> subsubsection ##
+Remarques importantes :
+##
+>>>>> list ##
+
+##
+>>>>> image ##
+data/fail-fast.png;
+ ;
+0.85
+##
+>>>>> paragraph ##
+
+##
+>> section ##
+AST to CFG
+##
+> chapter ##
+Model checking
+##

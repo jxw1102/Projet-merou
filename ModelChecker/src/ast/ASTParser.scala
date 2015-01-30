@@ -22,8 +22,8 @@ object ASTParser {
         def id        = ASTLine.idReg.findFirstMatchIn(s)
         def codeRange = {
         	val matcher = ASTLine.lineRangeReg.findAllIn(s)
-        			val l       = currentLine
-        			val res     = matcher.map(_ => CodePointer.parse(matcher.group(0))).toList match {
+        			val l   = currentLine
+        			val res = matcher.map(_ => CodePointer.parse(matcher.group(0))).toList match {
         				case ColPointer (x)                       :: Nil => Some(CodeRange(l,l,x,x))
         				case ColPointer (x)   :: ColPointer (y)   :: Nil => Some(CodeRange(l,l,x,y))
         				case ColPointer (x)   :: LinePointer(y,z) :: Nil => Some(CodeRange(l,y,x,z))
@@ -72,30 +72,6 @@ object ASTParser {
         		stack.head.children += node
         		stack.push(node)
     	})
-        
-//    	lines.foreach(line => {
-//            breakable {
-//                val idMatcher = idReg.findFirstMatchIn(line)
-//                val data = line.substring(line.indent)
-//                val node: ASTNode = idMatcher match {
-//                    case Some(m) =>
-//                        val codeRange = getCodeRange(line)
-//                        if(codeRange == None) {
-//                            break
-//                        }
-//                        ConcreteASTNode(line.indent/2,m.group(1),java.lang.Long.parseLong(m.group(2).substring(2),16),codeRange.get,data)
-//                    case None    =>
-//                        data match {
-//                            case "<<<NULL>>>"    =>    NullASTNode(line.indent/2)
-//                            case _               =>    OtherASTNode(line.indent/2,data)
-//                        }
-//                }
-//                
-//                while(node.depth <= stack.head.depth) stack.pop()
-//                stack.head.children += node
-//                stack.push(node)
-//            }
-//    	})
         println(tree.mkString);
     }
 }
@@ -108,7 +84,6 @@ sealed abstract class ASTNode(_depth: Int) {
     def depth    = _depth
     val children = ArrayBuffer[ASTNode]()
     
-    // quality check : this is in my opinion a better way to print the tree
     def mkString = addString(new StringBuilder).toString
     def addString(sb: StringBuilder): StringBuilder = {
         sb.append("  " * depth + this + "\n")
