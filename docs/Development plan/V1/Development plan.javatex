@@ -52,47 +52,58 @@ Project description and objectives
         The project started at January 19, and last eight week. At the end of the project we have to cross a defense in front of a jury who will evaluate our work in different aspects :
         ##  
         >>> list ##
-        Project management ; 
-        Technical aspect ;
-        Organization;
-        Rapport evaluation; 
-         
+        Project management and organization ; 
+        Technical accomplishment ;
+        Report and defense presentation ; 
+        English evaluation          
         ##
         >>> paragraph ##
+        In the course of the project, we have to satisfy client requirements and deliver at the end of the project a product suit their expectations. Further all over the two months, we are supervised by an Mr. Jean-Francois COIFFIN.  
         The subject that we work on was chosen by Mr. David Doose and Mr. Julien Brunel two researchers at Aerospace Lab ONERA. They are working on robot development using C++ language. This is why they need checking tools to verify some property on their embedded code.  
         ##
         >>> paragraph ##
         We choose to work on that project because of the originality of the subject, since it is mixing theories computer science and technical advanced principles.
-        Otherwise, studying model checking and temporal logic to verify properties on code was a topic that we studied on ENSEEIHT courses. This project is an opportunity to apply this theory.
+        Otherwise, studying model checking and temporal logic to verify properties on code was a topic that we studied on ENSEEIHT courses. This project is an opportunity to apply this theory and go further on it.
         ##
     
     >> section ##
     Project description
     ##
         >>> subsection ##
-        Main idea
+        Main idea  
         ##
+            >>>> paragraph ##
+            The client is waiting for a prototype that allow a research of pattern on a C++ code. What can be useful to check and verify properties on it.              
+            ##
         >>> subsection ##
         Related technologies
         ##
+            >>>> paragraph ##
+                ONERA team had already work on a similar project that call Coccinelle. However, Coccinelle was made basically to check pattern in C code. 
+                
+            ##
+
         >>> list ##
-        Coccinelle ;
 		Clang;
-##
->>> subsection ##
-Project parts
-##
->>> list ##
-Parser ;
+        ##
+      
+        >>> subsection ##
+        Project parts
+        ##
+        >>> list ##
+        Parser ;
 		CTL;
 		Model checking;
-##
->>> subsection ##
-To conclude
-##
->> section ##
-Final project
-##
+        ##
+        >>> subsection ##
+        To conclude
+        ##
+
+
+
+        >> section ##
+        Final project
+        ##
 >>> subsection ##
 Deliverable documents and define priorities
 ##
