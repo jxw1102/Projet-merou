@@ -27,16 +27,16 @@ chapterName=Part
 ##
  title[titlePage.projet-merouTemplate] ##
 date=January $29^{th}$ 2015
+vertical_strip_color=1.00,0.50,0.50
+first_author_info=Fabien \textsc{Sauce}
+ref=model-checking.dev-plan
+first_author_name=Zohour \textsc{Abouakil} ~\\ Sofia \textsc{Boutahar} ~\\ David \textsc{Courtinot} ~\\ Xiaowen \textsc{Ji} ~\\ Fabien \textsc{Sauce}
+horizontal_strip_color=0.70,0.10,0.10
 title_size=0.7
 sup_strip_color=0.70,0.70,0.70
 description=\textbf{Reference} : model-checking.dev-plan ~\\
-title=Development plan - Version 2
-ref=model-checking.dev-plan
-vertical_strip_color=1.00,0.50,0.50
-first_author_info=Fabien \textsc{Sauce}
-first_author_name=Zohour \textsc{Abouakil} ~\\ Sofia \textsc{Boutahar} ~\\ David \textsc{Courtinot} ~\\ Xiaowen \textsc{Ji} ~\\ Fabien \textsc{Sauce}
-horizontal_strip_color=0.70,0.10,0.10
 inf_strip_color=0.00,0.00,0.00
+title=Development plan - Version 2
 description_size=1.2
 ##
 > chapter ##
@@ -59,8 +59,9 @@ Project description and objectives
         ##
         >>> paragraph ##
         In the course of the project, we have to satisfy client requirements and deliver at the end of the project a product suit their expectations. Further all over the two months, we are supervised by an Mr. Jean-Francois COIFFIN.  
-        The subject that we work on was chosen by Mr. David Doose and Mr. Julien Brunel two researchers at Aerospace Lab ONERA. They are working on robot development using C++ language. This is why they need checking tools to verify some property on their embedded code.  
+        The subject that we work on was chosen by Mr. David Doose and Mr. Julien Brunel two researchers at Aerospace Lab ONERA. They are working on robot development using C++ language. This is why they need checking tools to verify some property on their embedded code. Their are already a product that do the same job like Coccinelle. However, Coccinelle was made basically to check pattern in C code. 
         ##
+
         >>> paragraph ##
         We choose to work on that project because of the originality of the subject, since it is mixing theories computer science and technical advanced principles.
         Otherwise, studying model checking and temporal logic to verify properties on code was a topic that we studied on ENSEEIHT courses. This project is an opportunity to apply this theory and go further on it.
@@ -75,29 +76,40 @@ Project description and objectives
             >>>> paragraph ##
             The client is waiting for a prototype that allow a research of pattern on a C++ code. What can be useful to check and verify properties on it.              
             ##
+
+        >>> subsection ##
+        Project parts
+        ##
+            >>>> paragraph ##
+            The project can be divided into two principals parts : 
+            ##
+            >>>> list ##
+            Parser : getting the C++ code and transform it to a data structure -graph- that can be studied  ;
+		    Model checking algorithm : this algorithm take a propriety to check and try to find the node of the graph that verify it.  
+            ##
+            >>>> paragraph ##
+            After realizing both parts separately, we have to mix them : this is the last product. 
+            ## 
+            >>>> paragraph ##
+            The following graph display the main step in our project. 
+            ##
+            >>>> image ##
+            data/tasks;
+		    Project part;
+		    0.7
+            ##
+
+            >>>> paragraph ##
+            Orange part is an extension of the project. It is an optional part.
+            ##
+
         >>> subsection ##
         Related technologies
         ##
             >>>> paragraph ##
-                ONERA team had already work on a similar project that call Coccinelle. However, Coccinelle was made basically to check pattern in C code. 
-                
+            To simplify the C++ code parsing we can use an intermediate tool : Clang. Witch is a compiler front end for C, C++, Objective-C and Objective-C++ programming languages developed by Apple. It take a C++ file as entrance and deliver a now AST file.  
             ##
-
-        >>> list ##
-		Clang;
-        ##
       
-        >>> subsection ##
-        Project parts
-        ##
-        >>> list ##
-        Parser ;
-		CTL;
-		Model checking;
-        ##
-        >>> subsection ##
-        To conclude
-        ##
 
 
 
@@ -223,11 +235,6 @@ Tasks organisation
 >>> subsection ##
 Tasks definition
 ##
->>>> image ##
-data/product_backlog.pdf;
-Product backlog;
-0.8
-##
 >>>> paragraph ##
 Sprint 1 backlog:
 ##
@@ -245,9 +252,6 @@ CFG conversion from parsed AST;
 Model checking with simple criteria;
 ##
 >>>> paragraph ##
-Sprint 3 backlog:
-##
->>>> list ##
 Improved CFG conversion from parsed AST;
 Model checking with complex criteria;
 ##
