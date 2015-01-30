@@ -1,7 +1,8 @@
 package ctl
 
-import ast.Identifier
-
+/**
+ * @author Zohour Abouakil
+ */
 // Parent class of all the class used un CTL 
 sealed abstract class CtlExpr {
     def AU(that: CtlExpr)  = _AU(this,that)
@@ -27,7 +28,7 @@ final case class EF  (right : CtlExpr) extends CtlExpr
 final case class Not (right : CtlExpr) extends CtlExpr 
 
 // Predicate
-final case class Predicate (varList : List[Identifier]=List()) extends CtlExpr 
+final case class Predicate (varList : List[String]=List()) extends CtlExpr 
 
 // Object 
 object CtlExpr {

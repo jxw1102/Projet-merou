@@ -1,22 +1,20 @@
 package ast
 
 import scala.collection.mutable.ArrayBuffer
+import ast.util.MutableListView
 
-class Stmt extends ProgramNode {
-    override def toGraph = ???
+class Stmt extends ProgramNode 
+final case class CompoundStmt() extends Stmt {
+    val  body: MutableListView[Stmt] = MutableListView()
 }
 
-class CompoundStmt extends Stmt {
-    private[this] val body = ArrayBuffer[Stmt]()
-    def addStmt(s: Stmt) = body += s
-    def statements: Iterable[Stmt] = body ++ ArrayBuffer()
+final case class AssignmentStmt(variable: String, value: Expr)                                              extends Stmt
+final case class IfStmt        (condition: Expr, body: CompoundStmt, elseStmt: Option[CompoundStmt])        extends Stmt
+final case class SwitchStmt    (expr: Expr, cases: Map[Litteral,SwitchCase], default: Option[CompoundStmt]) extends Stmt
+final case class SwitchCase    (value: Litteral, body: CompoundStmt)                                        extends Stmt
+final case class DeclStmt      ()                                                                           extends Stmt
+final case class FunCall       (identifier: String)                                                         extends Stmt {
+    val  args: MutableListView[Expr] = MutableListView()
 }
 
-class IfStmt        (val condition: Expr, val body: CompoundStmt, val elseStmt: Option[CompoundStmt]) extends Stmt
-class Identifier    (val name : String) extends Stmt {
-    override def toString = name
-}
-class FunCall       (val identifier: String, val args: List[Expr]) extends Stmt
-class AssignmentStmt(val variable: Identifier, val value: Expr) extends Stmt
-class SwitchStmt    (val expr: Expr, val cases: Map[Litteral,SwitchCase], default: Option[CompoundStmt]) extends Stmt
-class SwitchCase    (val value: Litteral, val body: CompoundStmt) extends Stmt
+final case class Type(name: String)
