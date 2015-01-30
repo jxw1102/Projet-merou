@@ -94,8 +94,7 @@ Stmt part
 ##
 >>>>> paragraph ##
 For this first iteration, we have decided to skip the C++ object oriented part in order to focus exclusively 
-on the imperative part.
-Inspired by the Clang API, we came up with the following class diagram :
+on the imperative part. Inspired by the Clang API, we came up with the following class diagram :
 ##
 >>>>> image ##
 data/stmt.png;
@@ -115,7 +114,7 @@ Partial class diagram of the \textbf{Expr} part;
 0.8
 ##
 >>>>> paragraph ##
-Finally, we present a more complete diagram to \textbf{Expr} even though when do not know yet if we will keep it that way,
+Finally, we present a more complete diagram for Expr even though we still do not know if we will keep it that way,
 its complexity being considered superfluous for the nature of the algorithms we will use on these structures.
 ##
 >>>>> image ##
@@ -127,11 +126,11 @@ Class diagram heavier (still incomplete) for the \textbf{Expr} part;
 Important notes
 ##
 >>>>> list ##
-To faithfully represent the CFG of our programs, we must take into account the fail-fast mechanism in assessing conjunctions / disjunctions.
-The importance of this mechanism for our project is illustrated in the following figure .;
-However, since the evaluation's order of the expressions is not specified in C++ (unlike Java which evaluates from left to right),
+to accuratelys represent the CFG of our input programs, we must take into account the fail-fast mechanism in the evaluation of boolean conjunctions/disjunctions.
+The importance of this mechanism for our project is illustrated in the figure below.;
+however, since the evaluation's order of the expressions is not completely specified specified in C++ (unlike Java which evaluates from left to right),
 we will limit these considerations to simple expressions. Therefore we will not take care of expressions (boolean or not) containing 
-sub-expressions edge effect (increment, assignments...).
+sub-expressions side effect (increment, assignments...).
 ##
 >>>>> image ##
 data/fail-fast.png;
@@ -139,12 +138,12 @@ On the left the considerate code. On the center, we didn't take into account the
 0.85
 ##
 >>>>> paragraph ##
-As it can be seen in the figure above, if we try to
-ensure the property \textit {<< variable s is always initialized when g(s) is called >>}, the first CFG will not allow us to conclude
-(or it will conclude \textbf {true}, wrongly) while the second allows us
-to say that there are executions, according to the value of a,
+As shown in the figure above, if we try to
+assert the property \textit {<< variable s is always initialized when g(s) is called >>}, the first CFG will not allow us to conclude
+(or it will conclude \textbf {true}, erroneously) while the second allows us
+to state that there are executions, according to the value of x,
 where $g$ is called with an uninitialized parameter
-(assuming that the left son is always a successful test and the right son is a failed test)
+(assuming that the left son is always a successful test and the right son is a failed test).
 ##
 >>>>> paragraph ##
 Another important thing to mention is that at the beginning, we had a mix of regular classes with
@@ -168,7 +167,15 @@ on an abstract superclass.
 AST to CFG
 ##
 >>> paragraph ##
-The class GraphNode is used to represent a node of the Control Flow Graph,
+The class GraphNode is used to represent a node of the CFG, it is still not clearly defined as we are missing the operations
+required on this class for the model checker. Nevertheless, we can already be sure that a GraphNode will wrap a ProgramNode value (most certainly only certain kind
+of ProgramNode such as DeclStmt, Assignment and so on, and never CompoundStmt or classes containing an inner CompoundStmt instance). It will also provide a list
+of predecessors and a list of successors so that we can explore the graph.
+##
+>>> paragraph ##
+Finally, we have thought about the problem of the label function. We must be able to labellize many different kinds of nodes
+with any kind of predicate. We do not want that adding a new predicate require rewriting the ProgramNode children classes, so we opted for
+a Visitor pattern. Thus, adding a new Label will only consist in writing a class extending the Labellizer trait.
 ##
 >>> image ##
 data/CFG.png;
