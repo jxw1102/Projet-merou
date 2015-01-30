@@ -201,6 +201,11 @@ Tasks organisation
 >>> subsection ##
 Tasks definition
 ##
+>>>> image ##
+data/product_backlog.pdf;
+Product backlog;
+0.8
+##
 >>>> paragraph ##
 Sprint 1 backlog:
 ##
