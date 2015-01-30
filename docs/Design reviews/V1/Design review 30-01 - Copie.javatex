@@ -22,7 +22,7 @@ babel[english]
  documentSettings ##
 documentClass=report
 alinea=4mm
-chapterName=Part
+chapterName=Partie
 ##
  title[titlePage.projet-merouTemplate] ##
 date=January $30^{th}$ 2015
@@ -30,6 +30,7 @@ ref=model-checking.design
 first_author_name=Zohour \textsc{Abouakil} ~\\ Sofia \textsc{Boutahar} ~\\ David \textsc{Courtinot} ~\\ Xiaowen \textsc{Ji} ~\\ Fabien \textsc{Sauce}
 title_size=0.8
 sup_strip_color=0.80,0.80,0.80
+description=Compte-rendu des dÃ©cisions prises lors des sÃ©ances de conception du 26/01 au 28/01
 inf_strip_color=0.00,0.00,0.00
 title=Design review - Iteration 1 - Version 2
 ##
@@ -37,10 +38,14 @@ title=Design review - Iteration 1 - Version 2
 AST and CFG representations
 ##
 >> paragraph ##
-
+After studying API Clang, we came to the conclusion that the AST is made of over nuances that we needed to build the CFG. 
+Indeed, the atom for a CFG is what is generally called a \ textit {statement} whereas the simplest instruction
+gives an AST representation composed of multiple nodes. We also found difficult to handle both parsing and binding of the graph nodes.
+That is why we have chosen to transform the AST into a series of high-level objects that its original nodes, which will be at places blocks
+CFG, or macro-blocks containing a subgraph.
 ##
 >> section ##
-
+Transitional representation of the Clang AST
 ##
 >>> subsection ##
 Generation of clang AST
@@ -61,11 +66,12 @@ From ASTNode to ProgramNode
 Partie \textbf{Stmt}
 ##
 >>>>> paragraph ##
-
+For this first iteration, we skip the C++ object part in order focus exclusively on the imperative part
+Inspired by the Clang API, we came to the following class diagram:
 ##
 >>>>> image ##
 data/stmt.png;
-;
+Class diagram from the imperative part of \textbf{Stmt};
 0.9
 ##
 >>>>> image ##
@@ -75,34 +81,50 @@ Class diagram of the part \textbf{Decl} ;
 
 ##
 >>>>> paragraph ##
-
+Note that our model does not strictly represent a C++ code. For example, we do not prevent a \textit{if} of containing the instruction \textit{break}
+ (among other inaccuracies ...).
+We felt that this kind of refinement would unnecessarily complicate the task without adding anything more to the CFG analysis. 
+Since the code is already checked semantically by the Clang compiler and given our future needs, we thought it would be wiser to aim for a simple model.
+Moreover, some classes have not been clearly defined in the previous diagram because we deliberately chose to represent them apart on 
+the diagram below. Finally, other classes were not represented (\textbf{BreakStmt}, \textbf{ContinueStmt} for a better readability).
 ##
 >>>>> image ##
 data/expr1.png;
-Diagramme de classe partiel de la partie \textbf{Expr};
+Partial class diagram of the \textbf{Expr} part;
 0.9
 ##
 >>>>> paragraph ##
-
+Finally, we present a more complete diagram to \textbf{Expr} even though when do not know yet if we will keep it that way,
+its complexity being considered superfluous for the nature of the algorithms we will use on these structures.
 ##
 >>>>> image ##
 data/expr2.png;
-Diagramme de classe plus fourni (mais toujours incomplet) de la partie \textbf{Expr};
+Class diagram heavier (still incomplete) for the \textbf{Expr} part;
 0.5
 ##
 >>>> subsubsection ##
-Remarques importantes :
+Important observations:
 ##
 >>>>> list ##
-
+To faithfully represent the CFG of our programs, we must take into account the fail-fast mechanism in assessing conjunctions / disjunctions.
+The importance of this mechanism for our project is illustrated in the following figure .;
+However, since the evaluation's order of the expressions is not specified in C++ (unlike Java which evaluates from left to right),
+we will limit these considerations to simple expressions. Therefore we will not take care of expressions (boolean or not) containing 
+sub-expressions edge effect (increment, assignments...).
 ##
 >>>>> image ##
 data/fail-fast.png;
- ;
+On the left the considerate code. On the center, we didn't take into account the fail-fast for the CFG, and finally on the right we consider the fail-fast;
 0.85
 ##
 >>>>> paragraph ##
-
+As it can be seen in the figure above, if we try to
+insure the property \textit {\ og s is always initialize when
+g(s) is called \ fg{}}, the first CFG will not allow us to conclude
+  (or it will conclude \textbf {true}, wrongly) while the second allows us
+  to say that there are executions, according to the value of a,
+where $g$ is called with an uninitialized parameter
+(assuming that the left son is always a successful test and the right son is a failed test)
 ##
 >> section ##
 AST to CFG
