@@ -13,18 +13,22 @@ class Program {
 }
 
 abstract class ProgramNode {
-	private[this] var _codeRange: Option[CodeRange] = None
-	
-	def codeRange                     = _codeRange
-	def codeRange_=(range: CodeRange) = _codeRange = Some(range)
+    private[this] var _codeRange: Option[CodeRange] = None
+    
+    def codeRange                     = _codeRange
+    def codeRange_=(range: CodeRange) = _codeRange = Some(range)
 }
 object ProgramNode {
     def apply(node: ProgramNode, codeRange: CodeRange) = node.codeRange = codeRange
-    def apply(node: ASTNode) = node match {
-    	case ConcreteASTNode(depth,ofType,id,pos,data) => 
-            ofType match {
-                case "CompoundStmt" => new CompoundStmt
-                case "DeclStmt"     => //new DeclStmt()
-            }
-    }
+//    def apply(node: ASTNode) = node match {
+//        case ConcreteASTNode(depth,ofType,id,pos,data) => 
+//            val instance: ProgramNode = ofType match {
+//                case "CompoundStmt" => new CompoundStmt
+////                case "CallExpr"     => new FunCall()
+//            }
+//            instance.codeRange_=(pos)
+//            instance
+////        case NullASTNode =>
+////        case OtherASTNode =>
+//    }
 }
