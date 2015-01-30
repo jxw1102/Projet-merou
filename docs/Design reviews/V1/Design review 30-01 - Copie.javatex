@@ -40,10 +40,34 @@ AST and CFG representations
 
 ##
 >> section ##
-
+Transitional reprensentation of the Clang AST
 ##
 >>> subsection ##
 Parse the Clang AST file
+##
+>>>> paragraph ##
+At first, we have considered using XML parsing libraries to parse the XML version of the Clang AST. However, 
+this type of output is no longer supported by the newest versions of the Clang compiler and all the existing tools
+provide partial support at best. Hence, we decided using the regular AST file and parse it line by line 
+with a custom parser.
+##
+>>>> paragraph ##
+We have identified three main kinds of nodes in the AST. Each one is associated to a specific class which extends ASTNode :
+##
+>>>> list ##
+nodes consisting in an type name, an id, a code pointer pointing the relevant lines of the code and some
+metadata that depend on the type of the node. These are represented by the ConcreteASTNode class;
+<<<NULL>>> children, represented by the NullASTNode class;
+other kind of nodes, prior to class declaration for example. These are represented by OtherASTNode
+##
+>>>> image ##
+ASTNode.png;
+Inheritance relationships between the classes used to represent the AST;
+0.8
+##
+>>>> paragraph ##
+The file will be parsed and converted in a tree data-structure which nodes are of type ASTNode. The ASTNode objects
+will then be converted in Stmt or Decl accordingly to the class hierarchy we present in the next part.
 ##
 >>> subsection ##
 From ASTNode to ProgramNode
