@@ -45,24 +45,38 @@ Project description and objectives
     >> section ##
     Surroundings of the project
     ##  
-        >>> paragraph ##
-        To get our ENSEEIHT engineering diploma, it is indispensable to realise a long project that gather together five students to work on a common project. 
+        
+        >>> subsection ##
+        What is "Projet long" ?
         ##
-        >>> paragraph ##
-        The project started at January 19, and last eight week. At the end of the project we have to cross a defense in front of a jury who will evaluate our work in different aspects :
+        >>>> paragraph ##
+        To get our ENSEEIHT engineering diploma, we are required to take part in project called "Projet long" that gather together five students to work on a common project. 
+        ##
+        >>>> paragraph ##
+        The project started on January 19, and last eight week. It ends up with a defense in which we promote our work in front of a jury who evaluate us according to different aspects :
+
         ##  
-        >>> list ##
+        >>>> list ##
         Project management and organization ; 
         Technical accomplishment ;
         Report and defense presentation ; 
         English evaluation          
         ##
-        >>> paragraph ##
-        In the course of the project, we have to satisfy client requirements and deliver at the end of the project a product suit their expectations. Further all over the two months, we are supervised by an Mr. Jean-Francois COIFFIN.  
-        The subject that we work on was chosen by Mr. David Doose and Mr. Julien Brunel two researchers at Aerospace Lab ONERA. They are working on robot development using C++ language. This is why they need checking tools to verify some property on their embedded code. Their are already a product that do the same job like Coccinelle. However, Coccinelle was made basically to check pattern in C code. 
+        >>>> paragraph ##
+        All over the project, we have to work side by side with the client for whom we have to deliver at the end of the project a product that suit their expectations. Furthermore, we are also supervised by Mr. Jean-Francois COIFFIN. He is in charge of helping us through his experience in project management and organization.   
         ##
 
-        >>> paragraph ##
+        >>> subsection ##
+        Who is our client ?
+        ##
+        >>>> paragraph ##
+        The subject that we work on was chosen by Mr. David Doose and Mr. Julien Brunel two researchers at Aerospace Lab ONERA. They are working on robot development using C++ language. This is why they are in the need of a checking tools to verify some properties on their embedded code. The client had already a product that do the same tasks, called Coccinelle. However, Coccinelle was basically made to check pattern in C code. 
+        ##
+
+        >>> subsection ##
+        Why we choose this subject ?
+        ##
+        >>>> paragraph ##
         We choose to work on that project because of the originality of the subject, since it is mixing theories computer science and technical advanced principles.
         Otherwise, studying model checking and temporal logic to verify properties on code was a topic that we studied on ENSEEIHT courses. This project is an opportunity to apply this theory and go further on it.
         ##
@@ -84,30 +98,30 @@ Project description and objectives
             The project can be divided into two principals parts : 
             ##
             >>>> list ##
-            Parser : getting the C++ code and transform it to a data structure -graph- that can be studied  ;
-		    Model checking algorithm : this algorithm take a propriety to check and try to find the node of the graph that verify it.  
+            Parser : get the C++ code as an input and transform it to a data structure -graph- to browse it  ;
+		    Model checking algorithm : this algorithm take a propriety to check and try to find the nodes in the graph that verify it.  
             ##
             >>>> paragraph ##
             After realizing both parts separately, we have to mix them : this is the last product. 
             ## 
             >>>> paragraph ##
-            The following graph display the main step in our project. 
+            The following graph display the main steps in our project. 
             ##
             >>>> image ##
             data/tasks;
-		    Project part;
+		    Project parts;
 		    0.7
             ##
 
             >>>> paragraph ##
-            Orange part is an extension of the project. It is an optional part.
+            Orange parts are an extension of the project. They are optional tasks.
             ##
 
         >>> subsection ##
         Related technologies
         ##
             >>>> paragraph ##
-            To simplify the C++ code parsing we can use an intermediate tool : Clang. Witch is a compiler front end for C, C++, Objective-C and Objective-C++ programming languages developed by Apple. It take a C++ file as entrance and deliver a now AST file.  
+            To simplify the C++ code parsing we can use an intermediate tool : Clang. It is a compiler front end for C, C++, Objective-C and Objective-C++ programming languages developed by Apple. It take a C++ file as entrance and deliver a new AST file.  
             ##
       
 
