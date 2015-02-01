@@ -50,10 +50,10 @@ Project description and objectives
         What is "Projet long" ?
         ##
         >>>> paragraph ##
-        To get our ENSEEIHT engineering diploma, we are required to take part in project called "Projet long" that gather together five students to work on a common project. 
+        To get our ENSEEIHT engineering diploma, we are required to take part in a project called "Projet long" that gather together five students to work on a common project. 
         ##
         >>>> paragraph ##
-        The project started on January 19, and last eight week. It ends up with a defense in which we promote our work in front of a jury who evaluate us according to different aspects :
+        The project started on January 19, and last eight weeks. It ends up with a defense in which we promote our work in front of a jury who evaluate us according to different aspects :
 
         ##  
         >>>> list ##
@@ -63,14 +63,14 @@ Project description and objectives
         English evaluation          
         ##
         >>>> paragraph ##
-        All over the project, we have to work side by side with the client for whom we have to deliver at the end of the project a product that suit their expectations. Furthermore, we are also supervised by Mr. Jean-Francois COIFFIN. He is in charge of helping us through his experience in project management and organization.   
+        All over the project, we have to work side by side with the client for whom we have to deliver at the end of the project a product that suit their expectations. Furthermore, we are also supervised by Mr. Jean-Francois COIFFIN. He is in charge of helping us through his experience in the project management and organization.   
         ##
 
         >>> subsection ##
         Who is our client ?
         ##
         >>>> paragraph ##
-        The subject that we work on was chosen by Mr. David Doose and Mr. Julien Brunel two researchers at Aerospace Lab ONERA. They are working on robot development using C++ language. This is why they are in the need of a checking tools to verify some properties on their embedded code. The client had already a product that do the same tasks, called Coccinelle. However, Coccinelle was basically made to check pattern in C code. 
+        The subject that we work on was chosen by Mr. David Doose and Mr. Julien Brunel, two researchers at Aerospace Lab ONERA. They are working on robot development using C++ language. This is why they are in the need of a checking tools to verify some properties on their embedded code. The client had already a product that do the same tasks, called Coccinelle. However, Coccinelle was basically made to check pattern in C code. 
         ##
 
         >>> subsection ##
@@ -174,80 +174,66 @@ Project description and objectives
 Project organization
 ##
     >> section ##
-Role definition
-##
->>> subsubsection ##
-Project manager
-##
->>>> paragraph ##
-The project manager is primarily concerned about trade and communications with the industrial and 
-customers . It has a leading role in the organization of static tasks.
-##
->>> subsubsection ##
-Supervisor
-##
->>>> paragraph ##
-The supervisor has a global view of the project technically . It ensures the advancement
-simultaneous tasks and can rearrange groups and objectives in case of unforeseen. 
-The supervisor can participate in writing the code or documentation but
-it is not its primary function . He can change from one week to anther.
-##
->>> subsubsection ##
-Quality manager
-##
->>>> paragraph ##
-The quality manager handles good programming rules and ensure that they are followed
- by developers. Any product code will pass under the watchful eye of the Quality
-before being validated . It also ensures the quality and consistency of all documents produced by
-the team. He is the only one able to push content on the repository (Github), or authorize a member
- to push.
-##
->>> subsubsection ##
-Test manager
-##
->>>> paragraph ##
-The test manager is responsible for validation testing in global environment
-written by programmers (each programmer has its own set of unit tests). He doesn't only run tests,
-he also determines whether the tests are complete or not.
-##
->>> subsubsection ##
-Configuration manager
-##
->>>> paragraph ##
-Configuration Manager should take care of every tools we are going to use. Make some choice about which tools are better than other. 
+    Role definition
+    ##
+        >>> subsubsection ##
+        Project manager
+        ##
+            >>>> paragraph ##
+            The project manager is primarily concerned about trade and communications with the industrial and customers . It has a leading role in the organization of static tasks.
+            ##
+        >>> subsubsection ##
+        Supervisor
+        ##
+            >>>> paragraph ##
+            The supervisor has a global technical view of the project. He supervises the advancement of simultaneous tasks. Otherwise, he can rearrange groups and objectives if a unforeseen occur. The supervisor has also to participate in coding or documenting an assigned task. Nevertheless, it is not his primary function . 
+            ##
+            >>>> paragraph ##
+            The team supervisor can change from one week to another.
+            ##
+        >>> subsubsection ##
+        Quality manager
+        ##
+            >>>> paragraph ##
+            The quality manager is in charge to verify every deliverable and documents destined to outside the team. In other words, any produced code will pass under the watchful eye of the Quality before being validated so he verifies if development rules are applied. He also ensures the quality and consistency of all documents produced by the team. 
+            ##
+        >>> subsubsection ##
+        Test manager
+        ##
+            >>>> paragraph ##
+            The test manager is responsible for validation testing in global environment written by programmers (each programmer has its own set of unit tests). He doesn't only run tests, he also determines whether the tests are complete or not.
+            ##
+        >>> subsubsection ##
+        Configuration manager  "to review"
+        ##
+            >>>> paragraph ##
+            Configuration Manager should take care of every tools we are going to use. Make some choice about which tools are better than other. 
 In particular he will handle the installation and the follow up of a version tool as Github for example.
-##
->>> subsubsection ##
-Chain development
-##
->>>> image ##
-data/cycle_qualite;
-		Schéma descriptif de la chaîne de développement;
-		0.7
-##
->> section ##
-Development organisation
-##
->>> paragraph ##
-To secure our evolution we can use :
-##
->>> subsection ##
-Usage of Scrum method
-##
->>>> paragraph ##
-We will try to use Scrum method, which is actually widely used, and 
-recognised for its effectiveness. At first, we will define a 
-\textit{product backlog} containing all desired functionalities in 
-the final product. In fact, this report is also a part of \textit{product backlog}. 
-Next, we will divide the project into three \textit{sprints} (which means 
-iterations). A \textit{sprint backlog} is defined for each \textit{sprint}, 
-including all we need to realise at the end of an iteration. Each 
-\textit{sprint} lasts two weeks and lies in improve the software 
+            ##
+        >>> subsubsection ##
+        Chain development
+        ##
+            >>>> image ##
+            data/cycle_qualite;
+		    Schéma descriptif de la chaîne de développement;
+		    0.7
+            ##
+    >> section ##
+    Development organisation
+    ##
+        >>> paragraph ##
+        To secure our evolution we can use :
+        ##
+        >>> subsection ##
+        Usage of Scrum method
+        ##
+            >>>> paragraph ##
+            We will try to use Scrum method, which is actually widely used, and recognised for its effectiveness. At first, we will define a \textit{product backlog} containing all desired functionalities in the final product. In fact, this report is also a part of \textit{product backlog}. 
+Next, we will divide the project into three \textit{sprints} (which means iterations). A \textit{sprint backlog} is defined for each \textit{sprint}, including all we need to realise at the end of an iteration. Each \textit{sprint} lasts two weeks and lies in improve the software 
 incrementally, so that it is close to \textit{product backlog}.
-##
->>>> paragraph ##
-At the end of each \textit{sprint}, we will organise a meeting, in order to 
-review the progress and propose improvements or modifications of planning,
+            ##
+            >>>> paragraph ##
+            At the end of each \textit{sprint}, we will organise a meeting, in order to review the progress and propose improvements or modifications of planning,
  but in the process of a \textit{sprint}, we cannot modify the \textit{sprint backlog}. 
 At last, each day starts with a \textit{scrum meeting}, on the meeting, each 
 team member present his objective of the day and his actual difficulties.
