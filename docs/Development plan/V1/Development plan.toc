@@ -1,55 +1,68 @@
 \select@language {french}
 \contentsline {chapter}{\numberline {I}Project description and objectives}{2}
 \contentsline {section}{\numberline {I.1}Surroundings of the project}{2}
+\contentsline {subsection}{\numberline {I.1.1}What is "Projet long" ?}{2}
 \contentsline {paragraph}{}{2}
 \contentsline {paragraph}{}{2}
 \contentsline {paragraph}{}{2}
-\contentsline {section}{\numberline {I.2}Project description}{2}
-\contentsline {subsection}{\numberline {I.2.1}Main idea}{2}
-\contentsline {subsection}{\numberline {I.2.2}Related technologies}{2}
-\contentsline {subsection}{\numberline {I.2.3}Project parts}{2}
-\contentsline {subsection}{\numberline {I.2.4}To conclude}{3}
-\contentsline {section}{\numberline {I.3}Final project}{3}
-\contentsline {subsection}{\numberline {I.3.1}Deliverable documents and define priorities}{3}
+\contentsline {subsection}{\numberline {I.1.2}Who are our clients ?}{2}
+\contentsline {paragraph}{}{2}
+\contentsline {subsection}{\numberline {I.1.3}What made us choose this subject ?}{2}
+\contentsline {paragraph}{}{2}
+\contentsline {section}{\numberline {I.2}Project description}{3}
+\contentsline {subsection}{\numberline {I.2.1}Main idea}{3}
+\contentsline {paragraph}{}{3}
+\contentsline {subsection}{\numberline {I.2.2}Project parts}{3}
 \contentsline {paragraph}{}{3}
 \contentsline {paragraph}{}{3}
-\contentsline {chapter}{\numberline {II}Project organization}{4}
-\contentsline {section}{\numberline {II.1}Role definition}{4}
-\contentsline {subsubsection}{Project manager}{4}
+\contentsline {paragraph}{}{3}
+\contentsline {subsection}{\numberline {I.2.3}Related technologies}{3}
+\contentsline {paragraph}{}{3}
+\contentsline {section}{\numberline {I.3}Final project}{4}
+\contentsline {subsection}{\numberline {I.3.1}Functionalities}{4}
 \contentsline {paragraph}{}{4}
-\contentsline {subsubsection}{Supervisor}{4}
 \contentsline {paragraph}{}{4}
-\contentsline {subsubsection}{Quality manager}{4}
+\contentsline {subsection}{\numberline {I.3.2}Deliverable documents and define priorities}{4}
 \contentsline {paragraph}{}{4}
-\contentsline {subsubsection}{Test manager}{4}
 \contentsline {paragraph}{}{4}
-\contentsline {subsubsection}{Configuration manager}{4}
-\contentsline {paragraph}{}{4}
-\contentsline {subsubsection}{Chain development}{5}
-\contentsline {section}{\numberline {II.2}Development organisation}{5}
+\contentsline {chapter}{\numberline {II}Project organization}{5}
+\contentsline {section}{\numberline {II.1}Roles definition}{5}
+\contentsline {subsubsection}{Project manager}{5}
 \contentsline {paragraph}{}{5}
-\contentsline {subsection}{\numberline {II.2.1}Usage of Scrum method}{5}
+\contentsline {subsubsection}{Supervisor}{5}
 \contentsline {paragraph}{}{5}
 \contentsline {paragraph}{}{5}
-\contentsline {subsection}{\numberline {II.2.2}Team repartition approach}{5}
+\contentsline {subsubsection}{Quality manager}{5}
 \contentsline {paragraph}{}{5}
+\contentsline {subsubsection}{Test manager}{5}
+\contentsline {paragraph}{}{5}
+\contentsline {subsubsection}{Configuration manager}{5}
+\contentsline {paragraph}{}{5}
+\contentsline {subsubsection}{Chain development}{6}
+\contentsline {section}{\numberline {II.2}Development organisation}{6}
+\contentsline {paragraph}{}{6}
+\contentsline {subsection}{\numberline {II.2.1}The Scrum method}{6}
+\contentsline {paragraph}{}{6}
+\contentsline {paragraph}{}{6}
+\contentsline {subsection}{\numberline {II.2.2}Team repartition approach}{6}
+\contentsline {paragraph}{}{6}
 \contentsline {section}{\numberline {II.3}Tasks organisation}{6}
 \contentsline {subsection}{\numberline {II.3.1}Tasks definition}{6}
 \contentsline {paragraph}{}{6}
-\contentsline {paragraph}{}{6}
-\contentsline {paragraph}{}{6}
-\contentsline {subsection}{\numberline {II.3.2}Planning}{6}
-\contentsline {chapter}{\numberline {III}Risk management}{8}
-\contentsline {paragraph}{}{8}
-\contentsline {chapter}{\numberline {IV}Code and documentation management}{9}
-\contentsline {section}{\numberline {IV.1}Quality management}{9}
-\contentsline {subsection}{\numberline {IV.1.1}Automated coding style checks}{9}
+\contentsline {paragraph}{}{7}
+\contentsline {paragraph}{}{7}
+\contentsline {subsection}{\numberline {II.3.2}Planning}{7}
+\contentsline {chapter}{\numberline {III}Risk management}{9}
 \contentsline {paragraph}{}{9}
-\contentsline {subsection}{\numberline {IV.1.2}Verification by pair}{10}
+\contentsline {chapter}{\numberline {IV}Code and documentation management}{10}
+\contentsline {section}{\numberline {IV.1}Quality management}{10}
+\contentsline {subsection}{\numberline {IV.1.1}Automated coding style checks}{10}
 \contentsline {paragraph}{}{10}
-\contentsline {paragraph}{}{10}
-\contentsline {section}{\numberline {IV.2}Test strategy}{10}
-\contentsline {paragraph}{}{10}
-\contentsline {section}{\numberline {IV.3}Configuration management}{10}
-\contentsline {paragraph}{}{10}
-\contentsline {chapter}{\numberline {V}Appendices}{11}
+\contentsline {subsection}{\numberline {IV.1.2}Verification by pair}{11}
+\contentsline {paragraph}{}{11}
+\contentsline {paragraph}{}{11}
+\contentsline {section}{\numberline {IV.2}Test strategy}{11}
+\contentsline {paragraph}{}{11}
+\contentsline {section}{\numberline {IV.3}Configuration management}{11}
+\contentsline {paragraph}{}{11}
+\contentsline {chapter}{\numberline {V}Appendices}{12}
