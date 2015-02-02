@@ -11,7 +11,10 @@ class StmtFactory {
         case OtherASTNode(depth,data)        => ???
     }
     
-	def forStmt(node: ASTNode) = ???
+	def forStmt(node: ASTNode) = {
+	    
+	}
+	
 	def ifStmt(node: ASTNode) = node match {
 	    case ConcreteASTNode(_,_,id,codeRange,_) => {
 	    	val cond     = exprStmt(node.children(1))
