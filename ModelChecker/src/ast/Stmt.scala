@@ -3,8 +3,8 @@ package ast
 import ast.util.MutableListView
 
 class Stmt extends ProgramNode 
-final case class CompoundStmt() extends Stmt {
-    val  body: MutableListView[Stmt] = MutableListView()
+final case class CompoundStmt(elts: List[ProgramNode]) extends Stmt {
+//    val  body: MutableListView[Stmt] = MutableListView()
 }
 
 final case class AssignmentStmt(variable: String, value: Expr)                                              extends Stmt

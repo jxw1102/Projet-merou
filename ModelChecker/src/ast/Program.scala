@@ -23,5 +23,5 @@ abstract class ProgramNode {
     def id_=(id: Long) = _id = Some(id)
 }
 object ProgramNode {
-    def apply(node: ProgramNode, codeRange: CodeRange, id: Long) = { node.codeRange = codeRange; node.id = id }
+    def apply(node: ProgramNode, codeRange: CodeRange, id: Long) = { node.codeRange = codeRange; node.id = id; node }
 }
