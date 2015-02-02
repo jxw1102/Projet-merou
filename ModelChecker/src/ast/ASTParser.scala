@@ -23,16 +23,16 @@ object ASTParser {
         def id        = ASTLine.idReg.findFirstMatchIn(s)
         def codeRange = {
             val matcher = ASTLine.lineRangeReg.findAllIn(s)
-                    val l   = currentLine
-                    val res = matcher.map(_ => CodePointer.parse(matcher.group(0))).toList match {
-                        case ColPointer (x)                       :: Nil => Some(CodeRange(l,l,x,x))
-                        case ColPointer (x)   :: ColPointer (y)   :: Nil => Some(CodeRange(l,l,x,y))
-                        case ColPointer (x)   :: LinePointer(y,z) :: Nil => Some(CodeRange(l,y,x,z))
-                        case LinePointer(v,w) :: LinePointer(x,y) :: Nil => Some(CodeRange(v,x,w,y))
-                        case LinePointer(x,y) :: ColPointer (z)   :: Nil => Some(CodeRange(x,x,y,z))
-                        case LinePointer(x,y)                     :: Nil => Some(CodeRange(x,x,y,y))
-                        case Nil                                         => None
-                        case _ => throw new ParseFailedException(s)
+                val l   = currentLine
+                val res = matcher.map(_ => CodePointer.parse(matcher.group(0))).toList match {
+                    case ColPointer (x)                       :: Nil => Some(CodeRange(l,l,x,x))
+                    case ColPointer (x)   :: ColPointer (y)   :: Nil => Some(CodeRange(l,l,x,y))
+                    case ColPointer (x)   :: LinePointer(y,z) :: Nil => Some(CodeRange(l,y,x,z))
+                    case LinePointer(v,w) :: LinePointer(x,y) :: Nil => Some(CodeRange(v,x,w,y))
+                    case LinePointer(x,y) :: ColPointer (z)   :: Nil => Some(CodeRange(x,x,y,z))
+                    case LinePointer(x,y)                     :: Nil => Some(CodeRange(x,x,y,y))
+                    case Nil                                         => None
+                    case _ => throw new ParseFailedException(s)
             }
             res match { case Some(x) => currentLine = x.lineMax; case None => }
             res
@@ -71,76 +71,7 @@ object ASTParser {
                 stack.head.children += node
                 stack.push(node)
         })
-        println(tree.mkString);
-        
-        /*
-        def convert(t: ASTNode) : ProgramNode {
-            if(t.children.isEmpty) {
-                return ProgramNode(t)
-            } else {
-                val n = ProgramNode(t)
-                foreach c in t.children => {
-                    n.addStatement(convert(c))
-                }
-            }
-        }
-        */
-        
-        def unfoldExpr(t: ConcreteASTNode): Expr = {
-            var node = t
-            while (node.children.length > 0) {
-              node = t.children.last.asInstanceOf[ConcreteASTNode]
-            }
-            val dataList = node.data.split(" ")
-            node.ofType match {
-                case "DeclRefExpr" => DeclRefExpr(dataList.last, dataList(dataList.length-2))
-                case t if t.endsWith("Literal") => Litteral(dataList.last)
-                case _             => throw new ConversionFailedException(node.mkString)
-            }
-        }
-        
-        def createBinaryOperator(t: ConcreteASTNode): BinaryOp = {
-            val exprs: ArrayBuffer[Expr] = ArrayBuffer()
-            t.children.foreach { c =>
-                val node = c.asInstanceOf[ConcreteASTNode]
-                val dataList = node.data.split(" ")
-                node.ofType match {
-                    case "ImplicitCastExpr" | "CStyleCastExpr" => exprs += unfoldExpr(node)
-                    case t if t.endsWith("Literal") => exprs += Litteral(dataList.last)
-                }
-            }
-            BinaryOp(exprs(0), exprs(1));
-        }
-        
-        def createValDecl(t: ConcreteASTNode): VarDecl = {
-            var expr: Option[Expr] = None
-            try {
-                t.children.last.asInstanceOf[ConcreteASTNode].ofType match {
-                    case t if t.endsWith("Literal") => expr = Some(Litteral(t.data.split(" ").last))
-                    case "BinaryOperator" => expr = Some(createBinaryOperator(t))
-                }
-            } catch {
-              case t: NoSuchElementException => t.printStackTrace()
-            }
-            val dataList = t.data.split(" ")
-            VarDecl(dataList(dataList.length-2),Type(dataList.last),expr)
-        }
-        
-        def createDeclStmt(t: ASTNode): DeclStmt = {
-            val stmt = DeclStmt()
-            t.children.foreach { c =>
-                c match {
-                    case ConcreteASTNode(depth,ofType,id,pos,data) => 
-                        ofType match {
-                            case "ValDecl" => stmt.decls += createValDecl(c.asInstanceOf[ConcreteASTNode])
-                            case _         => throw new ConversionFailedException(c.mkString)
-                        }
-                    case _ => throw new ConversionFailedException(c.mkString)
-                }
-            }
-            stmt
-        }
-        
+        println(tree.mkString);  
     }
 }
 
@@ -195,4 +126,4 @@ object CodePointer {
 }
 
 class ParseFailedException(s: String) extends RuntimeException("Failed to parse : " + s)
-class ConversionFailedException(s: String) extends RuntimeException("Failed to converte : " + s)
+class ConversionFailedException(s: String) extends RuntimeException("Failed to convert: " + s)

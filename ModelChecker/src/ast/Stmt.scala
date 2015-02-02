@@ -11,11 +11,6 @@ final case class AssignmentStmt(variable: String, value: Expr)                  
 final case class IfStmt        (condition: Expr, body: CompoundStmt, elseStmt: Option[CompoundStmt])        extends Stmt
 final case class SwitchStmt    (expr: Expr, cases: Map[Litteral,SwitchCase], default: Option[CompoundStmt]) extends Stmt
 final case class SwitchCase    (value: Litteral, body: CompoundStmt)                                        extends Stmt
-final case class DeclStmt      () extends Stmt {
-    val decls: MutableListView[Decl] = MutableListView()
-}
-final case class FunCall       (identifier: String)                                                         extends Stmt {
-    val  args: MutableListView[Expr] = MutableListView()
-}
-
-final case class Type(name: String)
+final case class DeclStmt      (decls: List[ProgramNode]) extends Stmt
+final case class ReturnStmt    (expr: Expr)    extends Stmt
+final case class Type          (name: String)
