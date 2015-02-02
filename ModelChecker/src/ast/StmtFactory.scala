@@ -1,19 +1,35 @@
 package ast
 
 import java.lang.Long.parseLong
-
 import scala.collection.mutable.ArrayBuffer
 
-class StmtFactory {
+object StmtFactory {
+    
+    implicit class DataProcessor(data: String) {
+        private def removeQuote(s: String) = {
+            s.replaceAll("'", "")
+        }
+        private val splitReg     = "(\\'.+?\\'|\\S+)".r
+        lazy val dataList = splitReg.findAllIn(data).toList.map(removeQuote)
+    }
+    
+    implicit class ListFetcher[T](list: List[T]) {
+        def get(idx: Int) = {
+            if (idx >= 0) list(idx) else list(list.length+idx)
+        }
+    }
+    
     def handleASTNode(node: ASTNode): ProgramNode = node match {
         case ConcreteASTNode(_,typeOf,_,_,_) => typeOf match {
             case "CompoundStmt"               => compoundStmt  (node)
             case "IfStmt"                     => ifStmt        (node)
             case "ForStmt"                    => forStmt       (node)
             case "ExprStmt"                   => exprStmt      (node)
+            case "DeclStmt"                   => declStmt      (node)
             case "VarDecl"                    => varDecl       (node)
             case "BinaryOperator"             => binaryOperator(node)
             case "ImplicitCastExpr"           => ignore        (node)
+            case "CallExpr"                   => callExpr      (node)
             case "CStyleCastExpr"             => ignore        (node)
             case "DeclRefExpr"                => declRefExpr   (node)
             case "ReturnStmt"                 => returnStmt    (node)
@@ -43,7 +59,7 @@ class StmtFactory {
     
     def literal(node: ASTNode) = node match {
         case ConcreteASTNode(_,_,id,codeRange,data) => {
-            ProgramNode(Litteral(data.split(" ").last),codeRange,id)
+            ProgramNode(Litteral(data.dataList.last),codeRange,id)
         }
         case _ => throw new IllegalArgumentException("node should be a ConcreteASTNode")
     }
@@ -56,8 +72,8 @@ class StmtFactory {
             } catch {
               case t: Throwable => t.printStackTrace()
             }
-            val dataList = data.split(" ")
-            ProgramNode(VarDecl(dataList(dataList.length - 2),Type(dataList.last),expr),codeRange,id)
+            val dataList = data.dataList
+            ProgramNode(VarDecl(dataList.get(-2),Type(dataList.last),expr),codeRange,id)
         }
         case _ => throw new IllegalArgumentException("node should be a ConcreteASTNode")
     }
@@ -88,16 +104,15 @@ class StmtFactory {
     
     def declRefExpr(node: ASTNode) = node match {
         case ConcreteASTNode(_,_,id,codeRange,data) => {
-            val dataList = data.split(" ")
-            ProgramNode(DeclRefExpr(dataList(dataList.length-2),dataList.last,parseLong(dataList(dataList.length-3).substring(2)),dataList(dataList.length-4)),codeRange,id)
+            val dataList = data.dataList
+            ProgramNode(DeclRefExpr(dataList.last,dataList.get(-2),parseLong(dataList.get(-3).substring(2),16),dataList.get(-4)),codeRange,id)
         }
         case _ => throw new IllegalArgumentException("node should be a ConcreteASTNode")
     }
     
     def callExpr(node: ASTNode) = node match {
         case ConcreteASTNode(_,_,id,codeRange,data) => {
-            val dataList = data.split(" ")
-            ProgramNode(CallExpr(dataList.last,node.children.map(handleASTNode).toList.asInstanceOf[List[Expr]]),codeRange,id)
+            ProgramNode(CallExpr(data.dataList.last,node.children.map(handleASTNode).toList.asInstanceOf[List[Expr]]),codeRange,id)
         }
         case _ => throw new IllegalArgumentException("node should be a ConcreteASTNode")
     }
@@ -111,7 +126,7 @@ class StmtFactory {
     
     def conditionalOperator(node: ASTNode) = node match {
         case ConcreteASTNode(_,_,id,codeRange,data) => {
-            ProgramNode(ConditionalOperator(node.children.map(handleASTNode).toList.asInstanceOf[List[Expr]],data.split(" ").last),codeRange,id)
+            ProgramNode(ConditionalOperator(node.children.map(handleASTNode).toList.asInstanceOf[List[Expr]],data.dataList.last),codeRange,id)
         }
         case _ => throw new IllegalArgumentException("node should be a ConcreteASTNode")
     }
