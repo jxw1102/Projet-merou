@@ -71,7 +71,7 @@ object ASTParser {
                 stack.head.children += node
                 stack.push(node)
         })
-        println(tree.mkString);
+//        println(tree.mkString);
         
         val ast = StmtFactory.handleASTNode(tree.children.last)
         println(ast)

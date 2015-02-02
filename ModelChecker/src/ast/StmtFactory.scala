@@ -14,9 +14,7 @@ object StmtFactory {
     }
     
     implicit class ListFetcher[T](list: List[T]) {
-        def get(idx: Int) = {
-            if (idx >= 0) list(idx) else list(list.length+idx)
-        }
+        def get(idx: Int) = if (idx >= 0) list(idx) else list(list.length+idx)
     }
     
     def handleASTNode(node: ASTNode): ProgramNode = node match {
@@ -36,7 +34,7 @@ object StmtFactory {
             case "ConditionalOperator"        => conditionalOperator(node)
             case tp if tp.endsWith("Literal") => literal       (node)
         }
-        case OtherASTNode(depth,data)        => ???
+        case OtherASTNode(depth,data)         => ???
     }
     
     def forStmt(node: ASTNode) = ???
