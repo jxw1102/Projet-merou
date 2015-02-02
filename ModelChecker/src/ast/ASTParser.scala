@@ -53,8 +53,6 @@ object ASTParser {
         val tree   = OtherASTNode(-1, "")
         stack.push(tree)
         
-        // break is usually discouraged in Scala (that's why it is not a keyword)
-        // I propose you a more functional solution
         lines.map(line => (line.codeRange,line.id,line.data,line.indent,line))
             .filter(tuple => !tuple._2.isDefined || tuple._1.isDefined)
             .foreach(tuple => {

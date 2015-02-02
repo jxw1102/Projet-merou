@@ -38,63 +38,83 @@ title=Design review - Iteration 1 - Version 2
 AST and CFG representations
 ##
 >> paragraph ##
-After studying API Clang, we came to the conclusion that the AST is made of over nuances that we needed to build the CFG. 
-Indeed, the atom for a CFG is what is generally called a \ textit {statement} whereas the simplest instruction
-gives an AST representation composed of multiple nodes. We also found difficult to handle both parsing and binding of the graph nodes.
-That is why we have chosen to transform the AST into a series of high-level objects that its original nodes, which will be at places blocks
-CFG, or macro-blocks containing a subgraph.
+After studying the Clang API, we came to the conclusion that the AST is a much more low-level representation of the programme than the CFG. 
+Indeed, the atom for a CFG is what is generally called a \textit{statement} whereas the simplest instruction
+gives an AST representation composed of multiple nodes. We also found it difficult to handle the parsing and the linking of the graph nodes at the same time.
+Thus, we have chosen to transform the AST into a series of higher-level objects than the original nodes, which will be converted
+in nodes of the CFG or supernodes containing a subgraph.
 ##
 >> section ##
-Transitional representation of the Clang AST
+Intermediate representation of the Clang AST
 ##
 >>> subsection ##
-Generation of clang AST
+Parsing the Clang AST file
 ##
 >>>> paragraph ##
-clang -cc1 -ast-dump simple.cpp
+At first, we have considered using XML parsing libraries to parse the XML version of the Clang AST. However, 
+this type of output is no longer supported by the newest versions of the Clang compiler and all the existing tools
+provide partial support at best. Hence, we decided using the regular AST file and parse it line by line 
+with a custom parser.
 ##
->>> subsection ##
-Parse the Clang AST file
+>>>> paragraph ##
+We have identified three main kinds of nodes in the AST. Each one is associated to a specific class which extends ASTNode :
+##
+>>>> list ##
+nodes consisting in an type name, an id, a code pointer pointing the relevant lines of the code and some
+metadata that depend on the type of the node. These are represented by the ConcreteASTNode class.;
+< < <NULL> > > children, represented by the NullASTNode class.;
+other kind of nodes, prior to class declaration for example. These are represented by OtherASTNode.
+##
+>>>> image ##
+data/ASTNode.png;
+Inheritance relationships between the classes used to represent the AST;
+0.8
+##
+>>>> paragraph ##
+The file will be parsed and converted in a tree data-structure which nodes are of type ASTNode. The ASTNode objects
+will then be converted in Stmt or Decl accordingly to the class hierarchy we present in the next part.
 ##
 >>> subsection ##
 From ASTNode to ProgramNode
 ##
 >>>> subsubsection ##
-\textbf{Decl} class hierarchy
-##
->>>> subsubsection ##
-Partie \textbf{Stmt}
+Decl class hierarchy
 ##
 >>>>> paragraph ##
-For this first iteration, we skip the C++ object part in order focus exclusively on the imperative part
-Inspired by the Clang API, we came to the following class diagram:
+For the Decl part, we did not have too much trouble and just had to associate each high-level Clang Decl class to a Scala class extending
+our Decl class.
+##
+>>>>> image ##
+data/decl.png;
+Class diagram of the imperative part of Decl ;
+0.8
+##
+>>>> subsubsection ##
+Stmt part
+##
+>>>>> paragraph ##
+For this first iteration, we have decided to skip the C++ object oriented part in order to focus exclusively 
+on the imperative part. Inspired by the Clang API, we came up with the following class diagram :
 ##
 >>>>> image ##
 data/stmt.png;
-Class diagram from the imperative part of \textbf{Stmt};
+Class diagram of the imperative part of Stmt;
 0.9
 ##
->>>>> image ##
-data/decl.png
-Class diagram of the part \textbf{Decl} ;
-1.0
-
-##
 >>>>> paragraph ##
-Note that our model does not strictly represent a C++ code. For example, we do not prevent a \textit{if} of containing the instruction \textit{break}
- (among other inaccuracies ...).
-We felt that this kind of refinement would unnecessarily complicate the task without adding anything more to the CFG analysis. 
+Note that our model does not strictly represent a C$++$ code. For example, we do not prevent a \textit{if} to contain the instruction \textit{break}
+(among other inaccuracies ...). We felt that this kind of refinement would unnecessarily complicate the task without adding anything more to the CFG analysis. 
 Since the code is already checked semantically by the Clang compiler and given our future needs, we thought it would be wiser to aim for a simple model.
-Moreover, some classes have not been clearly defined in the previous diagram because we deliberately chose to represent them apart on 
-the diagram below. Finally, other classes were not represented (\textbf{BreakStmt}, \textbf{ContinueStmt} for a better readability).
+Moreover, some classes have not been totally defined in the previous diagram because we deliberately chose to represent them apart on 
+the diagram below. Finally, other classes were not represented (BreakStmt, ContinueStmt for a better readability).
 ##
 >>>>> image ##
 data/expr1.png;
 Partial class diagram of the \textbf{Expr} part;
-0.9
+0.8
 ##
 >>>>> paragraph ##
-Finally, we present a more complete diagram to \textbf{Expr} even though when do not know yet if we will keep it that way,
+Finally, we present a more complete diagram for Expr even though we still do not know if we will keep it that way,
 its complexity being considered superfluous for the nature of the algorithms we will use on these structures.
 ##
 >>>>> image ##
@@ -103,14 +123,14 @@ Class diagram heavier (still incomplete) for the \textbf{Expr} part;
 0.5
 ##
 >>>> subsubsection ##
-Important observations:
+Important notes
 ##
 >>>>> list ##
-To faithfully represent the CFG of our programs, we must take into account the fail-fast mechanism in assessing conjunctions / disjunctions.
-The importance of this mechanism for our project is illustrated in the following figure .;
-However, since the evaluation's order of the expressions is not specified in C++ (unlike Java which evaluates from left to right),
+to accuratelys represent the CFG of our input programs, we must take into account the fail-fast mechanism in the evaluation of boolean conjunctions/disjunctions.
+The importance of this mechanism for our project is illustrated in the figure below.;
+however, since the evaluation's order of the expressions is not completely specified specified in C++ (unlike Java which evaluates from left to right),
 we will limit these considerations to simple expressions. Therefore we will not take care of expressions (boolean or not) containing 
-sub-expressions edge effect (increment, assignments...).
+sub-expressions side effect (increment, assignments...).
 ##
 >>>>> image ##
 data/fail-fast.png;
@@ -118,26 +138,49 @@ On the left the considerate code. On the center, we didn't take into account the
 0.85
 ##
 >>>>> paragraph ##
-As it can be seen in the figure above, if we try to
-insure the property \textit {\ og s is always initialize when
-g(s) is called \ fg{}}, the first CFG will not allow us to conclude
-  (or it will conclude \textbf {true}, wrongly) while the second allows us
-  to say that there are executions, according to the value of a,
+As shown in the figure above, if we try to
+assert the property \textit {<< variable s is always initialized when g(s) is called >>}, the first CFG will not allow us to conclude
+(or it will conclude \textbf {true}, erroneously) while the second allows us
+to state that there are executions, according to the value of x,
 where $g$ is called with an uninitialized parameter
-(assuming that the left son is always a successful test and the right son is a failed test)
+(assuming that the left son is always a successful test and the right son is a failed test).
+##
+>>>>> paragraph ##
+Another important thing to mention is that at the beginning, we had a mix of regular classes with
+var/val members and case classes. Moreover, we were using <<var>> immutable lists (class List) for building
+incrementally some collections as the list of statements in a compound statement. However, it would imply to append at the end
+because otherwise, the list would have been to be reversed each time needed. Thereforce, we have created a simple wrapper of ArrayBuffer,
+that hides all the ArrayBuffer definitions except $+=$, and otherwise behaves as an immutable List. Same thing was done with
+a wrapper of a mutable HashMap (for storing declaration by their name for example). This enables to use 
+a more functional programming style while being efficient.
+##
+>>>>> paragraph ##
+Finally, we chose to make all the classes as case-classes to enable the powerful Scala pattern-matching.
+Hence, it appeared a more flexible and clever conception to separate the Stmt/Decl classes from their 
+actual equivalent in the code, which is a ProgramNode. The ProgramNode contains the information of the position
+of the Stmt/Decl in the code thanks to the CodeRange class. As we were using case-classes, we could not inherit some constructor from
+ProgramNode that would initialize the CodeRange, so we just made the CodeRange optional and added a setter. It seems to be poor design
+at first sight but it was the best way to keep the advantages of both the pattern-matching and the factorization of an attribute 
+on an abstract superclass.
 ##
 >> section ##
 AST to CFG
 ##
 >>> paragraph ##
-The class CFGNode is used to represent a node of the Control Flow Graph, 
-
+The class GraphNode is used to represent a node of the CFG, it is still not clearly defined as we are missing the operations
+required on this class for the model checker. Nevertheless, we can already be sure that a GraphNode will wrap a ProgramNode value (most certainly only certain kind
+of ProgramNode such as DeclStmt, Assignment and so on, and never CompoundStmt or classes containing an inner CompoundStmt instance). It will also provide a list
+of predecessors and a list of successors so that we can explore the graph.
+##
+>>> paragraph ##
+Finally, we have thought about the problem of the label function. We must be able to labellize many different kinds of nodes
+with any kind of predicate. We do not want that adding a new predicate require rewriting the ProgramNode children classes, so we opted for
+a Visitor pattern. Thus, adding a new Label will only consist in writing a class extending the Labellizer trait.
 ##
 >>> image ##
-data/CFG.png
+data/CFG.png;
 CFG class diagram;
-1.0
-
+0.8
 ##
 > chapter ##
 Model checking
