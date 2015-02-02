@@ -117,7 +117,7 @@ object ASTParser {
             try {
                 t.children.last.asInstanceOf[ConcreteASTNode].ofType match {
                     case t if t.endsWith("Literal") => expr = Some(Litteral(t.data.split(" ").last))
-                    case "BinaryOperator" => expr = None
+                    case "BinaryOperator" => expr = Some(createBinaryOperator(t))
                 }
             } catch {
               case t: NoSuchElementException => t.printStackTrace()
