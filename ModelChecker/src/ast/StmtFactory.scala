@@ -37,23 +37,44 @@ object StmtFactory {
         case OtherASTNode(depth,data)         => ???
     }
     
-    def forStmt(node: ASTNode) = ???
-    
-    def ifStmt(node: ASTNode) = node match {
-        case ConcreteASTNode(_,_,id,codeRange,_) => {
-            val cond     = exprStmt(node.children(1))
-            val body     = compoundStmt(node.children(2))
-            val elseStmt = node.children(3) match {
-                case ConcreteASTNode(_,_,_,_,_) => Some(compoundStmt(node.children(3)))
-                case _                          => None
-            }
-            ProgramNode(IfStmt(cond,body,elseStmt),codeRange,id)
+    def handleForInitializer(node: ASTNode): ForInitializer = node match {
+        case ConcreteASTNode(_,typeOf,_,_,_) => typeOf match {
+            case "DeclStmt" => declStmt(node)
+            case _          => exprStmt(node)
         }
-        case _ => throw new IllegalArgumentException("node should be a ConcreteASTNode")
     }
     
-    def compoundStmt(node: ASTNode): CompoundStmt = CompoundStmt(node.children.map(handleASTNode).toList)
-    def exprStmt(node: ASTNode) = ???
+	def forStmt(node: ASTNode) = { 
+	    def lookFor[T](n: ASTNode, convert: ASTNode => T) = n match {
+	        case NullASTNode(_) => None
+	        case x              => Some(convert(n))
+	    }
+	    node match {
+	    	case ConcreteASTNode(_,_,id,codeRange,_) => {
+	        	val init   = lookFor(node.children(0),handleForInitializer)
+	        	val cond   = lookFor(node.children(2),exprStmt            )
+	        	val update = lookFor(node.children(3),exprStmt            )
+	        	val body   = compoundStmt(node.children(4))
+	        	ForStmt(init,cond,update,body)
+	    	}
+	    }
+	}
+	
+	def ifStmt(node: ASTNode) = node match {
+	    case ConcreteASTNode(_,_,id,codeRange,_) => {
+	    	val cond     = exprStmt(node.children(1))
+	    	val body     = compoundStmt(node.children(2))
+	    	val elseStmt = node.children(3) match {
+	    		case ConcreteASTNode(_,_,_,_,_) => Some(compoundStmt(node.children(3)))
+	    		case _                          => None
+	    	}
+	    	ProgramNode(IfStmt(cond,body,elseStmt),codeRange,id)
+	    }
+	    case _ => throw new IllegalArgumentException("node should be a ConcreteASTNode")
+	}
+	
+	def compoundStmt(node: ASTNode): CompoundStmt = CompoundStmt(node.children.map(handleASTNode).toList)
+	def exprStmt(node: ASTNode) = ???
     
     def literal(node: ASTNode) = node match {
         case ConcreteASTNode(_,_,id,codeRange,data) => {
@@ -76,11 +97,12 @@ object StmtFactory {
         case _ => throw new IllegalArgumentException("node should be a ConcreteASTNode")
     }
     
-    def declStmt(node: ASTNode) = node match {
-        case ConcreteASTNode(_,_,id,codeRange,_) => {
-            ProgramNode(DeclStmt(node.children.map(handleASTNode).toList),codeRange,id)
-        }
-        case _ => throw new IllegalArgumentException("node should be a ConcreteASTNode")
+    def declStmt(node: ASTNode): DeclStmt = node match {
+        case ConcreteASTNode(_,_,id,codeRange,_) => 
+            val res = DeclStmt(node.children.map(handleASTNode).toList)
+            ProgramNode(res,codeRange,id)
+            res
+        case _                                   => throw new IllegalArgumentException("node should be a ConcreteASTNode")
     }
     
     def binaryOperator(node: ASTNode) = node match {
@@ -128,5 +150,4 @@ object StmtFactory {
         }
         case _ => throw new IllegalArgumentException("node should be a ConcreteASTNode")
     }
-
 }

@@ -40,6 +40,16 @@ inf_strip_color=0.00,0.00,0.00
 description_size=1.2
 ##
 > chapter ##
+Changelog
+##
+>> list ##
+translated everything from french to english;
+minor fixes in the risk management;
+added information on the different roles;
+added a part on the quality checking;
+updated the planning 
+##
+> chapter ##
 Project description and objectives
 ##
 >> section ##
@@ -407,7 +417,4 @@ Configuration management
 All the delivrable documents are managed on a git repository, including documentation and reports.
 Anyone is allowed to commit at anytime, however any push must have been authorized by the quality responsible after the code
 has been thoroughly tested against a set of tests by the test responsible.
-##
-> chapter ##
-Appendices
 ##
