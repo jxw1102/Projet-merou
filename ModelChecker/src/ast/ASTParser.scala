@@ -1,7 +1,8 @@
 package ast
 
-import scala.collection.mutable.ArrayBuffer
 import java.lang.Long.parseLong
+
+import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.ArrayStack
 import scala.io.Source
 import scala.util.matching.Regex
@@ -18,20 +19,20 @@ object ASTParser {
      */
     implicit class ASTLine(s: String) {
         def indent    = s.indexOf(ASTLine.indentReg.findFirstIn(s).get)
-        def data      = if (s.indexOf("'") > 0) s.substring(s.indexOf("'")) else ""
+        def data      = s.substring(indent)
         def id        = ASTLine.idReg.findFirstMatchIn(s)
         def codeRange = {
             val matcher = ASTLine.lineRangeReg.findAllIn(s)
-                    val l   = currentLine
-                    val res = matcher.map(_ => CodePointer.parse(matcher.group(0))).toList match {
-                        case ColPointer (x)                       :: Nil => Some(CodeRange(l,l,x,x))
-                        case ColPointer (x)   :: ColPointer (y)   :: Nil => Some(CodeRange(l,l,x,y))
-                        case ColPointer (x)   :: LinePointer(y,z) :: Nil => Some(CodeRange(l,y,x,z))
-                        case LinePointer(v,w) :: LinePointer(x,y) :: Nil => Some(CodeRange(v,x,w,y))
-                        case LinePointer(x,y) :: ColPointer (z)   :: Nil => Some(CodeRange(x,x,y,z))
-                        case LinePointer(x,y)                     :: Nil => Some(CodeRange(x,x,y,y))
-                        case Nil                                         => None
-                        case _ => throw new ParseFailedException(s)
+                val l   = currentLine
+                val res = matcher.map(_ => CodePointer.parse(matcher.group(0))).toList match {
+                    case ColPointer (x)                       :: Nil => Some(CodeRange(l,l,x,x))
+                    case ColPointer (x)   :: ColPointer (y)   :: Nil => Some(CodeRange(l,l,x,y))
+                    case ColPointer (x)   :: LinePointer(y,z) :: Nil => Some(CodeRange(l,y,x,z))
+                    case LinePointer(v,w) :: LinePointer(x,y) :: Nil => Some(CodeRange(v,x,w,y))
+                    case LinePointer(x,y) :: ColPointer (z)   :: Nil => Some(CodeRange(x,x,y,z))
+                    case LinePointer(x,y)                     :: Nil => Some(CodeRange(x,x,y,y))
+                    case Nil                                         => None
+                    case _ => throw new ParseFailedException(s)
             }
             res match { case Some(x) => currentLine = x.lineMax; case None => }
             res
@@ -44,14 +45,14 @@ object ASTParser {
         val idReg        = "(\\w+) (0x[\\da-f]{9})".r
         val lineRangeReg = new Regex("line:(\\d+)(:(\\d+))?|col:(\\d+)", "line0", "", "line1", "col")
     }
-
+    
     var currentLine = 0
     def main(args: Array[String]) {
         val lines  = Source.fromFile(args(0)).getLines.toSeq
         val stack  = ArrayStack[ASTNode]()
         val tree   = OtherASTNode(-1, "")
         stack.push(tree)
-        
+
         lines.map(line => (line.codeRange,line.id,line.data,line.indent,line))
             .filter(tuple => !tuple._2.isDefined || tuple._1.isDefined)
             .foreach(tuple => {
@@ -71,6 +72,9 @@ object ASTParser {
                 stack.push(node)
         })
         println(tree.mkString);
+        
+        val ast = StmtFactory.handleASTNode(tree.children.last)
+        println(ast)
     }
 }
 
@@ -89,12 +93,9 @@ sealed abstract class ASTNode(_depth: Int) {
         sb
     }
 }
-final case class ConcreteASTNode(_depth: Int, ofType: String, id: Long, pos: CodeRange, data: String) extends ASTNode(_depth) {
-    def dataList = data.split(" ")
-}
+final case class ConcreteASTNode(_depth: Int, ofType: String, id: Long, pos: CodeRange, data: String) extends ASTNode(_depth)
 final case class NullASTNode(_depth: Int) extends ASTNode(_depth)
 final case class OtherASTNode(_depth:Int, data: String) extends ASTNode(_depth)
-
 /**
  * Represents a piece of code between the lineMin:colMin and lineMax:colMax characters
  */
@@ -125,3 +126,4 @@ object CodePointer {
 }
 
 class ParseFailedException(s: String) extends RuntimeException("Failed to parse : " + s)
+class ConversionFailedException(s: String) extends RuntimeException("Failed to convert: " + s)
