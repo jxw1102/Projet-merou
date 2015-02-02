@@ -11,8 +11,27 @@ class StmtFactory {
         case OtherASTNode(depth,data)        => ???
     }
     
-	def forStmt(node: ASTNode) = {
-	    
+    def handleForInitializer(node: ASTNode): ForInitializer = node match {
+        case ConcreteASTNode(_,typeOf,_,_,_) => typeOf match {
+            case "DeclStmt" => declStmt(node)
+            case _          => exprStmt(node)
+        }
+    }
+    
+	def forStmt(node: ASTNode) = { 
+	    def lookFor[T](n: ASTNode, convert: ASTNode => T) = n match {
+	        case NullASTNode(_) => None
+	        case x              => Some(convert(n))
+	    }
+	    node match {
+	    	case ConcreteASTNode(_,_,id,codeRange,_) => {
+	        	val init   = lookFor(node.children(0),handleForInitializer)
+	        	val cond   = lookFor(node.children(2),exprStmt            )
+	        	val update = lookFor(node.children(3),exprStmt            )
+	        	val body   = compoundStmt(node.children(4))
+	        	ForStmt(init,cond,update,body)
+	    	}
+	    }
 	}
 	
 	def ifStmt(node: ASTNode) = node match {
@@ -30,4 +49,5 @@ class StmtFactory {
 	
 	def compoundStmt(node: ASTNode): CompoundStmt = CompoundStmt(node.children.map(handleASTNode).toList)
 	def exprStmt(node: ASTNode) = ???
+	def declStmt(node: ASTNode) = ???
 }
