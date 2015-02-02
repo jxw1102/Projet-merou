@@ -18,7 +18,7 @@ object ASTParser {
      */
     implicit class ASTLine(s: String) {
         def indent    = s.indexOf(ASTLine.indentReg.findFirstIn(s).get)
-        def data      = s.substring(indent)
+        def data      = if (s.indexOf("'") > 0) s.substring(s.indexOf("'")) else ""
         def id        = ASTLine.idReg.findFirstMatchIn(s)
         def codeRange = {
             val matcher = ASTLine.lineRangeReg.findAllIn(s)
@@ -107,8 +107,8 @@ final case class CodeRange(lineMin: Int, lineMax: Int, colMin: Int, colMax: Int)
  * Represents a single code pointer of the form line:i:j or col:j
  */
 sealed abstract class CodePointer
-final case class LinePointer(val line: Int, val col: Int) extends CodePointer
-final case class ColPointer(val col: Int) extends CodePointer
+final case class LinePointer(line: Int, col: Int) extends CodePointer
+final case class ColPointer(col: Int)             extends CodePointer
 
 object CodePointer {
     val lineReg = new Regex("line:(\\d+)(:(\\d+))?", "line", "", "col")
