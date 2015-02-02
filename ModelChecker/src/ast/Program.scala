@@ -21,7 +21,7 @@ object ProgramNode {
         case ConcreteASTNode(depth,ofType,id,pos,data) => 
             val instance: ProgramNode = ofType match {
                 case "DeclRefExpr"       => new CompoundStmt
-                case "IntegerLiteral"    => new Litteral(data.split(" ").last.toInt)
+                case "IntegerLiteral"    => new Litteral(data.split(" ").last)
             }
             instance.codeRange_=(pos)
             instance

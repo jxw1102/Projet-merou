@@ -86,13 +86,41 @@ object ASTParser {
         }
         */
         
+        def unfoldExpr(t: ConcreteASTNode): Expr = {
+            var node = t
+            while (node.children.length > 0) {
+              node = t.children.last.asInstanceOf[ConcreteASTNode]
+            }
+            val dataList = node.data.split(" ")
+            node.ofType match {
+                case "DeclRefExpr" => DeclRefExpr(dataList.last, dataList(dataList.length-2))
+                case t if t.endsWith("Literal") => Litteral(dataList.last)
+                case _             => throw new ConversionFailedException(node.mkString)
+            }
+        }
+        
+        def createBinaryOperator(t: ConcreteASTNode): BinaryOp = {
+            val exprs: ArrayBuffer[Expr] = ArrayBuffer()
+            t.children.foreach { c =>
+                val node = c.asInstanceOf[ConcreteASTNode]
+                val dataList = node.data.split(" ")
+                node.ofType match {
+                    case "ImplicitCastExpr" | "CStyleCastExpr" => exprs += unfoldExpr(node)
+                    case t if t.endsWith("Literal") => exprs += Litteral(dataList.last)
+                }
+            }
+            BinaryOp(exprs(0), exprs(1));
+        }
+        
         def createValDecl(t: ConcreteASTNode): VarDecl = {
             var expr: Option[Expr] = None
-            t.children.foreach { c =>
-                c.asInstanceOf[ConcreteASTNode].ofType match {
-                    case "IntegerLiteral" => expr = Some(Litteral(t.data.split(" ").last.toInt))
+            try {
+                t.children.last.asInstanceOf[ConcreteASTNode].ofType match {
+                    case t if t.endsWith("Literal") => expr = Some(Litteral(t.data.split(" ").last))
                     case "BinaryOperator" => expr = None
-                }                
+                }
+            } catch {
+              case t: NoSuchElementException => t.printStackTrace()
             }
             val dataList = t.data.split(" ")
             VarDecl(dataList(dataList.length-2),Type(dataList.last),expr)
