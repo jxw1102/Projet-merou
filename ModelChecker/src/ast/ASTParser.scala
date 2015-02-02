@@ -1,7 +1,8 @@
 package ast
 
-import scala.collection.mutable.ArrayBuffer
 import java.lang.Long.parseLong
+
+import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.ArrayStack
 import scala.io.Source
 import scala.util.matching.Regex
@@ -73,6 +74,47 @@ object ASTParser {
                 stack.push(node)
         })
         println(tree.mkString);
+        
+        /*
+        def convert(t: ASTNode) : ProgramNode {
+            if(t.children.isEmpty) {
+                return ProgramNode(t)
+            } else {
+                val n = ProgramNode(t)
+                foreach c in t.children => {
+                    n.addStatement(convert(c))
+                }
+            }
+        }
+        */
+        
+        def createValDecl(t: ConcreteASTNode): VarDecl = {
+            var expr: Option[Expr] = None
+            t.children.foreach { c =>
+                c.asInstanceOf[ConcreteASTNode].ofType match {
+                    case "IntegerLiteral" => expr = Some(Litteral(t.data.split(" ").last.toInt))
+                    case "BinaryOperator" => expr = None
+                }                
+            }
+            val dataList = t.data.split(" ")
+            VarDecl(dataList(dataList.length-2),Type(dataList.last),expr)
+        }
+        
+        def createDeclStmt(t: ASTNode): DeclStmt = {
+            val stmt = DeclStmt()
+            t.children.foreach { c =>
+                c match {
+                    case ConcreteASTNode(depth,ofType,id,pos,data) => 
+                        ofType match {
+                            case "ValDecl" => stmt.decls += createValDecl(c.asInstanceOf[ConcreteASTNode])
+                            case _         => throw new ConversionFailedException(c.mkString)
+                        }
+                    case _ => throw new ConversionFailedException(c.mkString)
+                }
+            }
+            stmt
+        }
+        
     }
 }
 
@@ -127,3 +169,4 @@ object CodePointer {
 }
 
 class ParseFailedException(s: String) extends RuntimeException("Failed to parse : " + s)
+class ConversionFailedException(s: String) extends RuntimeException("Failed to converte : " + s)

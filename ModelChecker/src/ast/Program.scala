@@ -1,8 +1,5 @@
 package ast
 
-import scala.collection.mutable.HashMap
-import scala.collection.mutable.{Map => MMap}
-
 import cfg.GraphNode
 import util.MutableMapView
 
@@ -20,15 +17,15 @@ abstract class ProgramNode {
 }
 object ProgramNode {
     def apply(node: ProgramNode, codeRange: CodeRange) = node.codeRange = codeRange
-//    def apply(node: ASTNode) = node match {
-//        case ConcreteASTNode(depth,ofType,id,pos,data) => 
-//            val instance: ProgramNode = ofType match {
-//                case "CompoundStmt" => new CompoundStmt
-////                case "CallExpr"     => new FunCall()
-//            }
-//            instance.codeRange_=(pos)
-//            instance
-////        case NullASTNode =>
-////        case OtherASTNode =>
-//    }
+    def apply(node: ASTNode) = node match {
+        case ConcreteASTNode(depth,ofType,id,pos,data) => 
+            val instance: ProgramNode = ofType match {
+                case "DeclRefExpr"       => new CompoundStmt
+                case "IntegerLiteral"    => new Litteral(data.split(" ").last.toInt)
+            }
+            instance.codeRange_=(pos)
+            instance
+//        case NullASTNode =>
+//        case OtherASTNode =>
+    }
 }
