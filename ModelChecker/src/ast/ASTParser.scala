@@ -19,7 +19,7 @@ object ASTParser {
      */
     implicit class ASTLine(s: String) {
         def indent    = s.indexOf(ASTLine.indentReg.findFirstIn(s).get)
-        def data      = s.substring(indent)
+        def data      = s.substring(s.indexOf("'"))
         def id        = ASTLine.idReg.findFirstMatchIn(s)
         def codeRange = {
             val matcher = ASTLine.lineRangeReg.findAllIn(s)
@@ -48,8 +48,10 @@ object ASTParser {
     
     var currentLine = 0
     def main(args: Array[String]) {
-        val lines  = Source.fromFile(args(0)).getLines.toSeq
-        val stack  = ArrayStack[ASTNode]()
+        val lines     = Source.fromFile(args(0)).getLines.toSeq
+        val stack     = ArrayStack[ASTNode]()
+        val map       = collection.mutable.HashMap[ASTNode,ASTNode]()
+        val loopStack = ArrayStack[ASTNode]()
         val tree   = OtherASTNode(-1, "")
         stack.push(tree)
 
@@ -58,16 +60,28 @@ object ASTParser {
             .foreach(tuple => {
                 val node = tuple match {
                     case (Some(codeRange),Some(id),data,indent,_) =>
-                        ConcreteASTNode(indent/2,id.group(1),parseLong(id.group(2).substring(2),16),codeRange,data)
+                        val cnode = ConcreteASTNode(indent/2,id.group(1),parseLong(id.group(2).substring(2),16),codeRange,data)
+                        id.group(1) match {
+                            case "ForStmt" | "WhileStmt" => loopStack.push(cnode)
+                            case "BreakStmt"             => map += cnode -> loopStack.head
+                            
+                            
+                        }
+                        cnode
                     case (None,None,data,indent,_)    =>
                         data match {
                             case "<<<NULL>>>" => NullASTNode(indent/2)
                             case _            => OtherASTNode(indent/2,data)
                         }
                     case (_,_,_,_,line) => throw new ParseFailedException(line)
+                }    
+            
+                while (node.depth <= stack.head.depth) {
+                    if (stack.pop == loopStack.head)
+                        loopStack.pop
                 }
                 
-                while (node.depth <= stack.head.depth) stack.pop()
+
                 stack.head.children += node
                 stack.push(node)
         })
