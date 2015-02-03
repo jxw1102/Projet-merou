@@ -10,7 +10,7 @@ import scala.collection.mutable.ArrayBuffer
  * @author David Courtinot
  */
 object SourceCodeNodeFactory {
-    private val concreteNodeExpected = (node: ASTNode) => throw new IllegalArgumentException("node should be a ConcreteASTNode : " + node)
+    private val concreteNodeExpected = (node: ASTNode) => throw new IllegalArgumentException(node + " should be a ConcreteASTNode")
     private def setAndReturn[T <: SourceCodeNode](node: T, range: CodeRange, id: Long) = {
         SourceCodeNode(node,range,id)
         node
@@ -39,7 +39,6 @@ object SourceCodeNodeFactory {
             case "CompoundStmt"               => compoundStmt  (node)
             case "IfStmt"                     => ifStmt        (node)
             case "ForStmt"                    => forStmt       (node)
-            case "handleExpr"                 => handleExpr    (node)
             case "DeclStmt"                   => declStmt      (node)
             case "VarDecl"                    => varDecl       (node)
             case "ReturnStmt"                 => returnStmt    (node)
@@ -76,7 +75,6 @@ object SourceCodeNodeFactory {
             case x              => Some(convert(n))
         }
         
-        val a = 1 until 5
         node match {
             case ConcreteASTNode(_,_,id,codeRange,_) => {
                 val init   = lookFor(node.children(0),handleForInitializer)
@@ -94,10 +92,10 @@ object SourceCodeNodeFactory {
             val cond     = handleExpr  (node.children(1))
             val body     = compoundStmt(node.children(2))
             val elseStmt = node.children(3) match {
-                case ConcreteASTNode(_,_,_,_,_) => Some(handleASTNode(node.children(3)))
+                case ConcreteASTNode(_,_,_,_,_) => Some(handleASTNode(node.children(3)).asInstanceOf[Stmt])
                 case _                          => None
             }
-            SourceCodeNode(IfStmt(cond,body,elseStmt.asInstanceOf[Option[Stmt]]),codeRange,id)
+            SourceCodeNode(IfStmt(cond,body,elseStmt),codeRange,id)
         }
         case _ => concreteNodeExpected(node)
     }

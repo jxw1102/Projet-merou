@@ -15,9 +15,4 @@ final case class DeclRefExpr(targetType: String, targetName: String, targetId: L
 final case class CallExpr(returnType: String, params: List[Expr]) extends Expr {
     val funcDeclExpr = params.head
 }
-final case class ConditionalOperator(exprs: (Expr,Expr,Expr), returnType: String) extends Expr {
-    // is it really useful as we can get them from the pattern ?
-    val condition = exprs._1
-    val yes       = exprs._2
-    val no        = exprs._3
-}
+final case class ConditionalOperator(exprs: (Expr,Expr,Expr), returnType: String) extends Expr
