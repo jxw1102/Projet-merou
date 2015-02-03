@@ -12,7 +12,7 @@ final case class IfStmt        (condition: Expr, body: CompoundStmt, elseStmt: O
 final case class SwitchCase    (value: Literal, body: CompoundStmt)                                         extends Stmt
 final case class AssignmentStmt(variable: String, value: Expr)                                              extends Stmt
 final case class DeclStmt      (decls: List[SourceCodeNode])                                                extends Stmt with ForInitializer
-final case class CompoundStmt  (elts: List[SourceCodeNode])                                                 extends Stmt 
+final case class CompoundStmt  (val elts: List[SourceCodeNode])                                             extends Stmt 
 final case class ReturnStmt    (expr: Expr)                                                                 extends Stmt
 final case class Type          (name: String)
 final case class ContinueStmt()                                                                             extends Stmt

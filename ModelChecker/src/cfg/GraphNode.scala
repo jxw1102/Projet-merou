@@ -15,8 +15,11 @@ class GraphNode[U <: Labelizable[V], V <: Labelizer](val value: U) {
     def prev = _prev.toList
     def next = _next.toList
     
-    def addPrev(v: GUV) = _prev += v 
-    def addNext(v: GUV) = _next += v 
+    def <<(v: GUV) = _prev += v 
+    def >>(v: GUV) = _next += v 
+    
+    def <<<(v: Iterable[GUV]) = _prev ++= v
+    def >>>(v: Iterable[GUV]) = _next ++= v
 }
 
 /**
