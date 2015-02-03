@@ -53,7 +53,7 @@ object SourceCodeNodeFactory {
             case "CompoundStmt"               => compoundStmt  (node)
             case "IfStmt"                     => ifStmt        (node)
             case "ForStmt"                    => forStmt       (node)
-            case "handleExpr"                   => handleExpr    (node)
+            case "handleExpr"                 => handleExpr    (node)
             case "DeclStmt"                   => declStmt      (node)
             case "VarDecl"                    => varDecl       (node)
             case "ReturnStmt"                 => returnStmt    (node)
@@ -90,7 +90,6 @@ object SourceCodeNodeFactory {
             case x              => Some(convert(n))
         }
         
-        val a = 1 until 5
         node match {
             case ConcreteASTNode(_,_,id,codeRange,_) => {
                 val init   = lookFor(node.children(0),handleForInitializer)
