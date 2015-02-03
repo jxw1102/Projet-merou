@@ -20,8 +20,6 @@ class GraphNode[U <: Labelizable[V], V <: Labelizer](val value: U) {
     
     def <<<(v: Iterable[GUV]) = _prev ++= v
     def >>>(v: Iterable[GUV]) = _next ++= v
-    
-    def linkTo()
 }
 
 /**
