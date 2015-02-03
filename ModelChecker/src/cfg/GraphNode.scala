@@ -9,14 +9,17 @@ import scala.collection.mutable.ArrayBuffer
 class GraphNode[U <: Labelizable[V], V <: Labelizer](val value: U) {
     private type GUV = GraphNode[U,V]
     
-    private[this] val _next = ArrayBuffer[GUV]()
-    private[this] val _prev = ArrayBuffer[GUV]()
+    private val _next = ArrayBuffer[GUV]()
+    private val _prev = ArrayBuffer[GUV]()
     
     def prev = _prev.toList
     def next = _next.toList
     
-    def addPrev(v: GUV) = _prev += v 
-    def addNext(v: GUV) = _next += v 
+    def <<(v: GUV) = { _prev += v; v._next += this }
+    def >>(v: GUV) = { _next += v; v._prev += this } 
+    
+    def <<<(v: Iterable[GUV]) = { _prev ++= v; v.foreach { n => n._next += this } }
+    def >>>(v: Iterable[GUV]) = { _next ++= v; v.foreach { n => n._prev += this } }
 }
 
 /**
