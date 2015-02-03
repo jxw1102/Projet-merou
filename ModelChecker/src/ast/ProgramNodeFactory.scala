@@ -2,10 +2,42 @@ package ast
 
 import cfg.GraphNode
 import scala.collection.mutable.Set
+import collection.mutable.Map
 
-object ProgramNodeFactory {
+class ProgramNodeFactory(nodes: List[SourceCodeNode], val jumps: Map[Long,Long]) {
     type GNode = GraphNode[ProgramNode,ProgramNodeLabelizer]
     type MHSet = scala.collection.mutable.HashSet[GNode]
+    
+    /**
+     * The keys of this map are the ids of the JumpSmt(s) (break, continue, goto) in the code.
+     * The values are, for each JumpStmt, the set of reachable states just before the JumpStmt
+     * is executed
+     */
+    private val jumpPredecessors = Map[Long,Set[ProgramNode]]()
+    
+    /** 
+     * The keys of this map are the ids of the statements that are the target of a JumpStmt .
+     * The values are their conversion to ProgramNode. This will help to finalize the graph by linking every predecessor
+     * of a JumpStmt to its target
+     */
+    private val convertedStmts = Map[Long,ProgramNode]()
+    
+    // the graph is lazily computed
+    lazy val graph = toGraph(nodes)
+    
+    /**
+     * Starts by converting every SourceCodeNode into a GraphNode while accumulating information about jump statements.
+     * To finish, finalizes the graph by linking the jump statements origin(s) to their destination
+     */
+    private def toGraph(nodes: List[SourceCodeNode]) = {
+        ???
+        finalizeLinks
+    }
+    
+    /**
+     * Links the predecessors of the jump statements using 'jumpPredecessors', 'convertedStmts' and 'jumps'
+     */
+    private def finalizeLinks = ???
 
 	def handleSourceCodeNode(node: SourceCodeNode): (GNode,Set[GNode]) = node match {
 	    case IfStmt(condition,body,elseStmt)   => handleIf(node.asInstanceOf[IfStmt])
@@ -15,9 +47,6 @@ object ProgramNodeFactory {
         
     }
     
-    def link(from: GNode, to: GNode) = { from >> to; to << from }
-    
-
     def handleLoopBody(node: CompoundStmt, outSet: Set[GNode]) = {
         var (in,out) = handleSourceCodeNode(node.elts(0))
         node.elts.drop(1).foreach {
@@ -31,17 +60,17 @@ object ProgramNodeFactory {
     
 	def handleIf(ifStmt: IfStmt) = ifStmt match {
        case IfStmt(condition,body,elseStmt) => 
-            val res   = new GNode(If(condition))
+            val res   = new GNode(If(condition,ifStmt.codeRange.get,ifStmt.id.get))
             val left  = handleSourceCodeNode(body) 
             val out   = new MHSet()
             out     ++= left._2 
-            link(res,left._1)
+            res      >> left._1
             
             elseStmt match {
                 case Some(x) => 
                     val right = handleSourceCodeNode(x)
                     out     ++= right._2
-                    link(res,right._1)
+                    res      >> right._1
                 case None    =>
             }
             (res,out)
@@ -50,7 +79,7 @@ object ProgramNodeFactory {
 	
 	def handleWhile(whileStmt: WhileStmt) = whileStmt match {
 	    case WhileStmt(condition,body) =>
-	        val res = new GNode(While(condition))
+	        val res = new GNode(While(condition,whileStmt.codeRange.get,whileStmt.id.get))
 	        val in  = handleSourceCodeNode(body)
 	        
 	}

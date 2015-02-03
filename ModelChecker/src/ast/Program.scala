@@ -43,12 +43,12 @@ object SourceCodeNode {
  * visitor class
  */
 sealed abstract class ProgramNode extends Labelizable[ProgramNodeLabelizer] { type PNL = ProgramNodeLabelizer }
-final case class If        (expr: Expr)              extends ProgramNode { def visit(v: PNL) = v.visitIf        (this) }
-final case class For       (expr: Expr)              extends ProgramNode { def visit(v: PNL) = v.visitFor       (this) }
-final case class While     (expr: Expr)              extends ProgramNode { def visit(v: PNL) = v.visitWhile     (this) }
-final case class Identifier(s: String )              extends ProgramNode { def visit(v: PNL) = v.visitIdentifier(this) }
-final case class Expression(expr: Expr)              extends ProgramNode { def visit(v: PNL) = v.visitExpression(this) }
-final case class Assignment(left: Expr, right: Expr) extends ProgramNode { def visit(v: PNL) = v.visitAssignment(this) }
+final case class If        (expr: Expr, range: CodeRange, id: Long)              extends ProgramNode { def visit(v: PNL) = v.visitIf        (this) }
+final case class For       (expr: Expr, range: CodeRange, id: Long)              extends ProgramNode { def visit(v: PNL) = v.visitFor       (this) }
+final case class While     (expr: Expr, range: CodeRange, id: Long)              extends ProgramNode { def visit(v: PNL) = v.visitWhile     (this) }
+final case class Identifier(s: String , range: CodeRange, id: Long)              extends ProgramNode { def visit(v: PNL) = v.visitIdentifier(this) }
+final case class Expression(expr: Expr, range: CodeRange, id: Long)              extends ProgramNode { def visit(v: PNL) = v.visitExpression(this) }
+final case class Assignment(left: Expr, right: Expr, range: CodeRange, id: Long) extends ProgramNode { def visit(v: PNL) = v.visitAssignment(this) }
 
 trait ProgramNodeLabelizer extends Labelizer {
     def visitIf        (ifNode   : If        )

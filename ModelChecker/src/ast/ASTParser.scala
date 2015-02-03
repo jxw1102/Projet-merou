@@ -1,11 +1,12 @@
 package ast
 
 import java.lang.Long.parseLong
-
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.ArrayStack
 import scala.io.Source
 import scala.util.matching.Regex
+import scala.collection.mutable.HashMap
+import scala.collection.mutable.Map
 
 /**
  * The ASTParser enables to parse the Clang AST file and return a tree data structure (ASTNode) with a very basic
@@ -13,14 +14,14 @@ import scala.util.matching.Regex
  * @author Xiaowen Ji 
  * @author David Courtinot
  */
-object ASTParser {
+class ASTParser {
     /**
      * Implicit declaration providing useful parsing methods on lines of the Clang AST file
      */
     implicit class ASTLine(s: String) {
         def indent    = s.indexOf(ASTLine.indentReg.findFirstIn(s).get)
-        def data      = s.substring(s.indexOf("'"))
         def id        = ASTLine.idReg.findFirstMatchIn(s)
+        def data      = { val i = s.indexOf("'"); s.substring(if (i >= 0) i else s.length - 1) }
         def codeRange = {
             val matcher = ASTLine.lineRangeReg.findAllIn(s)
                 val l   = currentLine
@@ -46,29 +47,34 @@ object ASTParser {
         val lineRangeReg = new Regex("line:(\\d+)(:(\\d+))?|col:(\\d+)", "line0", "", "line1", "col")
     }
     
-    var currentLine = 0
-    def main(args: Array[String]) {
-        val lines     = Source.fromFile(args(0)).getLines.toSeq
+    private var currentLine = 0
+    
+    def parseFile(path: String) = {
+        currentLine   = 0
+        val lines     = Source.fromFile(path).getLines.toSeq
         val stack     = ArrayStack[ASTNode]()
-        val map       = collection.mutable.HashMap[ASTNode,ASTNode]()
+        val jumps     = HashMap[Long,Long]()
         val loopStack = ArrayStack[ASTNode]()
-        val tree   = OtherASTNode(-1, "")
+        val tree      = OtherASTNode(-1, "")
         stack.push(tree)
 
         lines.map(line => (line.codeRange,line.id,line.data,line.indent,line))
             .filter(tuple => !tuple._2.isDefined || tuple._1.isDefined)
             .foreach(tuple => {
+//                println(loopStack)
+//                println(stack)
+//                println()
                 val node = tuple match {
                     case (Some(codeRange),Some(id),data,indent,_) =>
                         val cnode = ConcreteASTNode(indent/2,id.group(1),parseLong(id.group(2).substring(2),16),codeRange,data)
                         id.group(1) match {
-                            case "ForStmt" | "WhileStmt" => loopStack.push(cnode)
-                            case "BreakStmt"             => map += cnode -> loopStack.head
-                            
-                            
+                            case "ForStmt" | "WhileStmt" | "SwitchStmt"  => loopStack.push(cnode)
+                            case "BreakStmt" => jumps += cnode.id -> loopStack.head.asInstanceOf[ConcreteASTNode].id
+                            case "GotoStmt"  => ???
+                            case _           =>
                         }
                         cnode
-                    case (None,None,data,indent,_)    =>
+                    case (None,None,data,indent,_) =>
                         data match {
                             case "<<<NULL>>>" => NullASTNode(indent/2)
                             case _            => OtherASTNode(indent/2,data)
@@ -77,20 +83,19 @@ object ASTParser {
                 }    
             
                 while (node.depth <= stack.head.depth) {
-                    if (stack.pop == loopStack.head)
-                        loopStack.pop
+                    val pop = stack.pop
+                    if (loopStack.nonEmpty && pop == loopStack.head) { /*println(pop + " == " + loopStack.head);*/ loopStack.pop }
                 }
-                
 
                 stack.head.children += node
+//                println((stack.head == tree) + " " + stack.head.children)
                 stack.push(node)
         })
-//        println(tree.mkString);
-        
-        val ast = SourceCodeNodeFactory.handleASTNode(tree.children.last)
-        println(ast)
+        new ASTParserResult(tree,jumps)
     }
 }
+
+final class ASTParserResult(val root: ASTNode, val jumps: Map[Long,Long])
 
 /**
  * Classes ASTNode, ConcreteASTNode, NullASTNode and OtherASTNode are used to
