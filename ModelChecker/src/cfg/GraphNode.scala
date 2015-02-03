@@ -12,11 +12,11 @@ class GraphNode[U <: Labelizable[V], V <: Labelizer](val value: U) {
     private[this] val _next = ArrayBuffer[GUV]()
     private[this] val _prev = ArrayBuffer[GUV]()
     
-    def next = _next.toList
     def prev = _prev.toList
+    def next = _next.toList
     
-    def next_=(v: GUV) = _next += v 
-    def prev_=(v: GUV) = _prev += v 
+    def addPrev(v: GUV) = _prev += v 
+    def addNext(v: GUV) = _next += v 
 }
 
 /**
