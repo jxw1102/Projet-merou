@@ -7,6 +7,8 @@ object ProgramNodeFactory {
     type GNode = GraphNode[ProgramNode,ProgramNodeLabelizer]
     type MHSet = scala.collection.mutable.HashSet[GNode]
     
+    def link(from: GNode, to: GNode) = { from >> to; to << from }
+    
 	def handleSourceCodeNode(node: SourceCodeNode): (GNode,Set[GNode]) = node match {
 	    case IfStmt   (condition,body,elseStmt) => handleIf   (node.asInstanceOf[IfStmt])
 	    case WhileStmt(condition,body)          => handleWhile(node.asInstanceOf[WhileStmt])
@@ -31,13 +33,13 @@ object ProgramNodeFactory {
 	        val left  = handleSourceCodeNode(body) 
 	        val out   = new MHSet()
 	        out     ++= left._2 
-	        res.addNext(left._1)
+	        link(res,left._1)
 	        
 	        elseStmt match {
 	            case Some(x) => 
 	                val right = handleSourceCodeNode(x)
 	                out     ++= right._2
-	                res.addNext(right._1)
+	                link(res,right._1)
 	            case None    =>
 	        }
 	        (res,out)
