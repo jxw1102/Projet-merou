@@ -354,9 +354,6 @@ EmptyClassChecker & \small{If a class/trait has no members, the braces are} & en
 \small{EqualsHashCodeChecker} & \small{Check that if a class implements either equals} & enabled \\ 
  & \small{or hashCode, it should implement the other} & \\
 \hline
-MagicNumberChecker & \small{Checks for use of magic numbers instead of} & ignore = -1, 0, 1 \\
-& \small{constants (safer)} & \\
-\hline
 MethodLengthChecker & \small{Checks that methods do not exceed a maximum} & 50 \\
 & \small{length} & \\
 \hline

@@ -67,14 +67,14 @@ object ASTParser {
                     case (_,_,_,_,line) => throw new ParseFailedException(line)
                 }    
             
-                while(node.depth <= stack.head.depth) stack.pop()
+                while (node.depth <= stack.head.depth) stack.pop()
                 stack.head.children += node
                 stack.push(node)
         })
         println(tree.mkString);
         
-        val ast = StmtFactory.handleASTNode(tree.children.last)
-        println(ast)
+//        val ast = ProgramNodeFactory.handleASTNode(tree.children.last)
+//        println(ast)
     }
 }
 
@@ -125,5 +125,5 @@ object CodePointer {
     }
 }
 
-class ParseFailedException(s: String) extends RuntimeException("Failed to parse : " + s)
+class ParseFailedException     (s: String) extends RuntimeException("Failed to parse : " + s)
 class ConversionFailedException(s: String) extends RuntimeException("Failed to convert: " + s)
