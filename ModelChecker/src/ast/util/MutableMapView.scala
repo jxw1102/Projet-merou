@@ -11,17 +11,17 @@ import scala.collection.mutable.HashMap
  * @author David Courtinot
  */
 class MutableMapView[K,V] extends Map[K,V] {
-	private val _map: MMap[K,V] = HashMap()
-	
-	// additional method to make the map mutable
-	private def  map: Map[K,V]                       = _map.toMap
-	def +=(kv: (K,V)): MutableMapView[K,V]           = { _map += kv; this }
-	
-	// implement the collection.immutable.Map trait
-	override def +[V1 >: V](kv: (K, V1)): Map[K, V1] = map + kv
-	override def get(key: K): Option[V]              = map.get(key)
-	override def iterator: Iterator[(K,V)]           = map.iterator
-	override def -(key: K): Map[K,V]                 = map - key
+    private val _map: MMap[K,V] = HashMap()
+    
+    // additional method to make the map mutable
+    private def  map: Map[K,V]                       = _map.toMap
+    def +=(kv: (K,V)): MutableMapView[K,V]           = { _map += kv; this }
+    
+    // implement the collection.immutable.Map trait
+    override def +[V1 >: V](kv: (K, V1)): Map[K, V1] = map + kv
+    override def get(key: K): Option[V]              = map.get(key)
+    override def iterator: Iterator[(K,V)]           = map.iterator
+    override def -(key: K): Map[K,V]                 = map - key
 }
 
 object MutableMapView {
