@@ -81,10 +81,11 @@ object ASTParser {
                         loopStack.pop
                 }
                 
+
                 stack.head.children += node
                 stack.push(node)
         })
-        println(tree.mkString);
+//        println(tree.mkString);
         
         val ast = SourceCodeNodeFactory.handleASTNode(tree.children.last)
         println(ast)

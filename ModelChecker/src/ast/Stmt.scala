@@ -8,9 +8,10 @@ package ast
  */
 class Stmt extends SourceCodeNode 
 final case class Type          (name: String)
-final case class SwitchStmt    (expr: Expr, cases: CompoundStmt, default: Option[Stmt])           extends Stmt
+final case class SwitchStmt    (expr: Expr, body: CompoundStmt)                                   extends Stmt
+final case class CaseStmt      (condition: Expr, body: Stmt)                                      extends Stmt
+final case class DefaultStmt   (body: Stmt)                                                       extends Stmt
 final case class IfStmt        (condition: Expr, body: CompoundStmt, elseStmt: Option[Stmt])      extends Stmt
-final case class SwitchCase    (value: Literal, body: CompoundStmt)                               extends Stmt
 final case class AssignmentStmt(variable: String, value: Expr)                                    extends Stmt
 final case class DeclStmt      (decls: List[SourceCodeNode])                                      extends Stmt with ForInitializer
 final case class CompoundStmt  (val elts: List[SourceCodeNode])                                   extends Stmt 
