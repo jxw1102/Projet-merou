@@ -6,6 +6,8 @@ import cfg.GraphNode
 import util.MutableMapView
 import cfg.Labelizer
 import cfg.Labelizable
+//import ast.Expr
+
 
 /**
  * Those classes represent the most abstract and final form of the transformations of the source code
@@ -56,3 +58,25 @@ trait ProgramNodeLabelizer extends Labelizer {
     def visitIdentifier(id       : Identifier)
     def visitExpression(expr     : Expression)
 }
+
+///////////////////////////////////////////////////////
+//              Example of a labelizer
+///////////////////////////////////////////////////////
+//case class BinaryOperator(symbol: String)
+//
+//class ExprLabel extends ProgramNodeLabelizer {
+//    val left: Metavar = DefinedMetavar(Variable("x"))
+//    val right: Metavar = UndefinedMetavar("X")
+//    val op = BinaryOperator("==")
+//    
+//    def visitIf        (ifNode   : If        ) = None
+//    def visitFor       (forNode  : For       ) = ???
+//    def visitWhile     (whileNode: While     ) = ???
+//    def visitAssignment(stmt     : Assignment) = ???
+//    def visitIdentifier(id       : Identifier) = ???
+//    def visitExpression(expr     : Expression) = ???
+//}
+//
+//abstract class Metavar 
+//case class DefinedMetavar(value: Expr) extends Metavar
+//case class UndefinedMetavar(name: String) extends Metavar

@@ -2,6 +2,7 @@ package ctl
 
 /**
  * @author Zohour Abouakil
+ * @author Fabien Sauce
  */
 // Parent class of all the class used un CTL 
 sealed abstract class CtlExpr {
@@ -19,13 +20,14 @@ final case class _AU (left : CtlExpr, right : CtlExpr) extends CtlExpr
 final case class _EU (left : CtlExpr, right : CtlExpr) extends CtlExpr 
 
 // Unary Expression
-final case class AX  (right : CtlExpr) extends CtlExpr 
-final case class EX  (right : CtlExpr) extends CtlExpr 
-final case class AG  (right : CtlExpr) extends CtlExpr 
-final case class EG  (right : CtlExpr) extends CtlExpr 
-final case class AF  (right : CtlExpr) extends CtlExpr 
-final case class EF  (right : CtlExpr) extends CtlExpr 
-final case class Not (right : CtlExpr) extends CtlExpr 
+final case class AX    (right : CtlExpr)              extends CtlExpr 
+final case class EX    (right : CtlExpr)              extends CtlExpr 
+final case class AG    (right : CtlExpr)              extends CtlExpr 
+final case class EG    (right : CtlExpr)              extends CtlExpr 
+final case class AF    (right : CtlExpr)              extends CtlExpr 
+final case class EF    (right : CtlExpr)              extends CtlExpr 
+final case class Not   (right : CtlExpr)              extends CtlExpr 
+final case class Exists(varName: String, op: CtlExpr) extends CtlExpr
 
 // Predicate
 final case class Predicate (varList : List[String]=List()) extends CtlExpr 
@@ -52,8 +54,6 @@ object CtlExpr {
             case EF (x)    => formatUnary("EF", printExpr(x))
             case Not (x)   => formatUnary("!", printExpr(x))
             case Predicate(x) => "P" + x.mkString("(", ", ", ")")
-          
         }
-        
     }
 }
