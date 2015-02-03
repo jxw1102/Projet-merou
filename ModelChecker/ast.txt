@@ -104,9 +104,6 @@
 |   | `-BinaryOperator 0x1028735d0 <col:25, col:31> 'int' lvalue '='
 |   |   |-DeclRefExpr 0x102873588 <col:25> 'int' lvalue Var 0x102872570 'sum' 'int'
 |   |   `-IntegerLiteral 0x1028735b0 <col:31> 'int' 30
-|   |-DeclStmt 0x102873dc0 <line:42:2, col:18>
-|   | `-VarDecl 0x102873670 <col:2, col:15> a 'int *'
-|   |   `-CXXNewExpr 0x102873d70 <col:11, col:15> 'int *'
 |   |-BinaryOperator 0x102879068 <line:43:2, col:7> 'int' lvalue '='
 |   | |-UnaryOperator 0x102879028 <col:2, col:3> 'int' lvalue prefix '*'
 |   | | `-ImplicitCastExpr 0x102879010 <col:3> 'int *' <LValueToRValue>
