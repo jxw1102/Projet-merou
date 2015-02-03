@@ -65,13 +65,13 @@ object ASTParser {
                             case _            => OtherASTNode(indent/2,data)
                         }
                     case (_,_,_,_,line) => throw new ParseFailedException(line)
-                }    
-            
+                }
+                
                 while (node.depth <= stack.head.depth) stack.pop()
                 stack.head.children += node
                 stack.push(node)
         })
-        println(tree.mkString);
+//        println(tree.mkString);
         
         val ast = SourceCodeNodeFactory.handleASTNode(tree.children.last)
         println(ast)

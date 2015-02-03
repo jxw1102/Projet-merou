@@ -48,6 +48,8 @@ object SourceCodeNodeFactory {
             case "LabelStmt"                  => labelStmt     (node)
             case "GotoStmt"                   => gotoStmt      (node)
             case "NullStmt"                   => nullStmt      (node)
+            case "CaseStmt"                   => caseStmt      (node)
+            case "DefaultStmt"                => defaultStmt   (node)
             case _                            => handleExpr    (node)
         }
         case _                                => concreteNodeExpected(node)
@@ -106,7 +108,10 @@ object SourceCodeNodeFactory {
         case _ => concreteNodeExpected(node)
     }
     
-    private def compoundStmt(node: ASTNode): CompoundStmt = CompoundStmt(node.children.map(handleASTNode).toList)
+    private def compoundStmt(node: ASTNode): CompoundStmt = node match {
+        case ConcreteASTNode(_,_,id,codeRange,data) => setAndReturn(CompoundStmt(node.children.map(handleASTNode).toList), codeRange, id).asInstanceOf[CompoundStmt]
+        case _                                      => concreteNodeExpected(node)
+    }
     
     private def literal(node: ASTNode) = node match {
         case ConcreteASTNode(_,_,id,codeRange,data) => setAndReturn(Literal(data.dataList.head),codeRange,id)
@@ -189,49 +194,54 @@ object SourceCodeNodeFactory {
     }
     
     private def breakStmt(node: ASTNode) = node match {
-        case ConcreteASTNode(_,_,id,codeRange,_) => 
-            setAndReturn(ReturnStmt(node.children.map(handleExpr).toList.last),codeRange,id)
-        case _ => concreteNodeExpected(node)
+        case ConcreteASTNode(_,_,id,codeRange,_) => setAndReturn(BreakStmt(),codeRange,id)
+        case _                                   => concreteNodeExpected(node)
     }
     
     private def continueStmt(node: ASTNode) = node match {
-        case ConcreteASTNode(_,_,id,codeRange,_) => 
-            setAndReturn(ReturnStmt(node.children.map(handleExpr).toList.last),codeRange,id)
-        case _ => concreteNodeExpected(node)
+        case ConcreteASTNode(_,_,id,codeRange,_) => setAndReturn(ContinueStmt(),codeRange,id)
+        case _                                   => concreteNodeExpected(node)
     }
     
     private def labelStmt(node: ASTNode) = node match {
-        case ConcreteASTNode(_,_,id,codeRange,data) => 
-            setAndReturn(LabelStmt(data.dataList.last,node.children.map(handleExpr).toList.last),codeRange,id)
-        case _ => concreteNodeExpected(node)
+        case ConcreteASTNode(_,_,id,codeRange,data) => setAndReturn(LabelStmt(data.dataList.last,node.children.map(handleExpr).toList.last),codeRange,id)
+        case _                                      => concreteNodeExpected(node)
     }
     
     private def gotoStmt(node: ASTNode) = node match {
-        case ConcreteASTNode(_,_,id,codeRange,data) => 
-            setAndReturn(GotoStmt(data.dataList.get(-2)),codeRange,id)
-        case _ => concreteNodeExpected(node)
+        case ConcreteASTNode(_,_,id,codeRange,data) => setAndReturn(GotoStmt(data.dataList.get(-2)),codeRange,id)
+        case _                                      => concreteNodeExpected(node)
     }
     
     private def nullStmt(node: ASTNode) = node match {
-        case ConcreteASTNode(_,_,id,codeRange,_) => 
-            setAndReturn(NullStmt(),codeRange,id)
+        case ConcreteASTNode(_,_,id,codeRange,_) => setAndReturn(NullStmt(),codeRange,id)
+        case _                                   => concreteNodeExpected(node)
+    }
+    
+    private def switchStmt(node: ASTNode) = node match {
+        case ConcreteASTNode(_,_,id,codeRange,_) => {
+            val expr = handleExpr(node.children(1))
+            val body = compoundStmt(node.children(2))
+            setAndReturn(SwitchStmt(expr,body),codeRange,id)
+        }
         case _ => concreteNodeExpected(node)
     }
     
-    private def switchStmt(node: ASTNode) = {
-        node match {
-            case ConcreteASTNode(_, _, id, codeRange, _) => {
-                // expr: Expr, cases: Map[Literal,SwitchCase], default: Option[CompoundStmt]
-                val expr = handleExpr(node.children(1))
-                val cases = CompoundStmt(node.children(2).children.map(handleASTNode).toList)
-                val default = node.children.last match {
-                    case ConcreteASTNode(_, _, _, _, _) => Some(handleASTNode(node.children.last).asInstanceOf[Stmt])
-                    case _                              => None
-                }
-                SwitchStmt(expr, cases, default)
-            }
-            case _ => concreteNodeExpected(node)
+    private def caseStmt(node: ASTNode) = node match {
+        case ConcreteASTNode(_,_,id,codeRange,_) => {
+            val condition = handleExpr(node.children(0))
+            val body = handleASTNode(node.children(2)).asInstanceOf[Stmt]
+            setAndReturn(CaseStmt(condition,body),codeRange,id)
         }
+        case _ => concreteNodeExpected(node)
+    }
+    
+    private def defaultStmt(node: ASTNode) = node match {
+        case ConcreteASTNode(_,_,id,codeRange,_) => {
+            val body = handleASTNode(node.children(0)).asInstanceOf[Stmt]
+            setAndReturn(DefaultStmt(body),codeRange,id)
+        }
+        case _ => concreteNodeExpected(node)
     }
     
 }
