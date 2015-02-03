@@ -112,8 +112,5 @@
 |   | | `-ImplicitCastExpr 0x102879010 <col:3> 'int *' <LValueToRValue>
 |   | |   `-DeclRefExpr 0x102873dd8 <col:3> 'int *' lvalue Var 0x102873670 'a' 'int *'
 |   | `-IntegerLiteral 0x102879048 <col:7> 'int' 10
-|   |-CXXDeleteExpr 0x1028790d0 <line:44:2, col:9> 'void'
-|   | `-ImplicitCastExpr 0x1028790b8 <col:9> 'int *' <LValueToRValue>
-|   |   `-DeclRefExpr 0x102879090 <col:9> 'int *' lvalue Var 0x102873670 'a' 'int *'
 |   `-ReturnStmt 0x102879118 <line:46:2, col:9>
 |     `-IntegerLiteral 0x1028790f8 <col:9> 'int' 0
