@@ -15,3 +15,5 @@ final case class DeclStmt      (decls: List[SourceCodeNode])                    
 final case class CompoundStmt  (elts: List[SourceCodeNode])                                                 extends Stmt 
 final case class ReturnStmt    (expr: Expr)                                                                 extends Stmt
 final case class Type          (name: String)
+final case class ContinueStmt()                                                                             extends Stmt
+final case class BreakStmt()                                                                                extends Stmt

@@ -42,6 +42,8 @@ object SourceCodeNodeFactory {
             case "DeclStmt"                   => declStmt      (node)
             case "VarDecl"                    => varDecl       (node)
             case "ReturnStmt"                 => returnStmt    (node)
+            case "BreakStmt"                  => breakStmt     (node)
+            case "ContinueStmt"               => continueStmt  (node)
             case _                            => handleExpr    (node)
         }
         case _                                => concreteNodeExpected(node)
@@ -181,4 +183,17 @@ object SourceCodeNodeFactory {
             
         case _ => concreteNodeExpected(node)
     }
+    
+    private def breakStmt(node: ASTNode) = node match {
+        case ConcreteASTNode(_,_,id,codeRange,_) => 
+            setAndReturn(ReturnStmt(node.children.map(handleExpr).toList.last),codeRange,id)
+        case _ => concreteNodeExpected(node)
+    }
+    
+    private def continueStmt(node: ASTNode) = node match {
+        case ConcreteASTNode(_,_,id,codeRange,_) => 
+            setAndReturn(ReturnStmt(node.children.map(handleExpr).toList.last),codeRange,id)
+        case _ => concreteNodeExpected(node)
+    }
+    
 }
