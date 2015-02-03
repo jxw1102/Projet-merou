@@ -44,6 +44,7 @@ object SourceCodeNodeFactory {
             case "ReturnStmt"                 => returnStmt    (node)
             case "BreakStmt"                  => breakStmt     (node)
             case "ContinueStmt"               => continueStmt  (node)
+            case "SwitchStmt"                 => switchStmt    (node)
             case _                            => handleExpr    (node)
         }
         case _                                => concreteNodeExpected(node)
@@ -194,6 +195,23 @@ object SourceCodeNodeFactory {
         case ConcreteASTNode(_,_,id,codeRange,_) => 
             setAndReturn(ReturnStmt(node.children.map(handleExpr).toList.last),codeRange,id)
         case _ => concreteNodeExpected(node)
+    }
+        private def switchStmt(node: ASTNode) = {
+        node match {
+            case ConcreteASTNode(_,_,id,codeRange,_) => {
+               // expr: Expr, cases: Map[Literal,SwitchCase], default: Option[CompoundStmt]
+                val expr     = handleExpr(node.children(1))
+                val cases    = CompoundStmt(node.children(2).children.map(handleASTNode).toList)
+                val default  = node.children.last match {
+                               case ConcreteASTNode(_,_,_,_,_) => Some(handleASTNode(node.children.last).asInstanceOf[Stmt])
+                               case _                          => None
+                }
+                SwitchStmt(expr, cases, default)
+                
+            }
+            case _ => concreteNodeExpected(node)
+            
+        }
     }
     
 }
