@@ -11,7 +11,7 @@ object ProgramNodeFactory {
     
 	def handleSourceCodeNode(node: SourceCodeNode): (GNode,Set[GNode]) = node match {
 	    case IfStmt   (condition,body,elseStmt) => handleIf   (node.asInstanceOf[IfStmt])
-	    case WhileStmt(condition,body)          => handleWhile(node.asInstanceOf[WhileStmt])
+//	    case WhileStmt(condition,body)          => handleWhile(node.asInstanceOf[WhileStmt])
 	       
 	    
 	}
@@ -23,7 +23,7 @@ object ProgramNodeFactory {
             case BreakStmt() => outSet ++= out
             case x           => 
                 val (newIn,newOut) = handleSourceCodeNode(x)
-                newIn.
+//                newIn.
         }
     }
     

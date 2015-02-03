@@ -93,7 +93,10 @@ sealed abstract class ASTNode(_depth: Int) {
         sb
     }
 }
-final case class ConcreteASTNode(_depth: Int, ofType: String, id: Long, pos: CodeRange, data: String) extends ASTNode(_depth)
+final case class ConcreteASTNode(_depth: Int, ofType: String, id: Long, pos: CodeRange, data: String) extends ASTNode(_depth) {
+    override def equals(that: Any) = that match { case ConcreteASTNode(_,_,_id,_,_) => id == _id; case _ => false }
+    override def hashCode          = id.hashCode
+}
 final case class NullASTNode(_depth: Int) extends ASTNode(_depth)
 final case class OtherASTNode(_depth:Int, data: String) extends ASTNode(_depth)
 /**
