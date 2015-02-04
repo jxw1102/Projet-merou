@@ -13,14 +13,14 @@ class ProgramNodeFactory(nodes: List[SourceCodeNode], val jumps: Map[Long,Long])
      * The values are, for each JumpStmt, the set of reachable states just before the JumpStmt
      * is executed
      */
-    private val jumpPredecessors = Map[Long,Set[ProgramNode]]()
+    private val jumpPredecessors = Map[Long,Set[GNode]]()
     
     /** 
      * The keys of this map are the ids of the statements that are the target of a JumpStmt .
      * The values are their conversion to ProgramNode. This will help to finalize the graph by linking every predecessor
      * of a JumpStmt to its target
      */
-    private val convertedStmts = Map[Long,ProgramNode]()
+    private val convertedStmts = Map[Long,GNode]()
     
     // the graph is lazily computed
     lazy val graph = toGraph(nodes)
