@@ -95,8 +95,4 @@ class ProgramNodeFactory(nodes: List[SourceCodeNode], val jumps: Map[Long,Long])
 	        val in  = handleSourceCodeNode(body)
 	        
 	}
-	
-//	private
 }
-
-private

@@ -8,12 +8,7 @@ import cfg.Labelizer
 import cfg.Labelizable
 import ast.model.Decl
 import ast.model.Expr
-<<<<<<< HEAD
-=======
 import ast.model.JumpStmt
->>>>>>> 0c34ba8a5e6b165b02f7173776b6e2221fb97033
-//import ast.Expr
-
 
 /**
  * Those classes represent the most abstract and final form of the transformations of the source code
