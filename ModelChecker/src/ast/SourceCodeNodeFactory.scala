@@ -1,9 +1,9 @@
 package ast
 
 import java.lang.Long.parseLong
-
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.Map
+import ast.model._
 
 /**
  * This class provides all necessary methods to convert an ASTNode into a SourceCodeNode

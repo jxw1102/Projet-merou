@@ -35,7 +35,7 @@ class ProgramNodeFactory(nodes: List[SourceCodeNode], val jumps: Map[Long,Long])
      * To finish, finalizes the graph by linking the jump statements origin(s) to their destination
      */
     private def toGraph(nodes: List[SourceCodeNode]) = {
-        ???
+        handleElements(nodes)
         finalizeLinks
     }
     
@@ -46,6 +46,7 @@ class ProgramNodeFactory(nodes: List[SourceCodeNode], val jumps: Map[Long,Long])
     
     private def saveAndReturn(node: SourceCodeNode, converted: GNode) = { convertedStmts += node.id.get -> converted; converted }
 
+    // the returned set must NEVER contain a Jump
 	private def handleSourceCodeNode(node: SourceCodeNode): (GNode,Set[GNode]) = {
         val res = node match {
         	case IfStmt(condition,body,elseStmt)   => handleIf(node.asInstanceOf[IfStmt])
@@ -57,16 +58,20 @@ class ProgramNodeFactory(nodes: List[SourceCodeNode], val jumps: Map[Long,Long])
         res
     }
     
-    private def handleLoopBody(node: CompoundStmt, outSet: Set[GNode]) = {
-        var (in,out) = handleSourceCodeNode(node.elts(0))
-        node.elts.drop(1).foreach {
-            case x: LoopStmt => ???
-            case BreakStmt() => outSet ++= out
-            case x           => 
-                val (newIn,newOut) = handleSourceCodeNode(x)
-//                newIn.
-        }
-    }
+	private def handleElements(elts: List[SourceCodeNode]) = {
+    	val first = handleSourceCodeNode(elts(0))
+    	val convert = elts.drop(1).map(handleSourceCodeNode)
+    	// connect each entry point b._1 to the set of exits (in a._2) of the previous element
+    	
+    	(first :: convert).zip(convert).foreach { 
+    	    case (a,b) => b._1.value match { 
+    	        case x: Jump => jumpPredecessors += x.id -> a._2 
+    	        case _       => b._1 <<< a._2
+    	    }
+    	}
+	}
+	
+    private def handleCompoundStmt(node: CompoundStmt) = handleElements(node.elts)
     
 	private def handleIf(ifStmt: IfStmt) = ifStmt match {
        case IfStmt(condition,body,elseStmt) => 
@@ -96,3 +101,5 @@ class ProgramNodeFactory(nodes: List[SourceCodeNode], val jumps: Map[Long,Long])
 	
 //	private
 }
+
+private

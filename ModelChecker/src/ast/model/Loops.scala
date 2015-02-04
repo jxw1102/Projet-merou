@@ -1,4 +1,4 @@
-package ast
+package ast.model
 
 /**
  * Classes used to represent different kinds of loops within the program
