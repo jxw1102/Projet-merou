@@ -3,6 +3,11 @@ package ast
 import cfg.GraphNode
 import scala.collection.mutable.Set
 import collection.mutable.Map
+import ast.model.IfStmt
+import ast.model.CompoundStmt
+import ast.model.WhileStmt
+import ast.model.BreakStmt
+import ast.model.LoopStmt
 
 class ProgramNodeFactory(nodes: List[SourceCodeNode], val jumps: Map[Long,Long]) {
     type GNode = GraphNode[ProgramNode,ProgramNodeLabelizer]
@@ -13,14 +18,14 @@ class ProgramNodeFactory(nodes: List[SourceCodeNode], val jumps: Map[Long,Long])
      * The values are, for each JumpStmt, the set of reachable states just before the JumpStmt
      * is executed
      */
-    private val jumpPredecessors = Map[Long,Set[ProgramNode]]()
+    private val jumpPredecessors = Map[Long,Set[GNode]]()
     
     /** 
      * The keys of this map are the ids of the statements that are the target of a JumpStmt .
      * The values are their conversion to ProgramNode. This will help to finalize the graph by linking every predecessor
      * of a JumpStmt to its target
      */
-    private val convertedStmts = Map[Long,ProgramNode]()
+    private val convertedStmts = Map[Long,GNode]()
     
     // the graph is lazily computed
     lazy val graph = toGraph(nodes)
@@ -38,16 +43,21 @@ class ProgramNodeFactory(nodes: List[SourceCodeNode], val jumps: Map[Long,Long])
      * Links the predecessors of the jump statements using 'jumpPredecessors', 'convertedStmts' and 'jumps'
      */
     private def finalizeLinks = ???
+    
+    private def saveAndReturn(node: SourceCodeNode, converted: GNode) = { convertedStmts += node.id.get -> converted; converted }
 
-	def handleSourceCodeNode(node: SourceCodeNode): (GNode,Set[GNode]) = node match {
-	    case IfStmt(condition,body,elseStmt)   => handleIf(node.asInstanceOf[IfStmt])
-//	    case ForStmt(init, cond, update, body) => handleFor(node.asInstanceOf[ForStmt])
-//        case WhileStmt(condition, body)        => handleWhile(node.asInstanceOf[WhileStmt])
-//        case DoWhileStmt(condition, body)      => handleDoWhile(node.asInstanceOf[DoWhileStmt])
+	private def handleSourceCodeNode(node: SourceCodeNode): (GNode,Set[GNode]) = {
+        val res = node match {
+        	case IfStmt(condition,body,elseStmt)   => handleIf(node.asInstanceOf[IfStmt])
+//	    	case ForStmt(init, cond, update, body) => saveAndReturn(node,handleFor(node.asInstanceOf[ForStmt]))
+//        	case WhileStmt(condition, body)        => handleWhile(node.asInstanceOf[WhileStmt])
+//      	  case DoWhileStmt(condition, body)      => handleDoWhile(node.asInstanceOf[DoWhileStmt])
         
+        }
+        res
     }
     
-    def handleLoopBody(node: CompoundStmt, outSet: Set[GNode]) = {
+    private def handleLoopBody(node: CompoundStmt, outSet: Set[GNode]) = {
         var (in,out) = handleSourceCodeNode(node.elts(0))
         node.elts.drop(1).foreach {
             case x: LoopStmt => ???
@@ -58,7 +68,7 @@ class ProgramNodeFactory(nodes: List[SourceCodeNode], val jumps: Map[Long,Long])
         }
     }
     
-	def handleIf(ifStmt: IfStmt) = ifStmt match {
+	private def handleIf(ifStmt: IfStmt) = ifStmt match {
        case IfStmt(condition,body,elseStmt) => 
             val res   = new GNode(If(condition,ifStmt.codeRange.get,ifStmt.id.get))
             val left  = handleSourceCodeNode(body) 
@@ -77,10 +87,12 @@ class ProgramNodeFactory(nodes: List[SourceCodeNode], val jumps: Map[Long,Long])
     }
 	
 	
-	def handleWhile(whileStmt: WhileStmt) = whileStmt match {
+	private def handleWhile(whileStmt: WhileStmt) = whileStmt match {
 	    case WhileStmt(condition,body) =>
 	        val res = new GNode(While(condition,whileStmt.codeRange.get,whileStmt.id.get))
 	        val in  = handleSourceCodeNode(body)
 	        
 	}
+	
+//	private
 }

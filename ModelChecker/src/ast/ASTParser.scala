@@ -61,9 +61,6 @@ class ASTParser {
         lines.map(line => (line.codeRange,line.id,line.data,line.indent,line))
             .filter(tuple => !tuple._2.isDefined || tuple._1.isDefined)
             .foreach(tuple => {
-//                println(loopStack)
-//                println(stack)
-//                println()
                 val node = tuple match {
                     case (Some(codeRange),Some(id),data,indent,_) =>
                         val cnode = ConcreteASTNode(indent/2,id.group(1),parseLong(id.group(2).substring(2),16),codeRange,data)
@@ -84,11 +81,10 @@ class ASTParser {
             
                 while (node.depth <= stack.head.depth) {
                     val pop = stack.pop
-                    if (loopStack.nonEmpty && pop == loopStack.head) { /*println(pop + " == " + loopStack.head);*/ loopStack.pop }
+                    if (loopStack.nonEmpty && pop == loopStack.head) loopStack.pop
                 }
 
                 stack.head.children += node
-//                println((stack.head == tree) + " " + stack.head.children)
                 stack.push(node)
         })
         new ASTParserResult(tree,jumps)
