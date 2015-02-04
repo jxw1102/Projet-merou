@@ -19,6 +19,10 @@
 |   | | `-DeclRefExpr 0x102872958 <col:2> 'int (int)' lvalue Function 0x1028721a0 'self' 'int (int)'
 |   | `-ImplicitCastExpr 0x1028729c8 <col:7> 'int' <LValueToRValue>
 |   |   `-DeclRefExpr 0x102872930 <col:7> 'int' lvalue Var 0x102872570 'sum' 'int'
+|   |-LabelStmt 0x102872088 <line:15:1, line:16:10> 'here'
+|   | `-DeclStmt 0x10281fe58 <col:5, col:15>
+|   |   `-VarDecl 0x10281fde0 <col:5, col:13> i 'int'
+|   |     `-IntegerLiteral 0x10281fe38 <col:13> 'int' 10
 |   |-ForStmt 0x102872c10 <line:19:2, line:21:2>
 |   | |-DeclStmt 0x102872a68 <line:19:7, col:16>
 |   | | `-VarDecl 0x1028729f0 <col:7, col:15> i 'int'
@@ -54,6 +58,7 @@
 |   |   | `-BinaryOperator 0x102872e30 <col:5, col:11> 'int' lvalue '='
 |   |   |   |-DeclRefExpr 0x102872dd0 <col:5> 'int' lvalue Var 0x102872570 'sum' 'int'
 |   |   |   `-IntegerLiteral 0x102872e10 <col:11> 'int' 50
+|   |   |-GotoStmt 0x10281ff08 <line:26:5, col:10> 'here' 0x10281fed0
 |   |   `-BinaryOperator 0x102872fd0 <line:27:3, col:25> 'int' lvalue ','
 |   |     |-CompoundAssignOperator 0x102872ec0 <col:3, col:10> 'int' lvalue '-=' ComputeLHSTy='int' ComputeResultTy='int'
 |   |     | |-DeclRefExpr 0x102872e78 <col:3> 'int' lvalue Var 0x102872570 'sum' 'int'
@@ -77,6 +82,7 @@
 |   |   | `-BinaryOperator 0x1028731b0 <line:31:4, col:10> 'int' lvalue '='
 |   |   |   |-DeclRefExpr 0x102873168 <col:4> 'int' lvalue Var 0x102872570 'sum' 'int'
 |   |   |   `-IntegerLiteral 0x102873190 <col:10> 'int' 20
+|   |   |-GotoStmt 0x102872638 <line:31:5> 'here' 0x1028720d0
 |   |   |-BreakStmt 0x1028731d8 <line:32:4>
 |   |   |-CaseStmt 0x102873208 <line:33:3, line:34:10>
 |   |   | |-IntegerLiteral 0x1028731e8 <line:33:8> 'int' 2
