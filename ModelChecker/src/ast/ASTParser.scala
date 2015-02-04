@@ -92,7 +92,7 @@ class ASTParser {
             
                 while (node.depth <= stack.head.depth) {
                     val pop = stack.pop
-                    if (loopStack.nonEmpty && pop == loopStack.head) { /*println(pop + " == " + loopStack.head);*/ loopStack.pop }
+                    if (loopStack.nonEmpty && pop == loopStack.head) loopStack.pop
                 }
 
                 stack.head.children += node

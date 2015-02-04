@@ -32,7 +32,7 @@ class ProgramNodeFactory(nodes: List[SourceCodeNode], val jumps: Map[Long,Long])
      * To finish, finalizes the graph by linking the jump statements origin(s) to their destination
      */
     private def toGraph(nodes: List[SourceCodeNode]) = {
-        ???
+        handleElements(nodes)
         finalizeLinks
     }
     
@@ -40,36 +40,37 @@ class ProgramNodeFactory(nodes: List[SourceCodeNode], val jumps: Map[Long,Long])
      * Links the predecessors of the jump statements using 'jumpPredecessors', 'convertedStmts' and 'jumps'
      */
     private def finalizeLinks = ???
+    
+    private def saveAndReturn(node: SourceCodeNode, converted: GNode) = { convertedStmts += node.id.get -> converted; converted }
 
-    def handleSourceCodeNode(node: SourceCodeNode): (GNode,Set[GNode]) = node match {
-        case IfStmt(condition,body,elseStmt)   => handleIf(node.asInstanceOf[IfStmt])
-//        case ForStmt(init, cond, update, body) => handleFor(node.asInstanceOf[ForStmt])
-//        case WhileStmt(condition, body)        => handleWhile(node.asInstanceOf[WhileStmt])
-//        case DoWhileStmt(condition, body)      => handleDoWhile(node.asInstanceOf[DoWhileStmt])
+    // the returned set must NEVER contain a Jump
+	private def handleSourceCodeNode(node: SourceCodeNode): (GNode,Set[GNode]) = {
+        val res = node match {
+        	case IfStmt(condition,body,elseStmt)   => handleIf(node.asInstanceOf[IfStmt])
+//	    	case ForStmt(init, cond, update, body) => saveAndReturn(node,handleFor(node.asInstanceOf[ForStmt]))
+//        	case WhileStmt(condition, body)        => handleWhile(node.asInstanceOf[WhileStmt])
+//      	  case DoWhileStmt(condition, body)      => handleDoWhile(node.asInstanceOf[DoWhileStmt])
         
-    }
-    
-   def handleCompoundStmt(comp: CompoundStmt, outSet: Set[GNode]) = {
-       
-   }
-    
-    def handleExpression(node: Expr, outSet: Set[GNode]) = {
-        val res = Expression(node,node.codeRange.get,node.id.get)
-        (res,outSet)
-    }
-    
-    def handleLoopBody(node: CompoundStmt, outSet: Set[GNode]) = {
-        var (in,out) = handleSourceCodeNode(node.elts(0))
-        node.elts.drop(1).foreach {
-            case x: LoopStmt => ???
-            case BreakStmt() => outSet ++= out
-            case x           => 
-                val (newIn,newOut) = handleSourceCodeNode(x)
-                
         }
+        res
     }
     
-    def handleIf(ifStmt: IfStmt) = ifStmt match {
+	private def handleElements(elts: List[SourceCodeNode]) = {
+    	val first = handleSourceCodeNode(elts(0))
+    	val convert = elts.drop(1).map(handleSourceCodeNode)
+    	// connect each entry point b._1 to the set of exits (in a._2) of the previous element
+    	
+    	(first :: convert).zip(convert).foreach { 
+    	    case (a,b) => b._1.value match { 
+    	        case x: Jump => jumpPredecessors += x.id -> a._2 
+    	        case _       => b._1 <<< a._2
+    	    }
+    	}
+	}
+	
+    private def handleCompoundStmt(node: CompoundStmt) = handleElements(node.elts)
+    
+	private def handleIf(ifStmt: IfStmt) = ifStmt match {
        case IfStmt(condition,body,elseStmt) => 
             val res   = new GNode(If(condition,ifStmt.codeRange.get,ifStmt.id.get))
             val left  = handleSourceCodeNode(body) 
@@ -86,12 +87,16 @@ class ProgramNodeFactory(nodes: List[SourceCodeNode], val jumps: Map[Long,Long])
             }
             (res,out)
     }
-    
-    
-    def handleWhile(whileStmt: WhileStmt) = whileStmt match {
-        case WhileStmt(condition,body) =>
-            val res = new GNode(While(condition,whileStmt.codeRange.get,whileStmt.id.get))
-            val in  = handleSourceCodeNode(body)
-            
-    }
+	
+	
+	private def handleWhile(whileStmt: WhileStmt) = whileStmt match {
+	    case WhileStmt(condition,body) =>
+	        val res = new GNode(While(condition,whileStmt.codeRange.get,whileStmt.id.get))
+	        val in  = handleSourceCodeNode(body)
+	        
+	}
+	
+//	private
 }
+
+private
