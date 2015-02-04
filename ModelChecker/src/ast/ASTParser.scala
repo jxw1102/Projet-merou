@@ -1,12 +1,16 @@
 package ast
 
 import java.lang.Long.parseLong
+
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.ArrayStack
-import scala.io.Source
-import scala.util.matching.Regex
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.Map
+import scala.io.Source
+import scala.util.matching.Regex
+
+import ast.DataProcessor
+import ast.SeqFetcher
 
 /**
  * The ASTParser enables to parse the Clang AST file and return a tree data structure (ASTNode) with a very basic
@@ -21,7 +25,10 @@ class ASTParser {
     implicit class ASTLine(s: String) {
         def indent    = s.indexOf(ASTLine.indentReg.findFirstIn(s).get)
         def id        = ASTLine.idReg.findFirstMatchIn(s)
-        def data      = { val i = s.indexOf("'"); s.substring(if (i >= 0) i else s.length - 1) }
+        def data      = { 
+            val matcher = ASTLine.dataReg.findFirstMatchIn(s)            
+            if (!matcher.isDefined) "" else matcher.get.group(1)
+        }
         def codeRange = {
             val matcher = ASTLine.lineRangeReg.findAllIn(s)
                 val l   = currentLine
@@ -45,6 +52,7 @@ class ASTParser {
         val indentReg    = "\\w|(<<<)".r
         val idReg        = "(\\w+) (0x[\\da-f]{9})".r
         val lineRangeReg = new Regex("line:(\\d+)(:(\\d+))?|col:(\\d+)", "line0", "", "line1", "col")
+        val dataReg      = "0x[\\dabcdef]{9} <.+> (.*)".r
     }
     
     private var currentLine = 0
@@ -63,9 +71,6 @@ class ASTParser {
         lines.map(line => (line.codeRange,line.id,line.data,line.indent,line))
             .filter(tuple => !tuple._2.isDefined || tuple._1.isDefined)
             .foreach(tuple => {
-//                println(loopStack)
-//                println(stack)
-//                println()
                 val node = tuple match {
                     case (Some(codeRange),Some(id),data,indent,_) =>
                         val cnode = ConcreteASTNode(indent/2,id.group(1),parseLong(id.group(2).substring(2),16),codeRange,data)
@@ -91,7 +96,6 @@ class ASTParser {
                 }
 
                 stack.head.children += node
-//                println((stack.head == tree) + " " + stack.head.children)
                 stack.push(node)
         })
         

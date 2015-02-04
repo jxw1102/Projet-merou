@@ -1,8 +1,10 @@
 package ast
 
-import cfg.GraphNode
+import scala.collection.mutable.Map
 import scala.collection.mutable.Set
-import collection.mutable.Map
+
+import ast.model._
+import cfg.GraphNode
 
 class ProgramNodeFactory(nodes: List[SourceCodeNode], val jumps: Map[Long,Long]) {
     type GNode = GraphNode[ProgramNode,ProgramNodeLabelizer]
@@ -39,12 +41,21 @@ class ProgramNodeFactory(nodes: List[SourceCodeNode], val jumps: Map[Long,Long])
      */
     private def finalizeLinks = ???
 
-	def handleSourceCodeNode(node: SourceCodeNode): (GNode,Set[GNode]) = node match {
-	    case IfStmt(condition,body,elseStmt)   => handleIf(node.asInstanceOf[IfStmt])
-//	    case ForStmt(init, cond, update, body) => handleFor(node.asInstanceOf[ForStmt])
+    def handleSourceCodeNode(node: SourceCodeNode): (GNode,Set[GNode]) = node match {
+        case IfStmt(condition,body,elseStmt)   => handleIf(node.asInstanceOf[IfStmt])
+//        case ForStmt(init, cond, update, body) => handleFor(node.asInstanceOf[ForStmt])
 //        case WhileStmt(condition, body)        => handleWhile(node.asInstanceOf[WhileStmt])
 //        case DoWhileStmt(condition, body)      => handleDoWhile(node.asInstanceOf[DoWhileStmt])
         
+    }
+    
+   def handleCompoundStmt(comp: CompoundStmt, outSet: Set[GNode]) = {
+       
+   }
+    
+    def handleExpression(node: Expr, outSet: Set[GNode]) = {
+        val res = Expression(node,node.codeRange.get,node.id.get)
+        (res,outSet)
     }
     
     def handleLoopBody(node: CompoundStmt, outSet: Set[GNode]) = {
@@ -54,11 +65,11 @@ class ProgramNodeFactory(nodes: List[SourceCodeNode], val jumps: Map[Long,Long])
             case BreakStmt() => outSet ++= out
             case x           => 
                 val (newIn,newOut) = handleSourceCodeNode(x)
-//                newIn.
+                
         }
     }
     
-	def handleIf(ifStmt: IfStmt) = ifStmt match {
+    def handleIf(ifStmt: IfStmt) = ifStmt match {
        case IfStmt(condition,body,elseStmt) => 
             val res   = new GNode(If(condition,ifStmt.codeRange.get,ifStmt.id.get))
             val left  = handleSourceCodeNode(body) 
@@ -75,12 +86,12 @@ class ProgramNodeFactory(nodes: List[SourceCodeNode], val jumps: Map[Long,Long])
             }
             (res,out)
     }
-	
-	
-	def handleWhile(whileStmt: WhileStmt) = whileStmt match {
-	    case WhileStmt(condition,body) =>
-	        val res = new GNode(While(condition,whileStmt.codeRange.get,whileStmt.id.get))
-	        val in  = handleSourceCodeNode(body)
-	        
-	}
+    
+    
+    def handleWhile(whileStmt: WhileStmt) = whileStmt match {
+        case WhileStmt(condition,body) =>
+            val res = new GNode(While(condition,whileStmt.codeRange.get,whileStmt.id.get))
+            val in  = handleSourceCodeNode(body)
+            
+    }
 }
