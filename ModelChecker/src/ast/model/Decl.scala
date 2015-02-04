@@ -1,6 +1,7 @@
-package ast
+package ast.model
 
 import scala.collection.mutable.ArrayBuffer
+import ast.SourceCodeNode
 
 abstract class Decl(_name: String) extends SourceCodeNode {
     def name = _name

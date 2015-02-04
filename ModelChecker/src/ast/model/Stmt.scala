@@ -1,4 +1,6 @@
-package ast
+package ast.model
+
+import ast.SourceCodeNode
 
 /**
  * Classes used to represent main kinds of statements within the program

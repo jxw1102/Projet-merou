@@ -1,9 +1,9 @@
 package ast
 
 import java.lang.Long.parseLong
-
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.Map
+import ast.model._
 
 /**
  * This class provides all necessary methods to convert an ASTNode into a SourceCodeNode
@@ -24,42 +24,29 @@ class SourceCodeNodeFactory(root: ASTNode) {
     }
     
     /**
-     * Implicit declaration that enables to split the 'data' field of the ConcreteASTNode(s)
-     */
-    private implicit class DataProcessor(data: String) {
-        val dataList = DataProcessor.splitReg.findAllIn(data).map(_.replaceAll("'", "")).toSeq
-    }
-    
-    private implicit object DataProcessor {
-        private val splitReg = "(\\'.+?\\'|\\S+)".r
-    }
-    
-    private implicit class SeqFetcher[T](seq: Seq[T]) {
-        def get(idx: Int) = if (idx >= 0) seq(idx) else seq(seq.length + idx)
-    }
-    
-    /**
      * General facade for handling most kind of nodes
      */
     private def handleASTNode(node: ASTNode): SourceCodeNode = node match {
-       	case ConcreteASTNode(_,typeOf,_,_,_) => typeOf match {
-       		case "CompoundStmt"  => compoundStmt(node)
-       		case "IfStmt"        => ifStmt      (node)
-       		case "ForStmt"       => forStmt     (node)
-       		case "DeclStmt"      => declStmt    (node)
-       		case "VarDecl"       => varDecl     (node)
-       		case "ReturnStmt"    => returnStmt  (node)
-       		case "BreakStmt"     => breakStmt   (node)
-       		case "ContinueStmt"  => continueStmt(node)
-       		case "SwitchStmt"    => switchStmt  (node)
-       		case "LabelStmt"     => labelStmt   (node)
-       		case "GotoStmt"      => gotoStmt    (node)
-       		case "NullStmt"      => nullStmt    (node)
-       		case "CaseStmt"      => caseStmt    (node)
-       		case "DefaultStmt"   => defaultStmt (node)
-       		case _               => handleExpr  (node)
-       	}
-       	case _                   => concreteNodeExpected(node)
+           case ConcreteASTNode(_,typeOf,_,_,_) => typeOf match {
+               case "CompoundStmt"  => compoundStmt(node)
+               case "IfStmt"        => ifStmt      (node)
+               case "ForStmt"       => forStmt     (node)
+               case "WhileStmt"     => whileStmt   (node)
+               case "DoStmt"        => doWhileStmt (node)
+               case "DeclStmt"      => declStmt    (node)
+               case "VarDecl"       => varDecl     (node)
+               case "ReturnStmt"    => returnStmt  (node)
+               case "BreakStmt"     => breakStmt   (node)
+               case "ContinueStmt"  => continueStmt(node)
+               case "SwitchStmt"    => switchStmt  (node)
+               case "LabelStmt"     => labelStmt   (node)
+               case "GotoStmt"      => gotoStmt    (node)
+               case "CaseStmt"      => caseStmt    (node)
+               case "DefaultStmt"   => defaultStmt (node)
+               case "NullStmt"      => nullStmt    (node)
+               case _               => handleExpr  (node)
+           }
+           case _                   => concreteNodeExpected(node)
     }
     
     private def handleForInitializer(node: ASTNode): ForInitializer = node match {
@@ -96,10 +83,28 @@ class SourceCodeNodeFactory(root: ASTNode) {
                 val cond   = lookFor(node.children(2),handleExpr          )
                 val update = lookFor(node.children(3),handleExpr          )
                 val body   = compoundStmt(node.children(4))
-                ForStmt(init,cond,update,body)
+                SourceCodeNode(ForStmt(init,cond,update,body),codeRange,id)
             }
             case _ => concreteNodeExpected(node)
         }
+    }
+    
+    private def whileStmt(node: ASTNode) = node match {
+        case ConcreteASTNode(_,_,id,codeRange,_) => {
+            val condition = handleExpr(node.children(1))
+            val body = handleASTNode(node.children(2)).asInstanceOf[Stmt]
+            SourceCodeNode(WhileStmt(condition,body),codeRange,id)
+        }
+        case _ => concreteNodeExpected(node)
+    }
+    
+    private def doWhileStmt(node: ASTNode) = node match {
+        case ConcreteASTNode(_,_,id,codeRange,_) => {
+            val condition = handleExpr(node.children(1))
+            val body = handleASTNode(node.children(0)).asInstanceOf[Stmt]
+            SourceCodeNode(DoWhileStmt(condition,body),codeRange,id)
+        }
+        case _ => concreteNodeExpected(node)
     }
     
     private def ifStmt(node: ASTNode) = node match {
@@ -186,7 +191,7 @@ class SourceCodeNodeFactory(root: ASTNode) {
     
     private def returnStmt(node: ASTNode) = node match {
         case ConcreteASTNode(_,_,id,codeRange,_) => 
-        	setAndReturn(ReturnStmt(node.children.map(handleExpr).toList.last),codeRange,id)
+            setAndReturn(ReturnStmt(node.children.map(handleExpr).toList.last),codeRange,id)
         case _ => concreteNodeExpected(node)
     }
     

@@ -6,6 +6,9 @@ import cfg.GraphNode
 import util.MutableMapView
 import cfg.Labelizer
 import cfg.Labelizable
+import ast.model.Decl
+import ast.model.Expr
+import ast.model.JumpStmt
 //import ast.Expr
 
 
@@ -49,6 +52,9 @@ final case class While     (expr: Expr, range: CodeRange, id: Long)             
 final case class Identifier(s: String , range: CodeRange, id: Long)              extends ProgramNode { def visit(v: PNL) = v.visitIdentifier(this) }
 final case class Expression(expr: Expr, range: CodeRange, id: Long)              extends ProgramNode { def visit(v: PNL) = v.visitExpression(this) }
 final case class Assignment(left: Expr, right: Expr, range: CodeRange, id: Long) extends ProgramNode { def visit(v: PNL) = v.visitAssignment(this) }
+
+// special definition to use only for the conversion to CFG
+private[ast] case class Jump(jump: JumpStmt, range: CodeRange, id: Long) extends ProgramNode { def visit(v: PNL) = throw new UnsupportedOperationException }
 
 trait ProgramNodeLabelizer extends Labelizer {
     def visitIf        (ifNode   : If        )

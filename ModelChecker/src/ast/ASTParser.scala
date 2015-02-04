@@ -54,6 +54,8 @@ class ASTParser {
         val lines     = Source.fromFile(path).getLines.toSeq
         val stack     = ArrayStack[ASTNode]()
         val jumps     = HashMap[Long,Long]()
+        val labels    = HashMap[String,Long]()
+        val gotos     = HashMap[Long,String]()
         val loopStack = ArrayStack[ASTNode]()
         val tree      = OtherASTNode(-1, "")
         stack.push(tree)
@@ -61,16 +63,14 @@ class ASTParser {
         lines.map(line => (line.codeRange,line.id,line.data,line.indent,line))
             .filter(tuple => !tuple._2.isDefined || tuple._1.isDefined)
             .foreach(tuple => {
-//                println(loopStack)
-//                println(stack)
-//                println()
                 val node = tuple match {
                     case (Some(codeRange),Some(id),data,indent,_) =>
                         val cnode = ConcreteASTNode(indent/2,id.group(1),parseLong(id.group(2).substring(2),16),codeRange,data)
                         id.group(1) match {
-                            case "ForStmt" | "WhileStmt" | "SwitchStmt"  => loopStack.push(cnode)
-                            case "BreakStmt" => jumps += cnode.id -> loopStack.head.asInstanceOf[ConcreteASTNode].id
-                            case "GotoStmt"  => ???
+                            case "ForStmt" | "WhileStmt" | "SwitchStmt" | "DoStmt"  => loopStack.push(cnode)
+                            case "BreakStmt" | "ContinueStmt" => jumps  += cnode.id -> loopStack.head.asInstanceOf[ConcreteASTNode].id
+                            case "GotoStmt"  => gotos  += cnode.id -> cnode.data.dataList.get(-2)
+                            case "LabelStmt" => labels += cnode.data.dataList.last -> cnode.id
                             case _           =>
                         }
                         cnode
@@ -84,13 +84,17 @@ class ASTParser {
             
                 while (node.depth <= stack.head.depth) {
                     val pop = stack.pop
-                    if (loopStack.nonEmpty && pop == loopStack.head) { /*println(pop + " == " + loopStack.head);*/ loopStack.pop }
+                    if (loopStack.nonEmpty && pop == loopStack.head) loopStack.pop
                 }
 
                 stack.head.children += node
-//                println((stack.head == tree) + " " + stack.head.children)
                 stack.push(node)
         })
+        
+        gotos.foreach(tup => {
+            jumps += tup._1 -> labels(tup._2)
+        })
+        
         new ASTParserResult(tree,jumps)
     }
 }
