@@ -11,9 +11,12 @@ import ast.model._
  * @author Xiaowen Ji
  * @author David Courtinot
  */
-class SourceCodeNodeFactory(root: ASTNode) {
+class SourceCodeNodeFactory(root: ASTNode, labels: Map[Long,String]) {
     // the resulting list of SourceCodeNode(s) is lazily computed
-    lazy val rootNodes = root.children.map(handleASTNode)
+    private lazy val rootNodes = root.children.map(handleASTNode)
+    private val labelNodes = Map[String,SourceCodeNode]()
+    
+    lazy val result = new SourceCodeNodeResult(rootNodes, labelNodes)
     
     // some utility methods
     private val concreteNodeExpected = (node: ASTNode) => throw new IllegalArgumentException(node + " should be a ConcreteASTNode")
@@ -22,6 +25,8 @@ class SourceCodeNodeFactory(root: ASTNode) {
         SourceCodeNode(node,range,id)
         node
     }
+    
+    final class SourceCodeNodeResult(val rootNodes: ArrayBuffer[SourceCodeNode], val labelNodes: Map[String,SourceCodeNode])
     
     /**
      * General facade for handling most kind of nodes
@@ -49,13 +54,13 @@ class SourceCodeNodeFactory(root: ASTNode) {
            case _                   => concreteNodeExpected(node)
     }
     
-    private def handleForInitializer(node: ASTNode): ForInitializer = node match {
-        case ConcreteASTNode(_,typeOf,_,_,_) => typeOf match {
-            case "DeclStmt" => declStmt(node)
-            case _          => handleExpr(node)
-        }
-        case _ => concreteNodeExpected(node)
-    }
+//    private def handleForInitializer(node: ASTNode): ForInitializer = node match {
+//        case ConcreteASTNode(_,typeOf,_,_,_) => typeOf match {
+//            case "DeclStmt" => declStmt(node)
+//            case _          => handleExpr(node)
+//        }
+//        case _ => concreteNodeExpected(node)
+//    }
     
     def handleExpr(node: ASTNode): Expr = node match {
         case ConcreteASTNode(_,typeOf,_,_,_) => typeOf match {
@@ -79,7 +84,7 @@ class SourceCodeNodeFactory(root: ASTNode) {
         
         node match {
             case ConcreteASTNode(_,_,id,codeRange,_) => {
-                val init   = lookFor(node.children(0),handleForInitializer)
+                val init   = lookFor(node.children(0),handleASTNode)
                 val cond   = lookFor(node.children(2),handleExpr          )
                 val update = lookFor(node.children(3),handleExpr          )
                 val body   = compoundStmt(node.children(4))
@@ -216,7 +221,10 @@ class SourceCodeNodeFactory(root: ASTNode) {
     }
     
     private def labelStmt(node: ASTNode) = node match {
-        case ConcreteASTNode(_,_,id,codeRange,data) => SourceCodeNode(LabelStmt(data.dataList.last,node.children.map(handleASTNode).last.asInstanceOf[Stmt]),codeRange,id)
+        case ConcreteASTNode(_,_,id,codeRange,data) => 
+            val res = SourceCodeNode(LabelStmt(data.dataList.last,node.children.map(handleASTNode).last.asInstanceOf[Stmt]),codeRange,id)
+            labelNodes += labels(id) -> res
+            res
         case _                                      => concreteNodeExpected(node)
     }
     

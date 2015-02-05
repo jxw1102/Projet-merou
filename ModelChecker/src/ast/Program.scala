@@ -9,6 +9,7 @@ import cfg.Labelizable
 import ast.model.Decl
 import ast.model.Expr
 import ast.model.JumpStmt
+import scala.collection.mutable.ArrayBuffer
 
 /**
  * Those classes represent the most abstract and final form of the transformations of the source code
@@ -33,6 +34,15 @@ abstract class SourceCodeNode {
     
     def id             = _id
     def id_=(id: Long) = _id = Some(id)
+    
+    private val _next = ArrayBuffer[SourceCodeNode]()
+    private val _prev = ArrayBuffer[SourceCodeNode]()
+    
+    def prev = _prev.toList
+    def next = _next.toList
+    
+    def <<(v: SourceCodeNode) = { _prev += v; v._next += this }
+    def >>(v: SourceCodeNode) = { _next += v; v._prev += this }
 }
 
 object SourceCodeNode {

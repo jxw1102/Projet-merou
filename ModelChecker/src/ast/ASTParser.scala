@@ -62,7 +62,7 @@ class ASTParser {
         val lines     = Source.fromFile(path).getLines.toSeq
         val stack     = ArrayStack[ASTNode]()
         val jumps     = HashMap[Long,Long]()
-        val labels    = HashMap[String,Long]()
+        val labels    = HashMap[Long,String]()
         val gotos     = HashMap[Long,String]()
         val loopStack = ArrayStack[ASTNode]()
         val tree      = OtherASTNode(-1, "")
@@ -78,7 +78,7 @@ class ASTParser {
                             case "ForStmt" | "WhileStmt" | "SwitchStmt" | "DoStmt"  => loopStack.push(cnode)
                             case "BreakStmt" | "ContinueStmt" => jumps  += cnode.id -> loopStack.head.asInstanceOf[ConcreteASTNode].id
                             case "GotoStmt"  => gotos  += cnode.id -> cnode.data.dataList.get(-2)
-                            case "LabelStmt" => labels += cnode.data.dataList.last -> cnode.id
+                            case "LabelStmt" => labels += cnode.id -> cnode.data.dataList.last
                             case _           =>
                         }
                         cnode
@@ -99,15 +99,11 @@ class ASTParser {
                 stack.push(node)
         })
         
-        gotos.foreach(tup => {
-            jumps += tup._1 -> labels(tup._2)
-        })
-        
-        new ASTParserResult(tree,jumps)
+        new ASTParserResult(tree,labels)
     }
 }
 
-final class ASTParserResult(val root: ASTNode, val jumps: Map[Long,Long])
+final class ASTParserResult(val root: ASTNode, val labels: Map[Long,String])
 
 /**
  * Classes ASTNode, ConcreteASTNode, NullASTNode and OtherASTNode are used to

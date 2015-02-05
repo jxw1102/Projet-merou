@@ -35,6 +35,7 @@
 |   | |-UnaryOperator 0x102872b30 <col:26, col:27> 'int' postfix '++'
 |   | | `-DeclRefExpr 0x102872b08 <col:26> 'int' lvalue Var 0x1028729f0 'i' 'int'
 |   | `-CompoundStmt 0x102872bf0 <col:31, line:21:2>
+|   |   |-BreakStmt 0x1021731e8 <line:32:4>
 |   |   `-CompoundAssignOperator 0x102872bb8 <line:20:3, col:10> 'int' lvalue '+=' ComputeLHSTy='int' ComputeResultTy='int'
 |   |     |-DeclRefExpr 0x102872b50 <col:3> 'int' lvalue Var 0x102872570 'sum' 'int'
 |   |     `-ImplicitCastExpr 0x102872ba0 <col:10> 'int' <LValueToRValue>
