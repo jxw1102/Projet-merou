@@ -6,6 +6,7 @@ package ctl
  */
 // Parent class of all the class used un CTL 
 sealed abstract class CtlExpr {
+    
     def AU(that: CtlExpr)  = _AU(this,that)
     def EU(that: CtlExpr)  = _EU(this,that)
     def &&(that : CtlExpr) = And(this,that)
@@ -14,7 +15,8 @@ sealed abstract class CtlExpr {
 }
 
 // Binary Expression
-final case class And (left : CtlExpr, right : CtlExpr) extends CtlExpr 
+final case class And (left : CtlExpr, right : CtlExpr) extends CtlExpr
+
 final case class Or  (left : CtlExpr, right : CtlExpr) extends CtlExpr 
 final case class _AU (left : CtlExpr, right : CtlExpr) extends CtlExpr 
 final case class _EU (left : CtlExpr, right : CtlExpr) extends CtlExpr 
