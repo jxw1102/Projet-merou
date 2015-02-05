@@ -7,7 +7,8 @@ import cfg.GraphNode
 import scala.collection.mutable.ArrayBuffer
 
 //class ProgramNodeFactory(nodes: List[SourceCodeNode], val jumps: Map[Long,Long]) {
-class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,SourceCodeNode]) {    
+class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,SourceCodeNode]) {
+    type GNode = GraphNode[ProgramNode,ProgramNodeLabelizer]
     /**
      * Starts by converting every SourceCodeNode into a GraphNode while accumulating information about jump statements.
      * To finish, finalizes the graph by linking the jump statements origin(s) to their destination
@@ -29,6 +30,12 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
             case _                                 => handleExpr(node,next)
         }
         res
+    }
+    
+    private def toGraphNode(node: SourceCodeNode) = (node,node.codeRange.get,node.id.get) match {
+        case (ForStmt(init,cond,update,body),range,id) => new GNode(For(cond,range,id))
+        case (ForStmt(init,cond,update,body),range,id) => new GNode(For(cond,range,id))
+        
     }
     
     private def handleCompoundStmt(cmpdStmt: SourceCodeNode, next: SourceCodeNode, exit: Option[SourceCodeNode], entry: Option[SourceCodeNode]) = cmpdStmt match {
@@ -53,32 +60,32 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
                 case _          =>
                     condition >> handle(body, next, exit, entry)
                     body >> next
-                    // if elseStmt exists
                     condition >> handle(elseStmt.get, next, exit, entry)
                     elseStmt.get >> next
-                   // ----
             }
            ifStmt
     }
+	
+	private def tryToLink(node: GNode, next: Option[SourceCodeNode]) = next match {
+		case None    => node
+	    case Some(x) => val res = toGraphNode(x); node >> res; res
+	}
     
     private def handleFor(forStmt: SourceCodeNode, next: SourceCodeNode, exit: Option[SourceCodeNode], entry: Option[SourceCodeNode]) = forStmt match {
-        case ForStmt(init,cond,update,body) =>
-            forStmt >> init.get
-            init.get >> cond.get
-            cond.get >> handle(body,update.get,Some(next),cond)
-            body >> update.get
-            update.get >> cond.get
-            next match {
-                case NullStmt() =>    
-                case _          =>    cond.get >> next
-            }
-            forStmt
+        case ForStmt(init,cond,update,body) => 
+            val res  = toGraphNode(forStmt)
+        	var next = tryToLink(res,init)
+            next     = tryToLink(next,cond)
+            next     = tryToLink(next,body)
+            next     = tryToLink(next,update)
+            next     = tryToLink(next,cond)
+        	res
     }
 	
 	private def handleWhile(whileStmt: SourceCodeNode, next: SourceCodeNode, exit: Option[SourceCodeNode], entry: Option[SourceCodeNode]) = whileStmt match {
 	    case WhileStmt(condition,body) =>
             whileStmt >> condition
-            condition >> handle(body,condition,Some(next),Some(condition))
+            condition >> handle(body.get,condition,Some(next),Some(condition))
             next match {
                 case NullStmt() =>    
                 case _          =>    condition >> next

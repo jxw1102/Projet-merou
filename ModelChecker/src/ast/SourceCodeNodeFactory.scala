@@ -54,6 +54,11 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[Long,String]) {
            case _                   => concreteNodeExpected(node)
     }
     
+    def lookFor[T](n: ASTNode, convert: ASTNode => T) = n match {
+            case NullASTNode(_) => None
+            case x              => Some(convert(n))
+    }
+    
 //    private def handleForInitializer(node: ASTNode): ForInitializer = node match {
 //        case ConcreteASTNode(_,typeOf,_,_,_) => typeOf match {
 //            case "DeclStmt" => declStmt(node)
@@ -77,17 +82,12 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[Long,String]) {
     }
     
     private def forStmt(node: ASTNode) = { 
-        def lookFor[T](n: ASTNode, convert: ASTNode => T) = n match {
-            case NullASTNode(_) => None
-            case x              => Some(convert(n))
-        }
-        
         node match {
             case ConcreteASTNode(_,_,id,codeRange,_) => {
-                val init   = lookFor(node.children(0),handleASTNode)
-                val cond   = lookFor(node.children(2),handleExpr          )
-                val update = lookFor(node.children(3),handleExpr          )
-                val body   = compoundStmt(node.children(4))
+                val init   = lookFor(node.children(0),handleASTNode                      )
+                val cond   = lookFor(node.children(2),handleExpr                         )
+                val update = lookFor(node.children(3),handleExpr                         )
+                val body   = lookFor(node.children(4),handleASTNode(_).asInstanceOf[Stmt])
                 SourceCodeNode(ForStmt(init,cond,update,body),codeRange,id)
             }
             case _ => concreteNodeExpected(node)
@@ -97,7 +97,7 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[Long,String]) {
     private def whileStmt(node: ASTNode) = node match {
         case ConcreteASTNode(_,_,id,codeRange,_) => {
             val condition = handleExpr(node.children(1))
-            val body = handleASTNode(node.children(2)).asInstanceOf[Stmt]
+            val body      = lookFor(node.children(2),handleASTNode(_).asInstanceOf[Stmt])
             SourceCodeNode(WhileStmt(condition,body),codeRange,id)
         }
         case _ => concreteNodeExpected(node)
