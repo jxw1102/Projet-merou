@@ -102,4 +102,3 @@ class ProgramNodeFactory(nodes: List[SourceCodeNode], val jumps: Map[Long,Long])
 //	private
 }
 
-private
