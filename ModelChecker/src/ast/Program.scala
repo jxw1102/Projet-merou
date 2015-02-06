@@ -10,6 +10,8 @@ import ast.model.Decl
 import ast.model.Expr
 import ast.model.JumpStmt
 import scala.collection.mutable.ArrayBuffer
+import jdk.nashorn.internal.ir.Assignment
+import ast.model.Stmt
 
 /**
  * Those classes represent the most abstract and final form of the transformations of the source code
@@ -34,15 +36,6 @@ abstract class SourceCodeNode {
     
     def id             = _id
     def id_=(id: Long) = _id = Some(id)
-    
-    private val _next = ArrayBuffer[SourceCodeNode]()
-    private val _prev = ArrayBuffer[SourceCodeNode]()
-    
-    def prev = _prev.toList
-    def next = _next.toList
-    
-    def <<(v: SourceCodeNode) = { _prev += v; v._next += this }
-    def >>(v: SourceCodeNode) = { _next += v; v._prev += this }
 }
 
 object SourceCodeNode {
@@ -53,22 +46,36 @@ object SourceCodeNode {
  * Case-classes that will be the values of the CFG nodes. They implement the Visitor pattern against the ProgramNodeLabelizer
  * visitor class
  */
-sealed abstract class ProgramNode extends Labelizable[ProgramNodeLabelizer] { type PNL = ProgramNodeLabelizer }
-final case class If        (expr: Expr, range: CodeRange, id: Long)              extends ProgramNode { def visit(v: PNL) = v.visitIf        (this) }
-final case class For       (expr: Option[Expr], range: CodeRange, id: Long)      extends ProgramNode { def visit(v: PNL) = v.visitFor       (this) }
-final case class While     (expr: Option[Expr], range: CodeRange, id: Long)      extends ProgramNode { def visit(v: PNL) = v.visitWhile     (this) }
-final case class Identifier(s: String , range: CodeRange, id: Long)              extends ProgramNode { def visit(v: PNL) = v.visitIdentifier(this) }
-final case class Expression(expr: Expr, range: CodeRange, id: Long)              extends ProgramNode { def visit(v: PNL) = v.visitExpression(this) }
-final case class Assignment(left: Expr, right: Expr, range: CodeRange, id: Long) extends ProgramNode { def visit(v: PNL) = v.visitAssignment(this) }
-
-// special definition to use only for the conversion to CFG
-private[ast] case class Jump(jump: JumpStmt, range: CodeRange, id: Long) extends ProgramNode { def visit(v: PNL) = throw new UnsupportedOperationException }
+sealed abstract class ProgramNode extends Labelizable[ProgramNodeLabelizer] {
+    type PNL = ProgramNodeLabelizer 
+    // ONLY for debugging purpose. I know it is very ugly...
+    override def toString = {
+        val format = (name: String, id: Long) => "%s_(0x%s)".format(name,java.lang.Long.toHexString(id))
+        this match {
+            case If        (_,_,id) => format("If"        ,id)
+            case For       (e,_,id) => format("For"       ,e.get.id.get)
+            case Block     (_,  id) => format("Block"     ,id)
+            case While     (e,_,id) => format("While"     ,e.id.get)
+            case Statement (_,_,id) => format("Statement" ,id)
+            case Identifier(_,_,id) => format("Identifier",id)
+            case Expression(_,_,id) => format("Expression",id)
+        }
+    }
+}
+final case class If        (e: Expr         , cr: CodeRange, id: Long) extends ProgramNode { def visit(v: PNL) = v.visitIf        (this) }
+final case class For       (e: Option[Expr] , cr: CodeRange, id: Long) extends ProgramNode { def visit(v: PNL) = v.visitFor       (this) }
+final case class Block     (                  cr: CodeRange, id: Long) extends ProgramNode { def visit(v: PNL) = v.visitBlock     (this) }
+final case class While     (e: Expr         , cr: CodeRange, id: Long) extends ProgramNode { def visit(v: PNL) = v.visitWhile     (this) }
+final case class Statement (stmt: Stmt      , cr: CodeRange, id: Long) extends ProgramNode { def visit(v: PNL) = v.visitStatement (this) }
+final case class Identifier(s: String       , cr: CodeRange, id: Long) extends ProgramNode { def visit(v: PNL) = v.visitIdentifier(this) }
+final case class Expression(e: Expr         , cr: CodeRange, id: Long) extends ProgramNode { def visit(v: PNL) = v.visitExpression(this) }
 
 trait ProgramNodeLabelizer extends Labelizer {
     def visitIf        (ifNode   : If        )
     def visitFor       (forNode  : For       )
+    def visitBlock     (block    : Block     )
     def visitWhile     (whileNode: While     )
-    def visitAssignment(stmt     : Assignment)
+    def visitStatement (stmt     : Statement )
     def visitIdentifier(id       : Identifier)
     def visitExpression(expr     : Expression)
 }

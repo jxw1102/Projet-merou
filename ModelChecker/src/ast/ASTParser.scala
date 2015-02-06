@@ -60,13 +60,13 @@ class ASTParser {
     def parseFile(path: String) = {
         currentLine   = 0
         val lines     = Source.fromFile(path).getLines.toSeq
-        val stack     = ArrayStack[ASTNode]()
-        val jumps     = HashMap[Long,Long]()
-        val labels    = HashMap[Long,String]()
-        val gotos     = HashMap[Long,String]()
-        val loopStack = ArrayStack[ASTNode]()
         val tree      = OtherASTNode(-1, "")
+        val stack     = ArrayStack[ASTNode]()
         stack.push(tree)
+//        val jumps     = HashMap[Long,Long]()
+//        val labels    = HashMap[Long,String]()
+//        val gotos     = HashMap[Long,String]()
+//        val loopStack = ArrayStack[ASTNode]()
 
         lines.map(line => (line.codeRange,line.id,line.data,line.indent,line))
             .filter(tuple => !tuple._2.isDefined || tuple._1.isDefined)
@@ -74,13 +74,13 @@ class ASTParser {
                 val node = tuple match {
                     case (Some(codeRange),Some(id),data,indent,_) =>
                         val cnode = ConcreteASTNode(indent/2,id.group(1),parseLong(id.group(2).substring(2),16),codeRange,data)
-                        id.group(1) match {
-                            case "ForStmt" | "WhileStmt" | "SwitchStmt" | "DoStmt"  => loopStack.push(cnode)
-                            case "BreakStmt" | "ContinueStmt" => jumps  += cnode.id -> loopStack.head.asInstanceOf[ConcreteASTNode].id
-                            case "GotoStmt"  => gotos  += cnode.id -> cnode.data.dataList.get(-2)
-                            case "LabelStmt" => labels += cnode.id -> cnode.data.dataList.last
-                            case _           =>
-                        }
+//                        id.group(1) match {
+//                            case "ForStmt" | "WhileStmt" | "SwitchStmt" | "DoStmt"  => loopStack.push(cnode)
+//                            case "BreakStmt" | "ContinueStmt" => jumps  += cnode.id -> loopStack.head.asInstanceOf[ConcreteASTNode].id
+//                            case "GotoStmt"  => gotos  += cnode.id -> cnode.data.dataList.get(-2)
+//                            case "LabelStmt" => labels += cnode.id -> cnode.data.dataList.last
+//                            case _           =>
+//                        }
                         cnode
                     case (None,None,data,indent,_) =>
                         data match {
@@ -92,18 +92,18 @@ class ASTParser {
             
                 while (node.depth <= stack.head.depth) {
                     val pop = stack.pop
-                    if (loopStack.nonEmpty && pop == loopStack.head) loopStack.pop
+//                    if (loopStack.nonEmpty && pop == loopStack.head) loopStack.pop
                 }
 
                 stack.head.children += node
                 stack.push(node)
         })
         
-        new ASTParserResult(tree,labels)
+        new ASTParserResult(tree/*,labels*/)
     }
 }
 
-final class ASTParserResult(val root: ASTNode, val labels: Map[Long,String])
+final class ASTParserResult(val root: ASTNode/*, val labels: Map[Long,String]*/)
 
 /**
  * Classes ASTNode, ConcreteASTNode, NullASTNode and OtherASTNode are used to

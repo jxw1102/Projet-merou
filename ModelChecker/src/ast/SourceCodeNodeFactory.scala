@@ -11,12 +11,11 @@ import ast.model._
  * @author Xiaowen Ji
  * @author David Courtinot
  */
-class SourceCodeNodeFactory(root: ASTNode, labels: Map[Long,String]) {
-    // the resulting list of SourceCodeNode(s) is lazily computed
-    private lazy val rootNodes = root.children.map(handleASTNode)
+class SourceCodeNodeFactory(root: ASTNode/*, labels: Map[Long,String]*/) {
     private val labelNodes = Map[String,SourceCodeNode]()
     
-    lazy val result = new SourceCodeNodeResult(rootNodes, labelNodes)
+    // the result of the whole AST's transformation is lazily computed
+    lazy val result = new SourceCodeNodeResult(root.children.map(handleASTNode), labelNodes)
     
     // some utility methods
     private val concreteNodeExpected = (node: ASTNode) => throw new IllegalArgumentException(node + " should be a ConcreteASTNode")
@@ -44,7 +43,7 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[Long,String]) {
                case "BreakStmt"     => breakStmt   (node)
                case "ContinueStmt"  => continueStmt(node)
                case "SwitchStmt"    => switchStmt  (node)
-               case "LabelStmt"     => labelStmt   (node)
+//               case "LabelStmt"     => labelStmt   (node)
                case "GotoStmt"      => gotoStmt    (node)
                case "CaseStmt"      => caseStmt    (node)
                case "DefaultStmt"   => defaultStmt (node)
@@ -58,14 +57,6 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[Long,String]) {
             case NullASTNode(_) => None
             case x              => Some(convert(n))
     }
-    
-//    private def handleForInitializer(node: ASTNode): ForInitializer = node match {
-//        case ConcreteASTNode(_,typeOf,_,_,_) => typeOf match {
-//            case "DeclStmt" => declStmt(node)
-//            case _          => handleExpr(node)
-//        }
-//        case _ => concreteNodeExpected(node)
-//    }
     
     def handleExpr(node: ASTNode): Expr = node match {
         case ConcreteASTNode(_,typeOf,_,_,_) => typeOf match {
@@ -220,13 +211,13 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[Long,String]) {
         case _                                   => concreteNodeExpected(node)
     }
     
-    private def labelStmt(node: ASTNode) = node match {
-        case ConcreteASTNode(_,_,id,codeRange,data) => 
-            val res = SourceCodeNode(LabelStmt(data.dataList.last,node.children.map(handleASTNode).last.asInstanceOf[Stmt]),codeRange,id)
-            labelNodes += labels(id) -> res
-            res
-        case _                                      => concreteNodeExpected(node)
-    }
+//    private def labelStmt(node: ASTNode) = node match {
+//        case ConcreteASTNode(_,_,id,codeRange,data) => 
+//            val res = SourceCodeNode(LabelStmt(data.dataList.last,node.children.map(handleASTNode).last.asInstanceOf[Stmt]),codeRange,id)
+//            labelNodes += labels(id) -> res
+//            res
+//        case _                                      => concreteNodeExpected(node)
+//    }
     
     private def gotoStmt(node: ASTNode) = node match {
         case ConcreteASTNode(_,_,id,codeRange,data) => setAndReturn(GotoStmt(data.dataList.get(-2)),codeRange,id)

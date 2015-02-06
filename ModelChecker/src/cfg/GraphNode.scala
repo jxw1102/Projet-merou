@@ -1,6 +1,7 @@
 package cfg
 
 import scala.collection.mutable.ArrayBuffer
+import collection.mutable.{ Set => MSet }
 
 /**
  * This class represents an oriented graph of labelizable nodes
@@ -20,6 +21,19 @@ class GraphNode[U <: Labelizable[V], V <: Labelizer](val value: U) {
     
     def <<<(v: Iterable[GUV]) = { _prev ++= v; v.foreach(n => n._next += this) }
     def >>>(v: Iterable[GUV]) = { _next ++= v; v.foreach(n => n._prev += this) }
+    
+    override def toString = value.toString
+    def mkString          = addString(new StringBuilder,MSet()).toString
+    
+    private  def addString(sb: StringBuilder, set: MSet[GUV]): StringBuilder = {
+    	_next.foreach(node => sb.append("%s -> %s\n".format(this,node)))
+        if (set contains this) sb 
+        else {
+	        set += this
+	        _next.filterNot(set contains _).foreach(_.addString(sb,set))
+	        sb
+        }
+    }
 }
 
 /**
