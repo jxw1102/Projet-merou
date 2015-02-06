@@ -53,8 +53,8 @@ sealed abstract class ProgramNode extends Labelizable[ProgramNodeLabelizer] {
         val format = (name: String, id: Long) => "%s_(0x%s)".format(name,java.lang.Long.toHexString(id))
         this match {
             case If        (_,_,id) => format("If"        ,id)
-            case For       (e,_,id) => format("For"       ,e.get.id.get)
-            case Block     (_,  id) => format("Block"     ,id)
+            case For       (e,_,id) => format("For"       ,if (e.isDefined) e.get.id.get else id)
+            case Empty     (_,  id) => format("Empty"     ,id)
             case While     (e,_,id) => format("While"     ,e.id.get)
             case Statement (_,_,id) => format("Statement" ,id)
             case Identifier(_,_,id) => format("Identifier",id)
@@ -64,7 +64,7 @@ sealed abstract class ProgramNode extends Labelizable[ProgramNodeLabelizer] {
 }
 final case class If        (e: Expr         , cr: CodeRange, id: Long) extends ProgramNode { def visit(v: PNL) = v.visitIf        (this) }
 final case class For       (e: Option[Expr] , cr: CodeRange, id: Long) extends ProgramNode { def visit(v: PNL) = v.visitFor       (this) }
-final case class Block     (                  cr: CodeRange, id: Long) extends ProgramNode { def visit(v: PNL) = v.visitBlock     (this) }
+final case class Empty     (                  cr: CodeRange, id: Long) extends ProgramNode { def visit(v: PNL) = v.visitEmpty     (this) }
 final case class While     (e: Expr         , cr: CodeRange, id: Long) extends ProgramNode { def visit(v: PNL) = v.visitWhile     (this) }
 final case class Statement (stmt: Stmt      , cr: CodeRange, id: Long) extends ProgramNode { def visit(v: PNL) = v.visitStatement (this) }
 final case class Identifier(s: String       , cr: CodeRange, id: Long) extends ProgramNode { def visit(v: PNL) = v.visitIdentifier(this) }
@@ -73,7 +73,7 @@ final case class Expression(e: Expr         , cr: CodeRange, id: Long) extends P
 trait ProgramNodeLabelizer extends Labelizer {
     def visitIf        (ifNode   : If        )
     def visitFor       (forNode  : For       )
-    def visitBlock     (block    : Block     )
+    def visitEmpty     (empty    : Empty     )
     def visitWhile     (whileNode: While     )
     def visitStatement (stmt     : Statement )
     def visitIdentifier(id       : Identifier)

@@ -17,8 +17,8 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
 	        case ForStmt(_,_,_,_)                  => handleFor(node,next,exit,entry)
 	        case WhileStmt(_,_)                    => handleWhile(node,next,exit,entry)
 	        case CompoundStmt(_)                   => handleCompoundStmt(node,next,exit,entry)
-//	        case BreakStmt()                       => handleJumpStmt(node,exit.get)
-//	        case ContinueStmt()                    => handleJumpStmt(node,entry.get)
+	        case BreakStmt()                       => handleJump(node,next,exit )
+	        case ContinueStmt()                    => handleJump(node,next,entry)
 //	        case GotoStmt(label)                   => handleJumpStmt(node,labelNodes(label))
 	        case _                                 => handleDefault(node,next)
     }
@@ -26,9 +26,11 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
     private def toGraphNode(node: SourceCodeNode) = (node,node.codeRange.get,node.id.get) match {
         case (ForStmt     (init,cond,update,body),range,id) => new GNode(For       (cond,range,id))
         case (WhileStmt   (cond,body)            ,range,id) => new GNode(While     (cond,range,id))
-        case (CompoundStmt(_)                    ,range,id) => new GNode(Block     (     range,id))
+        case (CompoundStmt(_)                    ,range,id) => new GNode(Empty     (     range,id))
         case (IfStmt(expr,_,_)                   ,range,id) => new GNode(If        (expr,range,id))
         case (expr: Expr                         ,range,id) => new GNode(Expression(expr,range,id))
+        case (BreakStmt()                        ,range,id) => new GNode(Empty     (     range,id))
+        case (ContinueStmt()                     ,range,id) => new GNode(Empty     (     range,id))
         case (stmt: Stmt                         ,range,id) => new GNode(Statement (stmt,range,id))
     }
     
@@ -38,7 +40,6 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
 	            def linkElements(list: List[SourceCodeNode], next: Option[GNode]): Option[GNode] = list match {
 	            	case h :: q   => 
 	            	    val node = handle(h,next,exit,entry) 
-//	            	    if (next.isDefined) node >> next.get
 	            	    q match {
 	            	        case Nil => Some(node)
 	            	        case _   => linkElements(q,Some(node))
@@ -77,24 +78,33 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
            ifNode
     }
 	
-	private def tryToLink(node: GNode, next: Option[SourceCodeNode]) = next match {
-		case None    => (node,node)
-	    case Some(x) => val res = toGraphNode(x); node >> res; (node,res)
-	}
-	
-	private def tryToLink(node: Option[SourceCodeNode], next: GNode) = node match {
-		case None    => (next,next)
-	    case Some(x) => val res = toGraphNode(x); res >> next; (res,next)
+	private def tryToLink(node: Option[GNode], next: Option[GNode]) = (node,next) match {
+	    case (Some(x),Some(y)) => x >> y; (Some(x),Some(y))
+	    case (None   ,Some(y)) =>         (Some(y),Some(y))
+	    case (Some(x),None   ) =>         (Some(x),Some(x))
+	    case (None   ,None   ) =>         (None   ,None   )
 	}
     
-    private def handleFor(forStmt: SourceCodeNode, next: Option[GNode], exit: Option[GNode], entry: Option[GNode]) = forStmt match {
+    private def handleFor(forStmt: SourceCodeNode, nextOpt: Option[GNode], exit: Option[GNode], entry: Option[GNode]) = forStmt match {
         case ForStmt(init,cond,update,body) => 
-        	val (res,cond) = tryToLink(init,toGraphNode(forStmt))
-        	// incorrect here, must call handle on the body
-            var next       = tryToLink(cond,body)._2
-            next           = tryToLink(next,update)._2
-            next >> cond
-        	res
+//        	val (res,cond) = tryToLink(init,toGraphNode(forStmt),exit,entry)
+//            val bodyNode   = tryToLink(cond,body,exit,entry)._2
+//            var next       = tryToLink(bodyNode,update,exit,entry)._2
+//            next >> cond
+//        	res
+	        val condNode   = Some(toGraphNode(forStmt))
+            val initNode   = init   match { case Some(x) => Some(toGraphNode(x))                        case None => None }
+        	val updateNode = update match { case Some(x) => Some(toGraphNode(x))                        case None => None }
+        	val bodyNode   = body   match { 
+        	    case Some(x) => Some(handle(x,if (updateNode.isDefined) updateNode else condNode,nextOpt,condNode))  
+        	    case None    => None
+        	}
+        	
+        	var (res,next) = tryToLink(initNode,condNode)
+        	next           = tryToLink(next    ,bodyNode)._2 
+        	if (updateNode.isDefined) 
+        	    updateNode.get >> condNode.get 
+        	res.get
     }
 	
 	private def handleWhile(whileStmt: SourceCodeNode, next: Option[GNode], exit: Option[GNode], entry: Option[GNode]) = whileStmt match {
@@ -117,9 +127,10 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
         res
     }
     
-//    private def handleJumpStmt(node: SourceCodeNode, exit: SourceCodeNode) = {
-//        node >> exit
-//        node
-//    }
+    private def handleJump(node: SourceCodeNode, res: Option[GNode], jumpTo: Option[GNode]) = {
+        val jump = toGraphNode(node)
+        if (jumpTo.isDefined) jump >> jumpTo.get
+        if (res.isDefined) res.get else jump 
+    }
     
 }
