@@ -9,9 +9,6 @@ import scala.collection.mutable.Map
 import scala.io.Source
 import scala.util.matching.Regex
 
-import ast.DataProcessor
-import ast.SeqFetcher
-
 /**
  * The ASTParser enables to parse the Clang AST file and return a tree data structure (ASTNode) with a very basic
  * identification of the different node of the original AST file. 
@@ -25,10 +22,7 @@ class ASTParser {
     implicit class ASTLine(s: String) {
         def indent    = s.indexOf(ASTLine.indentReg.findFirstIn(s).get)
         def id        = ASTLine.idReg.findFirstMatchIn(s)
-        def data      = { 
-            val matcher = ASTLine.dataReg.findFirstMatchIn(s)            
-            if (!matcher.isDefined) "" else matcher.get.group(1)
-        }
+        def data      = s.substring(indent)
         def codeRange = {
             val matcher = ASTLine.lineRangeReg.findAllIn(s)
                 val l   = currentLine
@@ -52,7 +46,6 @@ class ASTParser {
         val indentReg    = "\\w|(<<<)".r
         val idReg        = "(\\w+) (0x[\\da-f]{9})".r
         val lineRangeReg = new Regex("line:(\\d+)(:(\\d+))?|col:(\\d+)", "line0", "", "line1", "col")
-        val dataReg      = "0x[\\dabcdef]{9} <.+> (.*)".r
     }
     
     private var currentLine = 0
@@ -61,10 +54,7 @@ class ASTParser {
         currentLine   = 0
         val lines     = Source.fromFile(path).getLines.toSeq
         val stack     = ArrayStack[ASTNode]()
-        val jumps     = HashMap[Long,Long]()
         val labels    = HashMap[Long,String]()
-        val gotos     = HashMap[Long,String]()
-        val loopStack = ArrayStack[ASTNode]()
         val tree      = OtherASTNode(-1, "")
         stack.push(tree)
 
@@ -75,9 +65,6 @@ class ASTParser {
                     case (Some(codeRange),Some(id),data,indent,_) =>
                         val cnode = ConcreteASTNode(indent/2,id.group(1),parseLong(id.group(2).substring(2),16),codeRange,data)
                         id.group(1) match {
-                            case "ForStmt" | "WhileStmt" | "SwitchStmt" | "DoStmt"  => loopStack.push(cnode)
-                            case "BreakStmt" | "ContinueStmt" => jumps  += cnode.id -> loopStack.head.asInstanceOf[ConcreteASTNode].id
-                            case "GotoStmt"  => gotos  += cnode.id -> cnode.data.dataList.get(-2)
                             case "LabelStmt" => labels += cnode.id -> cnode.data.dataList.last
                             case _           =>
                         }
@@ -91,10 +78,8 @@ class ASTParser {
                 }    
             
                 while (node.depth <= stack.head.depth) {
-                    val pop = stack.pop
-                    if (loopStack.nonEmpty && pop == loopStack.head) loopStack.pop
+                    stack.pop
                 }
-
                 stack.head.children += node
                 stack.push(node)
         })

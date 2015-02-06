@@ -87,7 +87,7 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[Long,String]) {
                 val init   = lookFor(node.children(0),handleASTNode)
                 val cond   = lookFor(node.children(2),handleExpr          )
                 val update = lookFor(node.children(3),handleExpr          )
-                val body   = compoundStmt(node.children(4))
+                val body   = handleASTNode(node.children(4)).asInstanceOf[Stmt]
                 SourceCodeNode(ForStmt(init,cond,update,body),codeRange,id)
             }
             case _ => concreteNodeExpected(node)
@@ -115,7 +115,7 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[Long,String]) {
     private def ifStmt(node: ASTNode) = node match {
         case ConcreteASTNode(_,_,id,codeRange,_) => {
             val cond     = handleExpr  (node.children(1))
-            val body     = compoundStmt(node.children(2))
+            val body     = handleASTNode(node.children(2)).asInstanceOf[Stmt]
             val elseStmt = node.children(3) match {
                 case ConcreteASTNode(_,_,_,_,_) => Some(handleASTNode(node.children(3)).asInstanceOf[Stmt])
                 case _                          => None
@@ -211,12 +211,12 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[Long,String]) {
     }
     
     private def breakStmt(node: ASTNode) = node match {
-        case ConcreteASTNode(_,_,id,codeRange,_) => setAndReturn(BreakStmt(),codeRange,id)
+        case ConcreteASTNode(_,_,id,codeRange,_) => SourceCodeNode(BreakStmt(),codeRange,id)
         case _                                   => concreteNodeExpected(node)
     }
     
     private def continueStmt(node: ASTNode) = node match {
-        case ConcreteASTNode(_,_,id,codeRange,_) => setAndReturn(ContinueStmt(),codeRange,id)
+        case ConcreteASTNode(_,_,id,codeRange,_) => SourceCodeNode(ContinueStmt(),codeRange,id)
         case _                                   => concreteNodeExpected(node)
     }
     
@@ -229,7 +229,7 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[Long,String]) {
     }
     
     private def gotoStmt(node: ASTNode) = node match {
-        case ConcreteASTNode(_,_,id,codeRange,data) => setAndReturn(GotoStmt(data.dataList.get(-2)),codeRange,id)
+        case ConcreteASTNode(_,_,id,codeRange,data) => SourceCodeNode(GotoStmt(data.dataList.get(-2)),codeRange,id)
         case _                                      => concreteNodeExpected(node)
     }
     

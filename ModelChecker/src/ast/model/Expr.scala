@@ -1,4 +1,5 @@
 package ast.model
+import ast.SourceCodeNode
 
 /**
  * Classes used to represent expressions within the program

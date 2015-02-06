@@ -20,7 +20,9 @@ final case class DeclStmt      (decls: List[SourceCodeNode])                    
 final case class CompoundStmt  (val elts: List[SourceCodeNode])                                   extends Stmt 
 final case class ReturnStmt    (expr: Expr)                                                       extends Stmt with JumpStmt
 final case class ContinueStmt  ()                                                                 extends Stmt with JumpStmt
-final case class BreakStmt     ()                                                                 extends Stmt with JumpStmt
+final case class BreakStmt     ()                                                                 extends Stmt with JumpStmt 
 final case class LabelStmt     (label: String, body: Stmt)                                        extends Stmt
 final case class GotoStmt      (label: String)                                                    extends Stmt with JumpStmt
-final case class NullStmt      ()                                                                 extends Stmt
+final case class NullStmt      ()                                                                 extends Stmt {
+    this.id_=(0)
+}

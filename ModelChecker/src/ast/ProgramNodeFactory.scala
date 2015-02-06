@@ -1,10 +1,10 @@
 package ast
 
 import scala.collection.mutable.Map
-import scala.collection.mutable.Set
+
 import ast.model._
+import ast.model.Expr
 import cfg.GraphNode
-import scala.collection.mutable.ArrayBuffer
 
 //class ProgramNodeFactory(nodes: List[SourceCodeNode], val jumps: Map[Long,Long]) {
 class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,SourceCodeNode]) {    
@@ -13,52 +13,59 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
      * To finish, finalizes the graph by linking the jump statements origin(s) to their destination
      */
     
-    lazy val result = handle(rootNode, NullStmt(), None, None)
+    lazy val result = handle(rootNode,NullStmt(),None,None)
 
-    // the returned set must NEVER contain a Jump
     def handle(node: SourceCodeNode, next: SourceCodeNode, exit: Option[SourceCodeNode], entry: Option[SourceCodeNode]): SourceCodeNode = {
         val res = node match {
         	case IfStmt(_,_,_)                     => handleIf(node,next,exit,entry)
 	    	case ForStmt(_,_,_,_)                  => handleFor(node,next,exit,entry)
         	case WhileStmt(_,_)                    => handleWhile(node,next,exit,entry)
-            case CompoundStmt(_)                   => handleCompoundStmt(node,next,exit,entry)
-            case NullStmt()                        => node
-            case BreakStmt()                       => handleJumpStmt(node,exit.get)
-            case ContinueStmt()                    => handleJumpStmt(node,entry.get)
-            case GotoStmt(label)                   => handleJumpStmt(node,labelNodes(label))
+            case CompoundStmt(_)                   => handleCompound(node,next,exit,entry)
+            case NullStmt() | ReturnStmt(_)        => node
+            case BreakStmt()                       => handleJump(node,exit.get)
+            case ContinueStmt()                    => handleJump(node,entry.get)
+            case GotoStmt(label)                   => handleJump(node,labelNodes(label))
+            case SwitchStmt(_,_)                   => handleSwitch(node,next,Some(next),entry)
+            case CaseStmt(_,_)                     => handleSwitchCase(node,next,exit,entry)
+            case DefaultStmt(_)                    => handleSwitchCase(node,next,exit,entry)
             case _                                 => handleExpr(node,next)
         }
         res
     }
     
-    private def handleCompoundStmt(cmpdStmt: SourceCodeNode, next: SourceCodeNode, exit: Option[SourceCodeNode], entry: Option[SourceCodeNode]) = cmpdStmt match {
+    private def findLeaves(node: SourceCodeNode): List[SourceCodeNode] = findLeaves(Some(node))
+    private def findLeaves(node: Option[SourceCodeNode]): List[SourceCodeNode] = node match {
+        case Some(x) => x match {
+            case CompoundStmt(elts)         => if (elts.isEmpty) List(x) else findLeaves(elts.last)
+            case IfStmt(cond,body,elseStmt) => findLeaves(body) ++ findLeaves(elseStmt)
+            case ReturnStmt(_)              => List()
+            case _                          => List(x)
+        }
+        case None    => List()
+    }
+    
+    private def handleCompound(cmpdStmt: SourceCodeNode, next: SourceCodeNode, exit: Option[SourceCodeNode], entry: Option[SourceCodeNode]) = cmpdStmt match {
         case CompoundStmt(elts) =>
-            val nexts = elts.drop(1) :+ NullStmt()
-            for(i <- elts.zip(nexts)) i match {
-                case (a,b) => handle(a,b,exit,entry)
-            }
-            cmpdStmt >> elts(0)
-            next match {
-                case NullStmt() =>    
-                case _          =>    elts.last >> next 
+            if (elts.length > 0) {
+                val nexts = elts.drop(1) :+ NullStmt()
+                for(i <- elts.zip(nexts)) i match {
+                    case (a,b) => handle(a,b,exit,entry)
+                }
+                cmpdStmt >> elts(0)
+                findLeaves(elts.last).foreach(_.>>(next))
             }
             cmpdStmt
     }
     
 	private def handleIf(ifStmt: SourceCodeNode, next: SourceCodeNode, exit: Option[SourceCodeNode], entry: Option[SourceCodeNode]) = ifStmt match {
-       case IfStmt(condition,body,elseStmt) => 
-           ifStmt >> condition
-           next match {
-                case NullStmt() =>    
-                case _          =>
-                    condition >> handle(body, next, exit, entry)
-                    body >> next
-                    // if elseStmt exists
-                    condition >> handle(elseStmt.get, next, exit, entry)
-                    elseStmt.get >> next
-                   // ----
+       case IfStmt(condition,body,elseStmt) =>
+            ifStmt >> condition
+            condition >> handle(body, next, exit, entry)
+            elseStmt match {
+                case Some(x) => condition >> handle(x, next, exit, entry)
+                case None    => condition >> next
             }
-           ifStmt
+            ifStmt
     }
     
     private def handleFor(forStmt: SourceCodeNode, next: SourceCodeNode, exit: Option[SourceCodeNode], entry: Option[SourceCodeNode]) = forStmt match {
@@ -66,12 +73,12 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
             forStmt >> init.get
             init.get >> cond.get
             cond.get >> handle(body,update.get,Some(next),cond)
-            body >> update.get
-            update.get >> cond.get
-            next match {
-                case NullStmt() =>    
-                case _          =>    cond.get >> next
+            body match {
+                case CompoundStmt(elts) => elts.last >> update.get
+                case _                  => body >> update.get
             }
+            update.get >> cond.get
+            cond.get >> next
             forStmt
     }
 	
@@ -79,22 +86,44 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
 	    case WhileStmt(condition,body) =>
             whileStmt >> condition
             condition >> handle(body,condition,Some(next),Some(condition))
-            next match {
-                case NullStmt() =>    
-                case _          =>    condition >> next
-            }
+            condition >> next
             whileStmt
 	}
     
+    private def handleSwitch(switchStmt: SourceCodeNode, next: SourceCodeNode, exit: Option[SourceCodeNode], entry: Option[SourceCodeNode]) = switchStmt match {
+        case SwitchStmt(expr,body) =>
+            switchStmt >> expr
+            expr >> handleSwitchBody(body,next,exit,entry)
+            switchStmt
+    }
+    
+    private def handleSwitchBody(switchBody: CompoundStmt, next: SourceCodeNode, exit: Option[SourceCodeNode], entry: Option[SourceCodeNode]) = switchBody match {
+        case CompoundStmt(elts) =>
+            val nexts = elts.drop(1) :+ NullStmt()
+            for(i <- elts.zip(nexts)) i match {
+                case (a,b) => 
+                    a match { case CaseStmt(_,_) | DefaultStmt(_) => switchBody >> a; case _ =>}
+                    handle(a,b,exit,entry)
+            }
+            elts.last match {
+                case DefaultStmt(body) => body >> next
+                case CaseStmt(_,body)  => body >> next
+                case _                 => elts.last >> next
+            }
+            switchBody
+    }
+    
+    private def handleSwitchCase(caseStmt: SourceCodeNode, next: SourceCodeNode, exit: Option[SourceCodeNode], entry: Option[SourceCodeNode]) = caseStmt match {
+        case CaseStmt(_,body)  => caseStmt >> handle(body,next,exit,entry); caseStmt
+        case DefaultStmt(body) => caseStmt >> handle(body,next,exit,entry); caseStmt
+    }
+    
     private def handleExpr(node: SourceCodeNode, next: SourceCodeNode) = {
-        next match {
-                case NullStmt() =>    
-                case _          =>    node >> next
-        }
+        node >> next
         node
     }
     
-    private def handleJumpStmt(node: SourceCodeNode, exit: SourceCodeNode) = {
+    private def handleJump(node: SourceCodeNode, exit: SourceCodeNode) = {
         node >> exit
         node
     }
