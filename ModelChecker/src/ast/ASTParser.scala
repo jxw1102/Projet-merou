@@ -59,7 +59,8 @@ class ASTParser {
     
     def parseFile(path: String) = {
         currentLine   = 0
-        val lines     = Source.fromFile(path).getLines.toSeq
+        // ugly fix...
+        val lines     = Source.fromFile(path).getLines.dropWhile(!_.contains("main")).drop(1).takeWhile(!_.contains("return")).toSeq
         val tree      = OtherASTNode(-1, "")
         val stack     = ArrayStack[ASTNode]()
         stack.push(tree)
