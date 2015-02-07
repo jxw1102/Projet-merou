@@ -220,11 +220,11 @@ Scalastyle, an Eclipse plugin that we use for automated quality checs).
 In particular he will handle the installation and the follow up of a version tool as Github for example.
 ##
 >>> subsubsection ##
-Chain development
+Development chain
 ##
 >>>> image ##
 data/cycle_qualite;
-		    Schéma descriptif de la chaîne de développement;
+		    Scheme describing our development chain;
 		    0.7
 ##
 >> section ##
