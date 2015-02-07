@@ -46,13 +46,20 @@ object SourceCodeNode {
  * Case-classes that will be the values of the CFG nodes. They implement the Visitor pattern against the ProgramNodeLabelizer
  * visitor class
  */
-sealed abstract class ProgramNode extends Labelizable[ProgramNodeLabelizer] {
+sealed abstract class ProgramNode(val id: Long) extends Labelizable[ProgramNodeLabelizer] {
     type PNL = ProgramNodeLabelizer 
+    
+    override def equals(that: Any) = that match {
+        case x: ProgramNode => id == x.id 
+        case _              => false
+    }
+    override def hashCode = id.toInt
+    
     // ONLY for debugging purpose. I know it is very ugly...
     override def toString = {
-        val format = (name: String, id: Long) => "%s_(0x%s)".format(name,java.lang.Long.toHexString(id))
+        val format = (name: String, id: Long) => "%s_0x%s".format(name,java.lang.Long.toHexString(id))
         this match {
-            case If        (_,_,id) => format("If"        ,id)
+            case If        (e,_,id) => format("If"        ,e.id.get)
             case For       (e,_,id) => format("For"       ,if (e.isDefined) e.get.id.get else id)
             case Empty     (_,  id) => format("Empty"     ,id)
             case While     (e,_,id) => format("While"     ,e.id.get)
@@ -62,13 +69,13 @@ sealed abstract class ProgramNode extends Labelizable[ProgramNodeLabelizer] {
         }
     }
 }
-final case class If        (e: Expr         , cr: CodeRange, id: Long) extends ProgramNode { def visit(v: PNL) = v.visitIf        (this) }
-final case class For       (e: Option[Expr] , cr: CodeRange, id: Long) extends ProgramNode { def visit(v: PNL) = v.visitFor       (this) }
-final case class Empty     (                  cr: CodeRange, id: Long) extends ProgramNode { def visit(v: PNL) = v.visitEmpty     (this) }
-final case class While     (e: Expr         , cr: CodeRange, id: Long) extends ProgramNode { def visit(v: PNL) = v.visitWhile     (this) }
-final case class Statement (stmt: Stmt      , cr: CodeRange, id: Long) extends ProgramNode { def visit(v: PNL) = v.visitStatement (this) }
-final case class Identifier(s: String       , cr: CodeRange, id: Long) extends ProgramNode { def visit(v: PNL) = v.visitIdentifier(this) }
-final case class Expression(e: Expr         , cr: CodeRange, id: Long) extends ProgramNode { def visit(v: PNL) = v.visitExpression(this) }
+final case class If        (e: Expr         , cr: CodeRange, _id: Long) extends ProgramNode(_id) { def visit(v: PNL) = v.visitIf        (this) }
+final case class For       (e: Option[Expr] , cr: CodeRange, _id: Long) extends ProgramNode(_id) { def visit(v: PNL) = v.visitFor       (this) }
+final case class Empty     (                  cr: CodeRange, _id: Long) extends ProgramNode(_id) { def visit(v: PNL) = v.visitEmpty     (this) }
+final case class While     (e: Expr         , cr: CodeRange, _id: Long) extends ProgramNode(_id) { def visit(v: PNL) = v.visitWhile     (this) }
+final case class Statement (stmt: Stmt      , cr: CodeRange, _id: Long) extends ProgramNode(_id) { def visit(v: PNL) = v.visitStatement (this) }
+final case class Identifier(s: String       , cr: CodeRange, _id: Long) extends ProgramNode(_id) { def visit(v: PNL) = v.visitIdentifier(this) }
+final case class Expression(e: Expr         , cr: CodeRange, _id: Long) extends ProgramNode(_id) { def visit(v: PNL) = v.visitExpression(this) }
 
 trait ProgramNodeLabelizer extends Labelizer {
     def visitIf        (ifNode   : If        )

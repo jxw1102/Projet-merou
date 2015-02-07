@@ -25,10 +25,7 @@ class ASTParser {
     implicit class ASTLine(s: String) {
         def indent    = s.indexOf(ASTLine.indentReg.findFirstIn(s).get)
         def id        = ASTLine.idReg.findFirstMatchIn(s)
-        def data      = { 
-            val matcher = ASTLine.dataReg.findFirstMatchIn(s)            
-            if (!matcher.isDefined) "" else matcher.get.group(1)
-        }
+        def data      = s.substring(indent)
         def codeRange = {
             val matcher = ASTLine.lineRangeReg.findAllIn(s)
                 val l   = currentLine
@@ -50,9 +47,8 @@ class ASTParser {
     implicit object ASTLine {
         // the regex used to parse the file are compiled once and then used multiple times
         val indentReg    = "\\w|(<<<)".r
-        val idReg        = "(\\w+) (0x[\\da-f]{9})".r
-        val lineRangeReg = new Regex("line:(\\d+)(:(\\d+))?|col:(\\d+)", "line0", "", "line1", "col")
-        val dataReg      = "0x[\\dabcdef]{9} <.+> (.*)".r
+        val idReg        = "(\\w+) (0x[\\da-f]+)".r
+        val lineRangeReg = new Regex("line:(\\d+)(:(\\d+))?[,>]|col:(\\d+)[,>]", "line0", "", "line1", "col")
     }
     
     private var currentLine = 0
@@ -60,7 +56,7 @@ class ASTParser {
     def parseFile(path: String) = {
         currentLine   = 0
         // ugly fix...
-        val lines     = Source.fromFile(path).getLines.dropWhile(!_.contains("main")).drop(1).takeWhile(!_.contains("return")).toSeq
+        val lines     = Source.fromFile(path).getLines.dropWhile(!_.contains("main")).toSeq
         val tree      = OtherASTNode(-1, "")
         val stack     = ArrayStack[ASTNode]()
         stack.push(tree)
