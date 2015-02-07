@@ -1,0 +1,1 @@
+echo 'digraph G {}' | /usr/local/bin/dot -T png -o test.png && open test.png

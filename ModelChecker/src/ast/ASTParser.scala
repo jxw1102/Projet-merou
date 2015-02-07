@@ -1,13 +1,14 @@
 package ast
 
 import java.lang.Long.parseLong
-
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.ArrayStack
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.Map
 import scala.io.Source
 import scala.util.matching.Regex
+import sys.process._
+import scala.reflect.io.File
 
 /**
  * The ASTParser enables to parse the Clang AST file and return a tree data structure (ASTNode) with a very basic
@@ -51,14 +52,16 @@ class ASTParser {
     private var currentLine = 0
     
     def parseFile(path: String) = {
+        val astFile = path.substring(0,path.lastIndexOf('.')) + ".ast"
+        File(astFile).writeAll(Process("clang -cc1 -ast-dump " + path).!!)
         currentLine   = 0
-        val lines     = Source.fromFile(path).getLines.toSeq
+        val lines     = Source.fromFile(astFile).getLines.dropWhile(!_.contains("main")).toSeq
         val stack     = ArrayStack[ASTNode]()
         val labels    = HashMap[Long,String]()
         val tree      = OtherASTNode(-1, "")
         stack.push(tree)
 
-        lines.map(line => (line.codeRange,line.id,line.data,line.indent,line))
+        lines.drop(1).map(line => (line.codeRange,line.id,line.data,line.indent,line))
             .filter(tuple => !tuple._2.isDefined || tuple._1.isDefined)
             .foreach(tuple => {
                 val node = tuple match {

@@ -1,8 +1,10 @@
 package ast
 
 import java.lang.Long.parseLong
+
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.Map
+
 import ast.model._
 
 /**

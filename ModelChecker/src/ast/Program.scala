@@ -42,17 +42,26 @@ abstract class SourceCodeNode {
     def prev = _prev.toList
     def next = _next.toList
     
-    def <<(v: SourceCodeNode) = v match {
-        case NullStmt() =>
+    def <<(v: SourceCodeNode): Unit = v match {
+        case NullStmt() => 
         case _          => _prev += v; v._next += this
     }
-    def >>(v: SourceCodeNode) = v match {
-        case NullStmt() =>
-        case _          => _next += v; v._prev += this
+    def <<(v: Option[SourceCodeNode]): Unit = v match {
+        case Some(x) => this << x
+        case None    => 
+    }
+    
+    def >>(v: SourceCodeNode): SourceCodeNode = v match {
+        case NullStmt() => v
+        case _          => _next += v; v._prev += this; v 
+    }
+    def >>(v: Option[SourceCodeNode]): SourceCodeNode = v match {
+        case Some(x) => this >> x
+        case None    => this
     }
     
     override def toString = this.getClass.getSimpleName + "_" + id.get.toHexString
-    def mkString = addString(new StringBuilder).toString
+    def mkString = { set.clear(); addString(new StringBuilder).toString }
     val set = MSet[SourceCodeNode]()
     private def addString(sb: StringBuilder): StringBuilder = {
         _next.foreach(node => sb.append("%s -> %s;\n".format(this,node)))

@@ -70,15 +70,12 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
     
     private def handleFor(forStmt: SourceCodeNode, next: SourceCodeNode, exit: Option[SourceCodeNode], entry: Option[SourceCodeNode]) = forStmt match {
         case ForStmt(init,cond,update,body) =>
-            forStmt >> init.get
-            init.get >> cond.get
-            cond.get >> handle(body,update.get,Some(next),cond)
+            forStmt >> init >> cond >> handle(body,(update or cond or body).get,Some(next),cond)
             body match {
-                case CompoundStmt(elts) => elts.last >> update.get
-                case _                  => body >> update.get
+                case CompoundStmt(elts) => //if (!elts.isEmpty) elts.last >> update >> (cond or body) else body >> update >> (cond or body)
+                case _                  => (cond or body).get << update
             }
-            update.get >> cond.get
-            cond.get >> next
+            next << (cond or init or forStmt)
             forStmt
     }
 	
