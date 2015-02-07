@@ -15,7 +15,7 @@ object Main extends App {
     
     val cfg = new ProgramNodeFactory(astRes.rootNodes(0), astRes.labelNodes).result
     val gv = cfg.mkString
-    println(gv)
+//    println(gv)
     val cmd = "echo '" + "digraph G {\n" + gv + "}'" + " | /usr/local/bin/dot -T png -o test.png && open test.png"
     File("test.sh").writeAll(cmd)
     Process("sh test.sh").!

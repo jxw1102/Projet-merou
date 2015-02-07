@@ -42,7 +42,7 @@ abstract class SourceCodeNode {
     def prev = _prev.toList
     def next = _next.toList
     
-    def <<(v: SourceCodeNode): Unit = v match {
+    def <<(v: SourceCodeNode): Unit = this match {
         case NullStmt() => 
         case _          => _prev += v; v._next += this
     }

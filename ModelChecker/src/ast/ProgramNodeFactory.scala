@@ -38,6 +38,7 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
         case Some(x) => x match {
             case CompoundStmt(elts)         => if (elts.isEmpty) List(x) else findLeaves(elts.last)
             case IfStmt(cond,body,elseStmt) => findLeaves(body) ++ findLeaves(elseStmt)
+            case BreakStmt()                => List()
             case ReturnStmt(_)              => List()
             case _                          => List(x)
         }
@@ -63,19 +64,21 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
             condition >> handle(body, next, exit, entry)
             elseStmt match {
                 case Some(x) => condition >> handle(x, next, exit, entry)
-                case None    => condition >> next
+                case None    => if (next.isInstanceOf[NullStmt]) condition >> exit else condition >> next
             }
             ifStmt
     }
     
     private def handleFor(forStmt: SourceCodeNode, next: SourceCodeNode, exit: Option[SourceCodeNode], entry: Option[SourceCodeNode]) = forStmt match {
         case ForStmt(init,cond,update,body) =>
-            forStmt >> init >> cond >> handle(body,(update or cond or body).get,Some(next),cond)
+            forStmt >> init >> cond >> handle(body,(update or cond or body).get,Some(next),(update or cond))
             body match {
-                case CompoundStmt(elts) => //if (!elts.isEmpty) elts.last >> update >> (cond or body) else body >> update >> (cond or body)
-                case _                  => (cond or body).get << update
+                case NullStmt()                         => (cond or init or forStmt).get >> update >> (cond or forStmt)
+                case CompoundStmt(elts) if elts.isEmpty => body >> update >> (cond or body)
+                case _                                  => (cond or body).get << update
             }
             next << (cond or init or forStmt)
+            val cb = (cond or body)
             forStmt
     }
 	
@@ -84,6 +87,11 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
             whileStmt >> condition
             condition >> handle(body,condition,Some(next),Some(condition))
             condition >> next
+            body match {
+                case NullStmt()                         => condition >> condition
+                case CompoundStmt(elts) if elts.isEmpty => body >> condition
+                case _                                  => 
+            }
             whileStmt
 	}
     
@@ -99,7 +107,10 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
             val nexts = elts.drop(1) :+ NullStmt()
             for(i <- elts.zip(nexts)) i match {
                 case (a,b) => 
-                    a match { case CaseStmt(_,_) | DefaultStmt(_) => switchBody >> a; case _ =>}
+                    a match { 
+                        case CaseStmt(_,_) | DefaultStmt(_) => handleSwitchBranch(a,switchBody)
+                        case _              =>
+                    }
                     handle(a,b,exit,entry)
             }
             elts.last match {
@@ -108,6 +119,12 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
                 case _                 => elts.last >> next
             }
             switchBody
+    }
+    
+    private def handleSwitchBranch(branch: SourceCodeNode, parent: CompoundStmt): Unit = branch match {
+        case CaseStmt(_,c)  => parent >> branch; handleSwitchBranch(c,parent)
+        case DefaultStmt(c) => parent >> branch; handleSwitchBranch(c,parent)
+        case _              =>
     }
     
     private def handleSwitchCase(caseStmt: SourceCodeNode, next: SourceCodeNode, exit: Option[SourceCodeNode], entry: Option[SourceCodeNode]) = caseStmt match {

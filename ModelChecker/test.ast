@@ -1,0 +1,32 @@
+TranslationUnitDecl 0x1028254d0 <<invalid sloc>>
+|-TypedefDecl 0x102825a10 <<invalid sloc>> __int128_t '__int128'
+|-TypedefDecl 0x102825a70 <<invalid sloc>> __uint128_t 'unsigned __int128'
+|-TypedefDecl 0x102825e30 <<invalid sloc>> __builtin_va_list '__va_list_tag [1]'
+|-FunctionDecl 0x102825ed0 <test.cpp:1:1, line:3:1> fun 'int (void)'
+| `-CompoundStmt 0x102825fb0 <line:1:11, line:3:1>
+|   `-ReturnStmt 0x102825f90 <line:2:2, col:9>
+|     `-IntegerLiteral 0x102825f70 <col:9> 'int' 2
+|-FunctionDecl 0x1028260a0 <line:5:1, line:7:1> fun 'void (int)'
+| |-ParmVarDecl 0x102825fe0 <line:5:10, col:14> a 'int'
+| `-CompoundStmt 0x102826148 <col:17, line:7:1>
+`-FunctionDecl 0x102870b20 <line:9:1, line:13:1> main 'int (int, char **)'
+  |-ParmVarDecl 0x102826170 <line:9:10, col:14> argc 'int'
+  |-ParmVarDecl 0x102870a50 <col:20, col:27> argv 'char **'
+  `-CompoundStmt 0x102871048 <col:33, line:13:1>
+    |-DeclStmt 0x102870d88 <line:10:2, col:19>
+    | `-VarDecl 0x102870d30 <col:2, col:18> a 'int [10][19][10]'
+    |-DeclStmt 0x102870ff0 <line:11:2, col:20>
+    | `-VarDecl 0x102870db0 <col:2, col:19> b 'int'
+    |   `-ImplicitCastExpr 0x102870fd8 <col:10, col:19> 'int' <LValueToRValue>
+    |     `-ArraySubscriptExpr 0x102870fb0 <col:10, col:19> 'int' lvalue
+    |       |-ImplicitCastExpr 0x102870f98 <col:10, col:16> 'int *' <ArrayToPointerDecay>
+    |       | `-ArraySubscriptExpr 0x102870f20 <col:10, col:16> 'int [10]' lvalue
+    |       |   |-ImplicitCastExpr 0x102870f08 <col:10, col:13> 'int (*)[10]' <ArrayToPointerDecay>
+    |       |   | `-ArraySubscriptExpr 0x102870e90 <col:10, col:13> 'int [19][10]' lvalue
+    |       |   |   |-ImplicitCastExpr 0x102870e78 <col:10> 'int (*)[19][10]' <ArrayToPointerDecay>
+    |       |   |   | `-DeclRefExpr 0x102870e08 <col:10> 'int [10][19][10]' lvalue Var 0x102870d30 'a' 'int [10][19][10]'
+    |       |   |   `-IntegerLiteral 0x102870e30 <col:12> 'int' 1
+    |       |   `-IntegerLiteral 0x102870eb8 <col:15> 'int' 1
+    |       `-IntegerLiteral 0x102870f48 <col:18> 'int' 1
+    `-ReturnStmt 0x102871028 <line:12:2, col:9>
+      `-IntegerLiteral 0x102871008 <col:9> 'int' 0

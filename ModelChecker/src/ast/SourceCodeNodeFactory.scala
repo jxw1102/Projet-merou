@@ -70,6 +70,8 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[Long,String]) {
             case "BinaryOperator"             => binaryOperator           (node)
             case "CallExpr"                   => callExpr                 (node)
             case "DeclRefExpr"                => declRefExpr              (node)
+            case "InitListExpr"               => initListExpr             (node)
+            case "ArraySubscriptExpr"         => arraySubscriptExpr       (node)
             case "ConditionalOperator"        => ternary                  (node)
             case "CompoundAssignOperator"     => compoundAssignOperator   (node)
             case x if x.endsWith("Literal")   => literal                  (node)
@@ -178,6 +180,19 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[Long,String]) {
                 case _                             => conversionFailed(node)
             }
         }
+        case _ => concreteNodeExpected(node)
+    }
+    
+    private def initListExpr(node: ASTNode) = node match {
+        case ConcreteASTNode(_,_,id,codeRange,data) =>             
+            setAndReturn(InitListExpr(node.children.map(handleExpr).toList),codeRange,id)
+        case _ => concreteNodeExpected(node)
+    }
+    
+    private def arraySubscriptExpr(node: ASTNode) = node match {
+        case ConcreteASTNode(_,_,id,codeRange,data) =>
+            val tup = (handleExpr(node.children(0)), handleExpr(node.children(1)))
+            setAndReturn(ArraySubscriptExpr(tup),codeRange,id)
         case _ => concreteNodeExpected(node)
     }
     
