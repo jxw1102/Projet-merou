@@ -216,7 +216,7 @@ Configuration manager
 ##
 >>>> paragraph ##
 The configuration manager should take care of every tool we are going to use, make some choice about which tools are better than other (example :
-Scalastyle, an Eclipse plugin that we use for automated quality checs).
+Scalastyle, an Eclipse plugin that we use for automated quality checks).
 In particular he will handle the installation and the follow up of a version tool as Github for example.
 ##
 >>> subsubsection ##
@@ -296,13 +296,6 @@ Planning
 > chapter ##
 Risk management
 ##
->> paragraph ##
-
-##
->> latex ##
-%\includepdf[landscape=true,pages={1}]{data/risks.png}
-%\newgeometry{left=1.5cm,,right=1.5cm}
-##
 >> image ##
 data/risks.png;
 Analyse des risques;
@@ -324,7 +317,6 @@ some properties on a Scala code. Combined with a specific pulgin, this can be us
 in the IDE the developer is using. Our settings are the following :
 ##
 >>>> latex ##
-%\newgeometry{left=1.5cm,,right=1.5cm}
 \renewcommand{\arraystretch}{1.2}
 \begin{center}
 \begin{longtable}{|l|l|l|}
