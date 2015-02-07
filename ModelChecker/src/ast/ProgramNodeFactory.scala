@@ -6,7 +6,6 @@ import ast.model._
 import ast.model.Expr
 import cfg.GraphNode
 
-//class ProgramNodeFactory(nodes: List[SourceCodeNode], val jumps: Map[Long,Long]) {
 class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,SourceCodeNode]) {    
     /**
      * Starts by converting every SourceCodeNode into a GraphNode while accumulating information about jump statements.
@@ -21,7 +20,7 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
 	    	case ForStmt(_,_,_,_)                  => handleFor(node,next,exit,entry)
         	case WhileStmt(_,_)                    => handleWhile(node,next,exit,entry)
             case CompoundStmt(_)                   => handleCompound(node,next,exit,entry)
-            case NullStmt() | ReturnStmt(_)        => node
+            case ReturnStmt(_)                     => node
             case BreakStmt()                       => handleJump(node,exit.get)
             case ContinueStmt()                    => handleJump(node,entry.get)
             case GotoStmt(label)                   => handleJump(node,labelNodes(label))
@@ -38,8 +37,11 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
         case Some(x) => x match {
             case CompoundStmt(elts)         => if (elts.isEmpty) List(x) else findLeaves(elts.last)
             case IfStmt(cond,body,elseStmt) => findLeaves(body) ++ findLeaves(elseStmt)
+            case CaseStmt(_,body)           => findLeaves(body)
+            case DefaultStmt(body)          => findLeaves(body)
             case BreakStmt()                => List()
             case ReturnStmt(_)              => List()
+            case ContinueStmt()             => List()
             case _                          => List(x)
         }
         case None    => List()
@@ -64,7 +66,7 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
             condition >> handle(body, next, exit, entry)
             elseStmt match {
                 case Some(x) => condition >> handle(x, next, exit, entry)
-                case None    => if (next.isInstanceOf[NullStmt]) condition >> exit else condition >> next
+                case None    => condition >> next
             }
             ifStmt
     }
@@ -73,12 +75,10 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
         case ForStmt(init,cond,update,body) =>
             forStmt >> init >> cond >> handle(body,(update or cond or body).get,Some(next),(update or cond))
             body match {
-                case NullStmt()                         => (cond or init or forStmt).get >> update >> (cond or forStmt)
                 case CompoundStmt(elts) if elts.isEmpty => body >> update >> (cond or body)
                 case _                                  => (cond or body).get << update
             }
             next << (cond or init or forStmt)
-            val cb = (cond or body)
             forStmt
     }
 	
@@ -88,7 +88,6 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
             condition >> handle(body,condition,Some(next),Some(condition))
             condition >> next
             body match {
-                case NullStmt()                         => condition >> condition
                 case CompoundStmt(elts) if elts.isEmpty => body >> condition
                 case _                                  => 
             }
@@ -109,22 +108,22 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
                 case (a,b) => 
                     a match { 
                         case CaseStmt(_,_) | DefaultStmt(_) => handleSwitchBranch(a,switchBody)
-                        case _              =>
+                        case _                              =>
                     }
                     handle(a,b,exit,entry)
             }
             elts.last match {
                 case DefaultStmt(body) => body >> next
-                case CaseStmt(_,body)  => body >> next
+                case CaseStmt(_,body)  => findLeaves(body).foreach(_ >> next)
                 case _                 => elts.last >> next
             }
             switchBody
     }
     
     private def handleSwitchBranch(branch: SourceCodeNode, parent: CompoundStmt): Unit = branch match {
-        case CaseStmt(_,c)  => parent >> branch; handleSwitchBranch(c,parent)
-        case DefaultStmt(c) => parent >> branch; handleSwitchBranch(c,parent)
-        case _              =>
+            case CaseStmt(_, c) => parent >> branch; handleSwitchBranch(c, parent)
+            case DefaultStmt(c) => parent >> branch; handleSwitchBranch(c, parent)
+            case _              =>
     }
     
     private def handleSwitchCase(caseStmt: SourceCodeNode, next: SourceCodeNode, exit: Option[SourceCodeNode], entry: Option[SourceCodeNode]) = caseStmt match {

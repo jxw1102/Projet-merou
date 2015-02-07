@@ -10,10 +10,20 @@ object Main extends App {
 //	println(parseResult.root.mkString)
 //	println(parseResult.labels)
     
-    parseResult.root.children.remove(0,2)
+    var count = 0
+    parseResult.root.children.foreach { x => 
+        x match {
+            case ConcreteASTNode(_,ofType,_,_,_) if ofType == "ParmVarDecl" => count = count + 1
+            case _                                                          => 
+        }        
+    }
+    parseResult.root.children.remove(0, count)
     val astRes = new SourceCodeNodeFactory(parseResult.root,parseResult.labels).result
     
     val cfg = new ProgramNodeFactory(astRes.rootNodes(0), astRes.labelNodes).result
+    
+//    println(cfg.next(0).next(0).next(0).next(0).next)
+    
     val gv = cfg.mkString
 //    println(gv)
     val cmd = "echo '" + "digraph G {\n" + gv + "}'" + " | /usr/local/bin/dot -T png -o test.png && open test.png"

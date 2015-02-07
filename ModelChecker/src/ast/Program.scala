@@ -1,7 +1,6 @@
 package ast
 
 import scala.collection.mutable.ArrayBuffer
-
 import ast.model.Decl
 import ast.model.Expr
 import ast.model.JumpStmt
@@ -11,6 +10,7 @@ import cfg.Labelizable
 import cfg.Labelizer
 import util.MutableMapView
 import collection.mutable.{ Set => MSet }
+import scala.util.Random
 
 /**
  * Those classes represent the most abstract and final form of the transformations of the source code
@@ -43,8 +43,8 @@ abstract class SourceCodeNode {
     def next = _next.toList
     
     def <<(v: SourceCodeNode): Unit = this match {
-        case NullStmt() => 
-        case _          => _prev += v; v._next += this
+        case _ if !this.id.isDefined => 
+        case _                       => _prev += v; v._next += this
     }
     def <<(v: Option[SourceCodeNode]): Unit = v match {
         case Some(x) => this << x
@@ -52,23 +52,34 @@ abstract class SourceCodeNode {
     }
     
     def >>(v: SourceCodeNode): SourceCodeNode = v match {
-        case NullStmt() => v
-        case _          => _next += v; v._prev += this; v 
+        case _ if !v.id.isDefined => v
+        case _                    => _next += v; v._prev += this; v 
     }
     def >>(v: Option[SourceCodeNode]): SourceCodeNode = v match {
         case Some(x) => this >> x
         case None    => this
     }
     
-    override def toString = this.getClass.getSimpleName + "_" + id.get.toHexString
-    def mkString = { set.clear(); addString(new StringBuilder).toString }
-    val set = MSet[SourceCodeNode]()
-    private def addString(sb: StringBuilder): StringBuilder = {
+	override def hashCode() = id match {
+        case None    => Random.nextInt()
+        case Some(x) => x.toInt
+    }
+    
+	override def equals(obj: Any) = obj match {
+        case SourceCodeNode => obj.asInstanceOf[SourceCodeNode].id == this.id
+        case _              => false
+    }
+    
+	override def toString = this.getClass.getSimpleName + "_" + id.get.toHexString
+    
+    def mkString = addString(new StringBuilder, MSet()).toString
+
+	private def addString(sb: StringBuilder, set: MSet[SourceCodeNode]): StringBuilder = {
         _next.foreach(node => sb.append("%s -> %s;\n".format(this,node)))
         if (set contains this) sb 
         else {
         	set += this
-            _next/*.filterNot(set contains _)*/.foreach(_.addString(sb))
+            _next.filterNot(set contains _).foreach(_.addString(sb,set))
             sb
         }
     }

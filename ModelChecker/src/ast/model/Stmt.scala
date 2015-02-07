@@ -8,7 +8,7 @@ import ast.SourceCodeNode
  * @author David Courtinot
  * @author Xiaowen Ji
  */
-class Stmt extends SourceCodeNode 
+class Stmt extends SourceCodeNode
 sealed trait JumpStmt
 final case class Type          (name: String)
 final case class SwitchStmt    (expr: Expr, body: CompoundStmt)                                   extends Stmt
@@ -23,6 +23,4 @@ final case class ContinueStmt  ()                                               
 final case class BreakStmt     ()                                                                 extends Stmt with JumpStmt 
 final case class LabelStmt     (label: String, body: Stmt)                                        extends Stmt
 final case class GotoStmt      (label: String)                                                    extends Stmt with JumpStmt
-final case class NullStmt      ()                                                                 extends Stmt {
-    this.id_=(0)
-}
+final case class NullStmt      ()                                                                 extends Stmt
