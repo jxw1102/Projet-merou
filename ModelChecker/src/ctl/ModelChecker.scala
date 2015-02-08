@@ -54,9 +54,9 @@ object ModelChecker {
     //////////////////////////---------------------------------------------///////////////////////////
     def disj(t1: CheckerResult , t2: CheckerResult) = t1 ++ t2
     
-    def Disj() = {}
+    def Disj = {}
     
-    def Conj() = {}
+    def Conj = {}
     
     def conj(T1: CheckerResult , T2: CheckerResult) = 
         for (t1 <- T1 ; t2 <- T2 ; inter = interStateEnv(t1,t2) ; if (inter.isDefined)) yield inter 
@@ -71,5 +71,5 @@ object ModelChecker {
 
     def SAT_EU(T1: CheckerResult , T2: CheckerResult) = {}
     
-    def exits(x : String, T: CheckerResult) = for (t <- T; if (ex_binding(x, t))) yield existsone(x, t)
+    def exits(x: String, T: CheckerResult) = for (t <- T ; if (ex_binding(x, t))) yield existsone(x, t)
 }
