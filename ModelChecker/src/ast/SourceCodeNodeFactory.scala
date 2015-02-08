@@ -74,6 +74,7 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[Long,String]) {
             case "ArraySubscriptExpr"         => arraySubscriptExpr       (node)
             case "ConditionalOperator"        => ternary                  (node)
             case "CompoundAssignOperator"     => compoundAssignOperator   (node)
+            case "ParenExpr"                  => handleExpr               (node.children(0))
             case x if x.endsWith("Literal")   => literal                  (node)
             case x if x.endsWith("CastExpr")  => handleExpr               (node.children(0))
         }

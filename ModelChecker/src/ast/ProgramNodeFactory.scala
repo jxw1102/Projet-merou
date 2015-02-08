@@ -1,6 +1,7 @@
 package ast
 
 import scala.collection.mutable.Map
+import scala.collection.mutable.{Set => MSet}
 
 import ast.model._
 import ast.model.Expr
@@ -12,37 +13,62 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
      * To finish, finalizes the graph by linking the jump statements origin(s) to their destination
      */
     
-    lazy val result = handle(rootNode,NullStmt(),None,None)
+    private def cut(node: SourceCodeNode, set: MSet[SourceCodeNode]): Unit = {
+        if (set contains node) return
+        node match {
+            case CompoundStmt(_) | IfStmt(_, _, _) | CaseStmt(_, _) |
+                DefaultStmt(_) | ForStmt(_, _, _, _) | WhileStmt(_, _) |
+                DoWhileStmt(_, _) | SwitchStmt(_, _) | BreakStmt() |
+                ContinueStmt() | GotoStmt(_) | LabelStmt(_, _) | NullStmt() =>
+                node.prev.foreach { y => y.next.remove(node); y.next ++= node.next }
+                node.next.foreach { y => y.prev.remove(node); y.prev ++= node.prev }
+            case _ => set += node
+        }
+        node.next.foreach(cut(_,set))
+    }
+    
+    private def cut(node: SourceCodeNode): SourceCodeNode = {
+        cut(node,MSet())
+        node
+    }
+    
+    lazy val result = cut(handle(rootNode,NullStmt(),None,None))
 
     def handle(node: SourceCodeNode, next: SourceCodeNode, exit: Option[SourceCodeNode], entry: Option[SourceCodeNode]): SourceCodeNode = {
         val res = node match {
         	case IfStmt(_,_,_)                     => handleIf(node,next,exit,entry)
 	    	case ForStmt(_,_,_,_)                  => handleFor(node,next,exit,entry)
         	case WhileStmt(_,_)                    => handleWhile(node,next,exit,entry)
+            case DoWhileStmt(_,_)                  => handleDoWhile(node,next,exit,entry)
             case CompoundStmt(_)                   => handleCompound(node,next,exit,entry)
             case ReturnStmt(_)                     => node
-            case BreakStmt()                       => handleJump(node,exit.get)
-            case ContinueStmt()                    => handleJump(node,entry.get)
+            case BreakStmt()                       => handleJump(node,exit)
+            case ContinueStmt()                    => handleJump(node,entry)
             case GotoStmt(label)                   => handleJump(node,labelNodes(label))
-            case SwitchStmt(_,_)                   => handleSwitch(node,next,Some(next),entry)
+            case SwitchStmt(_,_)                   => handleSwitch(node,next,(notNull(next) | entry),entry)
             case CaseStmt(_,_)                     => handleSwitchCase(node,next,exit,entry)
             case DefaultStmt(_)                    => handleSwitchCase(node,next,exit,entry)
+            case LabelStmt(_,_)                    => handleLabel(node,next,exit,entry)
             case _                                 => handleExpr(node,next)
         }
         res
     }
     
+    def notNull(node: SourceCodeNode) = if (node.isInstanceOf[NullStmt]) None else Some(node)
+    
     private def findLeaves(node: SourceCodeNode): List[SourceCodeNode] = findLeaves(Some(node))
     private def findLeaves(node: Option[SourceCodeNode]): List[SourceCodeNode] = node match {
         case Some(x) => x match {
-            case CompoundStmt(elts)         => if (elts.isEmpty) List(x) else findLeaves(elts.last)
-            case IfStmt(cond,body,elseStmt) => findLeaves(body) ++ findLeaves(elseStmt)
-            case CaseStmt(_,body)           => findLeaves(body)
-            case DefaultStmt(body)          => findLeaves(body)
-            case BreakStmt()                => List()
-            case ReturnStmt(_)              => List()
-            case ContinueStmt()             => List()
-            case _                          => List(x)
+            case CompoundStmt(elts)          => if (elts.isEmpty) List(x) else findLeaves(elts.last)
+            case IfStmt(cond,body,elseStmt)  => findLeaves(body) ++ findLeaves(elseStmt | cond)
+            case CaseStmt(_,body)            => findLeaves(body)
+            case DefaultStmt(body)           => findLeaves(body)
+            case SwitchStmt(_,body)          => findLeaves(body)
+            case ForStmt(_,cond,_,body)      => findLeaves(cond | body)
+            case BreakStmt()                 => List()
+            case ReturnStmt(_)               => List()
+            case ContinueStmt()              => List()
+            case _                           => List(x)
         }
         case None    => List()
     }
@@ -56,6 +82,8 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
                 }
                 cmpdStmt >> elts(0)
                 findLeaves(elts.last).foreach(_.>>(next))
+            } else {
+                cmpdStmt >> next
             }
             cmpdStmt
     }
@@ -66,19 +94,19 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
             condition >> handle(body, next, exit, entry)
             elseStmt match {
                 case Some(x) => condition >> handle(x, next, exit, entry)
-                case None    => condition >> next
+                case None    => condition >> (notNull(next) | entry)
             }
             ifStmt
     }
     
     private def handleFor(forStmt: SourceCodeNode, next: SourceCodeNode, exit: Option[SourceCodeNode], entry: Option[SourceCodeNode]) = forStmt match {
         case ForStmt(init,cond,update,body) =>
-            forStmt >> init >> cond >> handle(body,(update or cond or body).get,Some(next),(update or cond))
+            forStmt >> init >> cond >> handle(body,(update | cond | body).get,Some(next),(update | cond | body))
             body match {
-                case CompoundStmt(elts) if elts.isEmpty => body >> update >> (cond or body)
-                case _                                  => (cond or body).get << update
+                case CompoundStmt(elts) if elts.isEmpty => body >> update >> (cond | body)
+                case _                                  => (cond | body).get << update
             }
-            next << (cond or init or forStmt)
+            next << (cond | init | forStmt)
             forStmt
     }
 	
@@ -93,6 +121,18 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
             }
             whileStmt
 	}
+    
+    private def handleDoWhile(doStmt: SourceCodeNode, next: SourceCodeNode, exit: Option[SourceCodeNode], entry: Option[SourceCodeNode]) = doStmt match {
+        case DoWhileStmt(condition,body) =>
+            doStmt >> handle(body,condition,Some(next),Some(condition))
+            condition >> next
+            condition >> body
+            body match {
+                case CompoundStmt(elts) if elts.isEmpty => body >> condition
+                case _                                  => 
+            }
+            doStmt
+    }
     
     private def handleSwitch(switchStmt: SourceCodeNode, next: SourceCodeNode, exit: Option[SourceCodeNode], entry: Option[SourceCodeNode]) = switchStmt match {
         case SwitchStmt(expr,body) =>
@@ -131,6 +171,12 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
         case DefaultStmt(body) => caseStmt >> handle(body,next,exit,entry); caseStmt
     }
     
+    private def handleLabel(labelStmt: SourceCodeNode, next: SourceCodeNode, exit: Option[SourceCodeNode], entry: Option[SourceCodeNode]) = labelStmt match {
+        case LabelStmt(label,body) =>
+            labelStmt >> handle(body,next,exit,entry)
+            labelStmt
+    }
+    
     private def handleExpr(node: SourceCodeNode, next: SourceCodeNode) = {
         node >> next
         node
@@ -139,6 +185,11 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
     private def handleJump(node: SourceCodeNode, exit: SourceCodeNode) = {
         node >> exit
         node
+    }
+    
+    private def handleJump(node: SourceCodeNode, exit: Option[SourceCodeNode]) = exit match {
+        case Some(x) => node >> x; node
+        case _       => node
     }
     
 }
