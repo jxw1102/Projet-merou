@@ -18,7 +18,7 @@ object Test extends App {
     println(clangCmd.!!)
     val parser = new ASTParser
     val parseResult = parser.parseFile(clangFilePath)
-    val astResult = new SourceCodeNodeFactory(parseResult.root).result
+    val astResult = new SourceCodeNodeFactory(parseResult.root,parseResult .labels).result
     val cfg = new ProgramNodeFactory(astResult.rootNodes(0), astResult.labelNodes).result
 
     val digraph = "Digraph {\n" + cfg.mkString + "}"
@@ -44,11 +44,6 @@ object Test extends App {
             case "png" | _ =>
                 dotCmd += "png " + dotFilePath
                 (dotCmd #> graphPath + name + ".png").!
-
         }
-
-        
-
     }
-
 }

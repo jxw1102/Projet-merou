@@ -4,23 +4,44 @@ import ast.model.Expr
 import scala.collection.mutable.Map
 
 /**
- * @author simple
+ * @author Zohour Abouakil
  */
+abstract class Environment {
+    def unapply : Option[(Map[String, Expr],Map[String, Set[Expr]])]
+    def unary_! : Set[Environment]
+    def interEnv (that: Environment): Environment 
+    def -(name: String): Environment
+}
 
-class Environment {
+object Bottom extends Environment {
+	override def unapply                     = None
+    override def unary_!                     = Set(new Bindings)
+    override def interEnv(that: Environment) = Bottom
+    override def -(name: String)             = Bottom
+}
+
+class Bindings extends Environment {
    val positiveBindings = Map[String, Expr]()
    val negativeBindings = Map[String, Set[Expr]]() 
    
-   def this (pb: Map[String, Expr], nb: Map[String, Set[Expr]]) {
-       this();
+   def this (pb: Map[String, Expr]=Map(), nb: Map[String, Set[Expr]]=Map()) {
+       this()
        positiveBindings ++= pb
        negativeBindings ++= nb
    }
    
-   /*
-    * This function verify if the two environment we want to intersection are not in conflict 
+   override def unapply: Option[(Map[String, Expr],Map[String, Set[Expr]])] = Some(positiveBindings, negativeBindings)
+
+   override def unary_! = {
+       val neg = positiveBindings.map     { case (key,value) => new Bindings(Map(),Map(key -> Set(value)))      }
+       val pos = negativeBindings.flatMap { case (key,set)   => set.map(v => new Bindings(Map(key -> v),Map())) }.toSet
+       pos ++ neg
+   }
+   
+   /**
+    * This function verifies that the two environment of which we want to compute the intersection are not in conflict 
     */
-   def conflicts (that: Environment): Boolean = {
+   def conflicts (that: Bindings): Boolean = {
        val domThis = this.positiveBindings.keySet ++ this.negativeBindings.keySet
        val domThat = that.positiveBindings.keySet ++ that.negativeBindings.keySet
        
@@ -39,24 +60,26 @@ class Environment {
        false 
    }
    
-   def interEnv (that: Environment): Option[Environment] = {
-       if (conflicts(that))
-           return None
-           
-       val res = new Environment
+   override def interEnv (that: Environment): Environment = {
+       that.unapply match {
+           case None            => Bottom    
+           case Some((pos,neg)) =>
+               if (conflicts(that.asInstanceOf[Bindings])) Bottom
+               else {
+                   val res = new Bindings
+                   res.positiveBindings ++= this.positiveBindings ++ pos
+                   val tmp                = this.negativeBindings ++ neg
        
-       res.positiveBindings ++= this.positiveBindings ++ that.positiveBindings
-       val tmp = this.negativeBindings ++ that.negativeBindings
-       
-       // clean 
-       res.negativeBindings ++= tmp.filterNot { case (key,value) => res.positiveBindings.contains(key) }
-       
-       return Some(res)
+                   // clean 
+                   res.negativeBindings ++= tmp.filterNot { case (key,value) => res.positiveBindings.contains(key) }
+                   res
+              }
+       }
    } 
     
-   def -(name : String) : Environment = {
-       return new Environment(if(this.positiveBindings contains name) this.positiveBindings-name else this.positiveBindings,
-                                if(this.negativeBindings contains name) this.negativeBindings-name else this.negativeBindings)
-   }
+   def -(name : String): Environment = new Bindings(this.positiveBindings - name,this.negativeBindings - name)
   
+   /**
+    * This function is used to get the opposite of an environment 
+    */
 }

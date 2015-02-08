@@ -23,10 +23,10 @@ object Main extends App {
         
         // parse the AST
     	val parseResult = (new ASTParser).parseFile(clangPath)
-    	val astRes      = new SourceCodeNodeFactory(parseResult.root).result
+    	val astRes      = new SourceCodeNodeFactory(parseResult.root,parseResult.labels).result
 
     	// generate the CFG and write it in a file
-    	val cfg = new ProgramNodeFactory(astRes.rootNodes(0), astRes.labelNodes).result
+    	val cfg = new ProgramNodeFactory(astRes.rootNodes(0),astRes.labelNodes).result
     	writer  = new PrintWriter(path + "test.dot")
     	writer.write("digraph {\n%s}".format(cfg.mkString))
     	writer.close
