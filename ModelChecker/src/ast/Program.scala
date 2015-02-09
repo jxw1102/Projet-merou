@@ -74,10 +74,10 @@ abstract class SourceCodeNode {
     
     def mkString = addString(new StringBuilder, MSet()).toString
 	private def addString(sb: StringBuilder, set: MSet[SourceCodeNode]): StringBuilder = {
-        _next.foreach(node => sb.append("%s -> %s;\n".format(this,node)))
-        if (set contains this) sb 
+        if (set contains this) sb
         else {
         	set += this
+        	_next.foreach(node => sb.append("%s -> %s;\n".format(this,node)))
             _next.filterNot(set contains _).foreach(_.addString(sb,set))
             sb
         }

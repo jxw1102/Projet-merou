@@ -22,8 +22,6 @@ object Main extends App {
     
     val cfg = new ProgramNodeFactory(astRes.rootNodes(0), astRes.labelNodes).result
     
-//    println(cfg.next(0).next(0).next(0).next(0).next)
-    
     val gv = cfg.mkString
 //    println(gv)
     val cmd = "echo '" + "digraph G {\n" + gv + "}'" + " | /usr/local/bin/dot -T png -o test.png && open test.png"
