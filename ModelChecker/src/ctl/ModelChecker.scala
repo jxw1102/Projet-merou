@@ -12,15 +12,12 @@ object ModelChecker {
     type GraphNodeProgram = GraphNode[ProgramNode, ProgramNodeLabelizer]
     type CheckerResult    = Set[StateEnv]
     
-    // j'ai remplacé les * par des / car quand on génèrera la scaladoc les /** ... */ seront interprétés
-    // comme des docstring
-    
     //////////////////////////---------------------------------------------//////////////////////////
     ///////////////////////////// Function implementation only for CTL-V //////////////////////////// 
     //////////////////////////---------------------------------------------//////////////////////////
-    def shift(s1: GraphNodeProgram , T: CheckerResult, s2: GraphNodeProgram): CheckerResult = {
-        return T.filter { case(a,b) => a == s1 }.map{ case(a,b) => (s2,b) } // return a new set 
-    }
+    def shift(s1: GraphNodeProgram , T: CheckerResult, s2: GraphNodeProgram): CheckerResult = 
+        T.filter { case(a,b) => a == s1 }.map{ case(a,b) => (s2,b) } // return a new set 
+    
     
     def interStateEnv(se1: StateEnv, se2: StateEnv): Option[StateEnv] = {
         if (se1._1 != se2._1) None
@@ -30,46 +27,54 @@ object ModelChecker {
     /**
      * The function existsone discards the binding of a quantified variable x from the environment of a state/environment pair
      */
-    def existsone(metaData: String, ev: StateEnv) : StateEnv = (ev._1, ev._2 - metaData)
+    private def existsone(metaData: String, ev: StateEnv) : StateEnv = (ev._1, ev._2 - metaData)
     
     /**
      * The function inj, used to inject the result of matching a predicate into the codomain of SAT
      */
-    def inj(s: GraphNodeProgram, env: Environment): StateEnv = (s, env)
-    def same(t1: CheckerResult , t2: CheckerResult)          = t1 == t2
+    private def inj(s: GraphNodeProgram, env: Environment): StateEnv = (s, env)
+    private def same(t1: CheckerResult , t2: CheckerResult)          = t1 == t2
     
-    val nodeParent = new GraphNodeProgram(???) // to modify 
-    def negone(s: GraphNodeProgram, env: Environment) = {
-        ((!env).map { case value => (s, value) } 
-        ++ 
-        nodeParent.states.map { node => if (node != s) inj(node, new Bindings) })      
+    private val nodeParent = new GraphNodeProgram(???) // to modify 
+    private def negone(se: StateEnv): Set[StateEnv] = se match { 
+        case (s, env) => 
+            ((!env).map { case value => (s, value) } ++ nodeParent.states.filter(_ != s).map {inj(_, new Bindings)})      
     }
 
-    // non, dans le cas général on ne sait rien sur Val. On a calculé l'attribut states sur GraphNode
-    // pour récupérer l'ensemble des états
-    def ex_binding(metaData: String, se: StateEnv) = true // On considere que l ensemble Val est infini
+    private def ex_binding(metaData: String, se: StateEnv) = true // On considere que l ensemble Val est infini
+    
     
     //////////////////////////---------------------------------------------///////////////////////////
     //////////////////////////////////////// common functions //////////////////////////////////////// 
     //////////////////////////---------------------------------------------///////////////////////////
     def disj(t1: CheckerResult , t2: CheckerResult) = t1 ++ t2
     
-    def Disj = {}
-    
-    def Conj = {}
+    def Disj(x: Set[CheckerResult]) = x.foldRight(Set[StateEnv]())(disj)
     
     def conj(T1: CheckerResult , T2: CheckerResult) = 
-        for (t1 <- T1 ; t2 <- T2 ; inter = interStateEnv(t1,t2) ; if (inter.isDefined)) yield inter 
+        for (t1 <- T1 ; t2 <- T2 ; inter = interStateEnv(t1,t2) ; if (inter.isDefined)) yield inter.get
         
-    def neg(T: CheckerResult) = {}
+    def Conj(x: Set[CheckerResult]) = x.foldRight(nodeParent.states.map(node => inj(node, new Bindings)))(conj)
+        
+    def neg(T: CheckerResult) = Conj(T.map(negone))
     
-    def preA(T: CheckerResult) = {}
+    // s∈ States (Conj {shift(s 0 , T, s) | s 0 ∈ next(s)})
+    def preA(T: CheckerResult) = nodeParent.states.flatMap(s => Conj(s.next.map(sNext => shift(sNext,T,s))))
     
-    def preE(T: CheckerResult) = {}
+    def preE(T: CheckerResult) = nodeParent.states.flatMap(s => Disj(s.next.map(sNext => shift(sNext,T,s))))
     
-    def SAT_AU(T1: CheckerResult , T2: CheckerResult) = {}
-
-    def SAT_EU(T1: CheckerResult , T2: CheckerResult) = {}
+    private def SAT_UU(f: CheckerResult => CheckerResult)(T1: CheckerResult , T2: CheckerResult) = {
+            var (w,x,y) = (T1,T2,T2)
+            do {
+                x = y 
+                y = disj(y, conj(w, f(y)))
+            } while(!same(x,y))           
+            y
+        }
+    
+    def SAT_AU = SAT_UU(preA)(_,_)
+    
+    def SAT_EU = SAT_UU(preE)(_,_)
     
     def exits(x: String, T: CheckerResult) = for (t <- T ; if (ex_binding(x, t))) yield existsone(x, t)
 }

@@ -28,13 +28,13 @@ trait ExprPattern {
     def matches(expr: Expr): Option[Environment]
 }
 
-case class BinaryOpPattern (left: PatternExpr, right: PatternExpr, op: String) {
+case class BinaryOpPattern (left: PatternExpr, right: PatternExpr, op: String) extends ExprPattern{
     private def matchEnv(pattern: PatternExpr, expr: Expr) = pattern match {
             case DefinedExpr  (e   : Expr  ) => if (e == expr) new Bindings else Bottom
             case UndefinedExpr(name: String) => new Bindings(Map(name -> expr))
     }
     
-    def matches(expr: Expr): Option[Environment] = {
+    override def matches(expr: Expr): Option[Environment] = {
         expr match {
           case BinaryOp(l,r,operator) =>  
               val lenv = matchEnv(left ,l)

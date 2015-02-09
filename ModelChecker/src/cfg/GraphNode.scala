@@ -13,8 +13,8 @@ class GraphNode[U <: Labelizable[V], V <: Labelizer](val value: U) {
     private val _next = MHSet[GUV]()
     private val _prev = MHSet[GUV]()
     
-    def prev = _prev.toList
-    def next = _next.toList
+    def prev = _prev.toSet
+    def next = _next.toSet
     
     lazy val states = getStates(this, Set())
     

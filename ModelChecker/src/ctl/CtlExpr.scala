@@ -1,5 +1,7 @@
 package ctl
 
+import ctl.ModelChecker._
+
 /**
  * @author Zohour Abouakil
  * @author Fabien Sauce
@@ -27,7 +29,7 @@ final case class EG                  (op  : CtlExpr) extends CtlExpr
 final case class AF                  (op  : CtlExpr) extends CtlExpr 
 final case class EF                  (op  : CtlExpr) extends CtlExpr 
 final case class Not                 (op  : CtlExpr) extends CtlExpr 
-final case class Exists(name: String, op  : CtlExpr) extends CtlExpr
+final case class Exist (name: String, op  : CtlExpr) extends CtlExpr
 
 // Predicate
 final case class Predicate (varList : List[String]=List()) extends CtlExpr 
@@ -57,20 +59,18 @@ object CtlExpr {
         }
     }
     
-//        def evalExpr(expr : CtlExpr) : ModelChecker.CheckerResult = {
-//	        expr match {
-//	            case And(x, y) => ModelChecker.conj(evalExpr(x), evalExpr(y))
-//	            case Or (x, y) => ModelChecker.disj(evalExpr(x), evalExpr(y))
-//	            case _AU(x, y) => 
-//	            case _EU(x, y) => 
-//	            case AX (x)    => 
-//	            case EX (x)    => 
-//	            case AG (x)    => 
-//	            case EG (x)    => 
-//	            case AF (x)    => 
-//	            case EF (x)    => 
-//	            case Not (x)   => 
-//	            case Predicate(x) => 
-//	        }
-//    }
+        def evalExpr(expr : CtlExpr) : CheckerResult = {
+	        expr match {
+	            case And   (x, y)    => conj(evalExpr(x), evalExpr(y))
+	            case Or    (x, y)    => disj(evalExpr(x), evalExpr(y))
+	            case _AU   (x, y)    => SAT_AU(evalExpr(x), evalExpr(y))
+	            case _EU   (x, y)    => SAT_EU(evalExpr(x), evalExpr(y))
+	            case AX    (x   )    => preA(evalExpr(x))
+	            case EX    (x   )    => preE(evalExpr(x))
+	            case Not   (x   )    => neg(evalExpr(x))
+                case Exist (x, y)    => exits(x, evalExpr(y))
+	            case Predicate(x)    => 
+                case _               => Set[StateEnv] ()
+	        }
+    }
 }
