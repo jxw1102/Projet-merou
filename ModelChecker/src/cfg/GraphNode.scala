@@ -2,6 +2,7 @@ package cfg
 
 import collection.mutable.{ Set => MSet, HashSet => MHSet }
 import ast.ProgramNode
+import ctl.Environment
 
 /**
  * This class represents an oriented unweighted graph of labelizable nodes
@@ -59,4 +60,4 @@ class GraphNode[U <: Labelizable[V], V <: Labelizer](val value: U) {
  * Implementation of the label function of a graph using the Visitor pattern
  */
 trait Labelizer
-trait Labelizable[V <: Labelizer] { def visit(visitor: V) }
+trait Labelizable[V <: Labelizer] { def visit(visitor: V): Option[Environment] }

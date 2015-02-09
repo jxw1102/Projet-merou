@@ -12,6 +12,7 @@ import ast.model.JumpStmt
 import scala.collection.mutable.ArrayBuffer
 import jdk.nashorn.internal.ir.Assignment
 import ast.model.Stmt
+import ctl.Environment
 
 /**
  * Those classes represent the most abstract and final form of the transformations of the source code
@@ -82,14 +83,15 @@ final case class Switch    (e: Expr         , cr: CodeRange, _id: String) extend
 private[ast] final case class Empty(          cr: CodeRange, _id: String) extends ProgramNode(_id) { def visit(v: PNL) = v.visitEmpty     (this) }
 
 trait ProgramNodeLabelizer extends Labelizer {
-    def visitIf                (ifNode     : If        )
-    def visitFor               (forNode    : For       )
-    def visitWhile             (whileNode  : While     )
-    def visitStatement         (stmt       : Statement )
-    def visitIdentifier        (id         : Identifier)
-    def visitExpression        (expr       : Expression)
-    def visitSwitch            (switchNode : Switch    )
-    private[ast] def visitEmpty(empty      : Empty     ) = throw new IllegalStateException("Empty nodes should never be explored")
+    def visitIf                (ifNode     : If        ): Option[Environment] = None
+    def visitFor               (forNode    : For       ): Option[Environment] = None
+    def visitWhile             (whileNode  : While     ): Option[Environment] = None
+    def visitStatement         (stmt       : Statement ): Option[Environment] = None
+    def visitIdentifier        (id         : Identifier): Option[Environment] = None
+    def visitExpression        (expr       : Expression): Option[Environment] = None
+    def visitSwitch            (switchNode : Switch    ): Option[Environment] = None
+    private[ast] final def visitEmpty(empty: Empty     ): Option[Environment] = 
+        throw new IllegalStateException("Empty nodes should never be explored")
 }
 
 ///////////////////////////////////////////////////////

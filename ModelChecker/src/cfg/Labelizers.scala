@@ -1,221 +1,130 @@
-//package cfg
-//
-//import ast.ProgramNodeLabelizer
-//import ast.For
-//import ast.While
-//import ast.Identifier
-//import ast.Expression
-//import ast.If
-//import ast.model.Expr
-//import ast.For
-//import ast.While
-//import ast.model.BinaryOp
-//import ast.Statement
-//import ctl.Environment
-//import ctl.Bindings
-//import scala.collection.mutable.Map
-//import ctl.Bottom
-//import ast.Switch
-//
-///**
-// * @author Zohour Abouakil
-// */
-//
-//sealed abstract class PatternExpr
-//case class UndefinedExpr(name: String) extends PatternExpr
-//case class DefinedExpr  (expr: Expr  ) extends PatternExpr
-//
-//trait ExprPattern {
-//    def matches(expr: Expr): Option[Environment]
-//}
-//
-//case class BinaryOpPattern (left: PatternExpr, right: PatternExpr, op: String) {
-//    private def matchEnv(pattern: PatternExpr, expr: Expr) = pattern match {
-//            case DefinedExpr  (e   : Expr  ) => if (e == expr) new Bindings else Bottom
-//            case UndefinedExpr(name: String) => new Bindings(Map(name -> expr))
-//    }
-//    
-//    def matches(expr: Expr): Option[Environment] = {
-//        expr match {
-//          case BinaryOp(l,r,operator) =>  
-//              val lenv = matchEnv(left ,l)
-//              val renv = matchEnv(right,r)
-//              (lenv.unapply,renv.unapply) match {
-//                  case (Some((lpos,_)),Some((rpos,_))) => Some(new Bindings(lpos ++ rpos))
-//                  case _                               => None
-//              }
-//          case _ => None
-//        }
-//    }
-//}
-//
-//class IfLabelizer(val pattern: ExprPattern) extends ProgramNodeLabelizer {
-//    def visitIf        (ifNode    : If        ) = ifNode match { case If(expr,_,_) => pattern.matches(expr) } 
-//    def visitFor       (forNode   : For       ) = None
-//    def visitWhile     (whileNode : While     ) = None
-//    def visitStatement (stmt      : Statement ) = None
-//    def visitIdentifier(id        : Identifier) = None
-//    def visitExpression(expr      : Expression) = None
-//    def visitSwitch    (switchNode: Switch    ) = None
-//}
-//
-//class ForLabelizer(val pattern: ExprPattern) extends ProgramNodeLabelizer {
-//    def visitIf        (ifNode   : If        ) = None
-//    def visitFor       (forNode  : For       ) = forNode match {
-//            case For(None      ,_,_) => None
-//            case For(Some(expr),_,_) => None//pattern.matches(expr) 
-//        }
-//    def visitWhile     (whileNode : While     ) = None
-//    def visitStatement (stmt      : Statement ) = None
-//    def visitIdentifier(id        : Identifier) = None
-//    def visitExpression(expr      : Expression) = None
-//    def visitSwitch    (switchNode: Switch    ) = None
-//}
-//
-//class WhileLabelizer(val pattern: ExprPattern) extends ProgramNodeLabelizer {
-//    def visitIf        (ifNode    : If        ) = None
-//    def visitFor       (forNode   : For       ) = None
-//    def visitWhile     (whileNode : While     ) = whileNode match { case While(expr,_,_) => pattern.matches(expr) }
-//    def visitStatement (stmt      : Statement ) = None
-//    def visitIdentifier(id        : Identifier) = None
-//    def visitExpression(expr      : Expression) = None
-//    def visitSwitch    (switchNode: Switch    ) = None
-//}
-//
-//class StatementLabelizer(val pattern: ExprPattern) extends ProgramNodeLabelizer {
-//    def visitIf        (ifNode    : If        ) = None
-//    def visitFor       (forNode   : For       ) = None
-//    def visitWhile     (whileNode : While     ) = None
-//    def visitStatement (stmt      : Statement ) = None //whileNode match { case While(expr,_,_) => None }//pattern.matches(expr) }
-//    def visitIdentifier(id        : Identifier) = None
-//    def visitExpression(expr      : Expression) = None
-//    def visitSwitch    (switchNode: Switch    ) = None
-//}
-//
-//class IdentifierLabelizer(val pattern: ExprPattern) extends ProgramNodeLabelizer {
-//    def visitIf        (ifNode    : If        ) = None
-//    def visitFor       (forNode   : For       ) = None
-//    def visitWhile     (whileNode : While     ) = None
-//    def visitStatement (stmt      : Statement ) = None
-//    def visitIdentifier(id        : Identifier) = None // whileNode match { case While(expr,_,_) => None }//pattern.matches(expr) }
-//    def visitExpression(expr      : Expression) = None
-//    def visitSwitch    (switchNode: Switch    ) = None
-//}
-//
-//class ExpressionLabelizer(val pattern: ExprPattern) extends ProgramNodeLabelizer {
-//    def visitIf        (ifNode    : If        ) = None
-//    def visitFor       (forNode   : For       ) = None
-//    def visitWhile     (whileNode : While     ) = None
-//    def visitStatement (stmt      : Statement ) = None
-//    def visitIdentifier(id        : Identifier) = None 
-//    def visitExpression(expr      : Expression) = None // whileNode match { case While(expr,_,_) => None }//pattern.matches(expr) }
-//    def visitSwitch    (switchNode: Switch    ) = None
-//}
-//=======
-//package cfg
-//
-//import ast.ProgramNodeLabelizer
-//import ast.For
-//import ast.While
-//import ast.Identifier
-//import ast.Expression
-//import ast.If
-//import ast.model.Expr
-//import ast.For
-//import ast.While
-//import ast.model.BinaryOp
-//import ast.Statement
-//import ctl.Environment
-//import ctl.Bindings
-//import scala.collection.mutable.Map
-//import ctl.Bottom
-//
-///**
-// * @author Zohour Abouakil
-// */
-//
-//sealed abstract class PatternExpr
-//case class UndefinedExpr(name: String) extends PatternExpr
-//case class DefinedExpr  (expr: Expr  ) extends PatternExpr
-//
-//trait ExprPattern {
-//    def matches(expr: Expr): Option[Environment]
-//}
-//
-//case class BinaryOpPattern (left: PatternExpr, right: PatternExpr, op: String) extends ExprPattern{
-//    private def matchEnv(pattern: PatternExpr, expr: Expr) = pattern match {
-//            case DefinedExpr  (e   : Expr  ) => if (e == expr) new Bindings else Bottom
-//            case UndefinedExpr(name: String) => new Bindings(Map(name -> expr))
-//    }
-//    
-//    override def matches(expr: Expr): Option[Environment] = {
-//        expr match {
-//          case BinaryOp(l,r,operator) =>  
-//              val lenv = matchEnv(left ,l)
-//              val renv = matchEnv(right,r)
-//              (lenv.unapply,renv.unapply) match {
-//                  case (Some((lpos,_)),Some((rpos,_))) => Some(new Bindings(lpos ++ rpos))
-//                  case _                               => None
-//              }
-//          case _ => None
-//        }
-//    }
-//}
-//
-//class IfLabelizer(val pattern: ExprPattern) extends ProgramNodeLabelizer {
-//    def visitIf        (ifNode   : If        ) = ifNode match { case If(expr,_,_) => pattern.matches(expr) } 
-//    def visitFor       (forNode  : For       ) = None
-//    def visitWhile     (whileNode: While     ) = None
-//    def visitStatement (stmt     : Statement ) = None
-//    def visitIdentifier(id       : Identifier) = None
-//    def visitExpression(expr     : Expression) = None
-//}
-//
-//class ForLabelizer(val pattern: ExprPattern) extends ProgramNodeLabelizer {
-//    def visitIf        (ifNode   : If        ) = None
-//    def visitFor       (forNode  : For       ) = forNode match {
-//            case For(None      ,_,_) => None
-//            case For(Some(expr),_,_) => None//pattern.matches(expr) 
-//        }
-//    def visitWhile     (whileNode: While     ) = None
-//    def visitStatement (stmt      : Statement) = None
-//    def visitIdentifier(id       : Identifier) = None
-//    def visitExpression(expr     : Expression) = None
-//}
-//
-//class WhileLabelizer(val pattern: ExprPattern) extends ProgramNodeLabelizer {
-//    def visitIf        (ifNode   : If        ) = None
-//    def visitFor       (forNode  : For       ) = None
-//    def visitWhile     (whileNode: While     ) = whileNode match { case While(expr,_,_) => pattern.matches(expr) }
-//    def visitStatement (stmt     : Statement ) = None
-//    def visitIdentifier(id       : Identifier) = None
-//    def visitExpression(expr     : Expression) = None
-//}
-//
-//class StatementLabelizer(val pattern: ExprPattern) extends ProgramNodeLabelizer {
-//    def visitIf        (ifNode   : If        ) = None
-//    def visitFor       (forNode  : For       ) = None
-//    def visitWhile     (whileNode: While     ) = None
-//    def visitStatement (stmt     : Statement ) = None //whileNode match { case While(expr,_,_) => None }//pattern.matches(expr) }
-//    def visitIdentifier(id       : Identifier) = None
-//    def visitExpression(expr     : Expression) = None
-//}
-//
-//class IdentifierLabelizer(val pattern: ExprPattern) extends ProgramNodeLabelizer {
-//    def visitIf        (ifNode   : If        ) = None
-//    def visitFor       (forNode  : For       ) = None
-//    def visitWhile     (whileNode: While     ) = None
-//    def visitStatement (stmt     : Statement ) = None
-//    def visitIdentifier(id       : Identifier) = None // whileNode match { case While(expr,_,_) => None }//pattern.matches(expr) }
-//    def visitExpression(expr     : Expression) = None 
-//}
-//
-//class ExpressionLabelizer(val pattern: ExprPattern) extends ProgramNodeLabelizer {
-//    def visitIf        (ifNode   : If        ) = None
-//    def visitFor       (forNode  : For       ) = None
-//    def visitWhile     (whileNode: While     ) = None
-//    def visitStatement (stmt     : Statement ) = None
-//    def visitIdentifier(id       : Identifier) = None 
-//    def visitExpression(expr     : Expression) = None // whileNode match { case While(expr,_,_) => None }//pattern.matches(expr) }
-//}
-//
+package cfg
+
+import scala.collection.mutable.Map
+
+import ast.Expression
+import ast.For
+import ast.For
+import ast.Identifier
+import ast.If
+import ast.ProgramNodeLabelizer
+import ast.Statement
+import ast.While
+import ast.While
+import ast.model.BinaryOp
+import ast.model.Expr
+import ast.model.Literal
+import ast.model.UnaryOp
+import ctl.Bindings
+import ctl.Bottom
+import ctl.Environment
+
+/**
+ * @author Zohour Abouakil
+ */
+
+sealed abstract class PatternExpr
+case class UndefinedExpr(name: String) extends PatternExpr
+case class DefinedExpr  (expr: Expr  ) extends PatternExpr
+
+trait ExprPattern {
+    def matches(expr: Expr): Option[Environment]
+    
+    def matchEnv(pattern: PatternExpr, expr: Expr) = pattern match {
+            case DefinedExpr  (e   : Expr  ) => if (e matches expr) new Bindings else Bottom
+            case UndefinedExpr(name: String) => new Bindings(Map(name -> expr))
+    }
+}
+
+
+case class BinaryOpPattern (left: PatternExpr, right: PatternExpr, op: String) extends ExprPattern{   
+    override def matches(expr: Expr): Option[Environment] = {
+        expr match {
+          case BinaryOp(l,r,operator) => 
+              if (operator == op) {
+                  val lenv = matchEnv(left ,l)
+                  val renv = matchEnv(right,r)
+                  (lenv.unapply,renv.unapply) match {
+                      case (Some((lpos,_)),Some((rpos,_))) => Some(new Bindings(lpos ++ rpos))
+                      case _                               => None
+                  } 
+              }
+              else     
+                  None
+          case _ => None
+        }
+    }
+}
+
+case class UnaryOpPattern (patternExpr: PatternExpr, op: String) extends ExprPattern{
+    override def matches(expr: Expr): Option[Environment] = {
+        expr match {
+          case UnaryOp(operand, operator) =>  
+              if (operator == op) {
+                  val env = matchEnv(patternExpr ,operand)
+                  env.unapply match {
+                      case Some((pos,_)) => Some(new Bindings(pos))
+                      case _              => None
+                  }
+              }
+              else 
+                  None
+          case _ => None
+        }
+    }
+}
+
+case class LiteralPattern(lit: PatternExpr) extends ExprPattern {
+    override def matches(expr: Expr): Option[Environment] = {
+        expr match {
+          case Literal(v) =>  
+              val env = matchEnv(lit,expr)
+              (env.unapply) match {
+                  case (Some((pos,_))) => Some(new Bindings(pos))
+                  case _               => None
+              }
+          case _ => None
+        }
+    }
+}
+
+
+//case class Literal            (x: String)  
+
+//case class CompoundAssignOp   (left: Expr, right: Expr, operator: String)                                 extends Expr
+//case class DeclRefExpr        (targetType: String, targetName: String, targetId: String, refType: String) extends Expr
+//case class ConditionalOperator(exprs: (Expr,Expr,Expr), returnType: String)                               extends Expr
+//case class ArraySubscriptExpr (exprs: (Expr, Expr))                                                       extends Expr
+//case class InitListExpr       (exprs: List[Expr])                                                         extends Expr
+//case class CallExpr           (returnType: String, params: List[Expr])                                    extends Expr {
+
+
+class IfLabelizer(val pattern: ExprPattern) extends ProgramNodeLabelizer {
+    override def visitIf(ifNode   : If) = ifNode match { 
+        case If(expr,_,_) => pattern.matches(expr) 
+        case _            => None
+    } 
+}
+
+class ForLabelizer(val pattern: ExprPattern) extends ProgramNodeLabelizer {
+    override def visitFor(forNode  : For) = forNode match {
+            case For(None      ,_,_) => None
+            case For(Some(expr),_,_) => pattern.matches(expr) 
+        }
+}
+
+class WhileLabelizer(val pattern: ExprPattern) extends ProgramNodeLabelizer {
+    override def visitWhile(whileNode: While) = whileNode match { case While(expr,_,_) => pattern.matches(expr) }
+}
+
+class StatementLabelizer(val pattern: ExprPattern) extends ProgramNodeLabelizer {
+    override def visitExpression(expr: Expression) = pattern.matches(expr.e)
+}
+
+class IdentifierLabelizer(val pattern: ExprPattern) extends ProgramNodeLabelizer {
+    override def visitIdentifier(id: Identifier) = id match { case Identifier(s, _, _)  => None }
+}
+
+class ExpressionLabelizer(val pattern: ExprPattern) extends ProgramNodeLabelizer {
+    override def visitExpression(expr: Expression) = expr match { case Expression(e, _, _) => pattern.matches(e) }
+}

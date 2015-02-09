@@ -8,7 +8,7 @@ import java.io.File
 
 object Main extends App {
     val folder = "switch"
-    new File("ModelChecker/unitary_tests/%s/".format(folder)).listFiles.filter(_.getName.endsWith("cpp")).foreach { file => 
+    new File("unitary_tests/%s/".format(folder)).listFiles.filter(_.getName.endsWith("cpp")).foreach { file => 
         val name = file.getName
         val s    = name.substring(0,name.lastIndexOf('.'))
         val path = file.getPath.substring(0,file.getPath.indexOf(name))
