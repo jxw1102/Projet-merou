@@ -20,13 +20,10 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
     private var labels = Map[String,GNode]()
     private def getLabel(label: String) = labels.getOrElseUpdate(label,toGraphNode(labelNodes(label)))
     
-    lazy val result = {
-        val res = clean(
+    lazy val result = 
+        clean(
             handle(rootNode,None,None,None)
-            ,Set())
-            println(res)
-            res.head
-    }
+            ,Set()).head
     
     private val debugEnabled = false
     private def debug(msg: String) = if (debugEnabled) println(msg)
@@ -155,7 +152,6 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
             val res      = handle(body,Some(condNode),next,Some(condNode))
             condNode >> res
             if (next.isDefined) condNode >> next.get 
-            println(res)
             res
     }
     
@@ -215,7 +211,7 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
             case CaseStmt(_, body) => 
                 body match {
                     case CaseStmt(_,_) => res >> handleCase(body,prev,next,exit,entry)           
-                    case BreakStmt()   => println("kikou " + res + " " + exit); res >> exit.get
+                    case BreakStmt()   => res >> exit.get
                     case _             => res >> handle(body,next,exit,entry)
                                            
                 }

@@ -1,12 +1,12 @@
 digraph {
-Statement_0x2ecc4b0 -> While_0x2ecc508
-While_0x2ecc508 -> If_0x2ecc568
-While_0x2ecc508 -> Statement_0x2ecc7c0
-If_0x2ecc568 -> While_0x2ecc508
-If_0x2ecc568 -> While_0x2ecc5d0
-While_0x2ecc5d0 -> If_0x2ecc630
-While_0x2ecc5d0 -> While_0x2ecc508
-If_0x2ecc630 -> While_0x2ecc508
-If_0x2ecc630 -> Statement_0x2ecc6d0
-Statement_0x2ecc6d0 -> While_0x2ecc5d0
+"int a  = 5  at 0x2e7c4b0 " -> "while (a > 5) at 0x2e7c748 "
+"while (a > 5) at 0x2e7c748 " -> "if (a > 6) at 0x2e7c710 "
+"while (a > 5) at 0x2e7c748 " -> "int b  = 17  at 0x2e7c7c0 "
+"if (a > 6) at 0x2e7c710 " -> "while (a > 5) at 0x2e7c748 "
+"if (a > 6) at 0x2e7c710 " -> "while (a < 6) at 0x2e7c6f8 "
+"while (a < 6) at 0x2e7c6f8 " -> "while (a > 5) at 0x2e7c748 "
+"while (a < 6) at 0x2e7c6f8 " -> "if (a > 6) at 0x2e7c650 "
+"if (a > 6) at 0x2e7c650 " -> "while (a > 5) at 0x2e7c748 "
+"if (a > 6) at 0x2e7c650 " -> "int c  = 5  at 0x2e7c6d0 "
+"int c  = 5  at 0x2e7c6d0 " -> "while (a < 6) at 0x2e7c6f8 "
 }

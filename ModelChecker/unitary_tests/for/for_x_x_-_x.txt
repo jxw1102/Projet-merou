@@ -1,33 +1,33 @@
-TranslationUnitDecl 0xeec0c0 <<invalid sloc>> <invalid sloc>
-|-TypedefDecl 0xeec3b0 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'char *'
-|-FunctionDecl 0xeec420 <unitary_tests\for\for_x_x_-_x.cpp:1:1, line:3:1> line:1:5 used f 'int (void)'
-| `-CompoundStmt 0xeec4c0 <col:9, line:3:1>
-|   `-ReturnStmt 0xeec4b0 <line:2:2, col:9>
-|     `-IntegerLiteral 0xeec490 <col:9> 'int' 3
-`-FunctionDecl 0xeec5d0 <line:5:1, line:10:1> line:5:5 main 'int (int, char **)'
-  |-ParmVarDecl 0xeec4f0 <col:10, col:14> col:14 argc 'int'
-  |-ParmVarDecl 0xeec550 <col:20, col:27> col:27 argv 'char **'
-  `-CompoundStmt 0xeec940 <col:33, line:10:1>
-    |-DeclStmt 0xeec760 <line:6:2, col:17>
-    | `-VarDecl 0xeec660 <col:2, col:16> col:6 j 'int' cinit
-    |   `-BinaryOperator 0xeec748 <col:10, col:16> 'int' '+'
-    |     |-IntegerLiteral 0xeec690 <col:10> 'int' 5
-    |     `-CallExpr 0xeec728 <col:14, col:16> 'int'
-    |       `-ImplicitCastExpr 0xeec718 <col:14> 'int (*)(void)' <FunctionToPointerDecay>
-    |         `-DeclRefExpr 0xeec6e8 <col:14> 'int (void)' lvalue Function 0xeec420 'f' 'int (void)'
-    |-ForStmt 0xeec898 <line:7:2, line:8:8>
-    | |-DeclStmt 0xeec7d0 <line:7:7, col:15>
-    | | `-VarDecl 0xeec780 <col:7, col:13> col:11 used i 'int' cinit
-    | |   `-IntegerLiteral 0xeec7b0 <col:13> 'int' 3
+TranslationUnitDecl 0xbec0c0 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0xbec3b0 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'char *'
+|-FunctionDecl 0xbec420 <unitary_tests\for\for_x_x_-_x.cpp:1:1, line:3:1> line:1:5 used f 'int (void)'
+| `-CompoundStmt 0xbec4c0 <col:9, line:3:1>
+|   `-ReturnStmt 0xbec4b0 <line:2:2, col:9>
+|     `-IntegerLiteral 0xbec490 <col:9> 'int' 3
+`-FunctionDecl 0xbec5d0 <line:5:1, line:10:1> line:5:5 main 'int (int, char **)'
+  |-ParmVarDecl 0xbec4f0 <col:10, col:14> col:14 argc 'int'
+  |-ParmVarDecl 0xbec550 <col:20, col:27> col:27 argv 'char **'
+  `-CompoundStmt 0xbec940 <col:33, line:10:1>
+    |-DeclStmt 0xbec760 <line:6:2, col:17>
+    | `-VarDecl 0xbec660 <col:2, col:16> col:6 j 'int' cinit
+    |   `-BinaryOperator 0xbec748 <col:10, col:16> 'int' '+'
+    |     |-IntegerLiteral 0xbec690 <col:10> 'int' 5
+    |     `-CallExpr 0xbec728 <col:14, col:16> 'int'
+    |       `-ImplicitCastExpr 0xbec718 <col:14> 'int (*)(void)' <FunctionToPointerDecay>
+    |         `-DeclRefExpr 0xbec6e8 <col:14> 'int (void)' lvalue Function 0xbec420 'f' 'int (void)'
+    |-ForStmt 0xbec898 <line:7:2, line:8:8>
+    | |-DeclStmt 0xbec7d0 <line:7:7, col:15>
+    | | `-VarDecl 0xbec780 <col:7, col:13> col:11 used i 'int' cinit
+    | |   `-IntegerLiteral 0xbec7b0 <col:13> 'int' 3
     | |-<<<NULL>>>
-    | |-BinaryOperator 0xeec828 <col:17, col:21> '_Bool' '<'
-    | | |-IntegerLiteral 0xeec7e0 <col:17> 'int' 5
-    | | `-ImplicitCastExpr 0xeec818 <col:21> 'int' <LValueToRValue>
-    | |   `-DeclRefExpr 0xeec800 <col:21> 'int' lvalue Var 0xeec780 'i' 'int'
+    | |-BinaryOperator 0xbec828 <col:17, col:21> '_Bool' '<'
+    | | |-IntegerLiteral 0xbec7e0 <col:17> 'int' 5
+    | | `-ImplicitCastExpr 0xbec818 <col:21> 'int' <LValueToRValue>
+    | |   `-DeclRefExpr 0xbec800 <col:21> 'int' lvalue Var 0xbec780 'i' 'int'
     | |-<<<NULL>>>
-    | `-CompoundAssignOperator 0xeec878 <line:8:3, col:8> 'int' lvalue '-=' ComputeLHSTy='int' ComputeResultTy='int'
-    |   |-DeclRefExpr 0xeec840 <col:3> 'int' lvalue Var 0xeec780 'i' 'int'
-    |   `-IntegerLiteral 0xeec858 <col:8> 'int' 5
-    `-CallExpr 0xeec920 <line:9:2, col:4> 'int'
-      `-ImplicitCastExpr 0xeec910 <col:2> 'int (*)(void)' <FunctionToPointerDecay>
-        `-DeclRefExpr 0xeec8f8 <col:2> 'int (void)' lvalue Function 0xeec420 'f' 'int (void)'
+    | `-CompoundAssignOperator 0xbec878 <line:8:3, col:8> 'int' lvalue '-=' ComputeLHSTy='double' ComputeResultTy='double'
+    |   |-DeclRefExpr 0xbec840 <col:3> 'int' lvalue Var 0xbec780 'i' 'int'
+    |   `-FloatingLiteral 0xbec858 <col:8> 'double' 5.000000e+00
+    `-CallExpr 0xbec920 <line:9:2, col:4> 'int'
+      `-ImplicitCastExpr 0xbec910 <col:2> 'int (*)(void)' <FunctionToPointerDecay>
+        `-DeclRefExpr 0xbec8f8 <col:2> 'int (void)' lvalue Function 0xbec420 'f' 'int (void)'

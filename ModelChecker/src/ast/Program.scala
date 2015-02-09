@@ -59,18 +59,18 @@ sealed abstract class ProgramNode(val id: String) extends Labelizable[ProgramNod
     
     // ONLY for debugging purpose. I know it is very ugly...
     override def toString = {
-        val format = (name: String, id: String) => "%s_%s".format(name,id)
+        val format = (name: String, a: Any, id: String) => "\"%s %s at %s \"".format(name,a,id)
         this match {
-            case If        (e,_,id) => format("If"        ,e.id.get)
-            case For       (e,_,id) => format("For"       ,if (e.isDefined) e.get.id.get else id)
-            case Empty     (_,  id) => format("Empty"     ,id)
-            case While     (e,_,id) => format("While"     ,e.id.get)
-            case Statement (_,_,id) => format("Statement" ,id)
-            case Identifier(_,_,id) => format("Identifier",id)
-            case Expression(_,_,id) => format("Expression",id)
-            case Switch    (e,_,_ ) => format("Switch", e.id.get)
+            case If        (e   ,_,id) => format("if"        ,e,id)
+            case For       (e   ,_,id) => format("for"       ,if (e.isDefined) e.get else "no_cond",id)
+            case Empty     (_   ,  id) => format("Empty"     ,"",id)
+            case While     (e   ,_,id) => format("while"     ,e,id)
+            case Statement (stmt,_,id) => format(stmt.toString ,"",id)
+            case Identifier(s   ,_,id) => format("Identifier",s,id)
+            case Expression(e   ,_,id) => format(e.toString,"",id)
+            case Switch    (e   ,_,_ ) => format("switch"    ,e,id)
         }
-    } 
+    }
 }
 final case class If        (e: Expr         , cr: CodeRange, _id: String) extends ProgramNode(_id) { def visit(v: PNL) = v.visitIf        (this) }
 final case class For       (e: Option[Expr] , cr: CodeRange, _id: String) extends ProgramNode(_id) { def visit(v: PNL) = v.visitFor       (this) }
@@ -93,25 +93,3 @@ trait ProgramNodeLabelizer extends Labelizer {
     private[ast] final def visitEmpty(empty: Empty     ): Option[Environment] = 
         throw new IllegalStateException("Empty nodes should never be explored")
 }
-
-///////////////////////////////////////////////////////
-//              Example of a labelizer
-///////////////////////////////////////////////////////
-//case class BinaryOperator(symbol: String)
-//
-//class ExprLabel extends ProgramNodeLabelizer {
-//    val left: Metavar = DefinedMetavar(Variable("x"))
-//    val right: Metavar = UndefinedMetavar("X")
-//    val op = BinaryOperator("==")
-//    
-//    def visitIf        (ifNode   : If        ) = None
-//    def visitFor       (forNode  : For       ) = ???
-//    def visitWhile     (whileNode: While     ) = ???
-//    def visitAssignment(stmt     : Assignment) = ???
-//    def visitIdentifier(id       : Identifier) = ???
-//    def visitExpression(expr     : Expression) = ???
-//}
-//
-//abstract class Metavar 
-//case class DefinedMetavar(value: Expr) extends Metavar
-//case class UndefinedMetavar(name: String) extends Metavar

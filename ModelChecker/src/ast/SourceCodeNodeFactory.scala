@@ -4,6 +4,7 @@ import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.Map
 import ast.model._
 
+
 /**
  * This class provides all necessary methods to convert an ASTNode into a SourceCodeNode
  * @author Sofia Boutahar
@@ -106,14 +107,14 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[String,String]) {
     private def parmVarDecl(node: ASTNode) = node match {
         case ConcreteASTNode(_,_,id,codeRange,data) => 
            val dataList = data.dataList
-            setAndReturn(ParamVarDecl(dataList.get(-2),Type(dataList.get(-1))),codeRange,id)
+            setAndReturn(ParamVarDecl(dataList.get(-2),dataList.get(-1)),codeRange,id)
         case _ => concreteNodeExpected(node)
     }
     
     private def functionDecl(node: ASTNode) = node match {
         case ConcreteASTNode(_,_,id,codeRange,data) => 
             val dataList = data.dataList
-            val res  = FunctionDecl(dataList.get(-3),Type(dataList.get(-2)),compoundStmt(node.children.last))
+            val res  = FunctionDecl(dataList.get(-3),dataList.get(-2),compoundStmt(node.children.last))
             res.args = node.children.slice(0,node.children.length - 1).map(parmVarDecl).toList      
             setAndReturn(res,codeRange,id)
         case _ => concreteNodeExpected(node)
@@ -137,15 +138,18 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[String,String]) {
     }
     
     private def literal(node: ASTNode) = node match {
-        case ConcreteASTNode(_,_,id,codeRange,data) => setAndReturn(Literal(data.dataList.head),codeRange,id)
+        case ConcreteASTNode(_,_,id,codeRange,data) => 
+            val dataList = data.dataList
+            setAndReturn(Literal(dataList.get(-2),dataList.get(-1)),codeRange,id)
         case _                                      => concreteNodeExpected(node)
     }
     
     private def varDecl(node: ASTNode) = node match {
         case ConcreteASTNode(_,_,id,codeRange,data) => 
-            var expr = if (node.children.isEmpty) None else Some(node.children.map(handleExpr).head)
+            var expr     = if (node.children.isEmpty) None else Some(node.children.map(handleExpr).head)
             val dataList = data.dataList
-            SourceCodeNode(VarDecl(dataList.get(-2),Type(dataList.last),expr),codeRange,id)
+            val args     = (if (dataList.last == "cinit") List(-3,-2) else List(-2,-1)).map(dataList.get(_))
+            SourceCodeNode(VarDecl(args.head,args.last,expr),codeRange,id)
         case _ => concreteNodeExpected(node)
     }
     
@@ -156,8 +160,9 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[String,String]) {
     
     def unaryOperator(node: ASTNode) = node match {
         case ConcreteASTNode(_,_,id,codeRange,data) => 
+            val dataList = data.dataList
             node.children.map(handleASTNode).toList match {
-                case (a: Expr) :: Nil => setAndReturn(UnaryOp(a,data.dataList.last),codeRange,id)
+                case (a: Expr) :: Nil => setAndReturn(UnaryOp(a,dataList.get(-1),OpPosition(dataList.get(-2))),codeRange,id)
                 case _                => conversionFailed(node)
             }
         case _ => concreteNodeExpected(node)
@@ -166,7 +171,7 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[String,String]) {
     def compoundAssignOperator(node: ASTNode) = node match {
         case ConcreteASTNode(_,_,id,codeRange,data) => 
             node.children.map(handleExpr).toList match {
-                case (a: Expr) :: (b: Expr) :: Nil => setAndReturn(CompoundAssignOp(a,b,data.dataList.last),codeRange,id)
+                case (a: Expr) :: (b: Expr) :: Nil => setAndReturn(CompoundAssignOp(a,b,data.dataList.get(-3)),codeRange,id)
                 case _ => conversionFailed(node)
             }
         case _ => concreteNodeExpected(node)

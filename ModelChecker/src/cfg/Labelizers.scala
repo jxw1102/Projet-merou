@@ -21,6 +21,7 @@ import ctl.Environment
 
 /**
  * @author Zohour Abouakil
+ * @author Xiaowen Ji
  */
 
 sealed abstract class PatternExpr
@@ -59,12 +60,12 @@ case class BinaryOpPattern (left: PatternExpr, right: PatternExpr, op: String) e
 case class UnaryOpPattern (patternExpr: PatternExpr, op: String) extends ExprPattern{
     override def matches(expr: Expr): Option[Environment] = {
         expr match {
-          case UnaryOp(operand, operator) =>  
+          case UnaryOp(operand,operator,kind) =>  
               if (operator == op) {
                   val env = matchEnv(patternExpr ,operand)
                   env.unapply match {
                       case Some((pos,_)) => Some(new Bindings(pos))
-                      case _              => None
+                      case _             => None
                   }
               }
               else 
@@ -77,7 +78,7 @@ case class UnaryOpPattern (patternExpr: PatternExpr, op: String) extends ExprPat
 case class LiteralPattern(lit: PatternExpr) extends ExprPattern {
     override def matches(expr: Expr): Option[Environment] = {
         expr match {
-          case Literal(v) =>  
+          case Literal(_,_) =>  
               val env = matchEnv(lit,expr)
               (env.unapply) match {
                   case (Some((pos,_))) => Some(new Bindings(pos))
