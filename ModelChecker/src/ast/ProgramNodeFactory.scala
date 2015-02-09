@@ -6,6 +6,10 @@ import scala.collection.mutable.Set
 
 import ast.model._
 import cfg.GraphNode
+/**@author Sofia Boutahar
+ * @author Xiaowen Ji
+ * @author David Courtinot
+ */
 
 class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,SourceCodeNode]) {
     type GNode = GraphNode[ProgramNode,ProgramNodeLabelizer]
@@ -52,6 +56,7 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
 	        case WhileStmt(_,_)      => handleWhile(node,next,exit,entry)
 	        case DoWhileStmt(_,_)    => handleDoWhile(node,next,exit,entry)
 	        case CompoundStmt(_)     => handleCompoundStmt(node,next,exit,entry)
+            case SwitchStmt(_,_)     => handleSwitch(node, next, exit, entry)          
 	        case BreakStmt()         => handleJump(node,exit )
 	        case ContinueStmt()      => handleJump(node,entry)
 	        case GotoStmt(label)     => handleJump(node,Some(getLabel(label)))
@@ -71,6 +76,8 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
         case (WhileStmt   (cond,body)            ,range,id) => new GNode(While     (cond,range,id))
         case (DoWhileStmt (cond,body)            ,range,id) => new GNode(While     (cond,range,id))
         case (IfStmt(expr,_,_)                   ,range,id) => new GNode(If        (expr,range,id))
+        case (SwitchStmt(expr,_)                 ,range,id) => new GNode(Switch    (expr,range,id))
+        case (CaseStmt(expr,_)                   ,range,id) => new GNode(Expression(expr,range,id))
         case (expr: Expr                         ,range,id) => new GNode(Expression(expr,range,id))
         case (CompoundStmt(_)                    ,range,id) => emptyNode                (range,id)
         case (BreakStmt()                        ,range,id) => emptyNode                (range,id)
@@ -170,4 +177,61 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
     	    res >> handle(body,next,entry,exit)
     	    res
     }
+     private def handleSwitch(node: SourceCodeNode, next: Option[GNode], exit: Option[GNode], entry: Option[GNode]) = {
+         val res = toGraphNode(node)
+         val head = node match {
+             case SwitchStmt(expr,body) =>
+                 body match {
+                    case CompoundStmt(elts) =>
+                        def linkElements(list: List[SourceCodeNode], next: Option[GNode]): Option[GNode] = list match {
+                            case h :: q   => 
+                                val node = h match {
+                                    case CaseStmt(_,_) => handleCase(h,res,next,next,entry)
+                                    case _             => handle(h,next,exit,entry) 
+                                }
+                                q match {
+                                    case Nil => Some(node)
+                                    case _   => linkElements(q,Some(node))
+                                }
+                            case Nil => None
+                        }
+                        linkElements(elts.reverse,next)
+                }
+        }
+        
+        head match {
+            case Some(x) => res >> x
+            case None    => if (next.isDefined) res >> next.get
+        }
+        res
+    }
+     
+//    private def handleSwitchBody(body: CompoundStmt, prev: GNode, next: Option[GNode], exit: Option[GNode], entry: Option[GNode]) = body match {
+//        case CompoundStmt(elts) => elts.foreach { x =>
+//            x match {
+//                case CaseStmt(_, _) | DefaultStmt(_) => handleCase(x, prev, next, next, entry)
+//                case _                               => handle(x, next, exit, entry)
+//
+//            }
+//
+//        }
+//
+//    }
+    private def handleCase(caseStmt: SourceCodeNode, prev: GNode, next: Option[GNode], exit: Option[GNode], entry: Option[GNode]): GNode = {
+        val res = toGraphNode(caseStmt)
+        caseStmt match {
+            case CaseStmt(_, body) => 
+                body match {
+                    case CaseStmt(_,_) => res >> handleCase(body, prev, next, exit, entry)           
+                    case BreakStmt()   => res >> exit.get
+                    case _             => res >> handle(body, next, exit, entry)
+                                           
+                }
+            case DefaultStmt(body) =>
+                res >> handle(body, next, exit, entry)
+              
+        }
+        prev >> res
+    }
+    
 }

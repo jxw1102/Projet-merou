@@ -16,8 +16,9 @@ import ast.model.Stmt
 /**
  * Those classes represent the most abstract and final form of the transformations of the source code
  * from AST just before the CFG conversion.
- * @author David Courtinot
- * @author Xiaowen Ji
+ * @author David Courtinot 
+ * @author Sofia Boutahar
+ * @author Xiaowen Ji      
  */
 class Program {
     type MMV = MutableMapView[String,Decl]
@@ -66,6 +67,7 @@ sealed abstract class ProgramNode(val id: String) extends Labelizable[ProgramNod
             case Statement (_,_,id) => format("Statement" ,id)
             case Identifier(_,_,id) => format("Identifier",id)
             case Expression(_,_,id) => format("Expression",id)
+            case Switch    (e,_,_ ) => format("Switch", e.id.get)
         }
     } 
 }
@@ -75,17 +77,19 @@ final case class While     (e: Expr         , cr: CodeRange, _id: String) extend
 final case class Statement (stmt: Stmt      , cr: CodeRange, _id: String) extends ProgramNode(_id) { def visit(v: PNL) = v.visitStatement (this) }
 final case class Identifier(s: String       , cr: CodeRange, _id: String) extends ProgramNode(_id) { def visit(v: PNL) = v.visitIdentifier(this) }
 final case class Expression(e: Expr         , cr: CodeRange, _id: String) extends ProgramNode(_id) { def visit(v: PNL) = v.visitExpression(this) }
+final case class Switch    (e: Expr         , cr: CodeRange, _id: String) extends ProgramNode(_id) { def visit(v: PNL) = v.visitSwitch    (this) }
 // only used during the construction of the graph, should never be used in an actual CFG
 private[ast] final case class Empty(          cr: CodeRange, _id: String) extends ProgramNode(_id) { def visit(v: PNL) = v.visitEmpty     (this) }
 
 trait ProgramNodeLabelizer extends Labelizer {
-    def visitIf                (ifNode   : If        )
-    def visitFor               (forNode  : For       )
-    def visitWhile             (whileNode: While     )
-    def visitStatement         (stmt     : Statement )
-    def visitIdentifier        (id       : Identifier)
-    def visitExpression        (expr     : Expression)
-    private[ast] def visitEmpty(empty    : Empty     ) = throw new IllegalStateException("Empty nodes should never be explored")
+    def visitIf                (ifNode     : If        )
+    def visitFor               (forNode    : For       )
+    def visitWhile             (whileNode  : While     )
+    def visitStatement         (stmt       : Statement )
+    def visitIdentifier        (id         : Identifier)
+    def visitExpression        (expr       : Expression)
+    def visitSwitch            (switchNode : Switch    )
+    private[ast] def visitEmpty(empty      : Empty     ) = throw new IllegalStateException("Empty nodes should never be explored")
 }
 
 ///////////////////////////////////////////////////////

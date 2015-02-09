@@ -15,6 +15,7 @@ import ctl.Environment
 import ctl.Bindings
 import scala.collection.mutable.Map
 import ctl.Bottom
+import ast.Switch
 
 /**
  * @author Zohour Abouakil
@@ -49,12 +50,13 @@ case class BinaryOpPattern (left: PatternExpr, right: PatternExpr, op: String) {
 }
 
 class IfLabelizer(val pattern: ExprPattern) extends ProgramNodeLabelizer {
-    def visitIf        (ifNode   : If        ) = ifNode match { case If(expr,_,_) => pattern.matches(expr) } 
-    def visitFor       (forNode  : For       ) = None
-    def visitWhile     (whileNode: While     ) = None
-    def visitStatement (stmt     : Statement ) = None
-    def visitIdentifier(id       : Identifier) = None
-    def visitExpression(expr     : Expression) = None
+    def visitIf        (ifNode    : If        ) = ifNode match { case If(expr,_,_) => pattern.matches(expr) } 
+    def visitFor       (forNode   : For       ) = None
+    def visitWhile     (whileNode : While     ) = None
+    def visitStatement (stmt      : Statement ) = None
+    def visitIdentifier(id        : Identifier) = None
+    def visitExpression(expr      : Expression) = None
+    def visitSwitch    (switchNode: Switch    ) = None
 }
 
 class ForLabelizer(val pattern: ExprPattern) extends ProgramNodeLabelizer {
@@ -63,44 +65,49 @@ class ForLabelizer(val pattern: ExprPattern) extends ProgramNodeLabelizer {
             case For(None      ,_,_) => None
             case For(Some(expr),_,_) => None//pattern.matches(expr) 
         }
-    def visitWhile     (whileNode: While     ) = None
-    def visitStatement (stmt      : Statement) = None
-    def visitIdentifier(id       : Identifier) = None
-    def visitExpression(expr     : Expression) = None
+    def visitWhile     (whileNode : While     ) = None
+    def visitStatement (stmt      : Statement ) = None
+    def visitIdentifier(id        : Identifier) = None
+    def visitExpression(expr      : Expression) = None
+    def visitSwitch    (switchNode: Switch    ) = None
 }
 
 class WhileLabelizer(val pattern: ExprPattern) extends ProgramNodeLabelizer {
-    def visitIf        (ifNode   : If        ) = None
-    def visitFor       (forNode  : For       ) = None
-    def visitWhile     (whileNode: While     ) = whileNode match { case While(expr,_,_) => pattern.matches(expr) }
-    def visitStatement (stmt     : Statement ) = None
-    def visitIdentifier(id       : Identifier) = None
-    def visitExpression(expr     : Expression) = None
+    def visitIf        (ifNode    : If        ) = None
+    def visitFor       (forNode   : For       ) = None
+    def visitWhile     (whileNode : While     ) = whileNode match { case While(expr,_,_) => pattern.matches(expr) }
+    def visitStatement (stmt      : Statement ) = None
+    def visitIdentifier(id        : Identifier) = None
+    def visitExpression(expr      : Expression) = None
+    def visitSwitch    (switchNode: Switch    ) = None
 }
 
 class StatementLabelizer(val pattern: ExprPattern) extends ProgramNodeLabelizer {
-    def visitIf        (ifNode   : If        ) = None
-    def visitFor       (forNode  : For       ) = None
-    def visitWhile     (whileNode: While     ) = None
-    def visitStatement (stmt     : Statement ) = None //whileNode match { case While(expr,_,_) => None }//pattern.matches(expr) }
-    def visitIdentifier(id       : Identifier) = None
-    def visitExpression(expr     : Expression) = None
+    def visitIf        (ifNode    : If        ) = None
+    def visitFor       (forNode   : For       ) = None
+    def visitWhile     (whileNode : While     ) = None
+    def visitStatement (stmt      : Statement ) = None //whileNode match { case While(expr,_,_) => None }//pattern.matches(expr) }
+    def visitIdentifier(id        : Identifier) = None
+    def visitExpression(expr      : Expression) = None
+    def visitSwitch    (switchNode: Switch    ) = None
 }
 
 class IdentifierLabelizer(val pattern: ExprPattern) extends ProgramNodeLabelizer {
-    def visitIf        (ifNode   : If        ) = None
-    def visitFor       (forNode  : For       ) = None
-    def visitWhile     (whileNode: While     ) = None
-    def visitStatement (stmt     : Statement ) = None
-    def visitIdentifier(id       : Identifier) = None // whileNode match { case While(expr,_,_) => None }//pattern.matches(expr) }
-    def visitExpression(expr     : Expression) = None 
+    def visitIf        (ifNode    : If        ) = None
+    def visitFor       (forNode   : For       ) = None
+    def visitWhile     (whileNode : While     ) = None
+    def visitStatement (stmt      : Statement ) = None
+    def visitIdentifier(id        : Identifier) = None // whileNode match { case While(expr,_,_) => None }//pattern.matches(expr) }
+    def visitExpression(expr      : Expression) = None
+    def visitSwitch    (switchNode: Switch    ) = None
 }
 
 class ExpressionLabelizer(val pattern: ExprPattern) extends ProgramNodeLabelizer {
-    def visitIf        (ifNode   : If        ) = None
-    def visitFor       (forNode  : For       ) = None
-    def visitWhile     (whileNode: While     ) = None
-    def visitStatement (stmt     : Statement ) = None
-    def visitIdentifier(id       : Identifier) = None 
-    def visitExpression(expr     : Expression) = None // whileNode match { case While(expr,_,_) => None }//pattern.matches(expr) }
+    def visitIf        (ifNode    : If        ) = None
+    def visitFor       (forNode   : For       ) = None
+    def visitWhile     (whileNode : While     ) = None
+    def visitStatement (stmt      : Statement ) = None
+    def visitIdentifier(id        : Identifier) = None 
+    def visitExpression(expr      : Expression) = None // whileNode match { case While(expr,_,_) => None }//pattern.matches(expr) }
+    def visitSwitch    (switchNode: Switch    ) = None
 }
