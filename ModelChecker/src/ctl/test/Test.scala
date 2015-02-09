@@ -9,11 +9,11 @@ import ctl._
 // Object traite les objets
 object Main extends App {
 
-    val p1 = Predicate(List("x"))
-    val p2 = Predicate(List("y"))
-
-    val expr = AX(AX(p1) && EG(p2))
-
-    println(CtlExpr.printExpr(expr))
+//    val p1 = Predicate(List("x"))
+//    val p2 = Predicate(List("y"))
+//
+//    val expr = AX(AX(p1) && EG(p2))
+//
+//    println(CtlExpr.printExpr(expr))
 
 }

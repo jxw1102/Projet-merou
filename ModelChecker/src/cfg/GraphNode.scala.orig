@@ -13,8 +13,26 @@ class GraphNode[U <: Labelizable[V], V <: Labelizer](val value: U) {
     private val _next = MHSet[GUV]()
     private val _prev = MHSet[GUV]()
     
-    def prev = _prev
-    def next = _next
+<<<<<<< HEAD
+    def prev = _prev.toSet
+    def next = _next.toSet
+=======
+    lazy val states = getStates(this, Set())
+    
+    private def getStates(gn: GUV, set: Set[GUV]): Set[GUV] = {
+        if (set contains gn) 
+            Set()
+        else {
+            var newSet = set + gn 
+            newSet ++ _next.toSet.flatMap((g: GUV) => getStates(g,newSet) )
+        }
+    }
+    
+    
+    
+    def prev = _prev.toList
+    def next = _next.toList
+>>>>>>> origin
     
     lazy val states = getStates(this, Set())
     
