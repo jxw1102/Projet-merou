@@ -4,8 +4,10 @@ import ast.model.Expr
 import scala.collection.mutable.Map
 
 /**
- * @author Zohour Abouakil
+ * @author simple
  */
+
+
 abstract class Environment {
     def unapply : Option[(Map[String, Expr],Map[String, Set[Expr]])]
     def unary_! : Set[Environment]
@@ -24,7 +26,7 @@ class Bindings extends Environment {
    val positiveBindings = Map[String, Expr]()
    val negativeBindings = Map[String, Set[Expr]]() 
    
-   def this (pb: Map[String, Expr]=Map(), nb: Map[String, Set[Expr]]=Map()) {
+   def this (pb: Map[String, Expr], nb: Map[String, Set[Expr]]) {
        this()
        positiveBindings ++= pb
        negativeBindings ++= nb
@@ -38,8 +40,8 @@ class Bindings extends Environment {
        pos ++ neg
    }
    
-   /**
-    * This function verifies that the two environment of which we want to compute the intersection are not in conflict 
+   /*
+    * This function verify if the two environment we want to intersection are not in conflict 
     */
    def conflicts (that: Bindings): Boolean = {
        val domThis = this.positiveBindings.keySet ++ this.negativeBindings.keySet
@@ -77,9 +79,12 @@ class Bindings extends Environment {
        }
    } 
     
-   def -(name : String): Environment = new Bindings(this.positiveBindings - name,this.negativeBindings - name)
+   def -(name : String) : Environment = {
+       return new Bindings(if(this.positiveBindings contains name) this.positiveBindings-name else this.positiveBindings,
+                                if(this.negativeBindings contains name) this.negativeBindings-name else this.negativeBindings)
+   }
   
-   /**
+   /*
     * This function is used to get the opposite of an environment 
     */
 }
