@@ -6,8 +6,14 @@ import ast.model.NullStmt
 import java.io.PrintWriter
 import java.io.File
 
+/**
+ * This class enables automated test of the AST to CFG transformation. Everything is handled from
+ * the call to the Clang compiler to the creation of a png representing the graph.
+ * @author David Courtinot
+ * @author Sofia Boutahar
+ */
 object Main extends App {
-    val folder = "switch"
+    val folder = "for"
     new File("unitary_tests/%s/".format(folder)).listFiles.filter(_.getName.endsWith("cpp")).foreach { file => 
         val name = file.getName
         val s    = name.substring(0,name.lastIndexOf('.'))

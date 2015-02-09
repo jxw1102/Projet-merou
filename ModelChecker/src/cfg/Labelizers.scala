@@ -37,7 +37,6 @@ trait ExprPattern {
     }
 }
 
-
 case class BinaryOpPattern (left: PatternExpr, right: PatternExpr, op: String) extends ExprPattern{   
     override def matches(expr: Expr): Option[Environment] = {
         expr match {
@@ -98,7 +97,6 @@ case class LiteralPattern(lit: PatternExpr) extends ExprPattern {
 //case class ArraySubscriptExpr (exprs: (Expr, Expr))                                                       extends Expr
 //case class InitListExpr       (exprs: List[Expr])                                                         extends Expr
 //case class CallExpr           (returnType: String, params: List[Expr])                                    extends Expr {
-
 
 class IfLabelizer(val pattern: ExprPattern) extends ProgramNodeLabelizer {
     override def visitIf(ifNode   : If) = ifNode match { 

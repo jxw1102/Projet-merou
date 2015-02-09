@@ -6,16 +6,20 @@ import scala.collection.mutable.Set
 
 import ast.model._
 import cfg.GraphNode
-/**@author Sofia Boutahar
+
+/**
+ * This class performs a conversion from SourceCodeNode to ProgramNode and a transformation from AST to
+ * CFG at the same time
+ * @author Sofia Boutahar
  * @author Xiaowen Ji
  * @author David Courtinot
  */
-
 class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,SourceCodeNode]) {
     type GNode = GraphNode[ProgramNode,ProgramNodeLabelizer]
     
     // id used to identify the artificial empty nodes created by the algorithm
     private var currentId = 0
+    
     // Map used to create (on the fly) GNode(s) from the SourceCodeNode labels 
     private var labels = Map[String,GNode]()
     private def getLabel(label: String) = labels.getOrElseUpdate(label,toGraphNode(labelNodes(label)))
@@ -25,9 +29,10 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
             handle(rootNode,None,None,None)
             ,Set()).head
     
-    private val debugEnabled = false
-    private def debug(msg: String) = if (debugEnabled) println(msg)
-            
+    /**
+     * This methods removes all the Empty nodes used for construction and updates the links in
+     * consequence. It is called just before returning the result.
+     */
     private def clean(node: GNode, explored: Set[GNode]): List[GNode] = {
         if (!explored.contains(node)) {
             explored += node
@@ -49,6 +54,9 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
         } else List(node)
     }
     
+    /**
+     * General facade for handling the SourceCodeNode(s)
+     */
     def handle(node: SourceCodeNode, next: Option[GNode], exit: Option[GNode], entry: Option[GNode]): GNode = 
         node match {
             case IfStmt(_,_,_)       => handleIf(node,next,exit,entry)
@@ -71,6 +79,10 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
         res
     }
     private def emptyNode(range: CodeRange, id: String) = new GNode(Empty(range,id))
+    
+    /**
+     * General facade for converting SourceCodeNode to a fresh and unlinked GNode
+     */
     private def toGraphNode(node: SourceCodeNode) = (node,node.codeRange.get,node.id.get) match {
         case (ForStmt     (init,cond,update,body),range,id) => new GNode(For       (cond,range,id))
         case (WhileStmt   (cond,body)            ,range,id) => new GNode(While     (cond,range,id))
@@ -87,32 +99,8 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
         case (stmt: Stmt                         ,range,id) => new GNode(Statement (stmt,range,id))
     }
     
-    private def handleCompoundStmt(cmpdStmt: SourceCodeNode, next: Option[GNode], exit: Option[GNode], entry: Option[GNode]) = {
-        debug("handleCompound(\n\t%s\n\t%s\n\t%s\n\t%s)".format(cmpdStmt,next,exit,entry))
-        val head = cmpdStmt match {
-            case CompoundStmt(elts) =>
-                def linkElements(list: List[SourceCodeNode], next: Option[GNode]): Option[GNode] = list match {
-                    case h :: q   => 
-                        val node = handle(h,next,exit,entry) 
-                        q match {
-                            case Nil => Some(node)
-                            case _   => linkElements(q,Some(node))
-                        }
-                    case Nil => None
-                }
-                linkElements(elts.reverse,next)
-        }
-        val res = toGraphNode(cmpdStmt)
-        head match {
-            case Some(x) => res >> x
-            case None    => if (next.isDefined) res >> next.get
-        }
-        res
-    }
-    
     private def handleIf(ifStmt: SourceCodeNode, next: Option[GNode], exit: Option[GNode], entry: Option[GNode]) = ifStmt match {
        case IfStmt(cond,body,elseStmt) => 
-           debug("handleIf(\n\t%s\n\t%s\n\t%s\n\t%s)".format(ifStmt,next,exit,entry))
            val ifNode = toGraphNode(ifStmt)
            ifNode >> handle(body,next,exit,entry)
            elseStmt match {
@@ -124,7 +112,6 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
     
     private def handleFor(forStmt: SourceCodeNode, next: Option[GNode], exit: Option[GNode], entry: Option[GNode]) = forStmt match {
         case ForStmt(init,cond,update,body) => 
-            debug("handleFor(\n\t%s\n\t%s\n\t%s\n\t%s)".format(cond,next,exit,entry))
             val condNode   = toGraphNode(forStmt)
             val initNode   = if (init  .isDefined) toGraphNode(init  .get) else emptyNode
             val updateNode = if (update.isDefined) toGraphNode(update.get) else emptyNode
@@ -138,7 +125,6 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
     
     private def handleWhile(whileStmt: SourceCodeNode, next: Option[GNode], exit: Option[GNode], entry: Option[GNode]) = whileStmt match {
         case WhileStmt(condition,body) =>
-            debug("handleWhile(\n\t%s\n\t%s\n\t%s\n\t%s)".format(whileStmt,next,exit,entry))
             val res = toGraphNode(whileStmt)
             res >> handle(body,Some(res),next,Some(res))
             if (next.isDefined) res >> next.get 
@@ -147,7 +133,6 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
     
     private def handleDoWhile(doWhileStmt: SourceCodeNode, next: Option[GNode], exit: Option[GNode], entry: Option[GNode]) = doWhileStmt match {
         case DoWhileStmt(condition,body) =>
-            debug("handleDoWhile(\n\t%s\n\t%s\n\t%s\n\t%s)".format(doWhileStmt,next,exit,entry))
             val condNode = toGraphNode(doWhileStmt)
             val res      = handle(body,Some(condNode),next,Some(condNode))
             condNode >> res
@@ -156,14 +141,12 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
     }
     
     private def handleDefault(node: SourceCodeNode, next: Option[GNode]) = {
-        debug("handleDefault(\n\t%s\n\t%s)".format(node,next))
         val res = toGraphNode(node)
         if (next.isDefined) res >> next.get
         res
     }
     
     private def handleJump(node: SourceCodeNode, jumpTo: Option[GNode]) = {
-        debug("handleJump(\n\t%s\n\t%s)".format(node,jumpTo))
         val jump = toGraphNode(node)
         if (jumpTo.isDefined) jump >> jumpTo.get
         jump
@@ -171,31 +154,45 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
     
     private def handleFunDecl(funDecl: SourceCodeNode, next: Option[GNode], exit: Option[GNode], entry: Option[GNode]) = funDecl match {
         case FunctionDecl(_,_,body) => 
-            debug("handleFunDecl(\n\t%s\n\t%s\n\t%s\n\t%s)".format(funDecl,next,exit,entry))
             val res = toGraphNode(funDecl)
             res >> handle(body,next,entry,exit)
             res
     }
-     private def handleSwitch(node: SourceCodeNode, nextOpt: Option[GNode], exit: Option[GNode], entry: Option[GNode]) = {
+    
+    private def linkElements(list: List[SourceCodeNode], next: Option[GNode])
+    						(handleHead: (SourceCodeNode,Option[GNode]) => GNode): Option[GNode] = list match {
+	    case h :: q => 
+	    	val node = handleHead(h,next)
+	    	q match {
+	    		case Nil => Some(node)
+	    		case _   => linkElements(q,Some(node))(handleHead)
+	    	}
+	    case Nil => None
+	}
+    
+    private def handleCompoundStmt(cmpdStmt: SourceCodeNode, next: Option[GNode], exit: Option[GNode], entry: Option[GNode]) = {
+        val head = cmpdStmt match {
+            case CompoundStmt(elts) =>
+                val handleHead = (h: SourceCodeNode, next: Option[GNode]) => handle(h,next,exit,entry) 
+             	linkElements(elts.reverse,next)(handleHead)
+        }
+        val res = toGraphNode(cmpdStmt)
+        head match {
+            case Some(x) => res >> x
+            case None    => if (next.isDefined) res >> next.get
+        }
+        res
+    }
+    
+    private def handleSwitch(node: SourceCodeNode, nextOpt: Option[GNode], exit: Option[GNode], entry: Option[GNode]) = {
          val res = toGraphNode(node)
          val head = node match {
-             case SwitchStmt(expr,body) =>
-                 body match {
-                    case CompoundStmt(elts) =>
-                        def linkElements(list: List[SourceCodeNode], next: Option[GNode]): Option[GNode] = list match {
-                            case h :: q   => 
-                                val node = h match {
-                                    case CaseStmt(_,_) => handleCase(h,res,next,nextOpt,entry)
-                                    case _             => handle(h,next,nextOpt,entry) 
-                                }
-                                q match {
-                                    case Nil => Some(node)
-                                    case _   => linkElements(q,Some(node))
-                                }
-                            case Nil => None
-                        }
-                        linkElements(elts.reverse,nextOpt)
-                }
+             case SwitchStmt(expr,CompoundStmt(elts)) =>
+             	val handleHead = (h: SourceCodeNode, next: Option[GNode]) => h match {
+             		case CaseStmt(_,_) => handleCase(h,res,next,nextOpt,entry)
+             		case _             => handle(h,next,nextOpt,entry) 
+             	}
+             	linkElements(elts.reverse,nextOpt)(handleHead)
         }
         
         head match {
@@ -213,11 +210,9 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
                     case CaseStmt(_,_) => res >> handleCase(body,prev,next,exit,entry)           
                     case BreakStmt()   => res >> exit.get
                     case _             => res >> handle(body,next,exit,entry)
-                                           
                 }
             case DefaultStmt(body)     => res >> handle(body,next,exit,entry)
         }
         prev >> res
     }
-    
 }

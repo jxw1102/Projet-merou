@@ -1,53 +1,53 @@
-TranslationUnitDecl 0x2fcc0a0 <<invalid sloc>> <invalid sloc>
-|-TypedefDecl 0x2fcc390 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'char *'
-`-FunctionDecl 0x2fcc400 <unitary_tests\switch\switch.cpp:1:1, line:15:1> line:1:5 main 'int (void)'
-  `-CompoundStmt 0x2fcc9a0 <line:2:1, line:15:1>
-    |-DeclStmt 0x2fcc4f0 <line:3:5, col:14>
-    | `-VarDecl 0x2fcc4a0 <col:5, col:13> col:9 used j 'int' cinit
-    |   `-IntegerLiteral 0x2fcc4d0 <col:13> 'int' 0
-    |-DeclStmt 0x2fcc560 <line:4:5, col:14>
-    | `-VarDecl 0x2fcc510 <col:5, col:13> col:9 used i 'int' cinit
-    |   `-IntegerLiteral 0x2fcc540 <col:13> 'int' 2
-    |-SwitchStmt 0x2fcc598 <line:5:5, line:13:5>
+TranslationUnitDecl 0xd9c0a0 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0xd9c390 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'char *'
+`-FunctionDecl 0xd9c400 <unitary_tests\switch\switch.cpp:1:1, line:15:1> line:1:5 main 'int (void)'
+  `-CompoundStmt 0xd9c9a0 <line:2:1, line:15:1>
+    |-DeclStmt 0xd9c4f0 <line:3:5, col:14>
+    | `-VarDecl 0xd9c4a0 <col:5, col:13> col:9 used j 'int' cinit
+    |   `-IntegerLiteral 0xd9c4d0 <col:13> 'int' 0
+    |-DeclStmt 0xd9c560 <line:4:5, col:14>
+    | `-VarDecl 0xd9c510 <col:5, col:13> col:9 used i 'int' cinit
+    |   `-IntegerLiteral 0xd9c540 <col:13> 'int' 2
+    |-SwitchStmt 0xd9c598 <line:5:5, line:13:5>
     | |-<<<NULL>>>
-    | |-ImplicitCastExpr 0x2fcc588 <line:5:13> 'int' <LValueToRValue>
-    | | `-DeclRefExpr 0x2fcc570 <col:13> 'int' lvalue Var 0x2fcc510 'i' 'int'
-    | `-CompoundStmt 0x2fcc900 <col:16, line:13:5>
-    |   |-CaseStmt 0x2fcc5d8 <line:6:9, col:18>
-    |   | |-IntegerLiteral 0x2fcc5b8 <col:14> 'int' 1
+    | |-ImplicitCastExpr 0xd9c588 <line:5:13> 'int' <LValueToRValue>
+    | | `-DeclRefExpr 0xd9c570 <col:13> 'int' lvalue Var 0xd9c510 'i' 'int'
+    | `-CompoundStmt 0xd9c900 <col:16, line:13:5>
+    |   |-CaseStmt 0xd9c5d8 <line:6:9, col:18>
+    |   | |-IntegerLiteral 0xd9c5b8 <col:14> 'int' 1
     |   | |-<<<NULL>>>
-    |   | `-UnaryOperator 0x2fcc610 <col:17, col:18> 'int' postfix '++'
-    |   |   `-DeclRefExpr 0x2fcc5f8 <col:17> 'int' lvalue Var 0x2fcc4a0 'j' 'int'
-    |   |-CaseStmt 0x2fcc648 <line:7:9, col:20>
-    |   | |-IntegerLiteral 0x2fcc628 <col:14> 'int' 2
+    |   | `-UnaryOperator 0xd9c610 <col:17, col:18> 'int' postfix '++'
+    |   |   `-DeclRefExpr 0xd9c5f8 <col:17> 'int' lvalue Var 0xd9c4a0 'j' 'int'
+    |   |-CaseStmt 0xd9c648 <line:7:9, col:20>
+    |   | |-IntegerLiteral 0xd9c628 <col:14> 'int' 2
     |   | |-<<<NULL>>>
-    |   | `-CompoundAssignOperator 0x2fcc6a0 <col:17, col:20> 'int' lvalue '+=' ComputeLHSTy='int' ComputeResultTy='int'
-    |   |   |-DeclRefExpr 0x2fcc668 <col:17> 'int' lvalue Var 0x2fcc4a0 'j' 'int'
-    |   |   `-IntegerLiteral 0x2fcc680 <col:20> 'int' 2
-    |   |-CaseStmt 0x2fcc6e0 <line:8:9, col:20>
-    |   | |-IntegerLiteral 0x2fcc6c0 <col:14> 'int' 3
+    |   | `-CompoundAssignOperator 0xd9c6a0 <col:17, col:20> 'int' lvalue '+=' ComputeLHSTy='int' ComputeResultTy='int'
+    |   |   |-DeclRefExpr 0xd9c668 <col:17> 'int' lvalue Var 0xd9c4a0 'j' 'int'
+    |   |   `-IntegerLiteral 0xd9c680 <col:20> 'int' 2
+    |   |-CaseStmt 0xd9c6e0 <line:8:9, col:20>
+    |   | |-IntegerLiteral 0xd9c6c0 <col:14> 'int' 3
     |   | |-<<<NULL>>>
-    |   | `-CompoundAssignOperator 0x2fcc738 <col:17, col:20> 'int' lvalue '+=' ComputeLHSTy='int' ComputeResultTy='int'
-    |   |   |-DeclRefExpr 0x2fcc700 <col:17> 'int' lvalue Var 0x2fcc4a0 'j' 'int'
-    |   |   `-IntegerLiteral 0x2fcc718 <col:20> 'int' 3
-    |   |-UnaryOperator 0x2fcc770 <col:23, col:24> 'int' postfix '++'
-    |   | `-DeclRefExpr 0x2fcc758 <col:23> 'int' lvalue Var 0x2fcc510 'i' 'int'
-    |   |-CaseStmt 0x2fcc7a8 <line:9:9, line:10:20>
-    |   | |-IntegerLiteral 0x2fcc788 <line:9:14> 'int' 4
+    |   | `-CompoundAssignOperator 0xd9c738 <col:17, col:20> 'int' lvalue '+=' ComputeLHSTy='int' ComputeResultTy='int'
+    |   |   |-DeclRefExpr 0xd9c700 <col:17> 'int' lvalue Var 0xd9c4a0 'j' 'int'
+    |   |   `-IntegerLiteral 0xd9c718 <col:20> 'int' 3
+    |   |-UnaryOperator 0xd9c770 <col:23, col:24> 'int' postfix '++'
+    |   | `-DeclRefExpr 0xd9c758 <col:23> 'int' lvalue Var 0xd9c510 'i' 'int'
+    |   |-CaseStmt 0xd9c7a8 <line:9:9, line:10:20>
+    |   | |-IntegerLiteral 0xd9c788 <line:9:14> 'int' 4
     |   | |-<<<NULL>>>
-    |   | `-CaseStmt 0x2fcc7e8 <line:10:9, col:20>
-    |   |   |-IntegerLiteral 0x2fcc7c8 <col:14> 'int' 5
+    |   | `-CaseStmt 0xd9c7e8 <line:10:9, col:20>
+    |   |   |-IntegerLiteral 0xd9c7c8 <col:14> 'int' 5
     |   |   |-<<<NULL>>>
-    |   |   `-CompoundAssignOperator 0x2fcc840 <col:17, col:20> 'int' lvalue '+=' ComputeLHSTy='int' ComputeResultTy='int'
-    |   |     |-DeclRefExpr 0x2fcc808 <col:17> 'int' lvalue Var 0x2fcc4a0 'j' 'int'
-    |   |     `-IntegerLiteral 0x2fcc820 <col:20> 'int' 10
-    |   |-BreakStmt 0x2fcc860 <line:11:17>
-    |   `-CaseStmt 0x2fcc888 <line:12:9, col:20>
-    |     |-IntegerLiteral 0x2fcc868 <col:14> 'int' 6
+    |   |   `-CompoundAssignOperator 0xd9c840 <col:17, col:20> 'int' lvalue '+=' ComputeLHSTy='int' ComputeResultTy='int'
+    |   |     |-DeclRefExpr 0xd9c808 <col:17> 'int' lvalue Var 0xd9c4a0 'j' 'int'
+    |   |     `-IntegerLiteral 0xd9c820 <col:20> 'int' 10
+    |   |-BreakStmt 0xd9c860 <line:11:17>
+    |   `-CaseStmt 0xd9c888 <line:12:9, col:20>
+    |     |-IntegerLiteral 0xd9c868 <col:14> 'int' 6
     |     |-<<<NULL>>>
-    |     `-CompoundAssignOperator 0x2fcc8e0 <col:17, col:20> 'int' lvalue '-=' ComputeLHSTy='int' ComputeResultTy='int'
-    |       |-DeclRefExpr 0x2fcc8a8 <col:17> 'int' lvalue Var 0x2fcc4a0 'j' 'int'
-    |       `-IntegerLiteral 0x2fcc8c0 <col:20> 'int' 1
-    `-DeclStmt 0x2fcc990 <line:14:5, col:14>
-      `-VarDecl 0x2fcc940 <col:5, col:13> col:9 k 'int' cinit
-        `-IntegerLiteral 0x2fcc970 <col:13> 'int' 7
+    |     `-CompoundAssignOperator 0xd9c8e0 <col:17, col:20> 'int' lvalue '-=' ComputeLHSTy='int' ComputeResultTy='int'
+    |       |-DeclRefExpr 0xd9c8a8 <col:17> 'int' lvalue Var 0xd9c4a0 'j' 'int'
+    |       `-IntegerLiteral 0xd9c8c0 <col:20> 'int' 1
+    `-DeclStmt 0xd9c990 <line:14:5, col:14>
+      `-VarDecl 0xd9c940 <col:5, col:13> col:9 k 'int' cinit
+        `-IntegerLiteral 0xd9c970 <col:13> 'int' 7

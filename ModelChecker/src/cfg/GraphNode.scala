@@ -17,8 +17,11 @@ class GraphNode[U <: Labelizable[V], V <: Labelizer](val value: U) {
     def prev = _prev
     def next = _next
     
+    /**
+     * 'states' contains all the states of the graph accessible from this GraphNode.
+     * It should be computed on the root node.
+     */
     lazy val states = getStates(this, Set())
-    
     private def getStates(gn: GUV, set: Set[GUV]): Set[GUV] = {
         if (set contains gn) Set()
         else {
@@ -27,16 +30,44 @@ class GraphNode[U <: Labelizable[V], V <: Labelizer](val value: U) {
         }
     }
     
+    /**
+     * Create a bidirectional binding from nodes this and v : this <- v
+     */
     def <<(v: GUV) = { _prev += v; v._next += this; v }
+    
+    /**
+     * Create a bidirectional binding from nodes this and v : this -> v
+     */
     def >>(v: GUV) = { _next += v; v._prev += this; v } 
     
+    /**
+     * Create a bidirectional binding from every node of v to this : this <- v(i) forall i
+     */
     def <<<(v: Iterable[GUV]) = { _prev ++= v; v.foreach(n => n._next += this) }
+    
+    /**
+     * Create a bidirectional binding from this to every node : this -> v(i) forall i
+     */
     def >>>(v: Iterable[GUV]) = { _next ++= v; v.foreach(n => n._prev += this) }
     
+    /**
+     * Undo a bidirectional binding from v to this
+     */
     def /<<(v: GUV) = { _prev -= v; v._next -= this; v }
+    
+    /**
+     * Undo a bidirectional binding from this to v
+     */
     def >>/(v: GUV) = { _next -= v; v._prev -= this; v }
     
+    /**
+     * Undo all the bidirectional bindings from every node of v to this 
+     */
     def /<<<(v: Iterable[GUV]) = { _prev --= v; v.foreach(n => n._next -= this) }
+    
+    /**
+     * Undo all the bidirectional bindings from this to every node of v
+     */
     def >>>/(v: Iterable[GUV]) = { _next --= v; v.foreach(n => n._prev -= this) }
 
     override def toString = value.toString
