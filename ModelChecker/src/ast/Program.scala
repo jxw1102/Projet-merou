@@ -29,30 +29,37 @@ class Program {
  */
 abstract class SourceCodeNode {
     private[this] var _codeRange: Option[CodeRange] = None
-    private[this] var _id       : Option[Long]      = None
+    private[this] var _id       : Option[String]    = None
     
     def codeRange                     = _codeRange
     def codeRange_=(range: CodeRange) = _codeRange = Some(range)
     
-    def id             = _id
-    def id_=(id: Long) = _id = Some(id)
+    def id               = _id
+    def id_=(id: String) = _id = Some(id)
 }
 
 object SourceCodeNode {
-    def apply(node: SourceCodeNode, codeRange: CodeRange, id: Long) = { node.codeRange = codeRange; node.id = id; node }
+    def apply(node: SourceCodeNode, codeRange: CodeRange, id: String) = { node.codeRange = codeRange; node.id = id; node }
 }
 
 /**
  * Case-classes that will be the values of the CFG nodes. They implement the Visitor pattern against the ProgramNodeLabelizer
  * visitor class
  */
-sealed abstract class ProgramNode extends Labelizable[ProgramNodeLabelizer] {
+sealed abstract class ProgramNode(val id: String) extends Labelizable[ProgramNodeLabelizer] {
     type PNL = ProgramNodeLabelizer 
+    
+    override def equals(that: Any) = that match {
+        case x: ProgramNode => id == x.id 
+        case _              => false
+    }
+    override def hashCode = id.hashCode
+    
     // ONLY for debugging purpose. I know it is very ugly...
     override def toString = {
-        val format = (name: String, id: Long) => "%s_(0x%s)".format(name,java.lang.Long.toHexString(id))
+        val format = (name: String, id: String) => "%s_%s".format(name,id)
         this match {
-            case If        (_,_,id) => format("If"        ,id)
+            case If        (e,_,id) => format("If"        ,e.id.get)
             case For       (e,_,id) => format("For"       ,if (e.isDefined) e.get.id.get else id)
             case Empty     (_,  id) => format("Empty"     ,id)
             case While     (e,_,id) => format("While"     ,e.id.get)
@@ -60,24 +67,25 @@ sealed abstract class ProgramNode extends Labelizable[ProgramNodeLabelizer] {
             case Identifier(_,_,id) => format("Identifier",id)
             case Expression(_,_,id) => format("Expression",id)
         }
-    }
+    } 
 }
-final case class If        (e: Expr         , cr: CodeRange, id: Long) extends ProgramNode { def visit(v: PNL) = v.visitIf        (this) }
-final case class For       (e: Option[Expr] , cr: CodeRange, id: Long) extends ProgramNode { def visit(v: PNL) = v.visitFor       (this) }
-final case class Empty     (                  cr: CodeRange, id: Long) extends ProgramNode { def visit(v: PNL) = v.visitEmpty     (this) }
-final case class While     (e: Expr         , cr: CodeRange, id: Long) extends ProgramNode { def visit(v: PNL) = v.visitWhile     (this) }
-final case class Statement (stmt: Stmt      , cr: CodeRange, id: Long) extends ProgramNode { def visit(v: PNL) = v.visitStatement (this) }
-final case class Identifier(s: String       , cr: CodeRange, id: Long) extends ProgramNode { def visit(v: PNL) = v.visitIdentifier(this) }
-final case class Expression(e: Expr         , cr: CodeRange, id: Long) extends ProgramNode { def visit(v: PNL) = v.visitExpression(this) }
+final case class If        (e: Expr         , cr: CodeRange, _id: String) extends ProgramNode(_id) { def visit(v: PNL) = v.visitIf        (this) }
+final case class For       (e: Option[Expr] , cr: CodeRange, _id: String) extends ProgramNode(_id) { def visit(v: PNL) = v.visitFor       (this) }
+final case class While     (e: Expr         , cr: CodeRange, _id: String) extends ProgramNode(_id) { def visit(v: PNL) = v.visitWhile     (this) }
+final case class Statement (stmt: Stmt      , cr: CodeRange, _id: String) extends ProgramNode(_id) { def visit(v: PNL) = v.visitStatement (this) }
+final case class Identifier(s: String       , cr: CodeRange, _id: String) extends ProgramNode(_id) { def visit(v: PNL) = v.visitIdentifier(this) }
+final case class Expression(e: Expr         , cr: CodeRange, _id: String) extends ProgramNode(_id) { def visit(v: PNL) = v.visitExpression(this) }
+// only used during the construction of the graph, should never be used in an actual CFG
+private[ast] final case class Empty(          cr: CodeRange, _id: String) extends ProgramNode(_id) { def visit(v: PNL) = v.visitEmpty     (this) }
 
 trait ProgramNodeLabelizer extends Labelizer {
-    def visitIf        (ifNode   : If        )
-    def visitFor       (forNode  : For       )
-    def visitEmpty     (empty    : Empty     )
-    def visitWhile     (whileNode: While     )
-    def visitStatement (stmt     : Statement )
-    def visitIdentifier(id       : Identifier)
-    def visitExpression(expr     : Expression)
+    def visitIf                (ifNode   : If        )
+    def visitFor               (forNode  : For       )
+    def visitWhile             (whileNode: While     )
+    def visitStatement         (stmt     : Statement )
+    def visitIdentifier        (id       : Identifier)
+    def visitExpression        (expr     : Expression)
+    private[ast] def visitEmpty(empty    : Empty     ) = throw new IllegalStateException("Empty nodes should never be explored")
 }
 
 ///////////////////////////////////////////////////////
