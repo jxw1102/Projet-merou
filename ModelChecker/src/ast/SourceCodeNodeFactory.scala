@@ -140,8 +140,7 @@ class SourceCodeNodeFactory(root: ASTNode) {
     }
     
     private def declStmt(node: ASTNode): DeclStmt = node match {
-        case ConcreteASTNode(_,_,id,codeRange,_) => 
-            setAndReturn(DeclStmt(node.children.map(handleASTNode).toList),codeRange,id)
+        case ConcreteASTNode(_,_,id,codeRange,_) => setAndReturn(DeclStmt(node.children.map(handleASTNode).toList),codeRange,id)
         case _  => concreteNodeExpected(node)
     }
     
@@ -217,7 +216,7 @@ class SourceCodeNodeFactory(root: ASTNode) {
     }
     
     private def labelStmt(node: ASTNode) = node match {
-        case ConcreteASTNode(_,_,id,codeRange,data) => setAndReturn(LabelStmt(data.dataList.last,node.children.map(handleExpr).last),codeRange,id)
+        case ConcreteASTNode(_,_,id,codeRange,data) => SourceCodeNode(LabelStmt(data.dataList.last,node.children.map(handleASTNode).last.asInstanceOf[Stmt]),codeRange,id)
         case _                                      => concreteNodeExpected(node)
     }
     

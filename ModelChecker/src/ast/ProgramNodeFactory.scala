@@ -1,13 +1,10 @@
 package ast
 
-import cfg.GraphNode
+import scala.collection.mutable.Map
 import scala.collection.mutable.Set
-import collection.mutable.Map
-import ast.model.IfStmt
-import ast.model.CompoundStmt
-import ast.model.WhileStmt
-import ast.model.BreakStmt
-import ast.model.LoopStmt
+
+import ast.model._
+import cfg.GraphNode
 
 class ProgramNodeFactory(nodes: List[SourceCodeNode], val jumps: Map[Long,Long]) {
     type GNode = GraphNode[ProgramNode,ProgramNodeLabelizer]
@@ -98,8 +95,4 @@ class ProgramNodeFactory(nodes: List[SourceCodeNode], val jumps: Map[Long,Long])
 	        val in  = handleSourceCodeNode(body)
 	        
 	}
-	
-//	private
 }
-
-private

@@ -1,20 +1,33 @@
 package ctl
 
+import cfg.Labelizer
+
+0
+
 /**
  * @author Zohour Abouakil
  * @author Fabien Sauce
  */
 // Parent class of all the class used un CTL 
 sealed abstract class CtlExpr {
+    
     def AU(that: CtlExpr)  = _AU(this,that)
     def EU(that: CtlExpr)  = _EU(this,that)
     def &&(that : CtlExpr) = And(this,that)
     def ||(that : CtlExpr) = Or(this,that)
     def unary_!            = Not(this)       // ! Predicate()
+    
+    //     Re-use some operator
+//    def AF(that: CtlExpr)  = _AU(true,that)
+//    def EF(that: CtlExpr)  = _EU(true,that)
+//    def AG(that: CtlExpr)  = Not(EF(Not(that)))
+//    def EG(that: CtlExpr)  = Not(AF(Not(that)))
+    
 }
 
 // Binary Expression
-final case class And (left : CtlExpr, right : CtlExpr) extends CtlExpr 
+final case class And (left : CtlExpr, right : CtlExpr) extends CtlExpr
+
 final case class Or  (left : CtlExpr, right : CtlExpr) extends CtlExpr 
 final case class _AU (left : CtlExpr, right : CtlExpr) extends CtlExpr 
 final case class _EU (left : CtlExpr, right : CtlExpr) extends CtlExpr 
@@ -22,15 +35,15 @@ final case class _EU (left : CtlExpr, right : CtlExpr) extends CtlExpr
 // Unary Expression
 final case class AX    (right : CtlExpr)              extends CtlExpr 
 final case class EX    (right : CtlExpr)              extends CtlExpr 
-final case class AG    (right : CtlExpr)              extends CtlExpr 
-final case class EG    (right : CtlExpr)              extends CtlExpr 
-final case class AF    (right : CtlExpr)              extends CtlExpr 
-final case class EF    (right : CtlExpr)              extends CtlExpr 
+final case class AG    (right : CtlExpr)              extends CtlExpr    /* replaced */
+final case class EG    (right : CtlExpr)              extends CtlExpr    /* replaced */
+final case class AF    (right : CtlExpr)              extends CtlExpr    /* replaced */
+final case class EF    (right : CtlExpr)              extends CtlExpr    /* replaced */
 final case class Not   (right : CtlExpr)              extends CtlExpr 
 final case class Exists(varName: String, op: CtlExpr) extends CtlExpr
 
 // Predicate
-final case class Predicate (varList : List[String]=List()) extends CtlExpr 
+final case class Predicate[L <: Labelizer] (labelizer: L) extends CtlExpr 
 
 // Object 
 object CtlExpr {
@@ -54,6 +67,25 @@ object CtlExpr {
             case EF (x)    => formatUnary("EF", printExpr(x))
             case Not (x)   => formatUnary("!", printExpr(x))
             case Predicate(x) => "P" + x.mkString("(", ", ", ")")
+        }
+    }
+    
+    
+    def evalExpr(expr : CtlExpr) : ModelChecker.CheckerResult = {
+            
+        expr match {
+            case And(x, y) => ModelChecker.conj(evalExpr(x), evalExpr(y))
+            case Or (x, y) => ModelChecker.disj(evalExpr(x), evalExpr(y))
+            case _AU(x, y) => 
+            case _EU(x, y) => 
+            case AX (x)    => 
+            case EX (x)    => 
+            case AG (x)    => 
+            case EG (x)    => 
+            case AF (x)    => 
+            case EF (x)    => 
+            case Not (x)   => 
+            case Predicate(x) => 
         }
     }
 }
