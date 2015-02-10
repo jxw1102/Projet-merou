@@ -3,19 +3,21 @@ package ctl
 import cfg.GraphNode
 import ast.ProgramNodeLabelizer
 import ast.ProgramNode
+import cfg.Labelizer
+import cfg.Labelizable
 
 /**
  * @author Zohour Abouakil
  */
-object ModelChecker {
-    type StateEnv         = (GraphNodeProgram, Environment)
-    type GraphNodeProgram = GraphNode[ProgramNode, ProgramNodeLabelizer]
-    type CheckerResult    = Set[StateEnv]
+class ModelChecker[U <: Labelizable[V], V <: Labelizer] {
+    type StateEnv      = (GNode, Environment)
+    type GNode         = GraphNode[U,V]
+    type CheckerResult = Set[StateEnv]
     
     //////////////////////////---------------------------------------------//////////////////////////
     ///////////////////////////// Function implementation only for CTL-V //////////////////////////// 
     //////////////////////////---------------------------------------------//////////////////////////
-    def shift(s1: GraphNodeProgram , T: CheckerResult, s2: GraphNodeProgram): CheckerResult = 
+    def shift(s1: GNode , T: CheckerResult, s2: GNode): CheckerResult = 
         T.filter { case(a,b) => a == s1 }.map{ case(a,b) => (s2,b) } // return a new set 
     
     
@@ -32,10 +34,10 @@ object ModelChecker {
     /**
      * The function inj, used to inject the result of matching a predicate into the codomain of SAT
      */
-    private def inj(s: GraphNodeProgram, env: Environment): StateEnv = (s, env)
+    private def inj(s: GNode, env: Environment): StateEnv = (s, env)
     private def same(t1: CheckerResult , t2: CheckerResult)          = t1 == t2
     
-    val nodeParent = new GraphNodeProgram(???) // to modify 
+    val nodeParent = new GNode(???) // to modify 
     private def negone(se: StateEnv): Set[StateEnv] = se match { 
         case (s, env) => 
             ((!env).map { case value => (s, value) } ++ nodeParent.states.filter(_ != s).map {inj(_, new Bindings)})      
@@ -59,9 +61,9 @@ object ModelChecker {
     def neg(T: CheckerResult) = Conj(T.map(negone))
     
     // s∈ States (Conj {shift(s 0 , T, s) | s 0 ∈ next(s)})
-    def preA(T: CheckerResult) = nodeParent.states.flatMap(s => Conj(s.next.toSet.map((sNext: GraphNodeProgram) => shift(sNext,T,s))))
+    def preA(T: CheckerResult) = nodeParent.states.flatMap(s => Conj(s.next.toSet.map((sNext: GNode) => shift(sNext,T,s))))
     
-    def preE(T: CheckerResult) = nodeParent.states.flatMap(s => Disj(s.next.toSet.map((sNext: GraphNodeProgram) => shift(sNext,T,s))))
+    def preE(T: CheckerResult) = nodeParent.states.flatMap(s => Disj(s.next.toSet.map((sNext: GNode) => shift(sNext,T,s))))
     
     private def SAT_UU(f: CheckerResult => CheckerResult)(T1: CheckerResult , T2: CheckerResult) = {
             var (w,x,y) = (T1,T2,T2)

@@ -2,6 +2,11 @@ package ctl
 
 import ast.ProgramNodeLabelizer
 import ctl.ModelChecker._
+import cfg.Labelizer
+import ctl.StateEnv
+import ctl.CheckerResult
+import cfg.Labelizable
+import cfg.GraphNode
 
 /**
  * @author Zohour Abouakil
@@ -60,18 +65,21 @@ object CtlExpr {
 //        }
 //    }
     
-    def evalExpr(expr : CtlExpr) : CheckerResult = {
+    def evalExpr[U <: Labelizable[V],V <: Labelizer](expr : CtlExpr, modelChecker: ModelChecker[U,V])
+                                        : Set[(GraphNode[U,V], Environment)] = {
+        
 	    expr match {
-	        case And   (x, y) => conj    (evalExpr(x),evalExpr(y))
-	        case Or    (x, y) => disj    (evalExpr(x),evalExpr(y))
-	        case _AU   (x, y) => SAT_AU  (evalExpr(x),evalExpr(y))
-	        case _EU   (x, y) => SAT_EU  (evalExpr(x),evalExpr(y))
-	        case AX    (x   ) => preA    (evalExpr(x))
-	        case EX    (x   ) => preE    (evalExpr(x))
-	        case Not   (x   ) => neg     (evalExpr(x))
-            case Exist (x, y) => exits (x,evalExpr(y))
-	        case Predicate(x) => for (n <- nodeParent.states ; env = n.value.visit(x) ; if(env.isDefined)) yield (n,env.get)           
-            case _            => Set[StateEnv]() 
+	        case And   (x, y)    => modelChecker.conj    (evalExpr(x, modelChecker),evalExpr(y, modelChecker))
+	        case Or    (x, y)    => modelChecker.disj    (evalExpr(x, modelChecker),evalExpr(y, modelChecker))
+	        case _AU   (x, y)    => modelChecker.SAT_AU  (evalExpr(x, modelChecker),evalExpr(y, modelChecker))
+	        case _EU   (x, y)    => modelChecker.SAT_EU  (evalExpr(x, modelChecker),evalExpr(y, modelChecker))
+	        case AX    (x   )    => modelChecker.preA    (evalExpr(x, modelChecker))
+	        case EX    (x   )    => modelChecker.preE    (evalExpr(x, modelChecker))
+	        case Not   (x   )    => modelChecker.neg     (evalExpr(x, modelChecker))
+            case Exist (x, y)    => modelChecker.exits (x,evalExpr(y, modelChecker))
+	        case Predicate(x: V) => 
+                for (n <- modelChecker.nodeParent.states ; env = n.value.visit(x) ; if(env.isDefined)) yield (n,env.get)           
+            //case _               => Set[StateEnv]() 
             }
     }
 }
