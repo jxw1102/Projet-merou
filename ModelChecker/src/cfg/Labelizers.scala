@@ -1,6 +1,5 @@
 package cfg
 
-import scala.collection.mutable.Map
 
 import ast.Expression
 import ast.For

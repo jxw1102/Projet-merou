@@ -1,0 +1,6 @@
+# Latex files
+*.pdf
+*.aux
+*.toc
+*.orig
+*.synctex
