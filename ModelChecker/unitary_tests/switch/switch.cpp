@@ -11,5 +11,5 @@ int main()
                 break;
         case 6: j-=1;
     }
-    int k = 7;
+//    int k = 7;
 }

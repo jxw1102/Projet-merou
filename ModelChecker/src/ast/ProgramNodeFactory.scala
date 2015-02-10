@@ -24,34 +24,25 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
     private var labels = Map[String,GNode]()
     private def getLabel(label: String) = labels.getOrElseUpdate(label,toGraphNode(labelNodes(label)))
     
-    lazy val result = 
-        clean(
-            handle(rootNode,None,None,None)
-            ,Set()).head
+    lazy val result = { 
+        val res = handle(rootNode,None,None,None)
+        clean(res,Set())
+        res
+    }
     
     /**
      * This methods removes all the Empty nodes used for construction and updates the links in
      * consequence. It is called just before returning the result.
      */
-    private def clean(node: GNode, explored: Set[GNode]): List[GNode] = {
-        if (!explored.contains(node)) {
-            explored += node
-            node.value match {
-                case Empty(_,_) => 
-                    val res = (node.prev.toList,node.next.toList) match {
-                        case (Nil,next) => node >>>/ next; next.flatMap(clean(_,explored))
-                        case (prev,Nil) => node /<<< prev; prev
-                        case (prev,next) =>
-                            node >>>/ next
-                            val cleaned = next.flatMap(clean(_,explored))
-                            for (x <- prev ; y <- cleaned) x >> y
-                            node /<<< prev
-                            prev
-                    }
-                    res
-                case _ => node.next.foreach(clean(_,explored)); List(node)
-            }
-        } else List(node)
+    private def clean(node: GNode, explored: Set[GNode]): Unit = {
+        if (explored contains node) return
+        node.value match {
+            case Empty(_,_) | Statement(GotoStmt(_) | LabelStmt(_,_),_,_) =>
+                node.prev.foreach { y => y.next.remove(node); y.next ++= node.next }
+                node.next.foreach { y => y.prev.remove(node); y.prev ++= node.prev }
+            case _ => explored += node
+        }
+        node.next.foreach(clean(_,explored))
     }
     
     /**
@@ -69,9 +60,9 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
             case ContinueStmt()      => handleJump(node,entry)
             case GotoStmt(label)     => handleJump(node,Some(getLabel(label)))
             case FunctionDecl(_,_,_) => handleFunDecl(node,next,exit,entry)
-            case _                   => handleDefault(node,next)
+            case LabelStmt(_,_)      => handleLabel(node,next,exit,entry)
+            case _                   => handleNormal(node,next)
     }
-    
     
     private def emptyNode = {
         val res    = new GNode(Empty(CodeRange(-1,-1,-1,-1),currentId.toString))
@@ -96,6 +87,7 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
         case (ContinueStmt()                     ,range,id) => emptyNode                (range,id)
         case (FunctionDecl(_,_,_)                ,range,id) => emptyNode                (range,id)
         case (NullStmt()                         ,range,id) => emptyNode                (range,id)
+        case (DefaultStmt(_)                     ,range,id) => emptyNode                (range,id)
         case (stmt: Stmt                         ,range,id) => new GNode(Statement (stmt,range,id))
     }
     
@@ -140,7 +132,7 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
             res
     }
     
-    private def handleDefault(node: SourceCodeNode, next: Option[GNode]) = {
+    private def handleNormal(node: SourceCodeNode, next: Option[GNode]) = {
         val res = toGraphNode(node)
         if (next.isDefined) res >> next.get
         res
@@ -189,8 +181,8 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
          val head = node match {
              case SwitchStmt(expr,CompoundStmt(elts)) =>
              	val handleHead = (h: SourceCodeNode, next: Option[GNode]) => h match {
-             		case CaseStmt(_,_) => handleCase(h,res,next,nextOpt,entry)
-             		case _             => handle(h,next,nextOpt,entry) 
+             		case CaseStmt(_,_) | DefaultStmt(_) => handleCase(h,res,next,nextOpt,entry)
+             		case _                              => handle(h,next,nextOpt,entry) 
              	}
              	linkElements(elts.reverse,nextOpt)(handleHead)
         }
@@ -207,12 +199,21 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
         caseStmt match {
             case CaseStmt(_, body) => 
                 body match {
-                    case CaseStmt(_,_) => res >> handleCase(body,prev,next,exit,entry)           
-                    case BreakStmt()   => res >> exit.get
-                    case _             => res >> handle(body,next,exit,entry)
+                    case CaseStmt(_,_)  => res >> handleCase(body,prev,next,exit,entry)           
+                    case BreakStmt()    => res >> exit.get
+                    case DefaultStmt(_) => res >> handleCase(body,prev,next,exit,entry)
+                    case _              => res >> handle(body,next,exit,entry)
                 }
             case DefaultStmt(body)     => res >> handle(body,next,exit,entry)
         }
         prev >> res
     }
+    
+    private def handleLabel(labelStmt: SourceCodeNode, next: Option[GNode], exit: Option[GNode], entry: Option[GNode]): GNode = labelStmt match {
+        case LabelStmt(label, body) =>
+            val res = getLabel(label)
+            res >> handle(body, next, exit, entry)
+            res
+    }
+    
 }

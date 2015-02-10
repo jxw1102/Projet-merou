@@ -1,18 +1,13 @@
 package ast
 
-import scala.collection.mutable.HashMap
-import scala.collection.mutable.{Map => MMap}
-import cfg.GraphNode
-import util.MutableMapView
-import cfg.Labelizer
-import cfg.Labelizable
 import ast.model.Decl
 import ast.model.Expr
 import ast.model.JumpStmt
-import scala.collection.mutable.ArrayBuffer
-import jdk.nashorn.internal.ir.Assignment
 import ast.model.Stmt
+import cfg.Labelizable
+import cfg.Labelizer
 import ctl.Environment
+import util.MutableMapView
 
 /**
  * Those classes represent the most abstract and final form of the transformations of the source code
@@ -59,19 +54,20 @@ sealed abstract class ProgramNode(val id: String) extends Labelizable[ProgramNod
     
     // ONLY for debugging purpose. I know it is very ugly...
     override def toString = {
-        val format = (name: String, a: Any, id: String) => "\"%s %s at %s \"".format(name,a,id)
+        val format = (name: String, a: Any, id: String, cr: CodeRange) => "\"%s %s at %s %s\"".format(name,a,cr,id)
         this match {
-            case If        (e   ,_,id) => format("if"        ,e,id)
-            case For       (e   ,_,id) => format("for"       ,if (e.isDefined) e.get else "no_cond",id)
-            case Empty     (_   ,  id) => format("Empty"     ,"",id)
-            case While     (e   ,_,id) => format("while"     ,e,id)
-            case Statement (stmt,_,id) => format(stmt.toString ,"",id)
-            case Identifier(s   ,_,id) => format("Identifier",s,id)
-            case Expression(e   ,_,id) => format(e.toString,"",id)
-            case Switch    (e   ,_,_ ) => format("switch"    ,e,id)
+            case If        (e   ,cr,id) => format("if"        ,e,id,cr)
+            case For       (e   ,cr,id) => format("for"       ,if (e.isDefined) e.get else "no_cond",id,cr)
+            case Empty     (_   ,   id) => format("Empty"     ,"",id,CodeRange(0,0,0,0))
+            case While     (e   ,cr,id) => format("while"     ,e,id,cr)
+            case Statement (stmt,cr,id) => format(stmt.toString ,"",id,cr)
+            case Identifier(s   ,cr,id) => format("Identifier",s,id,cr)
+            case Expression(e   ,cr,id) => format(e.toString,"",id,cr)
+            case Switch    (e   ,cr,id) => format("switch"    ,e,id,cr)
         }
     }
 }
+
 final case class If        (e: Expr         , cr: CodeRange, _id: String) extends ProgramNode(_id) { def visit(v: PNL) = v.visitIf        (this) }
 final case class For       (e: Option[Expr] , cr: CodeRange, _id: String) extends ProgramNode(_id) { def visit(v: PNL) = v.visitFor       (this) }
 final case class While     (e: Expr         , cr: CodeRange, _id: String) extends ProgramNode(_id) { def visit(v: PNL) = v.visitWhile     (this) }

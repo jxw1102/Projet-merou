@@ -9,7 +9,7 @@ package ast.model
 sealed abstract class Expr extends Stmt with ForInitializer {
     def matches(that: Expr): Boolean = (this,that) match {
         case (BinaryOp(xl,xr,xo),BinaryOp(yl,yr,yo))                 => (xo == yo) && (xl matches yl) && (xr matches yr)
-        case (UnaryOp(xopd,xopr,xkind),UnaryOp(yopd,yopr,ykind))     =>(xkind == ykind) && (xopr == yopr) && (xopd matches yopd)
+        case (UnaryOp(xopd,xopr,xkind),UnaryOp(yopd,yopr,ykind))     => (xkind == ykind) && (xopr == yopr) && (xopd matches yopd)
         case (CompoundAssignOp(xl,xr,xo),CompoundAssignOp(yl,yr,yo)) => (xo == yo) && (xl matches yl) && (xr matches yr)
         case (Literal(x,u),Literal(y,v))                             => x == y && u == v
         case (DeclRefExpr(_,_,x,_),DeclRefExpr(_,_,y,_))             => x == y

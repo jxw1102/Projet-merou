@@ -115,6 +115,7 @@ final case class OtherASTNode(_depth:Int, data: String) extends ASTNode(_depth)
 final case class CodeRange(lineMin: Int, lineMax: Int, colMin: Int, colMax: Int) {
     val lineRange = lineMin to lineMax
     val colRange  = colMin  to colMax
+    override def toString = if (lineMin == lineMax) "(%d,%d:%d)".format(lineMin,colMin,colMax) else "(%d:%d,%d:%d)".format(lineMin,lineMax,colMin,colMax)
 }
 
 /**
