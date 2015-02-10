@@ -4,17 +4,12 @@ import scala.collection.mutable.Map
 
 import ast.Expression
 import ast.For
-import ast.For
 import ast.Identifier
 import ast.If
 import ast.ProgramNodeLabelizer
 import ast.Statement
 import ast.While
-import ast.While
-import ast.model.BinaryOp
-import ast.model.Expr
-import ast.model.Literal
-import ast.model.UnaryOp
+import ast.model._
 import ctl.Bindings
 import ctl.Bottom
 import ctl.Environment
@@ -37,6 +32,7 @@ trait ExprPattern {
     }
 }
 
+// This class works for BinaryOp and CompoundAssignOp
 case class BinaryOpPattern (left: PatternExpr, right: PatternExpr, op: String) extends ExprPattern{   
     override def matches(expr: Expr): Option[Environment] = {
         expr match {
@@ -56,12 +52,12 @@ case class BinaryOpPattern (left: PatternExpr, right: PatternExpr, op: String) e
     }
 }
 
-case class UnaryOpPattern (patternExpr: PatternExpr, op: String) extends ExprPattern{
+case class UnaryOpPattern (operand: PatternExpr, op: String, kind: OpPosition) extends ExprPattern{
     override def matches(expr: Expr): Option[Environment] = {
         expr match {
           case UnaryOp(operand,operator,kind) =>  
-              if (operator == op) {
-                  val env = matchEnv(patternExpr ,operand)
+              if (operator == op && this.kind == kind) {
+                  val env = matchEnv(this.operand, operand)
                   env.unapply match {
                       case Some((pos,_)) => Some(new Bindings(pos))
                       case _             => None
@@ -74,27 +70,87 @@ case class UnaryOpPattern (patternExpr: PatternExpr, op: String) extends ExprPat
     }
 }
 
-case class LiteralPattern(lit: PatternExpr) extends ExprPattern {
+case class LiteralPattern(typeName: String, value: String) extends ExprPattern {
     override def matches(expr: Expr): Option[Environment] = {
         expr match {
-          case Literal(_,_) =>  
-              val env = matchEnv(lit,expr)
-              (env.unapply) match {
-                  case (Some((pos,_))) => Some(new Bindings(pos))
-                  case _               => None
+          case Literal(tp,vl) =>  
+              if (typeName == tp && value == vl) {
+                  Some(new Bindings())
+              } else {
+                  None
               }
           case _ => None
         }
     }
 }
 
+case class DeclRefExprPattern(id: String, refType: String) extends ExprPattern {
+    override def matches(expr: Expr): Option[Environment] = {
+        expr match {
+          case DeclRefExpr(_,_,id,refType) =>  
+              if (this.id == id && this.refType == refType) {
+                Some(new Bindings())
+              } else {
+                  None
+              }
+          case _ => None
+        }
+    }
+}
 
-//case class Literal            (x: String)  
+// patternExprs: (cond,yes,no)
+case class ConditionalOperatorPattern(patternExprs: (PatternExpr,PatternExpr,PatternExpr), rtnType: String) extends ExprPattern {
+    override def matches(expr: Expr): Option[Environment] = {
+        expr match {
+          case ConditionalOperator(exprs,rtnType) =>  
+              if (this.rtnType == rtnType) {
+                  val condEnv = matchEnv(patternExprs._1,exprs._1)
+                  val yesEnv  = matchEnv(patternExprs._2,exprs._2)
+                  val noEnv   = matchEnv(patternExprs._3,exprs._3)
+                  (condEnv.unapply,yesEnv.unapply,noEnv.unapply) match {
+                      case (Some((cpos,_)),Some((ypos,_)),Some((npos,_))) => Some(new Bindings(cpos ++ ypos ++ npos))
+                      case _ => None
+                  }
+              }
+              else 
+                  None
+          case _ => None
+        }
+    }
+}
 
-//case class CompoundAssignOp   (left: Expr, right: Expr, operator: String)                                 extends Expr
-//case class DeclRefExpr        (targetType: String, targetName: String, targetId: String, refType: String) extends Expr
-//case class ConditionalOperator(exprs: (Expr,Expr,Expr), returnType: String)                               extends Expr
-//case class ArraySubscriptExpr (exprs: (Expr, Expr))                                                       extends Expr
+// patternExprs: (array,index)
+case class ArraySubscriptExprPattern(patternExprs: (PatternExpr,PatternExpr)) extends ExprPattern {
+    override def matches(expr: Expr): Option[Environment] = {
+        expr match {
+          case ArraySubscriptExpr(exprs) => 
+              val arrayEnv = matchEnv(patternExprs._1,exprs._1)
+              val indexEnv = matchEnv(patternExprs._2,exprs._2)
+              (arrayEnv.unapply,indexEnv.unapply) match {
+                  case (Some((apos,_)),Some((ipos,_))) => Some(new Bindings(apos ++ ipos))
+                  case _ => None
+              }
+          case _ => None
+        }
+    }
+}
+
+/*
+case class CallExprPattern(params: List[PatternExpr], rtnType: String) extends ExprPattern {
+    override def matches(expr: Expr): Option[Environment] = {
+        expr match {
+          case CallExpr(rtnType,params) =>  
+              if (this.rtnType == rtnType) {
+                  
+              }
+              else 
+                  None
+          case _ => None
+        }
+    }
+}
+*/
+
 //case class InitListExpr       (exprs: List[Expr])                                                         extends Expr
 //case class CallExpr           (returnType: String, params: List[Expr])                                    extends Expr {
 
@@ -121,9 +177,9 @@ class StatementLabelizer(val pattern: ExprPattern) extends ProgramNodeLabelizer 
 }
 
 class IdentifierLabelizer(val pattern: ExprPattern) extends ProgramNodeLabelizer {
-    override def visitIdentifier(id: Identifier) = id match { case Identifier(s, _, _)  => None }
+    override def visitIdentifier(id: Identifier) = id match { case Identifier(s,_,_)  => None }
 }
 
 class ExpressionLabelizer(val pattern: ExprPattern) extends ProgramNodeLabelizer {
-    override def visitExpression(expr: Expression) = expr match { case Expression(e, _, _) => pattern.matches(e) }
+    override def visitExpression(expr: Expression) = expr match { case Expression(e,_,_) => pattern.matches(e) }
 }

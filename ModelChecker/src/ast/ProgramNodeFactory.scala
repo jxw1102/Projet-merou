@@ -102,7 +102,7 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
            }
            ifNode
     }
-    
+
     private def handleFor(forStmt: SourceCodeNode, next: Option[GNode], exit: Option[GNode], entry: Option[GNode]) = forStmt match {
         case ForStmt(init,cond,update,body) => 
             val condNode   = toGraphNode(forStmt)
@@ -153,21 +153,21 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
     }
     
     private def linkElements(list: List[SourceCodeNode], next: Option[GNode])
-    						(handleHead: (SourceCodeNode,Option[GNode]) => GNode): Option[GNode] = list match {
-	    case h :: q => 
-	    	val node = handleHead(h,next)
-	    	q match {
-	    		case Nil => Some(node)
-	    		case _   => linkElements(q,Some(node))(handleHead)
-	    	}
-	    case Nil => None
-	}
+                            (handleHead: (SourceCodeNode,Option[GNode]) => GNode): Option[GNode] = list match {
+        case h :: q => 
+            val node = handleHead(h,next)
+            q match {
+                case Nil => Some(node)
+                case _   => linkElements(q,Some(node))(handleHead)
+            }
+        case Nil => None
+    }
     
     private def handleCompoundStmt(cmpdStmt: SourceCodeNode, next: Option[GNode], exit: Option[GNode], entry: Option[GNode]) = {
         val head = cmpdStmt match {
             case CompoundStmt(elts) =>
                 val handleHead = (h: SourceCodeNode, next: Option[GNode]) => handle(h,next,exit,entry) 
-             	linkElements(elts.reverse,next)(handleHead)
+                 linkElements(elts.reverse,next)(handleHead)
         }
         val res = toGraphNode(cmpdStmt)
         head match {
@@ -181,11 +181,11 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
          val res = toGraphNode(node)
          val head = node match {
              case SwitchStmt(expr,CompoundStmt(elts)) =>
-             	val handleHead = (h: SourceCodeNode, next: Option[GNode]) => h match {
-             		case CaseStmt(_,_) | DefaultStmt(_) => handleCase(h,res,next,nextOpt,entry)
-             		case _                              => handle(h,next,nextOpt,entry)
-             	}
-             	linkElements(elts.reverse,nextOpt)(handleHead)
+                 val handleHead = (h: SourceCodeNode, next: Option[GNode]) => h match {
+                     case CaseStmt(_,_) | DefaultStmt(_) => handleCase(h,res,next,nextOpt,entry)
+                     case _                              => handle(h,next,nextOpt,entry)
+                 }
+                 linkElements(elts.reverse,nextOpt)(handleHead)
         }
         
         head match {
