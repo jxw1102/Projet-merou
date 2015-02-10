@@ -18,33 +18,34 @@ int main(int argc, char *argv[]) {
 	int len = 14;
 	int i, j, temp;
 	int sum = 0;
-//	sum = increment(sum);
-//	for (int i = 0;;) {
-//		sum += i;
-//		if (i == 8)
-//			break;
-//		if (i < 8)
-//			continue;
-//		sum *= i;
-//		sum -= i;
-//	}
-//	if (sum > 100)
-//		sum = 100;
-//	else if (sum > 50) {
-//		sum = 50;
-//	} else
-//		sum -= 5, sum = sum + 10;
-//
-//	switch (sum / 10) {
-//	case 1:
-//		sum = 20;
-//		break;
-//	case 2:
-//		sum = 30;
-//	default:
-//		sum += 10;
-//	}
-//	self(sum);
+	sum = increment(sum);
+	for (int i = 0;;) {
+		sum += i;
+		if (i == 8)
+			break;
+		if (i < 8)
+			continue;
+		sum *= i;
+		sum -= i;
+	}
+	if (sum > 100)
+		sum = 100;
+	else if (sum > 50) {
+		sum = 50;
+		return 1;
+	} else
+		sum -= 5, sum = sum + 10;
+
+	switch (sum / 10) {
+	case 1:
+		sum = 20;
+		break;
+	case 2:
+		sum = 30;
+	default:
+		sum += 10;
+	}
+	self(sum);
 
 label: if (sum == 19 ? (sum = 20, sum -= 10) : sum = 30)
 		sum = 10000;
@@ -64,8 +65,9 @@ label: if (sum == 19 ? (sum = 20, sum -= 10) : sum = 30)
 							arr[j + 1] = temp;
 						}
 			}
-		while (1) {
-			;
+		if (1) {
+			if(sum == 10)
+				self(sum);
 		}
 	}
 

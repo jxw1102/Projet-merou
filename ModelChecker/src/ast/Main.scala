@@ -38,7 +38,7 @@ object Main extends App {
     }
     
     if (args.length > 0) {
-        process("./"+args(0),"test","/usr/local/bin/dot")
+        process("./"+args(0),args(0).substring(0,args(0).lastIndexOf('.')),"/usr/local/bin/dot")
         "open test.png".!!
     } else {
         val folder = "switch"

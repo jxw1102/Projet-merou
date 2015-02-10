@@ -55,12 +55,13 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
             case WhileStmt(_,_)      => handleWhile(node,next,exit,entry)
             case DoWhileStmt(_,_)    => handleDoWhile(node,next,exit,entry)
             case CompoundStmt(_)     => handleCompoundStmt(node,next,exit,entry)
-            case SwitchStmt(_,_)     => handleSwitch(node, next, exit, entry)          
+            case ReturnStmt(_)       => toGraphNode(node)
             case BreakStmt()         => handleJump(node,exit )
             case ContinueStmt()      => handleJump(node,entry)
             case GotoStmt(label)     => handleJump(node,Some(getLabel(label)))
-            case FunctionDecl(_,_,_) => handleFunDecl(node,next,exit,entry)
+            case SwitchStmt(_,_)     => handleSwitch(node, next, exit, entry)
             case LabelStmt(_,_)      => handleLabel(node,next,exit,entry)
+            case FunctionDecl(_,_,_) => handleFunDecl(node,next,exit,entry)
             case _                   => handleNormal(node,next)
     }
     
@@ -75,9 +76,9 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
      * General facade for converting SourceCodeNode to a fresh and unlinked GNode
      */
     private def toGraphNode(node: SourceCodeNode) = (node,node.codeRange.get,node.id.get) match {
-        case (ForStmt     (init,cond,update,body),range,id) => new GNode(For       (cond,range,id))
-        case (WhileStmt   (cond,body)            ,range,id) => new GNode(While     (cond,range,id))
-        case (DoWhileStmt (cond,body)            ,range,id) => new GNode(While     (cond,range,id))
+        case (ForStmt(init,cond,update,body)     ,range,id) => new GNode(For       (cond,range,id))
+        case (WhileStmt(cond,body)               ,range,id) => new GNode(While     (cond,range,id))
+        case (DoWhileStmt(cond,body)             ,range,id) => new GNode(While     (cond,range,id))
         case (IfStmt(expr,_,_)                   ,range,id) => new GNode(If        (expr,range,id))
         case (SwitchStmt(expr,_)                 ,range,id) => new GNode(Switch    (expr,range,id))
         case (CaseStmt(expr,_)                   ,range,id) => new GNode(Expression(expr,range,id))
@@ -182,7 +183,7 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
              case SwitchStmt(expr,CompoundStmt(elts)) =>
              	val handleHead = (h: SourceCodeNode, next: Option[GNode]) => h match {
              		case CaseStmt(_,_) | DefaultStmt(_) => handleCase(h,res,next,nextOpt,entry)
-             		case _                              => handle(h,next,nextOpt,entry) 
+             		case _                              => handle(h,next,nextOpt,entry)
              	}
              	linkElements(elts.reverse,nextOpt)(handleHead)
         }
@@ -199,12 +200,12 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
         caseStmt match {
             case CaseStmt(_, body) => 
                 body match {
-                    case CaseStmt(_,_)  => res >> handleCase(body,prev,next,exit,entry)           
+                    case CaseStmt(_,_)  => res >> handleCase(body,prev,next,exit,entry)
                     case BreakStmt()    => res >> exit.get
                     case DefaultStmt(_) => res >> handleCase(body,prev,next,exit,entry)
                     case _              => res >> handle(body,next,exit,entry)
                 }
-            case DefaultStmt(body)     => res >> handle(body,next,exit,entry)
+            case DefaultStmt(body) => res >> handle(body,next,exit,entry)
         }
         prev >> res
     }
