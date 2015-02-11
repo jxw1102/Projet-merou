@@ -7,7 +7,7 @@ package object ast {
     }
     
     implicit object DataProcessor {
-        private val splitReg = "(\\'.+?\\'|\\S+)".r
+        private val splitReg = "(\\'.+?\\'(:\\'.+?\\')?|\\S+)".r
     }
     
     implicit class SeqFetcher[T](seq: Seq[T]) {
