@@ -8,6 +8,7 @@ import cfg.Labelizable
 import cfg.Labelizer
 import ctl.Environment
 import util.MutableMapView
+import cfg.GraphNode
 
 /**
  * Those classes represent the most abstract and final form of the transformations of the source code
@@ -16,9 +17,9 @@ import util.MutableMapView
  * @author Sofia Boutahar
  * @author Xiaowen Ji      
  */
-class Program {
-    type MMV = MutableMapView[String,Decl]
-    val declarations: MMV = MutableMapView()
+
+case class Program(val decls: Map[String,GraphNode[ProgramNode,ProgramNodeLabelizer]]) {
+    override def toString = decls.values.map(_.mkString).addString(new StringBuilder).toString
 }
 
 /**
@@ -45,6 +46,7 @@ object SourceCodeNode {
  */
 sealed abstract class ProgramNode(val id: String) extends Labelizable[ProgramNodeLabelizer] {
     type PNL = ProgramNodeLabelizer 
+    type SCN = SourceCodeNode
     
     override def equals(that: Any) = that match {
         case x: ProgramNode => id == x.id 
@@ -68,15 +70,15 @@ sealed abstract class ProgramNode(val id: String) extends Labelizable[ProgramNod
     }
 }
 
-final case class If        (e: Expr         , cr: CodeRange, _id: String) extends ProgramNode(_id) { def visit(v: PNL) = v.visitIf        (this) }
-final case class For       (e: Option[Expr] , cr: CodeRange, _id: String) extends ProgramNode(_id) { def visit(v: PNL) = v.visitFor       (this) }
-final case class While     (e: Expr         , cr: CodeRange, _id: String) extends ProgramNode(_id) { def visit(v: PNL) = v.visitWhile     (this) }
-final case class Statement (stmt: Stmt      , cr: CodeRange, _id: String) extends ProgramNode(_id) { def visit(v: PNL) = v.visitStatement (this) }
-final case class Identifier(s: String       , cr: CodeRange, _id: String) extends ProgramNode(_id) { def visit(v: PNL) = v.visitIdentifier(this) }
-final case class Expression(e: Expr         , cr: CodeRange, _id: String) extends ProgramNode(_id) { def visit(v: PNL) = v.visitExpression(this) }
-final case class Switch    (e: Expr         , cr: CodeRange, _id: String) extends ProgramNode(_id) { def visit(v: PNL) = v.visitSwitch    (this) }
+final case class If        (e: Expr             , cr: CodeRange, _id: String) extends ProgramNode(_id) { def visit(v: PNL) = v.visitIf        (this) }
+final case class For       (e: Option[Expr]     , cr: CodeRange, _id: String) extends ProgramNode(_id) { def visit(v: PNL) = v.visitFor       (this) }
+final case class While     (e: Expr             , cr: CodeRange, _id: String) extends ProgramNode(_id) { def visit(v: PNL) = v.visitWhile     (this) }
+final case class Statement (stmt: SourceCodeNode, cr: CodeRange, _id: String) extends ProgramNode(_id) { def visit(v: PNL) = v.visitStatement (this) }
+final case class Identifier(s: String           , cr: CodeRange, _id: String) extends ProgramNode(_id) { def visit(v: PNL) = v.visitIdentifier(this) }
+final case class Expression(e: Expr             , cr: CodeRange, _id: String) extends ProgramNode(_id) { def visit(v: PNL) = v.visitExpression(this) }
+final case class Switch    (e: Expr             , cr: CodeRange, _id: String) extends ProgramNode(_id) { def visit(v: PNL) = v.visitSwitch    (this) }
 // only used during the construction of the graph, should never be used in an actual CFG
-private[ast] final case class Empty(          cr: CodeRange, _id: String) extends ProgramNode(_id) { def visit(v: PNL) = v.visitEmpty     (this) }
+private[ast] final case class Empty(              cr: CodeRange, _id: String) extends ProgramNode(_id) { def visit(v: PNL) = v.visitEmpty     (this) }
 
 trait ProgramNodeLabelizer extends Labelizer {
     def visitIf                (ifNode     : If        ): Option[Environment] = None

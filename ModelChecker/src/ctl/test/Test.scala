@@ -10,15 +10,7 @@ import ctl.ModelChecker
 /**
  * @author Zohour Abouakil
  */
-
-
-
-// Object traite les objets
 object Main extends App {
-//    type Pos = Map[String,Any]
-//    type Neg = Map[String,Set[Any]]
-    
-    
     // Test environment 
         // Conflit 
        
@@ -85,8 +77,12 @@ object Main extends App {
 }
 
 abstract class Test
-case class F(x: Int)         extends Test with Labelizable[TestLabelizer]
-case class G(x: Int, y: Int) extends Test with Labelizable[TestLabelizer]
+case class F(x: Int)         extends Test with Labelizable[TestLabelizer] {
+    override def visit(t: TestLabelizer) = t.visitF(this)
+}
+case class G(x: Int, y: Int) extends Test with Labelizable[TestLabelizer] {
+    override def visit(t: TestLabelizer) = t.visitG(this)
+}
 
 trait TestLabelizer extends Labelizer {
     def visitF(f: F): Option[Environment] = None

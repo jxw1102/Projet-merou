@@ -21,5 +21,5 @@ final case class FunctionDecl(_name: String, typeName: String, body: CompoundStm
 }
 
 final case class ParamVarDecl(_name: String, typeName: String) extends Decl(_name) {
-	override def toString = "%s".format(typeName,name)
+	override def toString = "%s %s".format(typeName,name)
 }

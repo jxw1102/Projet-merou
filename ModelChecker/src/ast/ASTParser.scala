@@ -48,12 +48,12 @@ class ASTParser {
         val lineRangeReg = new Regex("line:(\\d+)(:(\\d+))?[,>]|col:(\\d+)[,>]", "line0", "", "line1", "col")
     }
     
-    private var currentLine = 0
-    
+    private var currentLine = 1
     def parseFile(path: String) = {
         currentLine   = 0
         // ignore first lines
-        val lines  = Source.fromFile(path).getLines.dropWhile(!_.contains("main")).toSeq
+        val lines  = Source.fromFile(path).getLines.dropWhile(_ contains "<invalid sloc>")
+        	/*.dropWhile(!_.contains("main"))*/.toSeq
         val tree   = OtherASTNode(-1, "")
         val stack  = ArrayStack[ASTNode]()
         val labels = HashMap[String,String]()

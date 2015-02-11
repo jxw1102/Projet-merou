@@ -31,50 +31,21 @@ class GraphNode[U <: Labelizable[V], V <: Labelizer](val value: U) {
     }
     
     /**
-     * Create a bidirectional binding from nodes this and v : this <- v
+     * Creates a bidirectional binding from nodes this and v : this <- v
      */
     def <<(v: GUV) = { _prev += v; v._next += this; v }
     
     /**
-     * Create a bidirectional binding from nodes this and v : this -> v
+     * Creates a bidirectional binding from nodes this and v : this -> v
      */
     def >>(v: GUV) = { _next += v; v._prev += this; v } 
     
-    /**
-     * Create a bidirectional binding from every node of v to this : this <- v(i) forall i
-     */
-    def <<<(v: Iterable[GUV]) = { _prev ++= v; v.foreach(n => n._next += this) }
-    
-    /**
-     * Create a bidirectional binding from this to every node : this -> v(i) forall i
-     */
-    def >>>(v: Iterable[GUV]) = { _next ++= v; v.foreach(n => n._prev += this) }
-    
-    /**
-     * Undo a bidirectional binding from v to this
-     */
-    def /<<(v: GUV) = { _prev -= v; v._next -= this; v }
-    
-    /**
-     * Undo a bidirectional binding from this to v
-     */
-    def >>/(v: GUV) = { _next -= v; v._prev -= this; v }
-    
-    /**
-     * Undo all the bidirectional bindings from every node of v to this 
-     */
-    def /<<<(v: Iterable[GUV]) = { _prev --= v; v.foreach(n => n._next -= this) }
-    
-    /**
-     * Undo all the bidirectional bindings from this to every node of v
-     */
-    def >>>/(v: Iterable[GUV]) = { _next --= v; v.foreach(n => n._prev -= this) }
-
     override def toString = value.toString
     def mkString          = addString(new StringBuilder,MSet()).toString
     
     private  def addString(sb: StringBuilder, set: MSet[GUV]): StringBuilder = {
         if (set contains this) sb 
+        else if (_next.isEmpty) sb.append(this + "\n")
         else {
         	set += this
         	_next.foreach(node => sb.append("%s -> %s\n".format(this,node)))

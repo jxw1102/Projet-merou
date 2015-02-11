@@ -2,6 +2,7 @@ package ast
 
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.Map
+import scala.collection.immutable.{ Map => IMap }
 import scala.collection.mutable.Set
 
 import ast.model._
@@ -14,35 +15,39 @@ import cfg.GraphNode
  * @author Xiaowen Ji
  * @author David Courtinot
  */
-class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,SourceCodeNode]) {
+class ProgramNodeFactory(rootNodes: Iterable[Decl], labelNodes: Map[String,SourceCodeNode]) {
     type GNode = GraphNode[ProgramNode,ProgramNodeLabelizer]
     
     // id used to identify the artificial empty nodes created by the algorithm
-    private var currentId = 0
+    private var currentId = -1
     
     // Map used to create (on the fly) GNode(s) from the SourceCodeNode labels 
     private var labels = Map[String,GNode]()
     private def getLabel(label: String) = labels.getOrElseUpdate(label,toGraphNode(labelNodes(label)))
-    
-    lazy val result = { 
-        val res = handle(rootNode,None,None,None)
-        clean(res,Set())
-        res
-    }
-    
+
+    lazy val result = 
+        Program(IMap(rootNodes.map(decl => decl.name -> {
+        	val res = handle(decl,None,None,None)
+        	clean(res,Set())
+        	res
+        }).toSeq: _*))
+        
     /**
      * This methods removes all the Empty nodes used for construction and updates the links in
      * consequence. It is called just before returning the result.
      */
     private def clean(node: GNode, explored: Set[GNode]): Unit = {
         if (explored contains node) return
+
+        val (prev,next) = (node.prev.toList,node.next.toList)
         node.value match {
-            case Empty(_,_) | Statement(GotoStmt(_) | LabelStmt(_,_),_,_) =>
-                node.prev.foreach { y => y.next.remove(node); y.next ++= node.next }
-                node.next.foreach { y => y.prev.remove(node); y.prev ++= node.prev }
-            case _ => explored += node
+            case Empty(_,_) =>
+                prev.foreach { y => y.next -= node; y.next ++= node.next }
+                next.foreach { y => y.prev -= node; y.prev ++= node.prev }
+            case _ => 
+                explored += node
         }
-        node.next.foreach(clean(_,explored))
+        next.foreach(clean(_,explored))
     }
     
     /**
@@ -77,19 +82,20 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
      */
     private def toGraphNode(node: SourceCodeNode) = (node,node.codeRange.get,node.id.get) match {
         case (ForStmt(init,cond,update,body)     ,range,id) => new GNode(For       (cond,range,id))
-        case (WhileStmt(cond,body)               ,range,id) => new GNode(While     (cond,range,id))
         case (DoWhileStmt(cond,body)             ,range,id) => new GNode(While     (cond,range,id))
-        case (IfStmt(expr,_,_)                   ,range,id) => new GNode(If        (expr,range,id))
+        case (WhileStmt(cond,body)               ,range,id) => new GNode(While     (cond,range,id))
         case (SwitchStmt(expr,_)                 ,range,id) => new GNode(Switch    (expr,range,id))
+        case (IfStmt(expr,_,_)                   ,range,id) => new GNode(If        (expr,range,id))
         case (CaseStmt(expr,_)                   ,range,id) => new GNode(Expression(expr,range,id))
         case (expr: Expr                         ,range,id) => new GNode(Expression(expr,range,id))
         case (CompoundStmt(_)                    ,range,id) => emptyNode                (range,id)
-        case (BreakStmt()                        ,range,id) => emptyNode                (range,id)
         case (ContinueStmt()                     ,range,id) => emptyNode                (range,id)
-        case (FunctionDecl(_,_,_)                ,range,id) => emptyNode                (range,id)
-        case (NullStmt()                         ,range,id) => emptyNode                (range,id)
+        case (LabelStmt(_,_)                     ,range,id) => emptyNode                (range,id)
         case (DefaultStmt(_)                     ,range,id) => emptyNode                (range,id)
-        case (stmt: Stmt                         ,range,id) => new GNode(Statement (stmt,range,id))
+        case (BreakStmt()                        ,range,id) => emptyNode                (range,id)
+        case (GotoStmt(_)                        ,range,id) => emptyNode                (range,id)
+        case (NullStmt()                         ,range,id) => emptyNode                (range,id)
+        case (_                                  ,range,id) => new GNode(Statement (node,range,id))
     }
     
     private def handleIf(ifStmt: SourceCodeNode, next: Option[GNode], exit: Option[GNode], entry: Option[GNode]) = ifStmt match {
@@ -216,5 +222,4 @@ class ProgramNodeFactory(rootNode: SourceCodeNode, labelNodes: Map[String,Source
             res >> handle(body, next, exit, entry)
             res
     }
-    
 }

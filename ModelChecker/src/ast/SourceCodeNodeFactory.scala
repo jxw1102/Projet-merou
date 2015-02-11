@@ -4,7 +4,6 @@ import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.Map
 import ast.model._
 
-
 /**
  * This class provides all necessary methods to convert an ASTNode into a SourceCodeNode
  * @author Sofia Boutahar
@@ -12,25 +11,26 @@ import ast.model._
  * @author David Courtinot
  */
 class SourceCodeNodeFactory(root: ASTNode, labels: Map[String,String]) {
-    private val labelNodes = Map[String,SourceCodeNode]()
+    type SCN = SourceCodeNode 
+    
+    private val labelNodes = Map[String,SCN]()
     
     // the result of the whole AST's transformation is lazily computed
-    lazy val result = new SourceCodeNodeResult(root.children.map(handleASTNode), labelNodes)
+    lazy val result = new SourceCodeResult(root.children.map(handleASTNode).map(_.asInstanceOf[Decl]),labelNodes)
+    final class SourceCodeResult(val rootNodes: ArrayBuffer[Decl], val labelNodes: Map[String,SCN])
     
     // some utility methods
     private val concreteNodeExpected = (node: ASTNode) => throw new IllegalArgumentException(node + " should be a ConcreteASTNode")
     private val conversionFailed     = (node: ASTNode) => throw new ConversionFailedException("BinaryOperator " + node.mkString)
-    private def setAndReturn[T <: SourceCodeNode](node: T, range: CodeRange, id: String) = {
+    private def setAndReturn[T <: SCN](node: T, range: CodeRange, id: String) = {
         SourceCodeNode(node,range,id)
         node
     }
     
-    final class SourceCodeNodeResult(val rootNodes: ArrayBuffer[SourceCodeNode], val labelNodes: Map[String,SourceCodeNode])
-    
     /**
      * General facade for handling most kind of nodes
      */
-    private def handleASTNode(node: ASTNode): SourceCodeNode = node match {
+    private def handleASTNode(node: ASTNode): SCN = node match {
            case ConcreteASTNode(_,typeOf,_,_,_) => typeOf match {
                case "CompoundStmt"   => compoundStmt(node)
                case "IfStmt"         => ifStmt      (node)
@@ -113,9 +113,9 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[String,String]) {
     
     private def functionDecl(node: ASTNode) = node match {
         case ConcreteASTNode(_,_,id,codeRange,data) => 
-            val dataList = data.dataList
-            val res  = FunctionDecl(dataList.get(-3),dataList.get(-2),compoundStmt(node.children.last))
-            res.args = node.children.slice(0,node.children.length - 1).map(parmVarDecl).toList      
+            val dataList      = data.dataList
+            val res           = FunctionDecl(dataList.get(-2),dataList.last,compoundStmt(node.children.last))
+            res.args          = node.children.take(node.children.length - 1).map(parmVarDecl).toList 
             setAndReturn(res,codeRange,id)
         case _ => concreteNodeExpected(node)
     }
@@ -280,5 +280,4 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[String,String]) {
             setAndReturn(DefaultStmt(body),codeRange,id)
         case _ => concreteNodeExpected(node)
     }
-    
 }

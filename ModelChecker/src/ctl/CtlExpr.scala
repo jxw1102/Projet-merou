@@ -1,10 +1,7 @@
 package ctl
 
 import ast.ProgramNodeLabelizer
-import ctl.ModelChecker._
 import cfg.Labelizer
-import ctl.StateEnv
-import ctl.CheckerResult
 import cfg.Labelizable
 import cfg.GraphNode
 

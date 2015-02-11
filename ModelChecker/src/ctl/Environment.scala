@@ -85,10 +85,4 @@ class Bindings extends Environment {
    } 
     
    def -(name : String): Environment = new Bindings(this.positiveBindings - name,this.negativeBindings - name)
-  
-   /**
-    * This function is used to get the opposite of an environment 
-    */
-   
-   
 }

@@ -12,7 +12,6 @@ import scala.sys.process._
  * @author Sofia Boutahar
  */
 object Main extends App {
-    
     def process(filePath: String, fileName: String, dot: String="dot") = {
         val cmd    = "clang -Xclang -ast-dump -fsyntax-only " + filePath
         val basePath = filePath.substring(0,filePath.indexOf(fileName))
@@ -25,12 +24,12 @@ object Main extends App {
         
         // parse the AST
         val parseResult = (new ASTParser).parseFile(clangPath)
-        val astRes      = new SourceCodeNodeFactory(parseResult.root,parseResult.labels).result
+        val astRes      = new SourceCodeNodeFactory(parseResult.root,parseResult.labels).result 
 
         // generate the CFG and write it in a file
-        val cfg = new ProgramNodeFactory(astRes.rootNodes(0),astRes.labelNodes).result
+        val cfg = new ProgramNodeFactory(astRes.rootNodes,astRes.labelNodes).result
         writer  = new PrintWriter(basePath + "test.dot")
-        writer.write("digraph {\n%s}".format(cfg.mkString))
+        writer.write("digraph {\n%s}".format(cfg))
         writer.close
         
         // generate the png image
@@ -41,7 +40,7 @@ object Main extends App {
         process("./"+args(0),args(0).substring(0,args(0).lastIndexOf('.')),"/usr/local/bin/dot")
         "open test.png".!!
     } else {
-        val folder = "switch"
+        val folder = "various"
         new File("unitary_tests/%s/".format(folder)).listFiles.filter(_.getName.endsWith("cpp")).foreach { file => 
             val name = file.getName
             val s    = name.substring(0,name.lastIndexOf('.'))
@@ -50,5 +49,4 @@ object Main extends App {
             process(file.getPath,s)
         }
     }
-    
 }
