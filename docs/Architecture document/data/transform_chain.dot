@@ -1,0 +1,7 @@
+digraph {
+	clang [shape=box,label="  Clang AST"];
+	ast [label="  ASTNode tree data-structure"];
+	clang -> ast [label="  Parsing of the AST"];
+	ast -> SourceCodeNode [label="  Transformation into an \n  intermediate Scala representation"];
+	SourceCodeNode -> GraphNode [label="  Build the control flow graph"];
+}

@@ -6,7 +6,7 @@ package ast.model
  * @author David Courtinot
  * @author Xiaowen Ji
  */
-sealed abstract class Expr extends Stmt with ForInitializer {
+sealed abstract class Expr extends ForInitializer {
     def matches(that: Expr): Boolean = (this,that) match {
         case (BinaryOp(xl,xr,xo),BinaryOp(yl,yr,yo))                 => (xo == yo) && (xl matches yl) && (xr matches yr)
         case (UnaryOp(xopd,xopr,xkind),UnaryOp(yopd,yopr,ykind))     => (xkind == ykind) && (xopr == yopr) && (xopd matches yopd)

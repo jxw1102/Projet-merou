@@ -1,0 +1,67 @@
+digraph {
+	// nodes
+	Stmt [shape=box,label=<<I><B>Stmt</B></I>>];
+	ForInitializer [shape=box,label=<<I><B>ForInitializer</B></I>>];
+	Expr [shape=box,label=<<I><B>Expr</B></I>>,color=red];
+	JumpStmt [shape=box,label=<<I><B>JumpStmt</B></I>>];
+	GotoStmt [shape=none,label=<
+		<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4">
+			<TR><TD>GotoStmt</TD></TR>
+			<TR><TD>
+				label: String
+			</TD></TR>
+		</TABLE>
+	>];
+	ReturnStmt [shape=none,label=<
+		<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4">
+			<TR><TD>ReturnStmt</TD></TR>
+			<TR><TD>
+				value: Expr
+			</TD></TR>
+		</TABLE>
+	>];
+	BreakStmt [shape=box];
+	ContinueStmt [shape=box];
+	NullStmt [shape=box];
+	LabelStmt [shape=none,label=<
+		<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4">
+			<TR><TD>LabelStmt</TD></TR>
+			<TR><TD>
+				label: String<BR/>
+				stmt: Stmt
+			</TD></TR>
+		</TABLE>
+	>];
+	DeclStmt [shape=none,label=<
+		<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4">
+			<TR><TD>DeclStmt</TD></TR>
+			<TR><TD>
+				decls: List[SourceCodeNode]
+			</TD></TR>
+		</TABLE>
+	>];
+	CompoundStmt [shape=none,label=<
+		<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4">
+			<TR><TD>CompoundStmt</TD></TR>
+			<TR><TD>
+				elts: List[SourceCodeNode]
+			</TD></TR>
+		</TABLE>
+	>];
+	
+		
+	// links
+	GotoStmt -> JumpStmt [style=dotted]
+	BreakStmt -> JumpStmt [style=dotted]
+	ContinueStmt -> JumpStmt [style=dotted]
+	ReturnStmt -> JumpStmt [style=dotted]
+	
+	DeclStmt -> ForInitializer [style=dotted]
+	Expr -> ForInitializer [style=dotted]
+	
+	ForInitializer -> Stmt
+	JumpStmt -> Stmt
+	NullStmt -> Stmt
+	LabelStmt -> Stmt
+	CompoundStmt -> Stmt
+}

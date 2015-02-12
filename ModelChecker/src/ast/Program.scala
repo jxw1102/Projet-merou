@@ -7,7 +7,6 @@ import ast.model.Stmt
 import cfg.Labelizable
 import cfg.Labelizer
 import ctl.Environment
-import util.MutableMapView
 import cfg.GraphNode
 
 /**
