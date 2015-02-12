@@ -16,7 +16,7 @@ final case class CaseStmt      (condition: Expr, body: Stmt)                    
 final case class DefaultStmt   (body: Stmt)                                                       extends Stmt
 final case class IfStmt        (condition: Expr, body: Stmt, elseStmt: Option[Stmt])              extends Stmt
 final case class AssignmentStmt(variable: String, value: Expr)                                    extends Stmt
-final case class CompoundStmt  (val elts: List[SourceCodeNode])                                   extends Stmt 
+final case class CompoundStmt  (elts: List[SourceCodeNode])                                   	  extends Stmt 
 final case class LabelStmt     (label: String, stmt: Stmt)                                        extends Stmt {
     override def toString = "LabelStmt"
 }

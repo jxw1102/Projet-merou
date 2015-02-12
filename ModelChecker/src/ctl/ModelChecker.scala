@@ -78,5 +78,5 @@ class ModelChecker[U <: Labelizable[V], V <: Labelizer] {
     
     def SAT_EU = SAT_UU(preE)(_,_)
     
-    def exits(x: String, T: CheckerResult) = for (t <- T ; if (ex_binding(x, t))) yield existsone(x, t)
+    def exists(x: String, T: CheckerResult) = for (t <- T ; if (ex_binding(x, t))) yield existsone(x, t)
 }

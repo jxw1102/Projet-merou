@@ -73,7 +73,7 @@ object CtlExpr {
 	        case AX    (x   )    => modelChecker.preA    (evalExpr(x, modelChecker))
 	        case EX    (x   )    => modelChecker.preE    (evalExpr(x, modelChecker))
 	        case Not   (x   )    => modelChecker.neg     (evalExpr(x, modelChecker))
-            case Exist (x, y)    => modelChecker.exits (x,evalExpr(y, modelChecker))
+            case Exist (x, y)    => modelChecker.exists  (x,evalExpr(y, modelChecker))
 	        case Predicate(x: V) => 
                 for (n <- modelChecker.nodeParent.states ; env = n.value.visit(x) ; if(env.isDefined)) yield (n,env.get)           
             //case _               => Set[StateEnv]() 

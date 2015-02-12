@@ -13,7 +13,7 @@ int self(int value) {
 	return value;
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char ** argv) {
 	int arr[] = { 22, 34, 3, 32, 82, 55, 89, 50, 37, 5, 64, 35, 9, 70 };
 	int len = 14;
 	int i, j, temp;

@@ -1,9 +1,11 @@
-package ast
+package ast.test
 
 import java.io.File
 import java.io.PrintWriter
-
 import scala.sys.process._
+import ast.ASTParser
+import ast.ProgramNodeFactory
+import ast.SourceCodeNodeFactory
 
 /**
  * This class enables automated test of the AST to CFG transformation. Everything is handled from
@@ -41,7 +43,7 @@ object Main extends App {
         "open test.png".!!
     } else {
         val folder = "various"
-        new File("unitary_tests/%s/".format(folder)).listFiles.filter(_.getName.endsWith("cpp")).foreach { file => 
+        new File("ModelChecker/unitary_tests/%s/".format(folder)).listFiles.filter(_.getName.endsWith("cpp")).foreach { file => 
             val name = file.getName
             val s    = name.substring(0,name.lastIndexOf('.'))
             
