@@ -134,13 +134,21 @@ case class ArraySubscriptExprPattern(patternExprs: (PatternExpr,PatternExpr)) ex
     }
 }
 
-/*
 case class CallExprPattern(params: List[PatternExpr], rtnType: String) extends ExprPattern {
     override def matches(expr: Expr): Option[Environment] = {
         expr match {
           case CallExpr(rtnType,params) =>  
+              val binding = new Bindings()
               if (this.rtnType == rtnType) {
-                  
+                  for(tup <- this.params.zip(params)) tup match {
+                      case (pe,e) =>
+                          val env = matchEnv(pe,e)
+                          env.unapply match {
+                              case Some((pos,_)) => binding.positiveBindings ++= pos 
+                              case _ =>
+                          }
+                  }
+                  Some(binding)
               }
               else 
                   None
@@ -148,10 +156,25 @@ case class CallExprPattern(params: List[PatternExpr], rtnType: String) extends E
         }
     }
 }
-*/
 
-//case class InitListExpr       (exprs: List[Expr])                                                         extends Expr
-//case class CallExpr           (returnType: String, params: List[Expr])                                    extends Expr {
+case class InitListExprPattern(exprs: List[PatternExpr]) extends ExprPattern {
+    override def matches(expr: Expr): Option[Environment] = {
+        expr match {
+          case InitListExpr(exprs) =>  
+                val binding = new Bindings()
+                for(tup <- this.exprs.zip(exprs)) tup match {
+                    case (pe,e) =>
+                        val env = matchEnv(pe,e)
+                        env.unapply match {
+                            case Some((pos,_)) => binding.positiveBindings ++= pos 
+                            case _ =>
+                        }
+                }
+                Some(binding)
+          case _ => None
+        }
+    }
+}
 
 class IfLabelizer(val pattern: ExprPattern) extends ProgramNodeLabelizer {
     override def visitIf(ifNode   : If) = ifNode match { 
