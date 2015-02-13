@@ -15,8 +15,9 @@ array
 gensymb
 tikz
 background[some]
-geometry
-babel[francais]
+fancyhdr
+geometry[margin=0.9in]
+babel[english]
 enumerate
 ##
  commands ##
@@ -26,12 +27,16 @@ documentClass=report
 alinea=4mm
 chapterName=Part
 ##
- title[titlePage.projet-merouTemplate] ##
-date=January $29^{th}$ 2015
+ preprocessor ##
+\pagestyle{fancy}
+##
+> title[titlePage.projet-merouTemplate] ##
+date=February $13^{th}$ 2015
 title_size=0.7
 sup_strip_color=0.70,0.70,0.70
 description=\textbf{Reference} : model-checking.dev-plan ~\\
-title=Development plan - Version 3
+title=Development plan
+version=3
 ref=model-checking.dev-plan
 vertical_strip_color=1.00,0.50,0.50
 first_author_info=Fabien \textsc{Sauce}
@@ -47,13 +52,15 @@ description_size=1.2
   \hline
   Version & Date & Change  \\
   \hline
-  V2 & January 26th  & translated everything from french to english \\
-  V2 & January 26th  & minor fixes in the risk management \\
-  V2 & January 26th  & added information on the different roles \\
-  V2 & January 26th  & added a part on the quality checking \\
-  V2 & January 26th  & updated the planning \\
-  V2 & February 06th & fill up deliverable section \\
-  V3 & February 10th & give more details about the program functionalities \\
+  V2 & January $26^{th}$  & translated everything from french to english \\
+   & January $26^{th}$  & minor fixes in the risk management \\
+   & January $26^{th}$  & added information on the different roles \\
+   & January $26^{th}$  & added a part on the quality checking \\
+   & January $26^{th}$  & updated the planning \\
+   & February $06^{th}$ & filled up deliverable section \\
+  \hline
+  V3 & February $10^{th}$ & gave more details about the program functionalities \\
+  & February $13^{th}$ & added a header, improved the changelog presentation \\
   \hline
 \end{tabular}
 \end{center}

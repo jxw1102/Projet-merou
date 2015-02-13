@@ -5,29 +5,27 @@ import ast.model.Expr
 /**
  * @author Zohour Abouakil
  */
-abstract class EnvironmentTest[T] {
-    protected type Env = EnvironmentTest[T]
+abstract class Environment[T] {
+    protected type Env = Environment[T]
     
     def unary_! : Set[Env]
     def interEnv (that: Env): Env 
     def -(name: String): Env
 }
 
-case class BottomTest[T]() extends EnvironmentTest[T] {
-    override def unary_!                     = Set(BindingsTest[T]())
-    override def interEnv(that: Env) = new BottomTest[T]
-    override def -(name: String)             = BottomTest[T]()
-    
-    override def toString                    = "BottomTest"
+case class Bottom[T]() extends Environment[T] {
+    override def unary_!             = Set(Bindings[T]())
+    override def interEnv(that: Env) = new Bottom[T]
+    override def -(name: String)     = Bottom[T]()
+    override def toString            = "Bottom"
 }
 
-case class BindingsTest[T](pos: Map[String, T]=Map[String, T](), neg: Map[String, Set[T]]=Map[String, Set[T]]()) extends EnvironmentTest[T] {
-//   override def unapply(b: BindingsTest[T]) = Some(b.positiveBindingsTest,b.negativeBindingsTest)
+case class Bindings[T](pos: Map[String, T]=Map[String, T](), neg: Map[String, Set[T]]=Map[String, Set[T]]()) extends Environment[T] {
    override def toString() = "(Env : {"+pos+"}{"+neg+"}"
    
    override def unary_! = {
-       val negative = pos.map     { case (key,value) => new BindingsTest(Map(),Map(key -> Set(value)))      }
-       val positive = neg.flatMap { case (key,set)   => set.map(v => new BindingsTest(Map(key -> v),Map())) }.toSet
+       val negative = pos.map     { case (key,value) => new Bindings(Map(),Map(key -> Set(value)))      }
+       val positive = neg.flatMap { case (key,set)   => set.map(v => new Bindings(Map(key -> v),Map())) }.toSet
        positive ++ negative
    }
    
@@ -35,8 +33,8 @@ case class BindingsTest[T](pos: Map[String, T]=Map[String, T](), neg: Map[String
     * This function verifies that the two Env of which we want to compute the intersection are not in conflict 
     */
    def conflicts (that: Env): Boolean = that match {
-       case BottomTest() => true
-       case BindingsTest(pos,neg) =>
+       case Bottom() => true
+       case Bindings(pos,neg) =>
 	       val domThis = this.pos.keySet ++ this.neg.keySet
 	       val domThat = pos.keySet ++ neg.keySet
 	       
@@ -55,14 +53,11 @@ case class BindingsTest[T](pos: Map[String, T]=Map[String, T](), neg: Map[String
 	       false 
    }
    
-   
-//   override def interEnv (that: Env): Env = ???
-   
    override def interEnv (that: Env): Env = {
        that match {
-           case BottomTest()          => BottomTest[T]()  
-           case BindingsTest(pos,neg) => 
-               if (conflicts(that)) BottomTest[T]()
+           case Bottom()          => Bottom[T]()  
+           case Bindings(pos,neg) => 
+               if (conflicts(that)) Bottom[T]()
                else {
                    val resPos = this.pos ++ pos  
                    val resNeg = Map(
@@ -70,11 +65,11 @@ case class BindingsTest[T](pos: Map[String, T]=Map[String, T](), neg: Map[String
                       	  .filterNot(resPos contains _)
                       	  .map(k => k -> (this.neg.getOrElse(k,Set()) ++ neg.getOrElse(k,Set())))
                       	  .toSeq : _*)
-                   BindingsTest[T](resPos,resNeg)
+                   Bindings[T](resPos,resNeg)
                }
        }
    } 
     
-   def -(name : String): Env = new BindingsTest(this.pos - name,this.neg - name)
+   def -(name : String): Env = new Bindings(this.pos - name,this.neg - name)
 }
 
