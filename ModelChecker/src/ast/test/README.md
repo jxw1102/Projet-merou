@@ -19,13 +19,13 @@ of the CFG using dot
 ### Requirements
 
 - Clang compiler
-- dot command must be in your PATH. Get dot : http://www.graphviz.org/Download..php)
+- dot command must be in your PATH. Get dot : http://www.graphviz.org/Download.php
 
 ## Usage
 
 Both test classes work the same way :
 
-- define the test case(s) in a folder of ModelChecker/unitary_tests/
-- set the 'folder' variable to the folder that contains the input cpp code you want to use for the tests
+- define the test case(s) in a subfolder of ModelChecker/unitary_tests/
+- in the test, set the 'folder' variable to the folder that contains the input cpp code you want to use for the tests
 - run the test
-- check he output in the folder containing the input
+- check the output in the folder containing the input files

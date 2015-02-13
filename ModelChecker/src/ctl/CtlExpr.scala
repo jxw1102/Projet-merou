@@ -14,7 +14,7 @@ sealed abstract class CtlExpr {
     def AU(that: CtlExpr)  = _AU(this,that)
     def EU(that: CtlExpr)  = _EU(this,that)
     def &&(that : CtlExpr) = And(this,that)
-    def ||(that : CtlExpr) = Or(this,that)
+    def ||(that : CtlExpr) = Or (this,that)
     def unary_!            = Not(this)
 }
 
