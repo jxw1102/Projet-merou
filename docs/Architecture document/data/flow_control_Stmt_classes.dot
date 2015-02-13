@@ -1,0 +1,90 @@
+digraph {
+	// nodes
+	Stmt [shape=box,label=<<I><B>Stmt</B></I>>];
+	SwitchStmt [shape=none,label=<
+		<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4">
+			<TR><TD>SwitchStmt</TD></TR>
+			<TR><TD>
+				expr: Expr <BR/>
+				body: CompoundStmt
+			</TD></TR>
+		</TABLE>
+	>];	
+	CaseStmt [shape=none,label=<
+		<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4">
+			<TR><TD>CaseStmt</TD></TR>
+			<TR><TD>
+				expr: Expr <BR/>
+				body: Stmt
+			</TD></TR>
+		</TABLE>
+	>];
+	DefaultStmt [shape=none,label=<
+		<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4">
+			<TR><TD>DefaultStmt</TD></TR>
+			<TR><TD>
+				body: Stmt
+			</TD></TR>
+		</TABLE>
+	>];
+	IfStmt [shape=none,label=<
+		<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4">
+			<TR><TD>IfStmt</TD></TR>
+			<TR><TD>
+				condition: Expr <BR/>
+				body: Stmt <BR/>
+				elseStmt: Option[Stmt]
+			</TD></TR>
+		</TABLE>
+	>];
+	ForStmt [shape=none,label=<
+		<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4">
+			<TR><TD>ForStmt</TD></TR>
+			<TR><TD>
+				init: Option[ForInitializer] <BR/>
+				cond: Option[Expr] <BR/>
+				update: Option[Expr] <BR/>
+				body: Option[Stmt]
+			</TD></TR>
+		</TABLE>
+	>];
+	ForStmt [shape=none,label=<
+		<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4">
+			<TR><TD>ForStmt</TD></TR>
+			<TR><TD>
+				init: Option[ForInitializer] <BR/>
+				cond: Option[Expr] <BR/>
+				update: Option[Expr] <BR/>
+				body: Stmt
+			</TD></TR>
+		</TABLE>
+	>];
+	WhileStmt [shape=none,label=<
+		<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4">
+			<TR><TD>WhileStmt</TD></TR>
+			<TR><TD>
+				cond: Expr <BR/>
+				body: Stmt
+			</TD></TR>
+		</TABLE>
+	>];
+	DoWhileStmt [shape=none,label=<
+		<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4">
+			<TR><TD>DoWhileStmt</TD></TR>
+			<TR><TD>
+				cond: Expr <BR/>
+				body: Stmt
+			</TD></TR>
+		</TABLE>
+	>];
+	
+	// links
+	
+	IfStmt -> Stmt
+	SwitchStmt -> Stmt
+	CaseStmt -> Stmt
+	DefaultStmt -> Stmt
+	WhileStmt -> Stmt
+	DoWhileStmt -> Stmt
+	ForStmt -> Stmt
+}

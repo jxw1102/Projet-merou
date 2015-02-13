@@ -1,0 +1,57 @@
+digraph {
+	// nodes
+	Stmt [shape=box,label=<<I><B>Stmt</B></I>>,color=red];
+	Decl [shape=none,label=<
+		<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4">
+			<TR><TD><I><B>Decl</B></I></TD></TR>
+			<TR><TD>
+				name: String
+			</TD></TR>
+		</TABLE>
+	>];
+	SCN [shape=none,label=<
+		<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4">
+			<TR><TD><I><B>SourceCodeNode</B></I></TD></TR>
+			<TR><TD>
+				id: Option[String] <BR/>
+				codeRange: Option[CodeRange]
+			</TD></TR>
+		</TABLE>
+	>];
+	FD [shape=none,label=<
+		<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4">
+			<TR><TD>FunctionDecl</TD></TR>
+			<TR><TD>
+				args: List[ParamVarDecl] <BR/>
+				typeName: String <BR/>
+				body: CompoundStmt
+			</TD></TR>
+		</TABLE>
+	>];
+	VD [shape=none,label=<
+		<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4">
+			<TR><TD>VarDecl</TD></TR>
+			<TR><TD>
+				args: List[ParamVarDecl] <BR/>
+				typeName: String <BR/>
+				value: Option[Expr]
+			</TD></TR>
+		</TABLE>
+	>];
+	PVD [shape=none,label=<
+		<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4">
+			<TR><TD>ParamVarDecl</TD></TR>
+			<TR><TD>
+				typeName: String <BR/>
+			</TD></TR>
+		</TABLE>
+	>];
+		
+	// links
+	Stmt -> SCN;
+	Decl -> SCN;
+	
+	FD -> Decl;
+	VD -> Decl;
+	PVD -> Decl;
+}

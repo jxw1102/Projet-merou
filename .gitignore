@@ -6,6 +6,9 @@ bin
 .project.bak
 .classpath.bak
 
+# Backups
+.orig
+
 # Eclipse settings and caches
 .settings
 .cache

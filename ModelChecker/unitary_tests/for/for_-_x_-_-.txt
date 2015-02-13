@@ -1,0 +1,28 @@
+TranslationUnitDecl 0x26c0c0 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0x26c3b0 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'char *'
+|-FunctionDecl 0x26c420 <unitary_tests\for\for_-_x_-_-.cpp:1:1, line:3:1> line:1:5 used f 'int (void)'
+| `-CompoundStmt 0x26c4c0 <col:9, line:3:1>
+|   `-ReturnStmt 0x26c4b0 <line:2:2, col:9>
+|     `-IntegerLiteral 0x26c490 <col:9> 'int' 3
+`-FunctionDecl 0x26c5d0 <line:5:1, line:9:1> line:5:5 main 'int (int, char **)'
+  |-ParmVarDecl 0x26c4f0 <col:10, col:14> col:14 argc 'int'
+  |-ParmVarDecl 0x26c550 <col:20, col:27> col:27 argv 'char **'
+  `-CompoundStmt 0x26c880 <col:33, line:9:1>
+    |-DeclStmt 0x26c760 <line:6:2, col:17>
+    | `-VarDecl 0x26c660 <col:2, col:16> col:6 j 'int' cinit
+    |   `-BinaryOperator 0x26c748 <col:10, col:16> 'int' '+'
+    |     |-IntegerLiteral 0x26c690 <col:10> 'int' 5
+    |     `-CallExpr 0x26c728 <col:14, col:16> 'int'
+    |       `-ImplicitCastExpr 0x26c718 <col:14> 'int (*)(void)' <FunctionToPointerDecay>
+    |         `-DeclRefExpr 0x26c6e8 <col:14> 'int (void)' lvalue Function 0x26c420 'f' 'int (void)'
+    |-ForStmt 0x26c7d8 <line:7:2, col:19>
+    | |-<<<NULL>>>
+    | |-<<<NULL>>>
+    | |-BinaryOperator 0x26c7b0 <col:10, col:14> '_Bool' '<'
+    | | |-IntegerLiteral 0x26c770 <col:10> 'int' 5
+    | | `-IntegerLiteral 0x26c790 <col:14> 'int' 3
+    | |-<<<NULL>>>
+    | `-NullStmt 0x26c7c8 <col:19>
+    `-CallExpr 0x26c860 <line:8:2, col:4> 'int'
+      `-ImplicitCastExpr 0x26c850 <col:2> 'int (*)(void)' <FunctionToPointerDecay>
+        `-DeclRefExpr 0x26c838 <col:2> 'int (void)' lvalue Function 0x26c420 'f' 'int (void)'

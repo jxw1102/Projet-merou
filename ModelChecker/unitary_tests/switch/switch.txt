@@ -1,0 +1,52 @@
+TranslationUnitDecl 0x10280d2d0 <<invalid sloc>>
+|-TypedefDecl 0x10280d810 <<invalid sloc>> __int128_t '__int128'
+|-TypedefDecl 0x10280d870 <<invalid sloc>> __uint128_t 'unsigned __int128'
+|-TypedefDecl 0x10280dc30 <<invalid sloc>> __builtin_va_list '__va_list_tag [1]'
+`-FunctionDecl 0x10280dcd0 <unitary_tests/switch/switch.cpp:1:1, line:15:1> main 'int (void)'
+  `-CompoundStmt 0x103032a90 <line:2:1, line:15:1>
+    |-DeclStmt 0x10280de58 <line:3:5, col:14>
+    | `-VarDecl 0x10280dde0 <col:5, col:13> j 'int'
+    |   `-IntegerLiteral 0x10280de38 <col:13> 'int' 0
+    |-DeclStmt 0x10280def8 <line:4:5, col:14>
+    | `-VarDecl 0x10280de80 <col:5, col:13> i 'int'
+    |   `-IntegerLiteral 0x10280ded8 <col:13> 'int' 2
+    `-SwitchStmt 0x10280df50 <line:5:5, line:13:5>
+      |-<<<NULL>>>
+      |-ImplicitCastExpr 0x10280df38 <line:5:13> 'int' <LValueToRValue>
+      | `-DeclRefExpr 0x10280df10 <col:13> 'int' lvalue Var 0x10280de80 'i' 'int'
+      `-CompoundStmt 0x103032a40 <col:16, line:13:5>
+        |-CaseStmt 0x10280dfa0 <line:6:9, col:18>
+        | |-IntegerLiteral 0x10280df80 <col:14> 'int' 1
+        | |-<<<NULL>>>
+        | `-UnaryOperator 0x103032610 <col:17, col:18> 'int' postfix '++'
+        |   `-DeclRefExpr 0x10280dfd8 <col:17> 'int' lvalue Var 0x10280dde0 'j' 'int'
+        |-CaseStmt 0x103032650 <line:7:9, col:20>
+        | |-IntegerLiteral 0x103032630 <col:14> 'int' 2
+        | |-<<<NULL>>>
+        | `-CompoundAssignOperator 0x1030326d0 <col:17, col:20> 'int' lvalue '+=' ComputeLHSTy='int' ComputeResultTy='int'
+        |   |-DeclRefExpr 0x103032688 <col:17> 'int' lvalue Var 0x10280dde0 'j' 'int'
+        |   `-IntegerLiteral 0x1030326b0 <col:20> 'int' 2
+        |-CaseStmt 0x103032728 <line:8:9, col:20>
+        | |-IntegerLiteral 0x103032708 <col:14> 'int' 3
+        | |-<<<NULL>>>
+        | `-CompoundAssignOperator 0x1030327a8 <col:17, col:20> 'int' lvalue '+=' ComputeLHSTy='int' ComputeResultTy='int'
+        |   |-DeclRefExpr 0x103032760 <col:17> 'int' lvalue Var 0x10280dde0 'j' 'int'
+        |   `-IntegerLiteral 0x103032788 <col:20> 'int' 3
+        |-UnaryOperator 0x103032808 <col:23, col:24> 'int' postfix '++'
+        | `-DeclRefExpr 0x1030327e0 <col:23> 'int' lvalue Var 0x10280de80 'i' 'int'
+        |-CaseStmt 0x103032848 <line:9:9, line:10:20>
+        | |-IntegerLiteral 0x103032828 <line:9:14> 'int' 4
+        | |-<<<NULL>>>
+        | `-CaseStmt 0x1030328a0 <line:10:9, col:20>
+        |   |-IntegerLiteral 0x103032880 <col:14> 'int' 5
+        |   |-<<<NULL>>>
+        |   `-CompoundAssignOperator 0x103032920 <col:17, col:20> 'int' lvalue '+=' ComputeLHSTy='int' ComputeResultTy='int'
+        |     |-DeclRefExpr 0x1030328d8 <col:17> 'int' lvalue Var 0x10280dde0 'j' 'int'
+        |     `-IntegerLiteral 0x103032900 <col:20> 'int' 10
+        |-BreakStmt 0x103032958 <line:11:17>
+        `-CaseStmt 0x103032988 <line:12:9, col:20>
+          |-IntegerLiteral 0x103032968 <col:14> 'int' 6
+          |-<<<NULL>>>
+          `-CompoundAssignOperator 0x103032a08 <col:17, col:20> 'int' lvalue '-=' ComputeLHSTy='int' ComputeResultTy='int'
+            |-DeclRefExpr 0x1030329c0 <col:17> 'int' lvalue Var 0x10280dde0 'j' 'int'
+            `-IntegerLiteral 0x1030329e8 <col:20> 'int' 1

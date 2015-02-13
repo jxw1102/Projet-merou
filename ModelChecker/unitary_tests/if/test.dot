@@ -1,0 +1,7 @@
+digraph {
+"int a  = 5  at 0xcdc4e0 " -> "if (a > 6) at 0xcdc630 "
+"if (a > 6) at 0xcdc630 " -> "int b  = 17  at 0xcdc6b0 "
+"if (a > 6) at 0xcdc630 " -> "int c  = 5  at 0xcdc5b0 "
+"int c  = 5  at 0xcdc5b0 " -> "(c *= 5)  at 0xcdc5f8 "
+"(c *= 5)  at 0xcdc5f8 " -> "int b  = 17  at 0xcdc6b0 "
+}

@@ -1,0 +1,42 @@
+TranslationUnitDecl 0x2e7c060 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0x2e7c350 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'char *'
+`-FunctionDecl 0x2e7c3c0 <unitary_tests\while\while_inner_continue_break.cpp:1:1, line:13:1> line:1:5 main 'int (void)'
+  `-CompoundStmt 0x2e7c7d0 <col:12, line:13:1>
+    |-DeclStmt 0x2e7c4b0 <line:2:2, col:11>
+    | `-VarDecl 0x2e7c460 <col:2, col:10> col:6 used a 'int' cinit
+    |   `-IntegerLiteral 0x2e7c490 <col:10> 'int' 5
+    |-WhileStmt 0x2e7c748 <line:3:2, line:11:2>
+    | |-<<<NULL>>>
+    | |-BinaryOperator 0x2e7c508 <line:3:9, col:13> '_Bool' '>'
+    | | |-ImplicitCastExpr 0x2e7c4f8 <col:9> 'int' <LValueToRValue>
+    | | | `-DeclRefExpr 0x2e7c4c0 <col:9> 'int' lvalue Var 0x2e7c460 'a' 'int'
+    | | `-IntegerLiteral 0x2e7c4d8 <col:13> 'int' 5
+    | `-CompoundStmt 0x2e7c730 <col:16, line:11:2>
+    |   `-IfStmt 0x2e7c710 <line:4:3, line:10:3>
+    |     |-<<<NULL>>>
+    |     |-BinaryOperator 0x2e7c568 <line:4:7, col:11> '_Bool' '>'
+    |     | |-ImplicitCastExpr 0x2e7c558 <col:7> 'int' <LValueToRValue>
+    |     | | `-DeclRefExpr 0x2e7c520 <col:7> 'int' lvalue Var 0x2e7c460 'a' 'int'
+    |     | `-IntegerLiteral 0x2e7c538 <col:11> 'int' 6
+    |     |-ContinueStmt 0x2e7c580 <line:5:4>
+    |     `-WhileStmt 0x2e7c6f8 <line:6:8, line:10:3>
+    |       |-<<<NULL>>>
+    |       |-BinaryOperator 0x2e7c5d0 <line:6:15, col:19> '_Bool' '<'
+    |       | |-ImplicitCastExpr 0x2e7c5c0 <col:15> 'int' <LValueToRValue>
+    |       | | `-DeclRefExpr 0x2e7c588 <col:15> 'int' lvalue Var 0x2e7c460 'a' 'int'
+    |       | `-IntegerLiteral 0x2e7c5a0 <col:19> 'int' 6
+    |       `-CompoundStmt 0x2e7c6e0 <col:22, line:10:3>
+    |         |-IfStmt 0x2e7c650 <line:7:4, line:8:5>
+    |         | |-<<<NULL>>>
+    |         | |-BinaryOperator 0x2e7c630 <line:7:8, col:12> '_Bool' '>'
+    |         | | |-ImplicitCastExpr 0x2e7c620 <col:8> 'int' <LValueToRValue>
+    |         | | | `-DeclRefExpr 0x2e7c5e8 <col:8> 'int' lvalue Var 0x2e7c460 'a' 'int'
+    |         | | `-IntegerLiteral 0x2e7c600 <col:12> 'int' 6
+    |         | |-BreakStmt 0x2e7c648 <line:8:5>
+    |         | `-<<<NULL>>>
+    |         `-DeclStmt 0x2e7c6d0 <line:9:4, col:13>
+    |           `-VarDecl 0x2e7c680 <col:4, col:12> col:8 c 'int' cinit
+    |             `-IntegerLiteral 0x2e7c6b0 <col:12> 'int' 5
+    `-DeclStmt 0x2e7c7c0 <line:12:2, col:12>
+      `-VarDecl 0x2e7c770 <col:2, col:10> col:6 b 'int' cinit
+        `-IntegerLiteral 0x2e7c7a0 <col:10> 'int' 17

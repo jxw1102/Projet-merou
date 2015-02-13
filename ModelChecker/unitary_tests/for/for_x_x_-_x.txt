@@ -1,0 +1,33 @@
+TranslationUnitDecl 0x112c0c0 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0x112c3b0 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'char *'
+|-FunctionDecl 0x112c420 <unitary_tests\for\for_x_x_-_x.cpp:1:1, line:3:1> line:1:5 used f 'int (void)'
+| `-CompoundStmt 0x112c4c0 <col:9, line:3:1>
+|   `-ReturnStmt 0x112c4b0 <line:2:2, col:9>
+|     `-IntegerLiteral 0x112c490 <col:9> 'int' 3
+`-FunctionDecl 0x112c5d0 <line:5:1, line:10:1> line:5:5 main 'int (int, char **)'
+  |-ParmVarDecl 0x112c4f0 <col:10, col:14> col:14 argc 'int'
+  |-ParmVarDecl 0x112c550 <col:20, col:27> col:27 argv 'char **'
+  `-CompoundStmt 0x112c940 <col:33, line:10:1>
+    |-DeclStmt 0x112c760 <line:6:2, col:17>
+    | `-VarDecl 0x112c660 <col:2, col:16> col:6 j 'int' cinit
+    |   `-BinaryOperator 0x112c748 <col:10, col:16> 'int' '+'
+    |     |-IntegerLiteral 0x112c690 <col:10> 'int' 5
+    |     `-CallExpr 0x112c728 <col:14, col:16> 'int'
+    |       `-ImplicitCastExpr 0x112c718 <col:14> 'int (*)(void)' <FunctionToPointerDecay>
+    |         `-DeclRefExpr 0x112c6e8 <col:14> 'int (void)' lvalue Function 0x112c420 'f' 'int (void)'
+    |-ForStmt 0x112c898 <line:7:2, line:8:8>
+    | |-DeclStmt 0x112c7d0 <line:7:7, col:15>
+    | | `-VarDecl 0x112c780 <col:7, col:13> col:11 used i 'int' cinit
+    | |   `-IntegerLiteral 0x112c7b0 <col:13> 'int' 3
+    | |-<<<NULL>>>
+    | |-BinaryOperator 0x112c828 <col:17, col:21> '_Bool' '<'
+    | | |-IntegerLiteral 0x112c7e0 <col:17> 'int' 5
+    | | `-ImplicitCastExpr 0x112c818 <col:21> 'int' <LValueToRValue>
+    | |   `-DeclRefExpr 0x112c800 <col:21> 'int' lvalue Var 0x112c780 'i' 'int'
+    | |-<<<NULL>>>
+    | `-CompoundAssignOperator 0x112c878 <line:8:3, col:8> 'int' lvalue '-=' ComputeLHSTy='double' ComputeResultTy='double'
+    |   |-DeclRefExpr 0x112c840 <col:3> 'int' lvalue Var 0x112c780 'i' 'int'
+    |   `-FloatingLiteral 0x112c858 <col:8> 'double' 5.000000e+00
+    `-CallExpr 0x112c920 <line:9:2, col:4> 'int'
+      `-ImplicitCastExpr 0x112c910 <col:2> 'int (*)(void)' <FunctionToPointerDecay>
+        `-DeclRefExpr 0x112c8f8 <col:2> 'int (void)' lvalue Function 0x112c420 'f' 'int (void)'

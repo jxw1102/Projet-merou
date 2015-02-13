@@ -1,12 +1,13 @@
 package ast
 
 import java.lang.Long.parseLong
+
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.ArrayStack
-import scala.io.Source
-import scala.util.matching.Regex
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.Map
+import scala.io.Source
+import scala.util.matching.Regex
 
 /**
  * The ASTParser enables to parse the Clang AST file and return a tree data structure (ASTNode) with a very basic
@@ -21,7 +22,7 @@ class ASTParser {
     implicit class ASTLine(s: String) {
         def indent    = s.indexOf(ASTLine.indentReg.findFirstIn(s).get)
         def id        = ASTLine.idReg.findFirstMatchIn(s)
-        def data      = { val i = s.indexOf("'"); s.substring(if (i >= 0) i else s.length - 1) }
+        def data      = s.substring(indent)
         def codeRange = {
             val matcher = ASTLine.lineRangeReg.findAllIn(s)
                 val l   = currentLine
@@ -43,21 +44,19 @@ class ASTParser {
     implicit object ASTLine {
         // the regex used to parse the file are compiled once and then used multiple times
         val indentReg    = "\\w|(<<<)".r
-        val idReg        = "(\\w+) (0x[\\da-f]{9})".r
-        val lineRangeReg = new Regex("line:(\\d+)(:(\\d+))?|col:(\\d+)", "line0", "", "line1", "col")
+        val idReg        = "(\\w+) (0x[\\da-f]+)".r
+        val lineRangeReg = new Regex("line:(\\d+)(:(\\d+))?[,>]|col:(\\d+)[,>]", "line0", "", "line1", "col")
     }
     
-    private var currentLine = 0
-    
+    private var currentLine = 1
     def parseFile(path: String) = {
         currentLine   = 0
-        val lines     = Source.fromFile(path).getLines.toSeq
-        val stack     = ArrayStack[ASTNode]()
-        val jumps     = HashMap[Long,Long]()
-        val labels    = HashMap[String,Long]()
-        val gotos     = HashMap[Long,String]()
-        val loopStack = ArrayStack[ASTNode]()
-        val tree      = OtherASTNode(-1, "")
+        // ignore first lines
+        val lines  = Source.fromFile(path).getLines.dropWhile(_ contains "<invalid sloc>")
+        	/*.dropWhile(!_.contains("main"))*/.toSeq
+        val tree   = OtherASTNode(-1, "")
+        val stack  = ArrayStack[ASTNode]()
+        val labels = HashMap[String,String]()
         stack.push(tree)
 
         lines.map(line => (line.codeRange,line.id,line.data,line.indent,line))
@@ -65,12 +64,9 @@ class ASTParser {
             .foreach(tuple => {
                 val node = tuple match {
                     case (Some(codeRange),Some(id),data,indent,_) =>
-                        val cnode = ConcreteASTNode(indent/2,id.group(1),parseLong(id.group(2).substring(2),16),codeRange,data)
+                        val cnode = ConcreteASTNode(indent/2,id.group(1),id.group(2),codeRange,data)
                         id.group(1) match {
-                            case "ForStmt" | "WhileStmt" | "SwitchStmt" | "DoStmt"  => loopStack.push(cnode)
-                            case "BreakStmt" | "ContinueStmt" => jumps  += cnode.id -> loopStack.head.asInstanceOf[ConcreteASTNode].id
-                            case "GotoStmt"  => gotos  += cnode.id -> cnode.data.dataList.get(-2)
-                            case "LabelStmt" => labels += cnode.data.dataList.last -> cnode.id
+                            case "LabelStmt" => labels += cnode.id -> cnode.data.dataList.last
                             case _           =>
                         }
                         cnode
@@ -82,24 +78,15 @@ class ASTParser {
                     case (_,_,_,_,line) => throw new ParseFailedException(line)
                 }    
             
-                while (node.depth <= stack.head.depth) {
-                    val pop = stack.pop
-                    if (loopStack.nonEmpty && pop == loopStack.head) loopStack.pop
-                }
-
+                while (node.depth <= stack.head.depth) stack.pop
                 stack.head.children += node
                 stack.push(node)
         })
-        
-        gotos.foreach(tup => {
-            jumps += tup._1 -> labels(tup._2)
-        })
-        
-        new ASTParserResult(tree,jumps)
+        new ASTParserResult(tree,labels)
     }
 }
 
-final class ASTParserResult(val root: ASTNode, val jumps: Map[Long,Long])
+final class ASTParserResult(val root: ASTNode, val labels: Map[String,String])
 
 /**
  * Classes ASTNode, ConcreteASTNode, NullASTNode and OtherASTNode are used to
@@ -116,7 +103,7 @@ sealed abstract class ASTNode(_depth: Int) {
         sb
     }
 }
-final case class ConcreteASTNode(_depth: Int, ofType: String, id: Long, pos: CodeRange, data: String) extends ASTNode(_depth) {
+final case class ConcreteASTNode(_depth: Int, ofType: String, id: String, pos: CodeRange, data: String) extends ASTNode(_depth) {
     override def equals(that: Any) = that match { case ConcreteASTNode(_,_,_id,_,_) => id == _id; case _ => false }
     override def hashCode          = id.hashCode
 }
@@ -128,6 +115,7 @@ final case class OtherASTNode(_depth:Int, data: String) extends ASTNode(_depth)
 final case class CodeRange(lineMin: Int, lineMax: Int, colMin: Int, colMax: Int) {
     val lineRange = lineMin to lineMax
     val colRange  = colMin  to colMax
+    override def toString = if (lineMin == lineMax) "(%d,%d:%d)".format(lineMin,colMin,colMax) else "(%d:%d,%d:%d)".format(lineMin,lineMax,colMin,colMax)
 }
 
 /**
