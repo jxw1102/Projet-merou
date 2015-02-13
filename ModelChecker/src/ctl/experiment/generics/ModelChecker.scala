@@ -6,12 +6,12 @@ import ast.ProgramNode
 /**
  * @author Zohour Abouakil
  */
-class ModelCheckerTest {
-    type StateEnv      = (GNode, EnvironmentTest)
-    type GNode         = GraphNode
+class ModelCheckerTest[T] {
+    type StateEnv      = (GNode, EnvironmentTest[T])
+    type GNode         = GraphNode[T]
     type CheckerResult = Set[StateEnv]
     
-     def evalExpr(expr : CtlExprTest): CheckerResult = {
+     def evalExpr(expr : CtlExprTest[T]): CheckerResult = {
         
 	    expr match {
 	        case And   (x, y)    => conj    (evalExpr(x),evalExpr(y))
@@ -47,7 +47,7 @@ class ModelCheckerTest {
     /**
      * The function inj, used to inject the result of matching a predicate into the codomain of SAT
      */
-    private def inj(s: GNode, env: EnvironmentTest): StateEnv = (s, env)
+    private def inj(s: GNode, env: EnvironmentTest[T]): StateEnv = (s, env)
     private def same(t1: CheckerResult , t2: CheckerResult)          = t1 == t2
     
     val nodeParent = new GNode(???) // to modify 
