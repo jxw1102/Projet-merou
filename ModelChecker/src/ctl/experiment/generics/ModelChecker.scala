@@ -6,23 +6,23 @@ import ast.ProgramNode
 /**
  * @author Zohour Abouakil
  */
-class ModelCheckerTest[T] {
-    type StateEnv      = (GNode, EnvironmentTest[T])
+class ModelChecker[T] {
+    type StateEnv      = (GNode, Environment[T])
     type GNode         = GraphNode[T]
     type CheckerResult = Set[StateEnv]
     
-     def evalExpr(expr : CtlExprTest[T]): CheckerResult = {
+     def evalExpr(expr : CtlExpr[T]): CheckerResult = {
         
-	    expr match {
-	        case And   (x, y)    => conj    (evalExpr(x),evalExpr(y))
-	        case Or    (x, y)    => disj    (evalExpr(x),evalExpr(y))
-	        case _AU   (x, y)    => SAT_AU  (evalExpr(x),evalExpr(y))
-	        case _EU   (x, y)    => SAT_EU  (evalExpr(x),evalExpr(y))
-	        case AX    (x   )    => preA    (evalExpr(x))
-	        case EX    (x   )    => preE    (evalExpr(x))
-	        case Not   (x   )    => neg     (evalExpr(x))
-            case Exists (x, y)    => exists  (x,evalExpr(y))
-	        case Predicate(x: T) => ???
+        expr match {
+            case And   (x, y)    => conj    (evalExpr(x),evalExpr(y))
+            case Or    (x, y)    => disj    (evalExpr(x),evalExpr(y))
+            case _AU   (x, y)    => SAT_AU  (evalExpr(x),evalExpr(y))
+            case _EU   (x, y)    => SAT_EU  (evalExpr(x),evalExpr(y))
+            case AX    (x   )    => preA    (evalExpr(x))
+            case EX    (x   )    => preE    (evalExpr(x))
+            case Not   (x   )    => neg     (evalExpr(x))
+            case Exists (x, y)   => exists  (x,evalExpr(y))
+            case Predicate(x: T) => ???
 //                for (n <- nodeParent.states ; env = n.value.visit(x) ; if(env.isDefined)) yield (n,env.get)           
             }
     }
@@ -40,20 +40,20 @@ class ModelCheckerTest[T] {
     }
     
     /**
-     * The function existsone discards the binding of a quantified variable x from the EnvironmentTest of a state/EnvironmentTest pair
+     * The function existsone discards the binding of a quantified variable x from the Environment of a state/Environment pair
      */
     private def existsone(metaData: String, ev: StateEnv) : StateEnv = (ev._1, ev._2 - metaData)
     
     /**
      * The function inj, used to inject the result of matching a predicate into the codomain of SAT
      */
-    private def inj(s: GNode, env: EnvironmentTest[T]): StateEnv = (s, env)
+    private def inj(s: GNode, env: Environment[T]): StateEnv = (s, env)
     private def same(t1: CheckerResult , t2: CheckerResult)          = t1 == t2
     
     val nodeParent = new GNode(???) // to modify 
     private def negone(se: StateEnv): Set[StateEnv] = se match { 
         case (s, env) => 
-            ((!env).map { case value => (s, value) } ++ nodeParent.states.filter(_ != s).map {inj(_, new BindingsTest)})      
+            ((!env).map { case value => (s, value) } ++ nodeParent.states.filter(_ != s).map {inj(_, new Bindings)})      
     }
 
     private def ex_binding(metaData: String, se: StateEnv) = true // On considere que l ensemble Val est infini
@@ -69,7 +69,7 @@ class ModelCheckerTest[T] {
     def conj(T1: CheckerResult , T2: CheckerResult) = 
         for (t1 <- T1 ; t2 <- T2 ; inter = interStateEnv(t1,t2) ; if (inter.isDefined)) yield inter.get
         
-    def Conj(x: Set[CheckerResult]) = x.foldRight(nodeParent.states.map(node => inj(node, new BindingsTest)))(conj)
+    def Conj(x: Set[CheckerResult]) = x.foldRight(nodeParent.states.map(node => inj(node, new Bindings)))(conj)
         
     def neg(T: CheckerResult) = Conj(T.map(negone))
     
