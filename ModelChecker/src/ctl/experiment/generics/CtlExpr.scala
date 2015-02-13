@@ -12,7 +12,7 @@ sealed abstract class CtlExpr[N,T] {
     def EU(that: CtlExpr[N,T]) = _EU(this,that)
     def &&(that: CtlExpr[N,T]) = And(this,that)
     def ||(that: CtlExpr[N,T]) = Or (this,that)
-    def unary_!              = Not(this)
+    def unary_!                = Not(this)
 }
 
 // Binary operators
@@ -22,16 +22,16 @@ final case class _AU   [N,T](left: CtlExpr[N,T], right: CtlExpr[N,T]) extends Ct
 final case class _EU   [N,T](left: CtlExpr[N,T], right: CtlExpr[N,T]) extends CtlExpr[N,T] 
 
 // Unary operators
-final case class AX    [N,T](op  : CtlExpr[N,T]) extends CtlExpr[N,T] 
-final case class EX    [N,T](op  : CtlExpr[N,T]) extends CtlExpr[N,T] 
-final case class AG    [N,T](op  : CtlExpr[N,T]) extends CtlExpr[N,T] 
-final case class EG    [N,T](op  : CtlExpr[N,T]) extends CtlExpr[N,T] 
-final case class AF    [N,T](op  : CtlExpr[N,T]) extends CtlExpr[N,T] 
-final case class EF    [N,T](op  : CtlExpr[N,T]) extends CtlExpr[N,T] 
-final case class Not   [N,T](op  : CtlExpr[N,T]) extends CtlExpr[N,T] 
+final case class AX    [N,T](op  : CtlExpr[N,T])                      extends CtlExpr[N,T] 
+final case class EX    [N,T](op  : CtlExpr[N,T])                      extends CtlExpr[N,T] 
+final case class AG    [N,T](op  : CtlExpr[N,T])                      extends CtlExpr[N,T] 
+final case class EG    [N,T](op  : CtlExpr[N,T])                      extends CtlExpr[N,T] 
+final case class AF    [N,T](op  : CtlExpr[N,T])                      extends CtlExpr[N,T] 
+final case class EF    [N,T](op  : CtlExpr[N,T])                      extends CtlExpr[N,T] 
+final case class Not   [N,T](op  : CtlExpr[N,T])                      extends CtlExpr[N,T] 
 final case class Exists[N,T]  (typeOf: TypeOf[T], op  : CtlExpr[N,T]) extends CtlExpr[N,T]
+final case class Predicate[N,T]  (label: Labelizer[N,T])              extends CtlExpr[N,T]
 
-final case class Predicate[N,T]  (label: Labelizer[N,T]) extends CtlExpr[N,T]
 abstract class Labelizer[N,T] {
     def test(t: N): Option[Environment[T]]
 }

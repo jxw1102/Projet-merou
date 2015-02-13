@@ -6,7 +6,7 @@ import ast.ProgramNode
 /**
  * @author Zohour Abouakil
  */
-abstract class ModelChecker[N,T](val root: GraphNode[N], convert: GraphNode[N] => Set[T]) {
+class ModelChecker[N,T](val root: GraphNode[N], convert: GraphNode[N] => Set[T]) {
     type StateEnv      = (GNode, Environment[T])
     type GNode         = GraphNode[N]
     type CheckerResult = Set[StateEnv]
@@ -14,37 +14,36 @@ abstract class ModelChecker[N,T](val root: GraphNode[N], convert: GraphNode[N] =
     lazy val Val: Set[T] = root.states.flatMap(convert).toSet
     
     def evalExpr(expr : CtlExpr[N,T]): CheckerResult = expr match {
-	        case And   (x, y)    => conj  (evalExpr(x),evalExpr(y))
-	        case Or    (x, y)    => disj  (evalExpr(x),evalExpr(y))
-	        case _AU   (x, y)    => SAT_AU(evalExpr(x),evalExpr(y))
-	        case _EU   (x, y)    => SAT_EU(evalExpr(x),evalExpr(y))
-	        case AX    (x   )    => preA  (evalExpr(x))
-	        case EX    (x   )    => preE  (evalExpr(x))
-	        case Not   (x   )    => neg   (evalExpr(x))
-            case Exists (x, y)   => exists(x,evalExpr(y))
-	        case Predicate(x) => 
-                for (n <- root.states ; env = x.test(n.value) ; if(env.isDefined)) yield (n,env.get)           
+	        case And   (x, y)  => conj  (evalExpr(x),evalExpr(y))
+	        case Or    (x, y)  => disj  (evalExpr(x),evalExpr(y))
+	        case _AU   (x, y)  => SAT_AU(evalExpr(x),evalExpr(y))
+	        case _EU   (x, y)  => SAT_EU(evalExpr(x),evalExpr(y))
+	        case AX    (x   )  => preA  (evalExpr(x))
+	        case EX    (x   )  => preE  (evalExpr(x))
+	        case Not   (x   )  => neg   (evalExpr(x))
+            case Exists (x, y) => exists(x,evalExpr(y))
+	        case Predicate(x)  => for (n <- root.states ; env = x.test(n.value) ; if(env.isDefined)) yield (n,env.get)           
     }
     
     //////////////////////////---------------------------------------------//////////////////////////
     ///////////////////////////// Function implementation only for CTL-V //////////////////////////// 
     //////////////////////////---------------------------------------------//////////////////////////
-    def shift(s1: GNode , T: CheckerResult, s2: GNode): CheckerResult = T.filter { case(a,b) => a == s1 }.map{ case(a,b) => (s2,b) }
+    def shift(s1: GNode , T: CheckerResult, s2: GNode) = T.filter { case(a,b) => a == s1 }.map{ case(a,b) => (s2,b) }
     
     def interStateEnv(se1: StateEnv, se2: StateEnv): Option[StateEnv] = {
         if (se1._1 != se2._1) None
-        else                  Some((se1._1, se1._2 interEnv se2._2)) 
+        else                  Some((se1._1,se1._2 interEnv se2._2)) 
     }
     
     /**
      * The existsone method discards the binding of a quantified variable x from the Environment of a state/Environment pair
      */
-    private def existsone(metaData: String, ev: StateEnv) : StateEnv = (ev._1, ev._2 - metaData)
+    private def existsone(metaData: String, ev: StateEnv) : StateEnv = (ev._1,ev._2 - metaData)
     
     /**
      * The function inj, used to inject the result of matching a predicate into the codomain of SAT
      */
-    private def inj(s: GNode, env: Environment[T])          = (s, env)
+    private def inj(s: GNode, env: Environment[T])          = (s,env)
     private def same(t1: CheckerResult , t2: CheckerResult) = t1 == t2
     
     private def negone(se: StateEnv): Set[StateEnv] = se match { 
