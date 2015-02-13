@@ -44,7 +44,7 @@ object Test extends App {
     root >> left
     root >> right
     
-    val checker = new ModelChecker[Node](root)
+//    val checker = new ModelChecker[Node](root)
 }
 
 abstract class Node

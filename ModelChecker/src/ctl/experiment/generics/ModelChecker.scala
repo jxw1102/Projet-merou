@@ -6,7 +6,7 @@ import ast.ProgramNode
 /**
  * @author Zohour Abouakil
  */
-abstract class ModelChecker[N,T](val root: GraphNode[N], convert: GraphNode[N] => Set[T]) {
+class ModelChecker[N,T](val root: GraphNode[N], convert: GraphNode[N] => Set[T]) {
     type StateEnv      = (GNode, Environment[T])
     type GNode         = GraphNode[N]
     type CheckerResult = Set[StateEnv]
