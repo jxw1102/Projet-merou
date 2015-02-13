@@ -12,59 +12,62 @@ abstract class Environment[T] {
 }
 
 case class Bottom[T]() extends Environment[T] {
-    override def unary_!                     = Set(Bindings[T]())
-    override def interEnv(that: Env)         = new Bottom[T]
-    override def -(name: String)             = Bottom[T]()
-    
-    override def toString                    = "Bottom"
+    override def unary_!             = Set(Bindings[T]())
+    override def interEnv(that: Env) = new Bottom[T]
+    override def -(name: String)     = Bottom[T]()
+    override def toString            = "Bottom"
 }
 
 case class Bindings[T](pos: Map[String, T]=Map[String, T](), neg: Map[String, Set[T]]=Map[String, Set[T]]()) extends Environment[T] {
-    //   override def unapply(b: Bindings[T]) = Some(b.positiveBindings,b.negativeBindings)
-    override def toString() = "(Env : {" + pos + "}{" + neg + "})"
-
-    override def unary_! = {
-        val negative = pos.map { case (key, value) => new Bindings(Map(), Map(key -> Set(value))) }
-        val positive = neg.flatMap { case (key, set) => set.map(v => new Bindings(Map(key -> v), Map())) }.toSet
-        positive ++ negative
-    }
-
-    /**
-     * This function verifies that the two Env of which we want to compute the intersection are not in conflict
-     */
-    def conflicts(that: Env): Boolean = that match {
-        case Bottom() => true
-        case Bindings(pos, neg) =>
-            val domThis = this.pos.keySet ++ this.neg.keySet
-            val domThat = pos.keySet ++ neg.keySet
-
-            val dom = domThis & domThat
-            for (key <- dom) {
-                (this.pos.get(key), pos.get(key), this.neg.get(key), neg.get(key)) match {
-                    case (Some(valueThis), Some(valueThat), None, None) => if (valueThis != valueThat) return true
-                    case (None, Some(valueThat), Some(valueThis), None) => if (valueThis.contains(valueThat)) return true
-                    case (Some(valueThis), None, None, Some(valueThat)) => if (valueThat.contains(valueThis)) return true
-                    case _ =>
-                }
-            }
-            false
-    }
-
-    override def interEnv(that: Env): Env = that match {
-        case Bottom() => Bottom[T]()
-        case Bindings(pos, neg) =>
-            if (conflicts(that)) Bottom[T]()
-            else {
-                val resPos = this.pos ++ pos
-                val resNeg = Map(
-                    (this.neg.keySet ++ neg.keySet)
-                        .filterNot(resPos contains _)
-                        .map(k => k -> (this.neg.getOrElse(k, Set()) ++ neg.getOrElse(k, Set())))
-                        .toSeq: _*)
-                Bindings[T](resPos, resNeg)
-            }
-    } 
+   override def toString() = "(Env : {"+pos+"}{"+neg+"}"
+   
+   override def unary_! = {
+       val negative = pos.map     { case (key,value) => new Bindings(Map(),Map(key -> Set(value)))      }
+       val positive = neg.flatMap { case (key,set)   => set.map(v => new Bindings(Map(key -> v),Map())) }.toSet
+       positive ++ negative
+   }
+   
+   /**
+    * This function verifies that the two Env of which we want to compute the intersection are not in conflict 
+    */
+   def conflicts (that: Env): Boolean = that match {
+       case Bottom() => true
+       case Bindings(pos,neg) =>
+	       val domThis = this.pos.keySet ++ this.neg.keySet
+	       val domThat = pos.keySet ++ neg.keySet
+	       
+	       val dom     = domThis & domThat
+	       
+	       for(key <- dom){ 
+	           (this.pos.get(key), pos.get(key),
+	                   this.neg.get(key), neg.get(key)) match {
+	               
+	               case (Some(valueThis), Some(valueThat), None           , None)            => if(valueThis == valueThat)        return true
+	               case (None           , Some(valueThat), Some(valueThis), None)            => if(valueThis.contains(valueThat)) return true 
+	               case (Some(valueThis), None           , None           , Some(valueThat)) => if(valueThat.contains(valueThis)) return true
+	               case  _                                                                   => 
+	           }
+	       }
+	       false 
+   }
+   
+   override def interEnv (that: Env): Env = {
+       that match {
+           case Bottom()          => Bottom[T]()  
+           case Bindings(pos,neg) => 
+               if (conflicts(that)) Bottom[T]()
+               else {
+                   val resPos = this.pos ++ pos  
+                   val resNeg = Map(
+                      (this.neg.keySet ++ neg.keySet)
+                      	  .filterNot(resPos contains _)
+                      	  .map(k => k -> (this.neg.getOrElse(k,Set()) ++ neg.getOrElse(k,Set())))
+                      	  .toSeq : _*)
+                   Bindings[T](resPos,resNeg)
+               }
+       }
+   } 
     
-    def -(name : String): Env = new Bindings(this.pos - name,this.neg - name)
+   def -(name : String): Env = new Bindings(this.pos - name,this.neg - name)
 }
 

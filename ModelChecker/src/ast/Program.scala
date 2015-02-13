@@ -90,3 +90,8 @@ trait ProgramNodeLabelizer extends Labelizer {
     private[ast] final def visitEmpty(empty: Empty     ): Option[Environment] = 
         throw new IllegalStateException("Empty nodes should never be explored")
 }
+
+//sealed abstract class CFGVal 
+//final case class CFGExpr(expr: Expr)         extends CFGVal
+//final case class CFGDecl(decl: Decl)         extends CFGVal
+//final case class Block  (elts: List[CFGVal]) extends CFGVal

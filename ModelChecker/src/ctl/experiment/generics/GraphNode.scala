@@ -21,12 +21,12 @@ class GraphNode[T](val value: T) {
      * 'states' contains all the states of the graph accessible from this GraphNode.
      * It should be computed on the root node.
      */
-    lazy val states = getStates(this, Set())
-    private def getStates(gn: GNode, set: Set[GNode]): Set[GNode] = {
-        if (set contains gn) Set()
+    lazy val states = getStates(Set())
+    private def getStates(set: Set[GNode]): Set[GNode] = {
+        if (set contains this) Set()
         else {
-            var newSet = set + gn 
-            newSet ++ _next.toSet.flatMap((g: GNode) => getStates(g,newSet) )
+            var newSet = set + this 
+            newSet ++ _next.toSet.flatMap((g: GNode) => g.getStates(newSet) )
         }
     }
     

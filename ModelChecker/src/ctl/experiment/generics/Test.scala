@@ -35,5 +35,18 @@ object Test extends App {
     def minusEnv (envT1: Environment[String], x: String) = println(envT1-x)
     minusEnv(env1 interEnv env2, "Z")    // correct
     
+    type GNode = GraphNode[Node]
     
+    val root    = new GNode(F(1))
+    val left    = new GNode(G(1,2))
+    val right   = new GNode(G(1,3))
+    
+    root >> left
+    root >> right
+    
+    val checker = new ModelChecker[Node](root)
 }
+
+abstract class Node
+case class F(x: Int) extends Node
+case class G(x: Int, y: Int) extends Node
