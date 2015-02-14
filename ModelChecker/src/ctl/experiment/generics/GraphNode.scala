@@ -2,7 +2,6 @@ package ctl.experiment.generics
 
 import collection.mutable.{ Set => MSet, HashSet => MHSet }
 import ast.ProgramNode
-import ctl.Environment
 
 /**
  * This class represents an oriented unweighted graph of labelizable nodes

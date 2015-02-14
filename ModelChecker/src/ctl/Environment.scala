@@ -52,8 +52,7 @@ class Bindings extends Environment {
        for(key <- dom){ 
            (this.positiveBindings.get(key), that.positiveBindings.get(key),
                    this.negativeBindings.get(key), that.negativeBindings.get(key)) match {
-               
-               case (Some(valueThis), Some(valueThat), None           , None)            => if(valueThis == valueThat)        return true
+               case (Some(valueThis), Some(valueThat), None           , None)            => if(valueThis != valueThat)        return true
                case (None           , Some(valueThat), Some(valueThis), None)            => if(valueThis.contains(valueThat)) return true 
                case (Some(valueThis), None           , None           , Some(valueThat)) => if(valueThat.contains(valueThis)) return true
                case  _                                                                   => 

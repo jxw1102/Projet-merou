@@ -1,7 +1,5 @@
 package ctl.experiment.generics
 
-import ast.model.Expr
-
 /**
  * @author Zohour Abouakil
  */
@@ -18,9 +16,10 @@ case class Bottom[T]() extends Environment[T] {
     override def interEnv(that: Env) = new Bottom[T]
     override def -(name: String)     = Bottom[T]()
     override def toString            = "Bottom"
+    override def equals(a: Any)      = a.isInstanceOf[Bottom[T]]
 }
 
-case class Bindings[T](pos: Map[String, T]=Map[String, T](), neg: Map[String, Set[T]]=Map[String, Set[T]]()) extends Environment[T] {
+case class Bindings[T](val pos: Map[String, T]=Map[String, T](), val neg: Map[String, Set[T]]=Map[String, Set[T]]()) extends Environment[T] {
    override def toString() = "(Env : {"+pos+"}{"+neg+"}"
    
    override def unary_! = {
@@ -71,5 +70,17 @@ case class Bindings[T](pos: Map[String, T]=Map[String, T](), neg: Map[String, Se
    } 
     
    def -(name : String): Env = new Bindings(this.pos - name,this.neg - name)
+   
+   override def equals(a: Any) = a match {
+       case Bindings(pos,neg) => pos == this.pos && neg == this.neg
+       case _                 => false
+   }
 }
 
+object Neg {
+    def apply[T](neg: (String,Set[T])*) = Bindings(Map(),Map(neg: _*))
+}
+
+object Pos {
+    def apply[T](pos: (String,T)*) = Bindings(Map(pos: _*),Map())
+}
