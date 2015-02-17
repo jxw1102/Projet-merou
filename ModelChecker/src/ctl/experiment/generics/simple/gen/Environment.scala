@@ -6,9 +6,9 @@ trait MetaVariable
 trait Value
 
 sealed abstract class Environment[M <: MetaVariable, V <: Value] {
-	def unary_! : Set[Environment[M,V]] 
-	def &(that: Environment[M, V]): Environment[M,V]
-	def -(variable: M)            : Environment[M,V]
+	def unary_!                    : Set[Environment[M,V]] 
+	def &(that: Environment[M, V]) : Environment[M,V]
+	def -(variable: M)             : Environment[M,V]
 }
 
 sealed abstract class Bottom
@@ -39,14 +39,28 @@ trait Convert {
 }
 
 sealed abstract class MetaVarBinding[V <: Value]
-case class PosBinding[V <: Value](value: V) extends MetaVarBinding[V]
-case class NegBinding[V <: Value](values: Set[V]) extends MetaVarBinding[V]
+case class PosBinding[V <: Value](value : V     ) extends MetaVarBinding[V] {
+    override def equals (a: Any) = a match {
+        case PosBinding(v) => v == value
+        case _             => false 
+    }
+}
+case class NegBinding[V <: Value](values: Set[V]) extends MetaVarBinding[V]{
+    override def equals (a: Any) = a match {
+        case NegBinding(v) => v == values
+        case _             => false 
+    }
+}
 
-case class BindingsEnv[M <: MetaVariable: TypeTag,V <: Value: TypeTag](bindings: Map[M, MetaVarBinding[V]]=Map[M, MetaVarBinding[V]]()) 
+case class BindingsEnv[M <: MetaVariable: TypeTag,V <: Value: TypeTag](bindings: Map[M, MetaVarBinding[V]] = Map[M, MetaVarBinding[V]]()) 
 	extends Environment[M,V] with Convert {
     
     def this() = this(Map[M, MetaVarBinding[V]]())
     
+    /**
+     * This function return the the complementary of an environment 
+     * It is a set of environment 
+     */
 	override def unary_! = {
     	bindings.flatMap { 
             case (key,PosBinding(value)) => Set(BindingsEnv(key -> NegBinding(Set(value))))
@@ -54,6 +68,9 @@ case class BindingsEnv[M <: MetaVariable: TypeTag,V <: Value: TypeTag](bindings:
         }.toSet
     }
 	
+    /** 
+     * This function return the intersection of two environment. First, it verifies the conflict
+     */
 	override def &(that: Environment[M,V]): Environment[M,V] = {
         that match {
             case BindingsEnv(b) => 
@@ -65,7 +82,7 @@ case class BindingsEnv[M <: MetaVariable: TypeTag,V <: Value: TypeTag](bindings:
                     case _ =>
                 })
                 val dom = bindings.keySet ++ b.keySet
-                BindingsEnv(dom.map(key => key -> { 
+                BindingsEnv[M,V](dom.map(key => key -> { 
                     (bindings.get(key),b.get(key)) match {
                     	case (Some(NegBinding(x)),Some(NegBinding(y))) => NegBinding(x ++ y)
                     	case (Some(NegBinding(x)),Some(PosBinding(y))) => PosBinding(y)
