@@ -1,22 +1,22 @@
 package ctl.experiment.generics
 
 object Test extends App {
-	type GNode  = GraphNode[Node]
-	type Env[T] = Environment[T] 
-	
+    type GNode  = GraphNode[Node]
+    type Env[T] = Environment[T] 
+    
     var i = 0
     
     def printMsg(failed: Boolean)     = { 
-	    val msg = "\tTest %d %s".format(i,if (failed) "failed" else "passed") 
-	    if (failed) Console.err.println(msg)
-	    else        println(msg)
-	    i += 1
-	}
+        val msg = "\tTest %d %s".format(i,if (failed) "failed" else "passed") 
+        if (failed) Console.err.println(msg)
+        else        println(msg)
+        i += 1
+    }
     def assertEquals[T](t0: T, t1: T)                                 = printMsg(t0 != t1)
     def assertTrue(b: Boolean)                                        = printMsg(!b)
     def compareEnv[T](envT1: Env[T], envT2: Env[T], expected: Env[T]) = assertEquals(envT1 interEnv envT2,expected)
     def testNeg[T](env: Env[T], envs: Env[T]*)                        = assertEquals(!env,Set(envs: _*))
-        
+    
     println("Testing environments...\n-----------------------")
     println("Testing compareEnv...")
     // test 0
@@ -85,7 +85,6 @@ object Test extends App {
     // test 10
     val shift = checker.shift(root,Set((root,bottom),(left,env11),(root,env12),(right,bottom)),left)
     assertEquals(shift,Set((left,bottom),(left,env12)))
-    
 }
 
 abstract class Node

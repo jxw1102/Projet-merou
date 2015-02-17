@@ -34,22 +34,22 @@ case class Bindings[T](val pos: Map[String, T]=Map[String, T](), val neg: Map[St
    def conflicts (that: Env): Boolean = that match {
        case Bottom() => true
        case Bindings(pos,neg) =>
-	       val domThis = this.pos.keySet ++ this.neg.keySet
-	       val domThat = pos.keySet ++ neg.keySet
-	       
-	       val dom     = domThis & domThat
-	       
-	       for(key <- dom){ 
-	           (this.pos.get(key), pos.get(key),
-	                   this.neg.get(key), neg.get(key)) match {
-	               
-	               case (Some(valueThis), Some(valueThat), None           , None)            => if(valueThis == valueThat)        return true
-	               case (None           , Some(valueThat), Some(valueThis), None)            => if(valueThis.contains(valueThat)) return true 
-	               case (Some(valueThis), None           , None           , Some(valueThat)) => if(valueThat.contains(valueThis)) return true
-	               case  _                                                                   => 
-	           }
-	       }
-	       false 
+           val domThis = this.pos.keySet ++ this.neg.keySet
+           val domThat = pos.keySet ++ neg.keySet
+           
+           val dom     = domThis & domThat
+           
+           for(key <- dom){ 
+               (this.pos.get(key), pos.get(key),
+                       this.neg.get(key), neg.get(key)) match {
+                   
+                   case (Some(pos1), Some(pos2), None      , None)       => if(pos1 == pos2)        return true
+                   case (None      , Some(pos2), Some(neg1), None)       => if(neg1.contains(pos2)) return true 
+                   case (Some(pos1), None      , None      , Some(neg2)) => if(neg2.contains(pos1)) return true
+                   case  _                                               => 
+               }
+           }
+           false 
    }
    
    override def interEnv (that: Env): Env = {
@@ -61,9 +61,9 @@ case class Bindings[T](val pos: Map[String, T]=Map[String, T](), val neg: Map[St
                    val resPos = this.pos ++ pos  
                    val resNeg = Map(
                       (this.neg.keySet ++ neg.keySet)
-                      	  .filterNot(resPos contains _)
-                      	  .map(k => k -> (this.neg.getOrElse(k,Set()) ++ neg.getOrElse(k,Set())))
-                      	  .toSeq : _*)
+                            .filterNot(resPos contains _)
+                            .map(k => k -> (this.neg.getOrElse(k,Set()) ++ neg.getOrElse(k,Set())))
+                            .toSeq : _*)
                    Bindings[T](resPos,resNeg)
                }
        }

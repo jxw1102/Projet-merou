@@ -14,15 +14,15 @@ class ModelChecker[N,T](val root: GraphNode[N], convert: GraphNode[N] => Set[T])
     lazy val Val: Set[T] = root.states.flatMap(convert).toSet
     
     def evalExpr(expr : CtlExpr[N,T]): CheckerResult = expr match {
-	        case And   (x, y)  => conj  (evalExpr(x),evalExpr(y))
-	        case Or    (x, y)  => disj  (evalExpr(x),evalExpr(y))
-	        case _AU   (x, y)  => SAT_AU(evalExpr(x),evalExpr(y))
-	        case _EU   (x, y)  => SAT_EU(evalExpr(x),evalExpr(y))
-	        case AX    (x   )  => preA  (evalExpr(x))
-	        case EX    (x   )  => preE  (evalExpr(x))
-	        case Not   (x   )  => neg   (evalExpr(x))
+            case And   (x, y)  => conj  (evalExpr(x),evalExpr(y))
+            case Or    (x, y)  => disj  (evalExpr(x),evalExpr(y))
+            case _AU   (x, y)  => SAT_AU(evalExpr(x),evalExpr(y))
+            case _EU   (x, y)  => SAT_EU(evalExpr(x),evalExpr(y))
+            case AX    (x   )  => preA  (evalExpr(x))
+            case EX    (x   )  => preE  (evalExpr(x))
+            case Not   (x   )  => neg   (evalExpr(x))
             case Exists (x, y) => exists(x,evalExpr(y))
-	        case Predicate(x)  => for (n <- root.states ; env = x.test(n.value) ; if(env.isDefined)) yield (n,env.get)           
+            case Predicate(x)  => for (n <- root.states ; env = x.test(n.value) ; if(env.isDefined)) yield (n,env.get)         
     }
     
     //////////////////////////---------------------------------------------//////////////////////////
@@ -56,7 +56,6 @@ class ModelChecker[N,T](val root: GraphNode[N], convert: GraphNode[N] => Set[T])
         case Bindings(_,neg) => typeOf.filter(Val).size > neg.getOrElse(typeOf.varName,Set()).size
     }
     
-    
     //////////////////////////---------------------------------------------///////////////////////////
     //////////////////////////////////////// common functions //////////////////////////////////////// 
     //////////////////////////---------------------------------------------///////////////////////////
@@ -67,12 +66,12 @@ class ModelChecker[N,T](val root: GraphNode[N], convert: GraphNode[N] => Set[T])
     def conj(T1: CheckerResult , T2: CheckerResult) = 
         for (t1 <- T1 ; t2 <- T2 ; inter = interStateEnv(t1,t2) ; if (inter.isDefined)) yield inter.get
         
-    def Conj(x: Set[CheckerResult]) = x.foldRight(root.states.map(node => inj(node, new Bindings)))(conj)
+    def conjFold(x: Set[CheckerResult]) = x.foldRight(root.states.map(node => inj(node, new Bindings)))(conj)
         
-    def neg(T: CheckerResult) = Conj(T.map(negone))
+    def neg(T: CheckerResult) = conjFold(T.map(negone))
     
     // s∈ States (Conj {shift(s 0 , T, s) | s 0 ∈ next(s)})
-    def preA(T: CheckerResult) = root.states.flatMap(s => Conj(s.next.toSet.map((sNext: GNode) => shift(sNext,T,s))))
+    def preA(T: CheckerResult) = root.states.flatMap(s => conjFold(s.next.toSet.map((sNext: GNode) => shift(sNext,T,s))))
     
     def preE(T: CheckerResult) = root.states.flatMap(s => Disj(s.next.toSet.map((sNext: GNode) => shift(sNext,T,s))))
     

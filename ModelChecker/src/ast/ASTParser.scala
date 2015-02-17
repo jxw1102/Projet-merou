@@ -53,7 +53,7 @@ class ASTParser {
         currentLine   = 0
         // ignore first lines
         val lines  = Source.fromFile(path).getLines.dropWhile(_ contains "<invalid sloc>")
-        	/*.dropWhile(!_.contains("main"))*/.toSeq
+            /*.dropWhile(!_.contains("main"))*/.toSeq
         val tree   = OtherASTNode(-1, "")
         val stack  = ArrayStack[ASTNode]()
         val labels = HashMap[String,String]()

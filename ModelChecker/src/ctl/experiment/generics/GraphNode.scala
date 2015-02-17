@@ -46,10 +46,10 @@ class GraphNode[T](val value: T) {
         if (set contains this) sb 
         else if (_next.isEmpty) sb.append(this + "\n")
         else {
-        	set += this
-        	_next.foreach(node => sb.append("%s -> %s\n".format(this,node)))
-	        _next.filterNot(set contains _).foreach(_.addString(sb,set))
-	        sb
+            set += this
+            _next.foreach(node => sb.append("%s -> %s\n".format(this,node)))
+            _next.filterNot(set contains _).foreach(_.addString(sb,set))
+            sb
         }
     }
     

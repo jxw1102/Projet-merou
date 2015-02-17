@@ -117,7 +117,7 @@ The project can be divided into two main parts :
 ##
 >>>> list ##
 \textbf{Parser :} takes a C++ code file as an input and transforms it into a data structure -a graph called CFG, as in Control Flow Graph- to explore every possible execution trace;
-		    \textbf{Model checking algorithm :} this algorithm takes a property to check and tries to find the nodes in the graph that verify it.
+            \textbf{Model checking algorithm :} this algorithm takes a property to check and tries to find the nodes in the graph that verify it.
 ##
 >>>> paragraph ##
 After realizing both parts separately, we have to make it work togetger : this is the final product.
@@ -125,8 +125,8 @@ The following graph shows the main steps in our project.
 ##
 >>>> image ##
 data/tasks;
-		    Project parts;
-		    0.7
+            Project parts;
+            0.7
 ##
 >>>> paragraph ##
 The tasks colored in orange represent possible (and optional) extensions of the product.
@@ -224,8 +224,8 @@ Development chain
 ##
 >>>> image ##
 data/cycle_qualite;
-		    Scheme describing our development chain;
-		    0.7
+            Scheme describing our development chain;
+            0.7
 ##
 >> section ##
 Development organisation

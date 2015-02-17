@@ -1,7 +1,7 @@
 ## Variable vivante
 
 **La variable x est vivante au noeud N** *(x est utilisée dans au moins un chemin partant de N ne contenant pas d’affectation d’une valeur à x)*
-	
+    
 <u>Intérêt :</u>
 
 * si une variable est morte à un certain point, il n’est pas utile de la conserver dans un registre

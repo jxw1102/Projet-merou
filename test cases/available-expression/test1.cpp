@@ -3,10 +3,10 @@
  */
 #include <iostream>
 int main(int argv, char** argc) {
-	int a = 5;
-	int b = 10;
-	int x = a + b;
-	int y = (a + b) + x;
-	a += 1;
-	y = (a + b) + x;
+    int a = 5;
+    int b = 10;
+    int x = a + b;
+    int y = (a + b) + x;
+    a += 1;
+    y = (a + b) + x;
 }

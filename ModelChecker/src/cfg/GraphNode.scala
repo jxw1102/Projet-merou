@@ -47,10 +47,10 @@ class GraphNode[U <: Labelizable[V], V <: Labelizer](val value: U) {
         if (set contains this) sb 
         else if (_next.isEmpty) sb.append(this + "\n")
         else {
-        	set += this
-        	_next.foreach(node => sb.append("%s -> %s\n".format(this,node)))
-	        _next.filterNot(set contains _).foreach(_.addString(sb,set))
-	        sb
+            set += this
+            _next.foreach(node => sb.append("%s -> %s\n".format(this,node)))
+            _next.filterNot(set contains _).foreach(_.addString(sb,set))
+            sb
         }
     }
     

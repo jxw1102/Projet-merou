@@ -13,7 +13,7 @@ abstract class Environment {
 }
 
 object Bottom extends Environment {
-	override def unapply                     = None
+    override def unapply                     = None
     override def unary_!                     = Set(new Bindings)
     override def interEnv(that: Environment) = Bottom
     override def -(name: String)             = Bottom

@@ -7,7 +7,7 @@ void f(int x) {}
 void g(int x) {}
 int main(int argv, char** argc) {
     int a = 10;
-	f(10);
-	if (a > 5)
-		g(13);
+    f(10);
+    if (a > 5)
+        g(13);
 }

@@ -22,8 +22,8 @@ sealed abstract class Expr extends ForInitializer {
     
     private def formatBinary(s1: Any, s2: String, s3: Any) = "(%s %s %s)".format(s1,s2,s3)
     override def toString = this match {
-    	case ConditionalOperator((x,y,z),_) => "(%s ? %s : %s)".format(x,y,z)
-    	case CompoundAssignOp   (l,r,op)    => formatBinary(l,op,r)
+        case ConditionalOperator((x,y,z),_) => "(%s ? %s : %s)".format(x,y,z)
+        case CompoundAssignOp   (l,r,op)    => formatBinary(l,op,r)
         case BinaryOp           (l,r,op)    => formatBinary(l,op,r)
         case UnaryOp            (x,op,pos)  => (if (pos == Prefix) List(op,x) else List(x,op)).mkString
         case Literal            (_,y)       => y

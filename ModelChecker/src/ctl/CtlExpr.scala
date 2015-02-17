@@ -62,21 +62,21 @@ object CtlExpr {
 //        }
 //    }
     
-    def evalExpr[U <: Labelizable[V],V <: Labelizer](expr : CtlExpr, modelChecker: ModelChecker[U,V])
-                                        : Set[(GraphNode[U,V], Environment)] = {
-        
-	    expr match {
-	        case And   (x, y)    => modelChecker.conj    (evalExpr(x, modelChecker),evalExpr(y, modelChecker))
-	        case Or    (x, y)    => modelChecker.disj    (evalExpr(x, modelChecker),evalExpr(y, modelChecker))
-	        case _AU   (x, y)    => modelChecker.SAT_AU  (evalExpr(x, modelChecker),evalExpr(y, modelChecker))
-	        case _EU   (x, y)    => modelChecker.SAT_EU  (evalExpr(x, modelChecker),evalExpr(y, modelChecker))
-	        case AX    (x   )    => modelChecker.preA    (evalExpr(x, modelChecker))
-	        case EX    (x   )    => modelChecker.preE    (evalExpr(x, modelChecker))
-	        case Not   (x   )    => modelChecker.neg     (evalExpr(x, modelChecker))
-            case Exist (x, y)    => modelChecker.exists  (x,evalExpr(y, modelChecker))
-	        case Predicate(x: V) => 
-                for (n <- modelChecker.nodeParent.states ; env = n.value.visit(x) ; if(env.isDefined)) yield (n,env.get)           
-            //case _               => Set[StateEnv]() 
-            }
-    }
+//    def evalExpr[U <: Labelizable[V],V <: Labelizer](expr : CtlExpr, modelChecker: ModelChecker[U,V])
+//                                        : Set[(GraphNode[U,V], Environment)] = {
+//        
+//        expr match {
+//            case And   (x, y)    => modelChecker.conj    (evalExpr(x, modelChecker),evalExpr(y, modelChecker))
+//            case Or    (x, y)    => modelChecker.disj    (evalExpr(x, modelChecker),evalExpr(y, modelChecker))
+//            case _AU   (x, y)    => modelChecker.SAT_AU  (evalExpr(x, modelChecker),evalExpr(y, modelChecker))
+//            case _EU   (x, y)    => modelChecker.SAT_EU  (evalExpr(x, modelChecker),evalExpr(y, modelChecker))
+//            case AX    (x   )    => modelChecker.preA    (evalExpr(x, modelChecker))
+//            case EX    (x   )    => modelChecker.preE    (evalExpr(x, modelChecker))
+//            case Not   (x   )    => modelChecker.neg     (evalExpr(x, modelChecker))
+//            case Exist (x, y)    => modelChecker.exists  (x,evalExpr(y, modelChecker))
+//            case Predicate(x: V) => 
+//                for (n <- modelChecker.nodeParent.states ; env = n.value.visit(x) ; if(env.isDefined)) yield (n,env.get)           
+//            case _               => ???
+//        }
+//    }
 }

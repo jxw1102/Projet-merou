@@ -187,16 +187,16 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[String,String]) {
     }
     
     private def arraySubscriptExpr(node: ASTNode) = node match {
-    	 case ConcreteASTNode(_,_,id,codeRange,data) =>
-    	 	val tup = (handleExpr(node.children(0)),handleExpr(node.children(1)))
-    	 	setAndReturn(ArraySubscriptExpr(tup),codeRange,id)
-    	 case _ => concreteNodeExpected(node)
+         case ConcreteASTNode(_,_,id,codeRange,data) =>
+             val tup = (handleExpr(node.children(0)),handleExpr(node.children(1)))
+             setAndReturn(ArraySubscriptExpr(tup),codeRange,id)
+         case _ => concreteNodeExpected(node)
     }
      
     private def initListExpr(node: ASTNode) = node match {
-    	case ConcreteASTNode(_,_,id,codeRange,data) =>
-    		setAndReturn(InitListExpr(node.children.map(handleExpr).toList),codeRange,id)
-    	case _ => concreteNodeExpected(node)
+        case ConcreteASTNode(_,_,id,codeRange,data) =>
+            setAndReturn(InitListExpr(node.children.map(handleExpr).toList),codeRange,id)
+        case _ => concreteNodeExpected(node)
     }
     
     private def declRefExpr(node: ASTNode) = node match {
@@ -258,12 +258,12 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[String,String]) {
     }
     
     private def labelStmt(node: ASTNode) = node match {
-    	case ConcreteASTNode(_,_,id,codeRange,data) =>
-    		val res = setAndReturn(
-    		        LabelStmt(data.dataList.last,node.children.map(handleASTNode).head.asInstanceOf[Stmt]),codeRange,id)
-    		labelNodes += labels(id) -> res
-    		res
-    	case _ => concreteNodeExpected(node)
+        case ConcreteASTNode(_,_,id,codeRange,data) =>
+            val res = setAndReturn(
+                    LabelStmt(data.dataList.last,node.children.map(handleASTNode).head.asInstanceOf[Stmt]),codeRange,id)
+            labelNodes += labels(id) -> res
+            res
+        case _ => concreteNodeExpected(node)
     }
     
     private def caseStmt(node: ASTNode) = node match {

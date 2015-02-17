@@ -27,9 +27,9 @@ class ProgramNodeFactory(rootNodes: Iterable[Decl], labelNodes: Map[String,Sourc
 
     lazy val result = 
         Program(IMap(rootNodes.map(decl => decl.name -> {
-        	val res = handle(decl,None,None,None)
-        	clean(res,Set())
-        	res
+            val res = handle(decl,None,None,None)
+            clean(res,Set())
+            res
         }).toSeq: _*))
         
     /**

@@ -107,5 +107,5 @@ class GLabelizer extends TestLabelizer {
 
 //type StateEnv   = (GNode, Environment)
 //type GNode[U,V] = GraphNode[U,V]
-//		type CheckerResult = Set[StateEnv]
+//        type CheckerResult = Set[StateEnv]
 //

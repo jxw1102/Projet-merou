@@ -1,41 +1,41 @@
 digraph {
-	// nodes
-	ASTNode [shape=none,label=<
-		<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4">
-			<TR><TD><B><I>ASTNode</I></B></TD></TR>
-			<TR><TD>depth: Int <BR/>children: ArrayBuffer[ASTNode]</TD></TR>		
-			<TR><TD>mkString: String <BR/> addString: StringBuilder</TD></TR>
-		</TABLE>
-	>];	 
-	ConcreteASTNode [shape=none,label=<
-		<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4">
-			<TR><TD>ConcreteASTNode</TD></TR>
-			<TR><TD>
-				ofType, id, data: String <BR/>
-				pos: CodeRange
-			</TD></TR> 
-		</TABLE>
-	>];
-	OtherASTNode [shape=none,label=<
-		<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4">
-			<TR><TD>OtherASTNode</TD></TR>
-			<TR><TD>
-				data: String
-			</TD></TR> 
-		</TABLE>
-	>];
-	NullASTNode [shape=box];
-	CodeRange [shape=none,label=<
-		<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4">
-			<TR><TD>CodeRange</TD></TR>
-			<TR><TD>
-				lineRange, colRange: Range
-			</TD></TR> 
-		</TABLE>
-	>];
-	
-	// links	
-	ConcreteASTNode -> ASTNode
-	NullASTNode -> ASTNode
-	OtherASTNode -> ASTNode
+    // nodes
+    ASTNode [shape=none,label=<
+        <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4">
+            <TR><TD><B><I>ASTNode</I></B></TD></TR>
+            <TR><TD>depth: Int <BR/>children: ArrayBuffer[ASTNode]</TD></TR>        
+            <TR><TD>mkString: String <BR/> addString: StringBuilder</TD></TR>
+        </TABLE>
+    >];     
+    ConcreteASTNode [shape=none,label=<
+        <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4">
+            <TR><TD>ConcreteASTNode</TD></TR>
+            <TR><TD>
+                ofType, id, data: String <BR/>
+                pos: CodeRange
+            </TD></TR> 
+        </TABLE>
+    >];
+    OtherASTNode [shape=none,label=<
+        <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4">
+            <TR><TD>OtherASTNode</TD></TR>
+            <TR><TD>
+                data: String
+            </TD></TR> 
+        </TABLE>
+    >];
+    NullASTNode [shape=box];
+    CodeRange [shape=none,label=<
+        <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4">
+            <TR><TD>CodeRange</TD></TR>
+            <TR><TD>
+                lineRange, colRange: Range
+            </TD></TR> 
+        </TABLE>
+    >];
+    
+    // links    
+    ConcreteASTNode -> ASTNode
+    NullASTNode -> ASTNode
+    OtherASTNode -> ASTNode
 }
