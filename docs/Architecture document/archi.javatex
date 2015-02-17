@@ -12,8 +12,8 @@ setspace
 background[some]
 gensymb
 tikz
-geometry
 fancyhdr
+geometry[margin=0.9in]
 babel[english]
 ##
  commands ##
@@ -171,18 +171,17 @@ part in order to focus exclusively on the imperative part. Inspired by the Clang
 >>>>> image ##
 data/basic_Stmt_classes.png;
 Representation of the most classes statements;
-0.5
-
+0.4
 ##
 >>>>> image ##
 data/flow_control_Stmt_classes.png;
 Flow-control structures;
-0.5
+0.4
 ##
 >>>>> image ##
 data/Expr_classes.png;
 Detail of the Expr class hierarchy;
-0.5
+0.35
 ##
 >>>>> paragraph ##
 Note that our model does not strictly represents a C++ code. For example, we do not prevent a \textit{if} to contain the instruction \textit{break}
@@ -214,15 +213,6 @@ where $g$ is called with an uninitialized parameter
 we could argue that it is fine to use fail-fast most of the times but that it is safer not to use it for a critical program.
 ##
 >>>>> paragraph ##
-Another important thing to mention is that at the beginning, we had a mix of regular classes with
-var/val members and case classes. Moreover, we were using <<var>> immutable lists (class List) for building
-incrementally some collections as the list of statements in a compound statement. However, it would imply to append at the end
-because otherwise, the list would have been to be reversed each time needed. Therefore, we have created a simple wrapper of ArrayBuffer,
-that hides all the ArrayBuffer definitions except $+=$, and otherwise behaves as an immutable List. Same thing was done with
-a wrapper of a mutable HashMap (for storing declaration by their name for example). This enables to use 
-a more functional programming style while being efficient.
-##
->>>>> paragraph ##
 Finally, we chose to make all the classes as case-classes to enable the powerful Scala pattern-matching.
 Most algorithms are recursive, the parsing of the AST being the only exception.
 ##
@@ -250,4 +240,19 @@ ProgramNode class hierarchy and GraphNode;
 ##
 > chapter ##
 Model checking
+##
+>> section ##
+Representation of the environments
+##
+>>> subsection ##
+
+##
+>> section ##
+CTL expressions
+##
+>>> subsection ##
+Defining the CTL-V language
+##
+>>> subsection ##
+Evaluation of the predicates
 ##

@@ -12,8 +12,8 @@
 \usepackage[some]{background}
 \usepackage{gensymb}
 \usepackage{tikz}
-\usepackage{geometry}
 \usepackage{fancyhdr}
+\usepackage[margin=0.9in]{geometry}
 \usepackage[english]{babel}
 \lstdefinelanguage{scala}{
 morekeywords={%
@@ -247,7 +247,7 @@ with a custom parser.}
 \paragraph{}
 \hspace{4mm}\textnormal{We have identified three main kinds of nodes in the AST. Each one is associated to a specific class which extends ASTNode :}
 
-\vspace{3mm}
+\vspace{1.5mm}
 \begin{itemize}
 \item nodes consisting in an type name, an id, a code pointer pointing the relevant lines of the code and some
 metadata that depend on the type of the node. These are represented by the ConcreteASTNode class.\vspace{1mm}
@@ -281,7 +281,7 @@ our Decl class, as it is shown in the previous figure.}
 \paragraph{}
 \hspace{4mm}\textnormal{Stmt is a Clang asbtraction of a statement in a program (any expression, any flow-control structure). As it was not presented as a priority by the client, we have decided to skip the C++ object oriented 
 part in order to focus exclusively on the imperative part. Inspired by the Clang API, we came up
- with the following class diagram.}
+ with the following class diagram :}
 
 \begin{center}
 \includegraphics[scale=0.4]{data/basic_Stmt_classes.png}
@@ -305,7 +305,7 @@ Since the code is already semantically checked by the Clang compiler and given o
 
 \subsubsection{Important notes}
 
-\vspace{3mm}
+\vspace{1.5mm}
 \begin{itemize}
 \item To accurately represent the CFG of our input programs, we should take into account the fail-fast mechanism in the evaluation of boolean conjunctions/disjunctions.
 The importance of this mechanism for our project is illustrated in the figure below.\vspace{1mm}
@@ -329,15 +329,6 @@ where $g$ is called with an uninitialized parameter
 we could argue that it is fine to use fail-fast most of the times but that it is safer not to use it for a critical program.}
 
 \paragraph{}
-\hspace{4mm}\textnormal{Another important thing to mention is that at the beginning, we had a mix of regular classes with
-var/val members and case classes. Moreover, we were using <<var>> immutable lists (class List) for building
-incrementally some collections as the list of statements in a compound statement. However, it would imply to append at the end
-because otherwise, the list would have been to be reversed each time needed. Therefore, we have created a simple wrapper of ArrayBuffer,
-that hides all the ArrayBuffer definitions except $+=$, and otherwise behaves as an immutable List. Same thing was done with
-a wrapper of a mutable HashMap (for storing declaration by their name for example). This enables to use 
-a more functional programming style while being efficient.}
-
-\paragraph{}
 \hspace{4mm}\textnormal{Finally, we chose to make all the classes as case-classes to enable the powerful Scala pattern-matching.
 Most algorithms are recursive, the parsing of the AST being the only exception.}
 
@@ -352,13 +343,15 @@ The ProgramNode objects will be the values of the nodes of the actual graph, rep
 \hspace{4mm}\textnormal{GraphNode is actually a generic type, completely independent of all the classes we introduced so far.
 It basically represents any oriented unweighted graph. The conversion from SourceCodeNode to
 ProgramNode is handled on the fly while constructing the CFG (GraphNode[ProgramNode]), which
-consists in creating the links between the various nodes of the graph so that they enable to explore the various
-possible execution paths.}
+consists in creating the links between the various nodes of the graph.}
 
 \begin{center}
 \includegraphics[scale=0.5]{data/CFG_classes.png}
-~\\~\\Figure II.7 - ProgramNode class hierarchy
+~\\~\\Figure II.7 - ProgramNode class hierarchy and GraphNode
 \end{center}
+
+\paragraph{}
+\hspace{4mm}\textnormal{}
 
 \chapter{Model checking}
 
