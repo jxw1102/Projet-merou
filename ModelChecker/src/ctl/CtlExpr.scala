@@ -33,6 +33,8 @@ final case class Exists   [M <: MetaVariable, N,V <: Value](typeOf: TypeOf[M, V]
 final case class Predicate[M <: MetaVariable, N,V <: Value](label : Labelizer[M,N,V])                   extends CtlExpr[M,N,V]
 
 abstract class Labelizer[M <: MetaVariable, N,V <: Value] {
+    type Env = Environment[M, V]
+    
     def test(t: N): Option[Environment[M, V]]
 }
 

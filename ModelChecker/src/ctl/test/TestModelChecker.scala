@@ -124,6 +124,12 @@ object TestModelChecker extends App with TestUtils with Convert{
         // test 14
         val set4 : Set[StateEnv] = Set((root, (new Binding ++ ("Z" -> 8)) -- ("X" -> Set(3,5,4), "Z" -> Set(7,9))))
         assertEquals(checker.conjFold(Set(set1, set4, set3)), Set((root, (new Binding ++ ("Y" -> 6)) ++ ("Z" -> 8) -- ("X" -> Set(3,5,4)))))
+    
+        println("\nTesting neg...")
+        // test 15
+        println(checker.neg(set1))
+    
+        
     }
         
     def advancedTests = {
@@ -137,16 +143,16 @@ object TestModelChecker extends App with TestUtils with Convert{
         def g(s: String)             = Predicate(NodeLabelizer("g",s))
         def h(s0: String,s1: String) = Predicate(NodeLabelizer("h",s0,s1))
         
-        // test 0
-        assertEquals(mcA.evalExpr(f("y")),Set((rootA,new Binding ++ ("y" -> 1))))
-        // test 1
-        assertEquals(mcA.evalExpr(f("x") && AX(g("y") && AX(h("x","y")))),Set((rootA,new Binding ++ ("x" -> 1,"y" -> 2))))
-        // test 2
-        assertEquals(mcA.evalExpr(f("x") && AX(Exists("y",g("y") && AX(h("x","y"))))),Set((rootA,new Binding ++ ("x" -> 1))))
-        // test 3
-        assertEquals(mcB.evalExpr(f("x") && AX(Exists("y",g("y") && AX(h("x","y"))))),Set((rootB,new Binding ++ ("x" -> 1))))
-        // test 4
-        assertEquals(mcC.evalExpr(f("x") && AX(Exists("y",g("y") && AX(h("x","y"))))),Set())
+//        // test 0
+//        assertEquals(mcA.evalExpr(f("y")),Set((rootA,new Binding ++ ("y" -> 1))))
+//        // test 1
+//        assertEquals(mcA.evalExpr(f("x") && AX(g("y") && AX(h("x","y")))),Set((rootA,new Binding ++ ("x" -> 1,"y" -> 2))))
+//        // test 2
+//        assertEquals(mcA.evalExpr(f("x") && AX(Exists("y",g("y") && AX(h("x","y"))))),Set((rootA,new Binding ++ ("x" -> 1))))
+//        // test 3
+//        assertEquals(mcB.evalExpr(f("x") && AX(Exists("y",g("y") && AX(h("x","y"))))),Set((rootB,new Binding ++ ("x" -> 1))))
+//        // test 4
+//        assertEquals(mcC.evalExpr(f("x") && AX(Exists("y",g("y") && AX(h("x","y"))))),Set())
     }
     
     // example of the figure 2.a in popl.pdf
@@ -194,7 +200,7 @@ object TestModelChecker extends App with TestUtils with Convert{
 
 abstract class Node
 object Node {
-    def convert = (g: GraphNode[Node]) => g.value match {
+    def convert = (node: Node) => node match {
     	case F(x)   => Set(IntVal(x))
         case G(x)   => Set(IntVal(x))
         case H(x,y) => Set(IntVal(x),IntVal(y))

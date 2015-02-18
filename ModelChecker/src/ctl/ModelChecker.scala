@@ -6,12 +6,12 @@ import scala.reflect.runtime.universe._
  * @author Zohour Abouakil
  * @author David Courtinot
  */
-class ModelChecker[M <: MetaVariable: TypeTag, N, V <: Value : TypeTag](val root: GraphNode[N], convert: GraphNode[N] => Set[V]) {
+class ModelChecker[M <: MetaVariable: TypeTag, N, V <: Value : TypeTag](val root: GraphNode[N], convert: N => Set[V]) {
     type StateEnv        = (GNode, Environment[M, V])
     type GNode           = GraphNode[N]
     type CheckerResult   = Set[StateEnv]
     
-    lazy val Val: Set[V] = root.states.flatMap(convert).toSet
+    lazy val Val: Set[V] = root.states.flatMap(g => convert(g.value)).toSet
     
     def evalExpr(expr : CtlExpr[M,N,V]): CheckerResult = expr match {
             case And      (x, y) => conj  (evalExpr(x),evalExpr(y))

@@ -223,8 +223,3 @@ class ProgramNodeFactory(rootNodes: Iterable[Decl], labelNodes: Map[String,Sourc
             res
     }
 }
-
-class CFGNode(value: ProgramNode) extends GraphNode[ProgramNode](value) {
-    override def equals(that: Any) = that match { case x: CFGNode => value == x.value case _ => false }
-    override def hashCode          = value.hashCode
-}
