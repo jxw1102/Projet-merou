@@ -125,6 +125,30 @@ case class UnaryOpPattern (operand: Pattern, op: String, kind: OpPosition) exten
     }
 }
 
+//case class CallExprPattern(params: List[Pattern], rtnType: String) extends ExprPattern {
+//
+//    override def matches(expr: Expr): Option[Env] = {
+//        expr match {
+//          case CallExpr(rtnType,params) =>  
+//              val binding = new BindingsEnv[CfgMetaVar, CFGVal]
+//              if (this.rtnType == rtnType) {
+//                  for(tup <- this.params.zip(params)) tup match {
+//                      case (pe,e) =>
+//                          val env = pe.matchEnv(e)
+//                          env match {
+//                              case BindingsEnv(pos) => binding ++ pos
+//                              case _ =>
+//                          }
+//                  }
+//                  Some(new BindingsEnv)
+//              }
+//              else 
+//                  None
+//          case _ => None
+//        }
+//    }
+//}
+
 
 trait DeclPattern extends Convert {
 	type Env = Environment[CfgMetaVar, CFGVal]
@@ -268,29 +292,6 @@ class ExpressionLabelizer(val pattern: ExprPattern) extends Labelizer[CfgMetaVar
 //                  case (BindingsEnv(apos),BindingsEnv(ipos)) => Some(new BindingsEnv(apos ++ ipos))
 //                  case _ => None
 //              }
-//          case _ => None
-//        }
-//    }
-//}
-
-//case class CallExprPattern(params: List[PatternExpr], rtnType: String) extends ExprPattern {
-//    override def matches(expr: Expr): Option[Env] = {
-//        expr match {
-//          case CallExpr(rtnType,params) =>  
-//              val binding = new BindingsEnv
-//              if (this.rtnType == rtnType) {
-//                  for(tup <- this.params.zip(params)) tup match {
-//                      case (pe,e) =>
-//                          val env = matchEnv(pe,e)
-//                          env match {
-//                              case BindingsEnv(pos) => binding ++ pos.toSeq
-//                              case _ =>
-//                          }
-//                  }
-//                  Some(binding)
-//              }
-//              else 
-//                  None
 //          case _ => None
 //        }
 //    }
