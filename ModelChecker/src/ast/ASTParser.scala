@@ -13,6 +13,7 @@ import scala.util.matching.Regex
  * The ASTParser enables to parse the Clang AST file and return a tree data structure (ASTNode) with a very basic
  * identification of the different node of the original AST file. 
  * @author Xiaowen Ji 
+ * @author Sofia Boutahar
  * @author David Courtinot
  */
 class ASTParser {

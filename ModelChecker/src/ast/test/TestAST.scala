@@ -7,6 +7,10 @@ import ast.SourceCodeNodeFactory
 import scala.sys.process._
 import java.io.File
 
+/**
+ * @author Sofia Boutahar
+ * @author David Courtinot
+ */
 object TestAST extends App {
     def process(filePath: String, fileName: String, dot: String="dot") = {
         val cmd       = "clang -Xclang -ast-dump -fsyntax-only " + filePath

@@ -1,7 +1,5 @@
 package ctl.experiment.generics
 
-import ast.ProgramNodeLabelizer
-
 /**
  * @author Zohour Abouakil
  * @author Fabien Sauce

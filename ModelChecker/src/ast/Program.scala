@@ -4,10 +4,7 @@ import ast.model.Decl
 import ast.model.Expr
 import ast.model.JumpStmt
 import ast.model.Stmt
-import cfg.Labelizable
-import cfg.Labelizer
-import ctl.Environment
-import cfg.GraphNode
+import ctl.GraphNode
 
 /**
  * Those classes represent the most abstract and final form of the transformations of the source code
@@ -17,7 +14,7 @@ import cfg.GraphNode
  * @author Xiaowen Ji      
  */
 
-case class Program(val decls: Map[String,GraphNode[ProgramNode,ProgramNodeLabelizer]]) {
+case class Program(val decls: Map[String,GraphNode[ProgramNode]]) {
     override def toString = decls.values.map(_.mkString).addString(new StringBuilder).toString
 }
 
@@ -43,8 +40,7 @@ object SourceCodeNode {
  * Case-classes that will be the values of the CFG nodes. They implement the Visitor pattern against the ProgramNodeLabelizer
  * visitor class
  */
-sealed abstract class ProgramNode(val id: String) extends Labelizable[ProgramNodeLabelizer] {
-    type PNL = ProgramNodeLabelizer 
+sealed abstract class ProgramNode(val id: String) {
     type SCN = SourceCodeNode
     
     override def equals(that: Any) = that match {
@@ -69,27 +65,15 @@ sealed abstract class ProgramNode(val id: String) extends Labelizable[ProgramNod
     }
 }
 
-final case class If        (e: Expr             , cr: CodeRange, _id: String) extends ProgramNode(_id) { def visit(v: PNL) = v.visitIf        (this) }
-final case class For       (e: Option[Expr]     , cr: CodeRange, _id: String) extends ProgramNode(_id) { def visit(v: PNL) = v.visitFor       (this) }
-final case class While     (e: Expr             , cr: CodeRange, _id: String) extends ProgramNode(_id) { def visit(v: PNL) = v.visitWhile     (this) }
-final case class Statement (stmt: SourceCodeNode, cr: CodeRange, _id: String) extends ProgramNode(_id) { def visit(v: PNL) = v.visitStatement (this) }
-final case class Identifier(s: String           , cr: CodeRange, _id: String) extends ProgramNode(_id) { def visit(v: PNL) = v.visitIdentifier(this) }
-final case class Expression(e: Expr             , cr: CodeRange, _id: String) extends ProgramNode(_id) { def visit(v: PNL) = v.visitExpression(this) }
-final case class Switch    (e: Expr             , cr: CodeRange, _id: String) extends ProgramNode(_id) { def visit(v: PNL) = v.visitSwitch    (this) }
+final case class If        (e: Expr             , cr: CodeRange, _id: String) extends ProgramNode(_id)
+final case class For       (e: Option[Expr]     , cr: CodeRange, _id: String) extends ProgramNode(_id)
+final case class While     (e: Expr             , cr: CodeRange, _id: String) extends ProgramNode(_id)
+final case class Statement (stmt: SourceCodeNode, cr: CodeRange, _id: String) extends ProgramNode(_id)
+final case class Identifier(s: String           , cr: CodeRange, _id: String) extends ProgramNode(_id)
+final case class Expression(e: Expr             , cr: CodeRange, _id: String) extends ProgramNode(_id)
+final case class Switch    (e: Expr             , cr: CodeRange, _id: String) extends ProgramNode(_id)
 // only used during the construction of the graph, should never be used in an actual CFG
-private[ast] final case class Empty(              cr: CodeRange, _id: String) extends ProgramNode(_id) { def visit(v: PNL) = v.visitEmpty     (this) }
-
-trait ProgramNodeLabelizer extends Labelizer {
-    def visitIf                (ifNode     : If        ): Option[Environment] = None
-    def visitFor               (forNode    : For       ): Option[Environment] = None
-    def visitWhile             (whileNode  : While     ): Option[Environment] = None
-    def visitStatement         (stmt       : Statement ): Option[Environment] = None
-    def visitIdentifier        (id         : Identifier): Option[Environment] = None
-    def visitExpression        (expr       : Expression): Option[Environment] = None
-    def visitSwitch            (switchNode : Switch    ): Option[Environment] = None
-    private[ast] final def visitEmpty(empty: Empty     ): Option[Environment] = 
-        throw new IllegalStateException("Empty nodes should never be explored")
-}
+private[ast] final case class Empty(              cr: CodeRange, _id: String) extends ProgramNode(_id)
 
 //sealed abstract class CFGVal 
 //final case class CFGExpr(expr: Expr)         extends CFGVal

@@ -1,4 +1,7 @@
-package ctl.experiment.generics.simple.gen
+package ctl.test
+
+import scala.reflect.runtime.universe
+import ctl._
 
 object Main extends App with Convert {
   class MyVariable extends MetaVariable
@@ -25,6 +28,4 @@ object Main extends App with Convert {
   
   println(b3 == b4)
   println(b3 == b5)
-  
-  println(b1 == b6)
 }

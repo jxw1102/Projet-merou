@@ -1,6 +1,5 @@
 package ctl.experiment.generics
 
-import ast.ProgramNodeLabelizer
 import ast.ProgramNode
 
 /**

@@ -6,7 +6,7 @@ import scala.collection.immutable.{ Map => IMap }
 import scala.collection.mutable.Set
 
 import ast.model._
-import cfg.GraphNode
+import ctl.GraphNode
 
 /**
  * This class performs a conversion from SourceCodeNode to ProgramNode and a transformation from AST to
@@ -16,7 +16,7 @@ import cfg.GraphNode
  * @author David Courtinot
  */
 class ProgramNodeFactory(rootNodes: Iterable[Decl], labelNodes: Map[String,SourceCodeNode]) {
-    type GNode = GraphNode[ProgramNode,ProgramNodeLabelizer]
+    type GNode = GraphNode[ProgramNode]
     
     // id used to identify the artificial empty nodes created by the algorithm
     private var currentId = -1
@@ -222,4 +222,9 @@ class ProgramNodeFactory(rootNodes: Iterable[Decl], labelNodes: Map[String,Sourc
             res >> handle(body, next, exit, entry)
             res
     }
+}
+
+class CFGNode(value: ProgramNode) extends GraphNode[ProgramNode](value) {
+    override def equals(that: Any) = that match { case x: CFGNode => value == x.value case _ => false }
+    override def hashCode          = value.hashCode
 }

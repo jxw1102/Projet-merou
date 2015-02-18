@@ -10,8 +10,8 @@ import ast.SourceCodeNodeFactory
 /**
  * This class enables automated test of the AST to CFG transformation. Everything is handled from
  * the call to the Clang compiler to the creation of a png representing the graph.
- * @author David Courtinot
  * @author Sofia Boutahar
+ * @author David Courtinot
  */
 object Main extends App {
     def process(filePath: String, fileName: String, dot: String="dot") = {

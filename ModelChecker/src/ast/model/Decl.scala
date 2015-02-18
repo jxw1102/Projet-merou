@@ -3,6 +3,11 @@ package ast.model
 import scala.collection.mutable.ArrayBuffer
 import ast.SourceCodeNode
 
+/**
+ * @author Sofia Boutahar
+ * @author Xiaowen Ji
+ * @author David Courtinot
+ */
 abstract class Decl(_name: String) extends SourceCodeNode {
     def name = _name
 }

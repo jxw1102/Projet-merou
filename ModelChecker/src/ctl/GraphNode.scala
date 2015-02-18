@@ -1,11 +1,17 @@
-package ctl.experiment.generics.simple.gen
+package ctl
 
-import collection.mutable.{ Set => MSet, HashSet => MHSet }
-import ast.ProgramNode
+import collection.mutable.{Set => MSet, HashSet => MHSet}
+import scala.collection.mutable.{HashSet => MHSet}
+import scala.collection.mutable.{Set => MSet}
+import scala.collection.mutable.{HashSet => MHSet}
+import scala.collection.mutable.{Set => MSet}
+import scala.collection.mutable.{HashSet => MHSet}
+import scala.collection.mutable.{Set => MSet}
 
 /**
  * This class represents an oriented unweighted graph of labelizable nodes
  * @author David Courtinot
+ * @author Xiaowen Ji
  */
 class GraphNode[N](val value: N) {
     private type GNode = GraphNode[N]
@@ -52,7 +58,4 @@ class GraphNode[N](val value: N) {
             sb
         }
     }
-    
-    override def equals(that: Any) = that match { case x: GNode => value == x.value case _ => false }
-    override def hashCode          = value.hashCode
 }
