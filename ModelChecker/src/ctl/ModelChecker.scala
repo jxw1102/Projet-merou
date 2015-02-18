@@ -57,17 +57,23 @@ class ModelChecker[M <: MetaVariable: TypeTag, N, V <: Value : TypeTag](val root
         case _ => false
     }
     
-    def conj(T1: CheckerResult , T2: CheckerResult) = 
+    def conj(T1: CheckerResult , T2: CheckerResult) = {
         for (t1 <- T1 ; t2 <- T2 ; inter = interStateEnv(t1,t2) ; if (inter.isDefined)) yield inter.get
+    }
         
     def disj    (t1: CheckerResult , t2: CheckerResult)   = t1 ++ t2
     def shift   (s1: GNode , T: CheckerResult, s2: GNode) = T.filter { case(a,b) => a == s1 }.map{ case(a,b) => (s2,b) }
     def Disj    (x: Set[CheckerResult])                   = x.foldRight(Set[StateEnv]())(disj)
-    def conjFold(x: Set[CheckerResult])                   = x.foldRight(root.states.map(node => inj(node, new BindingsEnv)))(conj)
+    def conjFold(x: Set[CheckerResult]): CheckerResult    = 
+        if (!x.isEmpty) x.foldRight(root.states.map(node => inj(node, new BindingsEnv)))(conj) else Set()
+    
     def neg     (T: CheckerResult)                        = conjFold(T.map(negone))
     def exists(typeOf: TypeOf[M,V], T: CheckerResult)     = for (t <- T ; if (ex_binding(typeOf,t))) yield existsone(typeOf.varName,t)
     
-    def preA(T: CheckerResult) = root.states.flatMap(s => conjFold(s.next.toSet.map((sNext: GNode) => shift(sNext,T,s))))
+    def preA(T: CheckerResult) = {
+        root.states.flatMap(s => conjFold(s.next.toSet.map((sNext: GNode) => shift(sNext,T,s))))    
+    }
+    
     def preE(T: CheckerResult) = root.states.flatMap(s => Disj(s.next.toSet.map((sNext: GNode) => shift(sNext,T,s))))
     def SAT_AU                 = SAT_UU(preA)(_,_)
     def SAT_EU                 = SAT_UU(preE)(_,_)

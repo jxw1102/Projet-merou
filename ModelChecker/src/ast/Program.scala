@@ -2,11 +2,11 @@ package ast
 
 import ast.model.Decl
 import ast.model.Expr
-import ast.model.JumpStmt
-import ast.model.Stmt
+import cfg.CFGDecl
 import cfg.CFGExpr
-import ctl.GraphNode
 import cfg.CFGVal
+import cfg.DeclIdentifier
+import ctl.GraphNode
 
 /**
  * Those classes represent the most abstract and final form of the transformations of the source code
@@ -48,6 +48,11 @@ object ProgramNode {
         case While     (expr,_,_) => Set(CFGExpr(expr))
         case Expression(expr,_,_) => Set(CFGExpr(expr))
         case Switch    (expr,_,_) => Set(CFGExpr(expr))
+        case Statement (stmt,_,_) => 
+            if(stmt.isInstanceOf[Decl]) 
+                Set(CFGDecl(DeclIdentifier(stmt.asInstanceOf[Decl].name)))
+            else 
+                Set()
         case For       (expr,_,_) => expr match {
             case Some(value) => Set(CFGExpr(value))
             case _           => Set()   

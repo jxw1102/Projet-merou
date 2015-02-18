@@ -129,7 +129,12 @@ object TestModelChecker extends App with TestUtils with Convert{
         // test 15
         println(checker.neg(set1))
     
-        
+        println("\nTesting preA...")
+        // test 15
+//        val set5: Set[StateEnv] = Set((left, new Binding ++ ("X" -> 2)),(right, new Binding ++ ("X" -> 2)))
+//        println(checker.preA(set5))
+//        
+//        println(checker.preE(set5))
     }
         
     def advancedTests = {
@@ -198,17 +203,28 @@ object TestModelChecker extends App with TestUtils with Convert{
     }
 }
 
-abstract class Node
+abstract class Node(val id: Int) {
+    override def equals(a: Any) = a match {
+        case x: Node => x.id == id
+        case _       => false
+    }
+    
+    override def hashCode = id
+}
 object Node {
+    private var id = 0
+    
+    def getId = { val res = id; id += 1; res }
+    
     def convert = (node: Node) => node match {
     	case F(x)   => Set(IntVal(x))
         case G(x)   => Set(IntVal(x))
         case H(x,y) => Set(IntVal(x),IntVal(y))
     }
 }
-case class F(x: Int)         extends Node
-case class G(x: Int)         extends Node
-case class H(x: Int, y: Int) extends Node
+case class F(x: Int)         extends Node(Node.getId)
+case class G(x: Int)         extends Node(Node.getId)
+case class H(x: Int, y: Int) extends Node(Node.getId)
 
 case class NodeLabelizer(op: String, metavars: Identifier*) extends Labelizer[Identifier,Node,IntVal] {
     def test(n: Node): Option[Environment[Identifier, IntVal]] = (n,op.toLowerCase) match {
