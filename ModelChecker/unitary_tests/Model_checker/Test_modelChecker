@@ -1,0 +1,11 @@
+test0 : 
+	- file : for/for_-_-_-_-
+	- expr : AX(Predicate(new IfLabelizer(BinaryOpPattern(UndefinedExpr(CfgMetaVar("X")), UndefinedExpr(CfgMetaVar("Y")), "=="))))
+	- result : Set(("int z  = 22  at (9,5:15) 0x2c7edb8",Env(X -> (z - 20), Y -> 19)), ("int j  = (5 + f())  at (6,5:20) 0x2c7ec00",Env(X -> j, Y -> 6)))
+
+test1 :
+	- file : if/if 
+	- expr : AX(Predicate(new IfLabelizer(BinaryOpPattern(UndefinedExpr(CfgMetaVar("X")), UndefinedExpr(CfgMetaVar("Y")), "=="))))
+	- result : Set()
+	
+test2 : 

@@ -1,0 +1,25 @@
+TranslationUnitDecl 0x2cda190 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0x2cda6d0 <<invalid sloc>> <invalid sloc> implicit __int128_t '__int128'
+|-TypedefDecl 0x2cda730 <<invalid sloc>> <invalid sloc> implicit __uint128_t 'unsigned __int128'
+|-TypedefDecl 0x2cdaaf0 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list '__va_list_tag [1]'
+|-FunctionDecl 0x2cdab90 <ModelChecker/unitary_tests/Model_checker/main.cpp:1:1, line:3:1> line:1:5 used f 'int (void)'
+| `-CompoundStmt 0x2cdac70 <col:9, line:3:1>
+|   `-ReturnStmt 0x2cdac50 <line:2:5, col:12>
+|     `-IntegerLiteral 0x2cdac30 <col:12> 'int' 3
+`-FunctionDecl 0x2d17a00 <line:5:1, line:9:1> line:5:5 main 'int (int, char **)'
+  |-ParmVarDecl 0x2cdaca0 <col:10, col:14> col:14 argc 'int'
+  |-ParmVarDecl 0x2cdad70 <col:20, col:27> col:27 argv 'char **'
+  `-CompoundStmt 0x2d17d98 <col:33, line:9:1>
+    |-DeclStmt 0x2d17c50 <line:6:5, col:20>
+    | `-VarDecl 0x2d17ac0 <col:5, col:19> col:9 used j 'int' cinit
+    |   `-BinaryOperator 0x2d17c28 <col:13, col:19> 'int' '+'
+    |     |-IntegerLiteral 0x2d17b18 <col:13> 'int' 5
+    |     `-CallExpr 0x2d17c00 <col:17, col:19> 'int'
+    |       `-ImplicitCastExpr 0x2d17be8 <col:17> 'int (*)(void)' <FunctionToPointerDecay>
+    |         `-DeclRefExpr 0x2d17b90 <col:17> 'int (void)' lvalue Function 0x2cdab90 'f' 'int (void)'
+    |-CallExpr 0x2d17d00 <line:7:5, col:7> 'int'
+    | `-ImplicitCastExpr 0x2d17ce8 <col:5> 'int (*)(void)' <FunctionToPointerDecay>
+    |   `-DeclRefExpr 0x2d17cc0 <col:5> 'int (void)' lvalue Function 0x2cdab90 'f' 'int (void)'
+    `-BinaryOperator 0x2d17d70 <line:8:5, col:9> 'int' lvalue '='
+      |-DeclRefExpr 0x2d17d28 <col:5> 'int' lvalue Var 0x2d17ac0 'j' 'int'
+      `-IntegerLiteral 0x2d17d50 <col:9> 'int' 0
