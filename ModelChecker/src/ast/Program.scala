@@ -7,6 +7,13 @@ import cfg.CFGExpr
 import cfg.CFGVal
 import cfg.DeclIdentifier
 import ctl.GraphNode
+import ast.model.CompoundAssignOp
+import ast.model.UnaryOp
+import ast.model.BinaryOp
+import ast.model.ConditionalOperator
+import ast.model.ArraySubscriptExpr
+import ast.model.CallExpr
+import ast.model.InitListExpr
 
 /**
  * Those classes represent the most abstract and final form of the transformations of the source code
@@ -43,18 +50,34 @@ object SourceCodeNode {
  * visitor class
  */
 object ProgramNode {
+   private def getAllExpr(expr: Expr): Set[CFGVal] = {
+     val subExpr: Set[CFGVal]   = expr match {
+         case  BinaryOp           (left, right, _)         => Set(CFGExpr(left), CFGExpr(right))                             
+         case  UnaryOp            (operand, _, _)          => Set(CFGExpr(operand))
+         case  CompoundAssignOp   (left, right, _)         => Set(CFGExpr(left), CFGExpr(right))                               
+         case  ConditionalOperator((expr1,expr2,expr3), _) => Set(CFGExpr(expr1), CFGExpr(expr2), CFGExpr(expr3))                                  
+         case  ArraySubscriptExpr ((expr1,expr2))          => Set(CFGExpr(expr1), CFGExpr(expr2))                                                      
+         case  InitListExpr       (exprs)                  => exprs.map(e => CFGExpr(e)).toSet                                                        
+         case  CallExpr           (_, params)              => params.map(e => CFGExpr(e)).toSet
+         case  _                                           => Set()
+     } 
+     subExpr + CFGExpr(expr)
+   }
+    
+    
+    // assignement to study 
     def convert: (ProgramNode => Set[CFGVal]) = (p : ProgramNode)  => p match {
-        case If        (expr,_,_) => Set(CFGExpr(expr))
-        case While     (expr,_,_) => Set(CFGExpr(expr))
-        case Expression(expr,_,_) => Set(CFGExpr(expr))
-        case Switch    (expr,_,_) => Set(CFGExpr(expr))
+        case If        (expr,_,_) => getAllExpr(expr)
+        case While     (expr,_,_) => getAllExpr(expr)
+        case Expression(expr,_,_) => getAllExpr(expr)
+        case Switch    (expr,_,_) => getAllExpr(expr)
         case Statement (stmt,_,_) => 
             if(stmt.isInstanceOf[Decl]) 
                 Set(CFGDecl(DeclIdentifier(stmt.asInstanceOf[Decl].name)))
             else 
                 Set()
         case For       (expr,_,_) => expr match {
-            case Some(value) => Set(CFGExpr(value))
+            case Some(value) => getAllExpr(value)
             case _           => Set()   
         }
         case _ => Set()

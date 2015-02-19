@@ -12,7 +12,7 @@ sealed abstract class Expr extends ForInitializer {
         case (UnaryOp(xopd,xopr,xkind),UnaryOp(yopd,yopr,ykind))     => (xkind == ykind) && (xopr == yopr) && (xopd matches yopd)
         case (CompoundAssignOp(xl,xr,xo),CompoundAssignOp(yl,yr,yo)) => (xo == yo) && (xl matches yl) && (xr matches yr)
         case (Literal(x,u),Literal(y,v))                             => x == y && u == v
-        case (DeclRefExpr(_,_,x,_),DeclRefExpr(_,_,y,_))             => x == y
+        case (DeclRefExpr(_,x,_,_),DeclRefExpr(_,y,_,_))             => x == y
         case (ConditionalOperator(x,_),ConditionalOperator(y,_))     => (x._1 matches y._1) && (x._2 matches y._2) && (x._3 matches y._3)
         case (ArraySubscriptExpr(x),ArraySubscriptExpr(y))           => (x._1 matches y._1) && (x._2 matches y._2)
         case (InitListExpr(x),InitListExpr(y))                       => x.zip(y).forall(p => p._1 matches p._2)
