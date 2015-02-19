@@ -3,8 +3,6 @@ package ast.model
 /**
  * Classes used to represent expressions within the program
  * @author Sofia Boutahar
- * @author David Courtinot
- * @author Xiaowen Ji
  */
 sealed abstract class Expr extends ForInitializer {
     def matches(that: Expr): Boolean = (this,that) match {
@@ -44,7 +42,7 @@ final case class ConditionalOperator(exprs: (Expr,Expr,Expr), returnType: String
 final case class ArraySubscriptExpr (exprs: (Expr, Expr))                                                       extends Expr
 final case class InitListExpr       (exprs: List[Expr])                                                         extends Expr
 final case class CallExpr           (returnType: String, params: List[Expr])                                    extends Expr {
-    val funcDeclExpr = params.head
+ val funcDeclExpr = params.head
 }
 
 sealed abstract class OpPosition 
