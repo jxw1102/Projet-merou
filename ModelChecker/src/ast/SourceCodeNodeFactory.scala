@@ -114,8 +114,8 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[String,String]) {
     private def functionDecl(node: ASTNode) = node match {
         case ConcreteASTNode(_,_,id,codeRange,data) => 
             val dataList      = data.dataList
-            val res           = FunctionDecl(dataList.get(-2),dataList.last,compoundStmt(node.children.last))
-            res.args          = node.children.take(node.children.length - 1).map(parmVarDecl).toList 
+            val args          = node.children.take(node.children.length - 1).map(parmVarDecl).toList 
+            val res           = FunctionDecl(dataList.get(-2),dataList.last,args,compoundStmt(node.children.last))
             setAndReturn(res,codeRange,id)
         case _ => concreteNodeExpected(node)
     }

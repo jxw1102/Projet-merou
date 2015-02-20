@@ -1,0 +1,13 @@
+TranslationUnitDecl 0x311d0f0 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0x311d3e0 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'char *'
+`-FunctionDecl 0x311d500 <ModelChecker\unitary_tests\ast\various\test.cpp:1:1, line:4:1> line:1:5 main 'int (int, char **)'
+  |-ParmVarDecl 0x311d420 <col:10, col:14> col:14 argc 'int'
+  |-ParmVarDecl 0x311d480 <col:20, col:27> col:27 argv 'char **'
+  `-CompoundStmt 0x311d6b0 <col:33, line:4:1>
+    |-DeclStmt 0x311d670 <line:2:2, col:17>
+    | |-VarDecl 0x311d590 <col:2, col:6> col:6 i 'int'
+    | |-VarDecl 0x311d5d0 <col:2, col:9> col:9 j 'int'
+    | `-VarDecl 0x311d610 <col:2, col:16> col:12 h 'int' cinit
+    |   `-IntegerLiteral 0x311d640 <col:16> 'int' 0
+    `-ReturnStmt 0x311d6a0 <line:3:2, col:9>
+      `-IntegerLiteral 0x311d680 <col:9> 'int' 0

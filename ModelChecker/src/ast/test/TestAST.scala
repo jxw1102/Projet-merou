@@ -35,5 +35,4 @@ object TestAST extends App {
          val s    = name.substring(0,name.lastIndexOf('.'))
          process(file.getPath,s)
      }
-    
 }
