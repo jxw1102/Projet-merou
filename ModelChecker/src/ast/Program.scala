@@ -49,10 +49,7 @@ object ProgramNode {
         case Expression(expr,_,_) => Set(CFGExpr(expr))
         case Switch    (expr,_,_) => Set(CFGExpr(expr))
         case Statement (stmt,_,_) => 
-            if(stmt.isInstanceOf[Decl]) 
-                Set(CFGDecl(DeclIdentifier(stmt.asInstanceOf[Decl].name)))
-            else 
-                Set()
+            if(stmt.isInstanceOf[Decl]) Set(CFGDecl(DeclIdentifier(stmt.asInstanceOf[Decl].name))) else Set()
         case For       (expr,_,_) => expr match {
             case Some(value) => Set(CFGExpr(value))
             case _           => Set()   
@@ -69,8 +66,6 @@ sealed abstract class ProgramNode(val id: String) {
         case _              => false
     }
     override def hashCode = id.hashCode
-
-    
     override def toString = {
         val format = (name: String, a: Any, id: String, cr: CodeRange) => "\"%s %s at %s %s\"".format(name,a,cr,id)
         this match {
@@ -95,7 +90,6 @@ final case class Expression(e: Expr             , cr: CodeRange, _id: String) ex
 final case class Switch    (e: Expr             , cr: CodeRange, _id: String) extends ProgramNode(_id)
 // only used during the construction of the graph, should never be used in an actual CFG
 private[ast] final case class Empty(              cr: CodeRange, _id: String) extends ProgramNode(_id)
-
 
 object CFGNode {
     //convert 
