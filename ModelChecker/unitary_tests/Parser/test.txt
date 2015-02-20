@@ -6,13 +6,21 @@ x++
 9
 -8
 x++ % 8
-x-- + o
-6||8
+x-- + o + ghjgj
+++A + !B
+h||n
 X==1
+x += a & b
+x = a && b
+david *= a * b
+g *= *s * b
+g *= *s * *b
 Y!= x
 j <<= 12
+A || B && C
+j |= k
+b = david | sofia
 f(a,s)
 f == (x /= 4)
 f(9 + sofia)
-revelation(David,aime,ZhongWei,et,les,thailandaises,bien,fraiches) 
 .end.
