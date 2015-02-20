@@ -1,26 +1,26 @@
-TranslationUnitDecl 0x10280acd0 <<invalid sloc>>
-|-TypedefDecl 0x10280b210 <<invalid sloc>> __int128_t '__int128'
-|-TypedefDecl 0x10280b270 <<invalid sloc>> __uint128_t 'unsigned __int128'
-|-TypedefDecl 0x10280b630 <<invalid sloc>> __builtin_va_list '__va_list_tag [1]'
-`-FunctionDecl 0x10280b6d0 <ModelChecker/unitary_tests/if/if.cpp:1:1, line:8:1> main 'int (void)'
-  `-CompoundStmt 0x103800540 <line:1:12, line:8:1>
-    |-DeclStmt 0x10280b858 <line:2:2, col:11>
-    | `-VarDecl 0x10280b7e0 <col:2, col:10> a 'int'
-    |   `-IntegerLiteral 0x10280b838 <col:10> 'int' 5
-    |-IfStmt 0x103800470 <line:3:2, line:6:2>
+TranslationUnitDecl 0x29c8170 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0x29c86b0 <<invalid sloc>> <invalid sloc> implicit __int128_t '__int128'
+|-TypedefDecl 0x29c8710 <<invalid sloc>> <invalid sloc> implicit __uint128_t 'unsigned __int128'
+|-TypedefDecl 0x29c8ad0 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list '__va_list_tag [1]'
+`-FunctionDecl 0x29c8b70 <ModelChecker/unitary_tests/if/if.cpp:1:1, line:8:1> line:1:5 main 'int (void)'
+  `-CompoundStmt 0x2a05aa0 <col:12, line:8:1>
+    |-DeclStmt 0x29c8cf8 <line:2:5, col:14>
+    | `-VarDecl 0x29c8c80 <col:5, col:13> col:9 used a 'int' cinit
+    |   `-IntegerLiteral 0x29c8cd8 <col:13> 'int' 5
+    |-IfStmt 0x2a059d0 <line:3:5, line:6:5>
     | |-<<<NULL>>>
-    | |-BinaryOperator 0x10280b8d0 <line:3:6, col:10> '_Bool' '>'
-    | | |-ImplicitCastExpr 0x10280b8b8 <col:6> 'int' <LValueToRValue>
-    | | | `-DeclRefExpr 0x10280b870 <col:6> 'int' lvalue Var 0x10280b7e0 'a' 'int'
-    | | `-IntegerLiteral 0x10280b898 <col:10> 'int' 6
-    | |-CompoundStmt 0x103800448 <col:13, line:6:2>
-    | | |-DeclStmt 0x10280b988 <line:4:3, col:12>
-    | | | `-VarDecl 0x10280b910 <col:3, col:11> c 'int'
-    | | |   `-IntegerLiteral 0x10280b968 <col:11> 'int' 5
-    | | `-CompoundAssignOperator 0x103800410 <line:5:3, col:8> 'int' lvalue '*=' ComputeLHSTy='int' ComputeResultTy='int'
-    | |   |-DeclRefExpr 0x10280b9a0 <col:3> 'int' lvalue Var 0x10280b910 'c' 'int'
-    | |   `-IntegerLiteral 0x10280b9c8 <col:8> 'int' 5
+    | |-BinaryOperator 0x29c8d70 <line:3:9, col:13> '_Bool' '>'
+    | | |-ImplicitCastExpr 0x29c8d58 <col:9> 'int' <LValueToRValue>
+    | | | `-DeclRefExpr 0x29c8d10 <col:9> 'int' lvalue Var 0x29c8c80 'a' 'int'
+    | | `-IntegerLiteral 0x29c8d38 <col:13> 'int' 6
+    | |-CompoundStmt 0x2a059a8 <col:16, line:6:5>
+    | | |-DeclStmt 0x29c8e28 <line:4:9, col:18>
+    | | | `-VarDecl 0x29c8db0 <col:9, col:17> col:13 used c 'int' cinit
+    | | |   `-IntegerLiteral 0x29c8e08 <col:17> 'int' 5
+    | | `-CompoundAssignOperator 0x2a05970 <line:5:9, col:14> 'int' lvalue '*=' ComputeLHSTy='int' ComputeResultTy='int'
+    | |   |-DeclRefExpr 0x29c8e40 <col:9> 'int' lvalue Var 0x29c8db0 'c' 'int'
+    | |   `-IntegerLiteral 0x29c8e68 <col:14> 'int' 5
     | `-<<<NULL>>>
-    `-DeclStmt 0x103800528 <line:7:2, col:12>
-      `-VarDecl 0x1038004b0 <col:2, col:10> b 'int'
-        `-IntegerLiteral 0x103800508 <col:10> 'int' 17
+    `-DeclStmt 0x2a05a88 <line:7:5, col:15>
+      `-VarDecl 0x2a05a10 <col:5, col:13> col:9 b 'int' cinit
+        `-IntegerLiteral 0x2a05a68 <col:13> 'int' 17

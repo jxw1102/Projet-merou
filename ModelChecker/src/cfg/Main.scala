@@ -10,6 +10,12 @@ import ast.ProgramNode
 import ctl.ModelChecker
 import ctl.ModelChecker
 import ctl.AX
+import ctl.Predicate
+import ctl.EX
+import ast.model.Literal
+import cfg.ExpressionLabelizer
+import cfg.ExpressionLabelizer
+import ast.model.DeclRefExpr
 
 
 /**
@@ -17,7 +23,7 @@ import ctl.AX
  * @author David Courtinot
  */
 object Main extends App {
-    def buildGraph(filePath: String, fileName: String) = {
+    def buildGraph(filePath: String, fileName: String, dot: String="dot") = {
         val cmd    = "clang -Xclang -ast-dump -fsyntax-only " + filePath
         val basePath = filePath.substring(0,filePath.indexOf(fileName))
         val clangPath = basePath + fileName + ".txt"
@@ -32,22 +38,49 @@ object Main extends App {
         val astRes      = new SourceCodeNodeFactory(parseResult.root,parseResult.labels).result 
 
         // generate the CFG and write it in a file
-        new ProgramNodeFactory(astRes.rootNodes,astRes.labelNodes).result
+//        new ProgramNodeFactory(astRes.rootNodes,astRes.labelNodes).result
+        
+        val cfg = new ProgramNodeFactory(astRes.rootNodes,astRes.labelNodes).result
+//        writer  = new PrintWriter(basePath + "test.dot")
+//        writer.write("digraph {\n%s}".format(cfg))
+//        writer.close
+//        
+//        // generate the png image
+//        Seq(dot,"-Tpng",basePath + "test.dot","-o",basePath + fileName + ".png") !
+//        
+        cfg
     }
     
-    val folder = "various"
-        new File("ModelChecker/unitary_tests/%s/".format(folder)).listFiles.filter(_.getName.endsWith("cpp")).foreach { file => 
-            val name = file.getName
-            val s    = name.substring(0,name.lastIndexOf('.'))
-            
-            // generate the Clang AST and print it in a file
-            val cfg = buildGraph(file.getPath,s)
-            
-            val mainGraph = cfg.decls("main")
-            
-            val checker = new ModelChecker[CfgMetaVar, ProgramNode, CFGVal](mainGraph, ProgramNode.convert)
-            
-            //checker.evalExpr(AX[CfgMetaVar, ProgramNode, CFGVal](PredicateUndefinedExpr(CfgMetaVar("X"))))
-        }
+    val file = new File("ModelChecker/unitary_tests/Model_checker/main.cpp")
+    val name = file.getName
+    val s    = name.substring(0,name.lastIndexOf('.'))
     
+    // generate the Clang AST and print it in a file
+    val cfg       = buildGraph(file.getPath,s)
+    val mainGraph = cfg.decls("main")
+    val checker   = new ModelChecker[CfgMetaVar, ProgramNode, CFGVal](mainGraph, ProgramNode.convert)
+           
+//    val res = checker.evalExpr(
+//            Predicate(new StatementLabelizer(VarDeclPattern(DefinedDecl("j"), "int")))
+//            AU
+//            Predicate(new ExpressionLabelizer(CallExprPattern(List(DefinedExpr(DeclRefExpr("", "f","","")), DefinedExpr(DeclRefExpr("", "q","","")))))))
+
+    val res = checker.evalExpr(
+            Predicate(new StatementLabelizer(VarDeclPattern(DefinedDecl("q"), "int")))
+            AU
+            Predicate(new ExpressionLabelizer(BinaryOpPattern(DefinedExpr(DeclRefExpr("", "q","","")), UndefinedExpr(CfgMetaVar("X")), "="))))
+
+            
+//    val res = checker.evalExpr(Predicate(new StatementLabelizer(VarDeclPattern(UndefinedExpr(CfgMetaVar("X")), "int"))))
+    
+//    val res = checker.evalExpr(Predicate(new ExpressionLabelizer(CallExprPattern(List(DefinedExpr(DeclRefExpr("", "f","","")), UndefinedExpr(CfgMetaVar("X")))))))
+    
+//    val res = checker.evalExpr(AX(Predicate(new IfLabelizer(BinaryOpPattern(UndefinedExpr(CfgMetaVar("X")),UndefinedExpr(CfgMetaVar("X")), "==")))))
+//    val res = checker.evalExpr(AX(Predicate(new IfLabelizer(BinaryOpPattern(UndefinedExpr(CfgMetaVar("X")), 
+//            UndefinedExpr(CfgMetaVar("Y")), "==")))))
+    
+//    val res = checker.evalExpr(AU(Predicate(new IfLabelizer(BinaryOpPattern(UndefinedExpr(CfgMetaVar("X")), 
+//     
+    
+    println("Res : " +res)
 }

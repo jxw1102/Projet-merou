@@ -49,25 +49,31 @@ class ModelChecker[M <: MetaVariable: TypeTag, N, V <: Value : TypeTag](val root
             (!env).map { case value => (s, value) } ++ (root.states - s).map(inj(_, new BindingsEnv[M,V]))    
     }
 
-    protected def ex_binding(typeOf: TypeOf[M,V], se: StateEnv) = se._2 match { 
-        case BindingsEnv(bind) => bind.get(typeOf.varName) match {
+    protected def ex_binding(varName : M, typeOf: TypeOf[V], se: StateEnv) = se._2 match { 
+        case BindingsEnv(bind) => bind.get(varName) match {
             case Some(NegBinding(neg)) => typeOf.filter(Val).size > neg.size
             case _                     => true
         }        
         case _ => false
     }
     
-    def conj(T1: CheckerResult , T2: CheckerResult) = 
+    def conj(T1: CheckerResult , T2: CheckerResult) = {
         for (t1 <- T1 ; t2 <- T2 ; inter = interStateEnv(t1,t2) ; if (inter.isDefined)) yield inter.get
+    }
         
     def disj    (t1: CheckerResult , t2: CheckerResult)   = t1 ++ t2
     def shift   (s1: GNode , T: CheckerResult, s2: GNode) = T.filter { case(a,b) => a == s1 }.map{ case(a,b) => (s2,b) }
     def Disj    (x: Set[CheckerResult])                   = x.foldRight(Set[StateEnv]())(disj)
-    def conjFold(x: Set[CheckerResult])                   = x.foldRight(root.states.map(node => inj(node, new BindingsEnv)))(conj)
-    def neg     (T: CheckerResult)                        = conjFold(T.map(negone))
-    def exists(typeOf: TypeOf[M,V], T: CheckerResult)     = for (t <- T ; if (ex_binding(typeOf,t))) yield existsone(typeOf.varName,t)
+    def conjFold(x: Set[CheckerResult]): CheckerResult    = 
+        if (!x.isEmpty) x.foldRight(root.states.map(node => inj(node, new BindingsEnv)))(conj) else Set()
     
-    def preA(T: CheckerResult) = root.states.flatMap(s => conjFold(s.next.toSet.map((sNext: GNode) => shift(sNext,T,s))))
+    def neg     (T: CheckerResult)                        = conjFold(T.map(negone))
+    def exists(varType: (M,TypeOf[V]), T: CheckerResult)     = for (t <- T ; if (ex_binding(varType._1, varType._2,t))) yield existsone(varType._1,t)
+    
+    def preA(T: CheckerResult) = {
+        root.states.flatMap(s => conjFold(s.next.toSet.map((sNext: GNode) => shift(sNext,T,s))))    
+    }
+    
     def preE(T: CheckerResult) = root.states.flatMap(s => Disj(s.next.toSet.map((sNext: GNode) => shift(sNext,T,s))))
     def SAT_AU                 = SAT_UU(preA)(_,_)
     def SAT_EU                 = SAT_UU(preE)(_,_)
