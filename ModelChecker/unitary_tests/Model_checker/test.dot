@@ -1,0 +1,15 @@
+digraph {
+"int (int) f(int q)  at (3,1:1) 0x358fc10" -> "ReturnStmt((q + 2))  at (2,5:14) 0x358fd40"
+"ReturnStmt((q + 2))  at (2,5:14) 0x358fd40"
+"int (int, char **) main(int argc, char ** argv)  at (5:22,1:1) 0x35ccb00" -> "int j  = (5 + f(7))  at (6,5:21) 0x35ccd78"
+"int j  = (5 + f(7))  at (6,5:21) 0x35ccd78" -> "if (j == (4 - 6)) at (7,5:20) 0x35cce90"
+"if (j == (4 - 6)) at (7,5:20) 0x35cce90" -> "f(6)  at (8,5:8) 0x35ccf78"
+"f(6)  at (8,5:8) 0x35ccf78" -> "int q   at (9,5:10) 0x35cd018"
+"int q   at (9,5:10) 0x35cd018" -> "int d  = 0  at (11,5:14) 0x35cd0b8"
+"int d  = 0  at (11,5:14) 0x35cd0b8" -> "f(q)  at (14,5:8) 0x35cd190"
+"f(q)  at (14,5:8) 0x35cd190" -> "if (j == 2) at (16:21,5:5) 0x35cd380"
+"if (j == 2) at (16:21,5:5) 0x35cd380" -> "(q = 7)  at (17,6:10) 0x35cd2a8"
+"if (j == 2) at (16:21,5:5) 0x35cd380" -> "(j = 3)  at (20,6:10) 0x35cd338"
+"(q = 7)  at (17,6:10) 0x35cd2a8"
+"(j = 3)  at (20,6:10) 0x35cd338"
+}

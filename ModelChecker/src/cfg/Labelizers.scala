@@ -75,18 +75,18 @@ sealed abstract class Pattern extends Convert {
 
     def matchEnv(expr: Expr): Env = this match {
         case DefinedExpr  (e   : Expr  )     => if (e matches expr) new BindingsEnv else Bottom
-        case UndefinedExpr(name: CfgMetaVar) => new BindingsEnv ++ (name -> expr)
+        case UndefinedVar (name: CfgMetaVar) => new BindingsEnv ++ (name -> expr)
         case _                               => Bottom
     }
     
     def matchDeclName(n: String): Env = this match {
         case DefinedDecl  (s   : String)     => if (s==n) new BindingsEnv else Bottom
-        case UndefinedExpr(name: CfgMetaVar) => new BindingsEnv ++ (name -> CFGDecl(DeclIdentifier(n))) 
+        case UndefinedVar (name: CfgMetaVar) => new BindingsEnv ++ (name -> CFGDecl(DeclIdentifier(n))) 
         case _                               => Bottom
     }
 }
 
-case class UndefinedExpr(name: CfgMetaVar) extends Pattern
+case class UndefinedVar (name: CfgMetaVar) extends Pattern
 case class DefinedExpr  (expr: Expr  )     extends Pattern
 case class DefinedDecl  (name: String)     extends Pattern
 
@@ -184,12 +184,9 @@ trait DeclPattern extends Convert {
 case class VarDeclPattern(varName: Pattern, typeNameDecl: String, valueDecl: Option[Pattern] = None) extends DeclPattern {
 	
 	override def matches(decl: Decl): Option[Env] = {
-        println("yoo je passe par la")
-        println(decl)
         decl match {          
 			case VarDecl(name, typeName, value)  => 
-                println(typeName + " :: " + typeNameDecl)
-    			if(typeName == typeNameDecl) {
+                if(typeName == typeNameDecl) {
                     val valueEnv: Option[Env] = (value,valueDecl) match {
                         case (Some(expr), Some(exprDecl)) => Some(exprDecl.matchEnv(expr))  
                         case (None, None)                 => Some(new BindingsEnv)    
