@@ -3,8 +3,6 @@ package ast.model
 /**
  * Classes used to represent expressions within the program
  * @author Sofia Boutahar
- * @author David Courtinot
- * @author Xiaowen Ji
  */
 sealed abstract class Expr extends ForInitializer {
     def matches(that: Expr): Boolean = (this,that) match {
@@ -12,7 +10,7 @@ sealed abstract class Expr extends ForInitializer {
         case (UnaryOp(xopd,xopr,xkind),UnaryOp(yopd,yopr,ykind))     => (xkind == ykind) && (xopr == yopr) && (xopd matches yopd)
         case (CompoundAssignOp(xl,xr,xo),CompoundAssignOp(yl,yr,yo)) => (xo == yo) && (xl matches yl) && (xr matches yr)
         case (Literal(x,u),Literal(y,v))                             => x == y && u == v
-        case (DeclRefExpr(_,_,x,_),DeclRefExpr(_,_,y,_))             => x == y
+        case (DeclRefExpr(_,x,_,_),DeclRefExpr(_,y,_,_))             => x == y
         case (ConditionalOperator(x,_),ConditionalOperator(y,_))     => (x._1 matches y._1) && (x._2 matches y._2) && (x._3 matches y._3)
         case (ArraySubscriptExpr(x),ArraySubscriptExpr(y))           => (x._1 matches y._1) && (x._2 matches y._2)
         case (InitListExpr(x),InitListExpr(y))                       => x.zip(y).forall(p => p._1 matches p._2)
@@ -44,7 +42,7 @@ final case class ConditionalOperator(exprs: (Expr,Expr,Expr), returnType: String
 final case class ArraySubscriptExpr (exprs: (Expr, Expr))                                                       extends Expr
 final case class InitListExpr       (exprs: List[Expr])                                                         extends Expr
 final case class CallExpr           (returnType: String, params: List[Expr])                                    extends Expr {
-    val funcDeclExpr = params.head
+ val funcDeclExpr = params.head
 }
 
 sealed abstract class OpPosition 

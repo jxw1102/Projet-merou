@@ -3,8 +3,10 @@ int f() {
 }
 
 int main(int argc, char** argv) {
-    // if I replace it with f() it creates only one f() node
     int j = 5 + f();
+    if (j == 6);
     for (;;);
+    int z = 22;
+    if ((z-20)==19);
     f();
 }

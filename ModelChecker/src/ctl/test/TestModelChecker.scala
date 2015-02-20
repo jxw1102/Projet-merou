@@ -1,8 +1,22 @@
 package ctl.test
 
+import scala.annotation.migration
 import scala.reflect.runtime.universe
-import ctl._
+
+import ctl.AX
+import ctl.BindingsEnv
+import ctl.Bottom
+import ctl.Convert
+import ctl.Environment
+import ctl.Exists
 import ctl.GraphNode
+import ctl.Labelizer
+import ctl.ModelChecker
+import ctl.NoType
+import ctl.Predicate
+import ctl.Value
+import ctl.NoType
+
 
 /**
  * @author Zohour Abouakil
@@ -138,7 +152,7 @@ object TestModelChecker extends App with TestUtils with Convert{
     }
         
     def advancedTests = {
-        implicit def noType(s: String) = NoType[Identifier,IntVal](Identifier(s))
+        implicit def noType(s: String) = (Identifier(s), new NoType[IntVal])
         
         type MC                 = ModelChecker[Identifier,Node,IntVal]
         val (rootA,rootB,rootC) = (example2a,example2b,example2c)
@@ -148,16 +162,19 @@ object TestModelChecker extends App with TestUtils with Convert{
         def g(s: String)             = Predicate(NodeLabelizer("g",s))
         def h(s0: String,s1: String) = Predicate(NodeLabelizer("h",s0,s1))
         
-//        // test 0
-//        assertEquals(mcA.evalExpr(f("y")),Set((rootA,new Binding ++ ("y" -> 1))))
-//        // test 1
-//        assertEquals(mcA.evalExpr(f("x") && AX(g("y") && AX(h("x","y")))),Set((rootA,new Binding ++ ("x" -> 1,"y" -> 2))))
-//        // test 2
-//        assertEquals(mcA.evalExpr(f("x") && AX(Exists("y",g("y") && AX(h("x","y"))))),Set((rootA,new Binding ++ ("x" -> 1))))
-//        // test 3
-//        assertEquals(mcB.evalExpr(f("x") && AX(Exists("y",g("y") && AX(h("x","y"))))),Set((rootB,new Binding ++ ("x" -> 1))))
-//        // test 4
-//        assertEquals(mcC.evalExpr(f("x") && AX(Exists("y",g("y") && AX(h("x","y"))))),Set())
+        // test 0
+        assertEquals(mcA.evalExpr(f("y")),Set((rootA,new Binding ++ ("y" -> 1))))
+        // test 1
+        assertEquals(mcA.evalExpr(f("x") && AX(g("y") && AX(h("x","y")))),Set((rootA,new Binding ++ ("x" -> 1,"y" -> 2))))
+        // test 2
+        assertEquals(mcA.evalExpr(f("x") && AX(Exists("y",g("y") && AX(h("x","y"))))),Set((rootA,new Binding ++ ("x" -> 1))))
+        // test 3
+        assertEquals(mcB.evalExpr(f("x") && AX(Exists("y",g("y") && AX(h("x","y"))))),Set((rootB,new Binding ++ ("x" -> 1))))
+        // test 4
+        assertEquals(mcC.evalExpr(f("x") && AX(Exists("y",g("y") && AX(h("x","y"))))),Set())
+        // test 5
+//        println(mcC.evalExpr(f("x") AU g("y")))
+        //assertEquals(mcC.evalExpr(f("x") AU g("y")),Set())
     }
     
     // example of the figure 2.a in popl.pdf
@@ -201,6 +218,20 @@ object TestModelChecker extends App with TestUtils with Convert{
         
         root
     }
+    
+//    def example2d = {
+//        val root   = new GNode(F(1))
+//        val center = new 
+//        val left1  = new GNode(G(2))
+//        val left2  = new GNode(H(1,3))
+//        val right1 = new GNode(G(3))
+//        val right2 = new GNode(H(1,3))
+//                
+//        root >> left1  >> left2  >> left2
+//        root >> right1 >> right2 >> right2
+//        
+//        root
+//    }
 }
 
 abstract class Node(val id: Int) {

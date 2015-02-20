@@ -49,8 +49,8 @@ class ModelChecker[M <: MetaVariable: TypeTag, N, V <: Value : TypeTag](val root
             (!env).map { case value => (s, value) } ++ (root.states - s).map(inj(_, new BindingsEnv[M,V]))    
     }
 
-    protected def ex_binding(typeOf: TypeOf[M,V], se: StateEnv) = se._2 match { 
-        case BindingsEnv(bind) => bind.get(typeOf.varName) match {
+    protected def ex_binding(varName : M, typeOf: TypeOf[V], se: StateEnv) = se._2 match { 
+        case BindingsEnv(bind) => bind.get(varName) match {
             case Some(NegBinding(neg)) => typeOf.filter(Val).size > neg.size
             case _                     => true
         }        
@@ -68,7 +68,7 @@ class ModelChecker[M <: MetaVariable: TypeTag, N, V <: Value : TypeTag](val root
         if (!x.isEmpty) x.foldRight(root.states.map(node => inj(node, new BindingsEnv)))(conj) else Set()
     
     def neg     (T: CheckerResult)                        = conjFold(T.map(negone))
-    def exists(typeOf: TypeOf[M,V], T: CheckerResult)     = for (t <- T ; if (ex_binding(typeOf,t))) yield existsone(typeOf.varName,t)
+    def exists(varType: (M,TypeOf[V]), T: CheckerResult)     = for (t <- T ; if (ex_binding(varType._1, varType._2,t))) yield existsone(varType._1,t)
     
     def preA(T: CheckerResult) = {
         root.states.flatMap(s => conjFold(s.next.toSet.map((sNext: GNode) => shift(sNext,T,s))))    
