@@ -65,7 +65,7 @@ class ModelChecker[M <: MetaVariable: TypeTag, N, V <: Value : TypeTag](val root
     def shift   (s1: GNode , T: CheckerResult, s2: GNode) = T.filter { case(a,b) => a == s1 }.map{ case(a,b) => (s2,b) }
     def Disj    (x: Set[CheckerResult])                   = x.foldRight(Set[StateEnv]())(disj)
     def conjFold(x: Set[CheckerResult]): CheckerResult    = 
-        if (!x.isEmpty) x.foldRight(root.states.map(node => inj(node, new BindingsEnv)))(conj) else Set()
+        x.foldRight(root.states.map(node => inj(node, new BindingsEnv)))(conj)
     
     def neg     (T: CheckerResult)                        = conjFold(T.map(negone))
     def exists(varType: (M,TypeOf[V]), T: CheckerResult)     = for (t <- T ; if (ex_binding(varType._1, varType._2,t))) yield existsone(varType._1,t)

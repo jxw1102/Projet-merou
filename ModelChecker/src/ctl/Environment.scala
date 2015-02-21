@@ -57,7 +57,7 @@ case class NegBinding[V <: Value](values: Set[V]) extends MetaVarBinding[V]{
     }
 }
 
-case class BindingsEnv[M <: MetaVariable: TypeTag,V <: Value: TypeTag](bindings: Map[M, MetaVarBinding[V]] = Map[M, MetaVarBinding[V]]()) 
+case class BindingsEnv[M <: MetaVariable: TypeTag,V <: Value: TypeTag] private[ctl] (bindings: Map[M, MetaVarBinding[V]] = Map[M, MetaVarBinding[V]]()) 
 	extends Environment[M,V] with Convert {
     
     def this() = this(Map[M, MetaVarBinding[V]]())
@@ -71,6 +71,8 @@ case class BindingsEnv[M <: MetaVariable: TypeTag,V <: Value: TypeTag](bindings:
             case (key,NegBinding(value)) => value.map(v => BindingsEnv(key -> PosBinding(v)))
         }.toSet
     }
+    
+//    def unapply(bind:BindingsEnv[M,V]): Option[Map[M, MetaVarBinding[V]]] = Some(bindings)
 	
     /** 
      * This function return the intersection of two environment. First, it verifies the conflict
@@ -100,9 +102,9 @@ case class BindingsEnv[M <: MetaVariable: TypeTag,V <: Value: TypeTag](bindings:
 
 	def -(variable: M) = BindingsEnv(bindings - variable)
 	
-	private lazy val _hashCode  = bindings.hashCode
-	override def hashCode       = _hashCode
+	override lazy val hashCode  = bindings.hashCode
     override def equals(a: Any) = a match {
+        // a tester
 	    case BindingsEnv(b) => bindings == b
 	    case _              => false
     }
@@ -117,6 +119,6 @@ case class BindingsEnv[M <: MetaVariable: TypeTag,V <: Value: TypeTag](bindings:
 }
 
 object BindingsEnv {
-    def apply[M <: MetaVariable: TypeTag, V <: Value: TypeTag](bindings: (M,MetaVarBinding[V])*): BindingsEnv[M,V] = 
-        BindingsEnv(Map(bindings: _*))
+    private[ctl] def apply[M <: MetaVariable: TypeTag, V <: Value: TypeTag](bindings: (M,MetaVarBinding[V])*): BindingsEnv[M,V] = 
+        new BindingsEnv(Map(bindings: _*))
 }
