@@ -88,7 +88,7 @@ object CTLInterpreter extends JavaTokenParsers{
               }*/)
              
           } catch {
-              case e => println("Test failed on line %d" .format(numTest)) ;errors += 1; e.printStackTrace
+              case e: Throwable => println("Test failed on line %d" .format(numTest)) ;errors += 1; e.printStackTrace
           })
       if (errors == 0) println("All tests ran successfully :) !") 
      }

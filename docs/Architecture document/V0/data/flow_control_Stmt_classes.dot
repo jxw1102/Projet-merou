@@ -1,0 +1,30 @@
+digraph hierarchy {
+	node[shape=record,style=filled,fillcolor=gray95]
+	edge[dir=back, arrowtail=empty]
+
+    // nodes
+    SwitchStmt [label="{SwitchStmt|expr: Expr\nbody: CompoundStmt}"]    
+    CaseStmt [label="{CaseStmt|expr: Expr\nbody: Stmt}"]
+    DefaultStmt [label="{DefaultStmt|body: Stmt}"]
+    IfStmt [label="{IfStmt|condition: Expr\nbody: Stmt\nelseStmt: Option[Stmt]}"]
+    ForStmt [label="{ForStmt|init: Option[SourceCodeNode]\ncond: Option[Expr]\nupdate: Option[Expr]\nbody: Option[Stmt]}"]
+    WhileStmt [label="{WhileStmt|cond: Expr\nbody: Stmt}"]
+    DoWhileStmt [label="{DoWhileStmt|cond: Expr\nbody: Stmt}"]
+    
+    // links
+    Stmt -> IfStmt
+    Stmt -> SwitchStmt     
+    Stmt -> CaseStmt     
+    Stmt -> DefaultStmt     
+    Stmt -> WhileStmt     
+    Stmt -> DoWhileStmt     
+    Stmt -> ForStmt   
+
+	IfStmt -> Stmt [arrowtail=odiamond]
+    SwitchStmt -> Stmt [arrowtail=odiamond]     
+    CaseStmt -> Stmt [arrowtail=odiamond]     
+    DefaultStmt -> Stmt[arrowtail=odiamond]     
+    WhileStmt -> Stmt [arrowtail=odiamond]   
+    DoWhileStmt -> Stmt [arrowtail=odiamond]   
+    ForStmt -> Stmt [arrowtail=odiamond]
+}

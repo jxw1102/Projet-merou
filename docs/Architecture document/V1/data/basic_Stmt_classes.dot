@@ -1,0 +1,29 @@
+digraph hierarchy {
+	node[shape=record,style=filled,fillcolor=gray95]
+	edge[dir=back, arrowtail=empty]
+	
+    // nodes
+    Expr [color=red]
+    GotoStmt [label="{GotoStmt|label: String}"]
+    ReturnStmt [label="{ReturnStmt|value: Expr}"]
+    LabelStmt [label="{LabelStmt|label: String\nstmt: Stmt}"]
+    DeclStmt [label="{DeclStmt|decls: List[SourceCodeNode]}"]
+    CompoundStmt [label="{CompoundStmt|elts: List[SourceCodeNode]}"]
+        
+    // links
+    JumpStmt -> GotoStmt [arrowtail=normal]
+    JumpStmt -> BreakStmt [arrowtail=normal]
+    JumpStmt -> ContinueStmt [arrowtail=normal]
+    JumpStmt -> ReturnStmt [arrowtail=normal]
+    
+    Stmt -> DeclStmt
+    Stmt -> Expr    
+    Stmt -> JumpStmt 
+    Stmt -> NullStmt 
+    Stmt -> LabelStmt 
+    Stmt -> CompoundStmt 
+	
+	LabelStmt -> Stmt [arrowtail=odiamond]
+	CompoundStmt -> Stmt [arrowtail=odiamond]
+	DeclStmt -> Stmt [constraint=false,arrowtail=odiamond]
+}

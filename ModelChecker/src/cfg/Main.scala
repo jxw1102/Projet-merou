@@ -14,6 +14,7 @@ import ctl.Predicate
 import ctl.EX
 import ast.model.Literal
 import ast.model.DeclRefExpr
+import ctl.EU
 
 
 /**
@@ -56,12 +57,10 @@ object Main extends App {
     // generate the Clang AST and print it in a file
     val cfg       = buildGraph(file.getPath,s)
     val mainGraph = cfg.decls("main")
-    val checker   = new ModelChecker[CfgMetaVar, ProgramNode, CFGVal](mainGraph, ProgramNode.convert)
+    val checker   = new ModelChecker[CFGMetaVar, ProgramNode, CFGVal](mainGraph, ProgramNode.convert)
            
-    val res = checker.evalExpr(
-            Predicate(new StatementLabelizer(VarDeclPattern(DefinedDecl("j"), "int")))
-            EU
-            Predicate(new ExpressionLabelizer(CallExprPattern(List(DefinedExpr(DeclRefExpr("", "f","","")), DefinedExpr(DeclRefExpr("", "q","","")))))))
+    val res = checker.evalExpr(EU(Predicate(new StatementLabelizer(VarDeclPattern(DefinedDecl("j"), "int"))),
+            Predicate(new ExpressionLabelizer(CallExprPattern(List(DefinedExpr(DeclRefExpr("", "f","","")), DefinedExpr(DeclRefExpr("", "q","",""))))))))
 
 //    val res = checker.evalExpr(
 //            Predicate(new StatementLabelizer(VarDeclPattern(DefinedDecl("q"), "int")))

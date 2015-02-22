@@ -1,8 +1,0 @@
-TranslationUnitDecl 0x1030218d0 <<invalid sloc>>
-|-TypedefDecl 0x103021e10 <<invalid sloc>> __int128_t '__int128'
-|-TypedefDecl 0x103021e70 <<invalid sloc>> __uint128_t 'unsigned __int128'
-|-TypedefDecl 0x103022230 <<invalid sloc>> __builtin_va_list '__va_list_tag [1]'
-`-FunctionDecl 0x1030222d0 <../../../CppCode/GoTo.cpp:3:1, line:8:1> main 'int (void)'
-  `-CompoundStmt 0x103022440 <line:4:1, line:8:1>
-    `-LabelStmt 0x103022420 <line:5:1, line:7:6> 'tryAgain'
-      `-GotoStmt 0x103022408 <col:1, col:6> 'tryAgain' 0x1030223d0

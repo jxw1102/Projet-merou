@@ -3,27 +3,14 @@ package ctl.test
 import scala.annotation.migration
 import scala.reflect.runtime.universe
 
-import ctl.AX
-import ctl.BindingsEnv
-import ctl.Bottom
-import ctl.Convert
-import ctl.Environment
-import ctl.Exists
-import ctl.GraphNode
-import ctl.Labelizer
-import ctl.ModelChecker
-import ctl.NoType
-import ctl.Predicate
-import ctl.Value
-import ctl.NoType
-
+import ctl._
 
 /**
  * @author Zohour Abouakil
  * @author Xiaowen Ji
  * @author David Courtinot
  */
-object TestModelChecker extends App with TestUtils with Convert{
+object TestModelChecker extends App with TestUtils with ConvertEnv{
     type GNode    = GraphNode[Node]
     type Binding  = BindingsEnv[Identifier, IntVal]
     type Env      = Environment[Identifier, IntVal]

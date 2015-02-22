@@ -38,9 +38,9 @@ object BottomEnv {
 	}  
 }
 
-trait Convert {
-  implicit def botTobot[M <: MetaVariable: TypeTag, V <: Value: TypeTag](b: Bottom): BottomEnv[M,V] = 
-      BottomEnv.create[M, V]
+trait ConvertEnv {
+  implicit def botTobot[M <: MetaVariable: TypeTag,V <: Value: TypeTag](b: Bottom): BottomEnv[M,V] = 
+      BottomEnv.create[M,V]
 }
 
 sealed abstract class MetaVarBinding[V <: Value]
@@ -58,7 +58,7 @@ case class NegBinding[V <: Value](values: Set[V]) extends MetaVarBinding[V]{
 }
 
 case class BindingsEnv[M <: MetaVariable: TypeTag,V <: Value: TypeTag] private[ctl] (bindings: Map[M, MetaVarBinding[V]] = Map[M, MetaVarBinding[V]]()) 
-	extends Environment[M,V] with Convert {
+	extends Environment[M,V] with ConvertEnv {
     
     def this() = this(Map[M, MetaVarBinding[V]]())
     
@@ -71,8 +71,6 @@ case class BindingsEnv[M <: MetaVariable: TypeTag,V <: Value: TypeTag] private[c
             case (key,NegBinding(value)) => value.map(v => BindingsEnv(key -> PosBinding(v)))
         }.toSet
     }
-    
-//    def unapply(bind:BindingsEnv[M,V]): Option[Map[M, MetaVarBinding[V]]] = Some(bindings)
 	
     /** 
      * This function return the intersection of two environment. First, it verifies the conflict
@@ -95,6 +93,7 @@ case class BindingsEnv[M <: MetaVariable: TypeTag,V <: Value: TypeTag] private[c
                     	case (Some(PosBinding(x)),Some(NegBinding(y))) => PosBinding(x)
                     	case (_                  ,Some(x)            ) => x
                     	case (Some(x)            ,_                  ) => x
+                    	case _ => throw new MatchError
                 }}).toSeq: _*)
             case _  => that
         }
