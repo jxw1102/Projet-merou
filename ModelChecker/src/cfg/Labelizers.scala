@@ -2,24 +2,19 @@ package cfg
 
 import ast.Expression
 import ast.For
-import ast.Identifier
 import ast.If
+import ast.ProgramNode
 import ast.Statement
 import ast.While
 import ast.model._
-import ctl.Bottom
-import ctl.Environment
-import ctl.ConvertEnv
-import ctl.MetaVariable
-import ctl.Value
 import ctl.BindingsEnv
-import com.sun.xml.internal.bind.v2.schemagen.episode.Bindings
+import ctl.Bottom
+import ctl.ConvertEnv
+import ctl.Environment
 import ctl.Labelizer
-import ast.ProgramNode
+import ctl.MetaVariable
 import ctl.TypeOf
-import ctl.MetaVarBinding
-import ctl.NegBinding
-import ctl.PosBinding
+import ctl.Value
 
 /**
  * @author Zohour Abouakil
@@ -75,11 +70,15 @@ trait ExprPattern extends ConvertEnv {
     def matches(expr: Expr): Option[Env]
 }
 
+case object Anything extends ExprPattern {
+    def matches(expr: Expr): Option[Env] = Some(new BindingsEnv)
+}
+
 // This class works for BinaryOp and CompoundAssignOp
 case class BinaryOpPattern (left: Pattern, right: Pattern, op: String) extends ExprPattern {   
     override def matches(expr: Expr): Option[Env] = {
         expr match {
-          case BinaryOp(l,r,operator) => 
+          case BinaryOp(_,l,r,operator) => 
               if (operator == op) {
                   val inter = left.matchEnv(l) & right.matchEnv(r)
                   inter match {
@@ -96,12 +95,12 @@ case class BinaryOpPattern (left: Pattern, right: Pattern, op: String) extends E
 case class UnaryOpPattern (operand: Pattern, op: String, kind: OpPosition) extends ExprPattern {
     override def matches(expr: Expr): Option[Env] = {
         expr match {
-          case UnaryOp(operand,operator,kind) =>  
+          case UnaryOp(_,operand,operator,kind) =>  
               if (operator == op && this.kind == kind) {
                   val env = this.operand.matchEnv(operand)
                   env match {
                       case BindingsEnv(_) => Some(env)
-                      case _                 => None
+                      case _              => None
                   }
               }
               else None
@@ -130,12 +129,11 @@ case class CallExprPattern(params: List[Pattern], rtnType: Option[String] = None
           case CallExpr(rtn,paramsFun) =>  
               if (paramsFun.size == params.size) {
                   rtnType match {
-                      case Some(value) => if (this.rtnType == rtnType) matchesParams(paramsFun) else None
+                      case Some(value) => if (value == rtn) matchesParams(paramsFun) else None
                       case _           => matchesParams(paramsFun)
                   } 
               }
-              else 
-                  None
+              else None
           case _ => None
         }
     }
@@ -196,13 +194,25 @@ class WhileLabelizer(val pattern: ExprPattern) extends Labelizer[CFGMetaVar, Pro
 
 class ExpressionLabelizer(val pattern: ExprPattern) extends Labelizer[CFGMetaVar, ProgramNode, CFGVal] {
 	override def test(t: ProgramNode) = t match {
-	case Expression(e,_,_) => pattern.matches(e)
-	case _                 => None 
+		case Expression(e,_,_) => pattern.matches(e)
+		case _                 => None 
 	}
 }
 
+case class ArithmeticPointerLabelizer() extends Labelizer[CFGMetaVar, ProgramNode, CFGVal] {
+    override def test(t: ProgramNode) = 
+    	ProgramNode.convert(t).filter(_.isInstanceOf[CFGExpr]).map { case CFGExpr(expr) => expr }.find {
+    	    case x: CompoundAssignOp if x.isPointer => true
+    	    case x: BinaryOp         if x.isPointer => true
+    	    case x: UnaryOp          if x.isPointer => true
+    	    case _                                  => false
+    	} match {
+    	    case Some(_) => Some(new BindingsEnv)
+    	    case None    => None
+    	}
+}
 
-class StatementLabelizer(val pattern: DeclPattern) extends Labelizer[CFGMetaVar, ProgramNode, CFGVal] {
+case class StatementLabelizer(val pattern: DeclPattern) extends Labelizer[CFGMetaVar, ProgramNode, CFGVal] {
     override def test(t: ProgramNode): Option[Environment[CFGMetaVar, CFGVal]] = {
 //        println("node " + t + " ::  "+ t.getClass)
         t match {
@@ -222,4 +232,25 @@ class StatementLabelizer(val pattern: DeclPattern) extends Labelizer[CFGMetaVar,
             case _ => None 
         }
     }
+} 
+
+case class DeadIfLabelizer() extends Labelizer[CFGMetaVar,ProgramNode,CFGVal] {
+    override def test(t: ProgramNode): Option[Environment[CFGMetaVar, CFGVal]] = t match {
+        case If(Literal(_,_,_),_,_) => Some(new BindingsEnv) 
+        case _                      => None
+    }
 }
+
+case class ReturnLabelizer(pattern: ExprPattern)  extends Labelizer[CFGMetaVar,ProgramNode,CFGVal] {
+    override def test(t: ProgramNode): Option[Environment[CFGMetaVar, CFGVal]] = t match {
+        case Statement(ReturnStmt(_,expr),_,_) => Some(new BindingsEnv ++ (CFGMetaVar("X") -> CFGExpr(expr)))
+        case _                                 => None
+    }
+}
+//
+//case class DeclLabelizer(pattern: DeclPattern)  extends Labelizer[CFGMetaVar,ProgramNode,CFGVal] {
+//    override def test(t: ProgramNode): Option[Environment[CFGMetaVar, CFGVal]] = t match {
+//        case Decl() => 
+//        case _                                 => None
+//    }
+//}

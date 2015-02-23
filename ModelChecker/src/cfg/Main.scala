@@ -60,7 +60,7 @@ object Main extends App {
     val checker   = new ModelChecker[CFGMetaVar, ProgramNode, CFGVal](mainGraph, ProgramNode.convert)
            
     val res = checker.evalExpr(EU(Predicate(new StatementLabelizer(VarDeclPattern(DefinedDecl("j"), "int"))),
-            Predicate(new ExpressionLabelizer(CallExprPattern(List(DefinedExpr(DeclRefExpr("", "f","","")), DefinedExpr(DeclRefExpr("", "q","",""))))))))
+            Predicate(new ExpressionLabelizer(CallExprPattern(List(DefinedExpr(DeclRefExpr("","", "f","","")), DefinedExpr(DeclRefExpr("","", "q","",""))))))))
 
 //    val res = checker.evalExpr(
 //            Predicate(new StatementLabelizer(VarDeclPattern(DefinedDecl("q"), "int")))

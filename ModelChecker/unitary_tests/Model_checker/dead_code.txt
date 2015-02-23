@@ -1,0 +1,49 @@
+TranslationUnitDecl 0x3baf060 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0x3baf350 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'char *'
+|-FunctionDecl 0x3baf410 <ModelChecker\unitary_tests\Model_checker\dead_code.cpp:1:1, line:3:1> line:1:5 used f 'int (int)'
+| |-ParmVarDecl 0x3baf390 <col:7, col:11> col:11 used q 'int'
+| `-CompoundStmt 0x3baf4f8 <col:14, line:3:1>
+|   `-ReturnStmt 0x3baf4e8 <line:2:5, col:14>
+|     `-BinaryOperator 0x3baf4d0 <col:12, col:14> 'int' '+'
+|       |-ImplicitCastExpr 0x3baf4c0 <col:12> 'int' <LValueToRValue>
+|       | `-DeclRefExpr 0x3baf484 <col:12> 'int' lvalue ParmVar 0x3baf390 'q' 'int'
+|       `-IntegerLiteral 0x3baf4a0 <col:14> 'int' 2
+`-FunctionDecl 0x3baf600 <line:5:1, line:20:1> line:5:5 main 'int (int, char **)'
+  |-ParmVarDecl 0x3baf520 <col:10, col:14> col:14 argc 'int'
+  |-ParmVarDecl 0x3baf580 <col:20, col:27> col:27 argv 'char **'
+  `-CompoundStmt 0x3bafd00 <col:33, line:20:1>
+    |-DeclStmt 0x3baf750 <line:6:2, col:18>
+    | |-VarDecl 0x3baf690 <col:2, col:10> col:6 used j 'int' cinit
+    | | `-IntegerLiteral 0x3baf6c0 <col:10> 'int' 0
+    | `-VarDecl 0x3baf6f0 <col:2, col:17> col:13 used q 'int' cinit
+    |   `-IntegerLiteral 0x3baf720 <col:17> 'int' 2
+    |-IfStmt 0x3baf888 <line:7:5, line:8:9>
+    | |-<<<NULL>>>
+    | |-BinaryOperator 0x3baf7a8 <line:7:9, col:14> '_Bool' '=='
+    | | |-ImplicitCastExpr 0x3baf798 <col:9> 'int' <LValueToRValue>
+    | | | `-DeclRefExpr 0x3baf760 <col:9> 'int' lvalue Var 0x3baf690 'j' 'int'
+    | | `-IntegerLiteral 0x3baf778 <col:14> 'int' 2
+    | |-CallExpr 0x3baf858 <line:8:6, col:9> 'int'
+    | | |-ImplicitCastExpr 0x3baf848 <col:6> 'int (*)(int)' <FunctionToPointerDecay>
+    | | | `-DeclRefExpr 0x3baf810 <col:6> 'int (int)' lvalue Function 0x3baf410 'f' 'int (int)'
+    | | `-ImplicitCastExpr 0x3baf878 <col:8> 'int' <LValueToRValue>
+    | |   `-DeclRefExpr 0x3baf7f8 <col:8> 'int' lvalue Var 0x3baf6f0 'q' 'int'
+    | `-<<<NULL>>>
+    |-IfStmt 0x3baf988 <line:10:5, line:15:5>
+    | |-<<<NULL>>>
+    | |-CXXBoolLiteralExpr 0x3baf8a8 <line:10:9> '_Bool' false
+    | |-CompoundStmt 0x3baf908 <col:15, line:12:5>
+    | | `-BinaryOperator 0x3baf8f0 <line:11:6, col:10> 'int' lvalue '='
+    | |   |-DeclRefExpr 0x3baf8b8 <col:6> 'int' lvalue Var 0x3baf6f0 'q' 'int'
+    | |   `-IntegerLiteral 0x3baf8d0 <col:10> 'int' 7
+    | `-CompoundStmt 0x3baf970 <line:13:10, line:15:5>
+    |   `-BinaryOperator 0x3baf958 <line:14:6, col:10> 'int' lvalue '='
+    |     |-DeclRefExpr 0x3baf91c <col:6> 'int' lvalue Var 0x3baf690 'j' 'int'
+    |     `-IntegerLiteral 0x3baf938 <col:10> 'int' 3
+    |-ReturnStmt 0x3baf9c8 <line:17:5, col:12>
+    | `-IntegerLiteral 0x3baf9a8 <col:12> 'int' 0
+    `-DeclStmt 0x3bafcf0 <line:19:5, col:26>
+      `-VarDecl 0x3baf9f0 <col:5, col:19> col:11 sofia 'char *' cinit
+        `-ImplicitCastExpr 0x3bafac8 <col:19> 'char *' <NoOp>
+          `-ImplicitCastExpr 0x3bafab8 <col:19> 'const char *' <ArrayToPointerDecay>
+            `-StringLiteral 0x3bafa78 <col:19> 'const char [6]' lvalue "Sofia"

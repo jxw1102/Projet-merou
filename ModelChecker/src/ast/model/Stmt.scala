@@ -22,7 +22,7 @@ final case class NullStmt      ()                                               
 final case class ContinueStmt  ()                                                                 extends JumpStmt
 final case class BreakStmt     ()                                                                 extends JumpStmt
 final case class GotoStmt      (label: String)                                                    extends JumpStmt
-final case class ReturnStmt    (expr: Expr)                                                       extends JumpStmt
+final case class ReturnStmt    (returnType: String, expr: Expr)                                   extends JumpStmt
 final case class DeclStmt      (decls: List[SourceCodeNode])                                      extends ForInitializer {
     override def toString = decls.mkString(", ")
 }

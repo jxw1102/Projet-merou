@@ -4,9 +4,10 @@ import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.Map
 import scala.collection.immutable.{ Map => IMap }
 import scala.collection.mutable.Set
-
 import ast.model._
 import ctl.GraphNode
+import ast.model.DoWhileStmt
+import ast.model.ForStmt
 
 /**
  * This class performs a conversion from SourceCodeNode to ProgramNode and a transformation from AST to
@@ -60,7 +61,7 @@ class ProgramNodeFactory(rootNodes: Iterable[Decl], labelNodes: Map[String,Sourc
             case WhileStmt(_,_)        => handleWhile(node,next,exit,entry)
             case DoWhileStmt(_,_)      => handleDoWhile(node,next,exit,entry)
             case CompoundStmt(_)       => handleCompoundStmt(node,next,exit,entry)
-            case ReturnStmt(_)         => toGraphNode(node)
+            case ReturnStmt(_,_)       => toGraphNode(node)
             case BreakStmt()           => handleJump(node,exit )
             case ContinueStmt()        => handleJump(node,entry)
             case GotoStmt(label)       => handleJump(node,Some(getLabel(label)))
@@ -157,7 +158,7 @@ class ProgramNodeFactory(rootNodes: Iterable[Decl], labelNodes: Map[String,Sourc
             val res        = toGraphNode(funDecl)
             val handleHead = (h: SourceCodeNode, next: Option[GNode]) => handle(h,next,exit,entry) 
             val bodyNode   = handle(body,next,entry,exit)
-            val head       = linkElements(args,Some(bodyNode))(handleHead)
+            val head       = linkElements(args.reverse,Some(bodyNode))(handleHead)
             head match {
                 case None    => res >> bodyNode
                 case Some(x) => res >> x
@@ -193,7 +194,7 @@ class ProgramNodeFactory(rootNodes: Iterable[Decl], labelNodes: Map[String,Sourc
     private def handleDeclStmt(decl: SourceCodeNode, next: Option[GNode], exit: Option[GNode], entry: Option[GNode]) =  decl match {
         case DeclStmt(decls) =>
             val handleHead = (h: SourceCodeNode, next: Option[GNode]) => handle(h,next,exit,entry) 
-            linkElements(decls,next)(handleHead) match {
+            linkElements(decls.reverse,next)(handleHead) match {
             	case None    => throw new ConversionFailedException("DeclStmt has to be at least one child")
             	case Some(x) => x
             }

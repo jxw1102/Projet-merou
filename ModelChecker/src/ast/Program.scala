@@ -47,14 +47,14 @@ object SourceCodeNode {
 object ProgramNode {
    private def getAllExpr(expr: Expr): Set[CFGVal] = {
      val subExpr: Set[CFGVal] = expr match {
-         case  BinaryOp           (left, right, _)         => Set(CFGExpr(left), CFGExpr(right))                             
-         case  UnaryOp            (operand, _, _)          => Set(CFGExpr(operand))
-         case  CompoundAssignOp   (left, right, _)         => Set(CFGExpr(left), CFGExpr(right))                               
-         case  ConditionalOperator((expr1,expr2,expr3), _) => Set(CFGExpr(expr1), CFGExpr(expr2), CFGExpr(expr3))                                  
-         case  ArraySubscriptExpr ((expr1,expr2))          => Set(CFGExpr(expr1), CFGExpr(expr2))                                                      
-         case  InitListExpr       (exprs)                  => exprs.map(e => CFGExpr(e)).toSet                                                        
-         case  CallExpr           (_, params)              => params.map(e => CFGExpr(e)).toSet
-         case  _                                           => Set()
+         case  BinaryOp           (_,left, right, _)         => Set(CFGExpr(left), CFGExpr(right))                             
+         case  UnaryOp            (_,operand, _, _)          => Set(CFGExpr(operand))
+         case  CompoundAssignOp   (_,left, right, _)         => Set(CFGExpr(left), CFGExpr(right))                               
+         case  ConditionalOperator(_,(expr1,expr2,expr3), _) => Set(CFGExpr(expr1), CFGExpr(expr2), CFGExpr(expr3))                                  
+         case  ArraySubscriptExpr (_,(expr1,expr2))          => Set(CFGExpr(expr1), CFGExpr(expr2))                                                      
+         case  InitListExpr       (_,exprs)                  => exprs.map(e => CFGExpr(e)).toSet                                                        
+         case  CallExpr           (_,params)                 => params.map(e => CFGExpr(e)).toSet
+         case  _                                             => Set()
      } 
      subExpr + CFGExpr(expr)
    }
