@@ -30,6 +30,7 @@ sealed abstract class Expr extends ForInitializer {
         case DeclRefExpr        (_,x,_,_)   => x
         case CallExpr           (_,params)  => params.head match {
             case DeclRefExpr(_,name,_,_) => "%s(%s)".format(name,params.drop(1).mkString(","))
+            case _ => throw new IllegalStateException("The first child of a CallExpr should always be a DeclRefExpr")
         }
     }
 }

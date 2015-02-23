@@ -3,27 +3,14 @@ package ctl.test
 import scala.annotation.migration
 import scala.reflect.runtime.universe
 
-import ctl.AX
-import ctl.BindingsEnv
-import ctl.Bottom
-import ctl.Convert
-import ctl.Environment
-import ctl.Exists
-import ctl.GraphNode
-import ctl.Labelizer
-import ctl.ModelChecker
-import ctl.NoType
-import ctl.Predicate
-import ctl.Value
-import ctl.NoType
-
+import ctl._
 
 /**
  * @author Zohour Abouakil
  * @author Xiaowen Ji
  * @author David Courtinot
  */
-object TestModelChecker extends App with TestUtils with Convert{
+object TestModelChecker extends App with TestUtils with ConvertEnv{
     type GNode    = GraphNode[Node]
     type Binding  = BindingsEnv[Identifier, IntVal]
     type Env      = Environment[Identifier, IntVal]
@@ -61,93 +48,94 @@ object TestModelChecker extends App with TestUtils with Convert{
         				
         println("\nTesting model checker...\n-----------------------")
         println("Testing shift...")
-        // test 0
-        val shift = checker.shift(root,Set((root,Bottom),(left,env11),(root,env12),(right,Bottom)),left)
-        assertEquals(shift,Set[(GNode,Env)]((left,Bottom),(left,env12)))
-        				
-        println("\nTesting interStateEnv...")
-        // test 1
-        val sEnv11 = (root, env11) 
-        val sEnv12 = (root, env12) 
-        				
-        val env13  = new Binding ++ ("X" -> 4)
-        val env14  = (new Binding ++ ("Y" -> 6)) -- ("X" -> Set(3,5))
-        
-        val sEnv13 = (root, env13) 
-        val sEnv14 = (root, env14) 
-        val sEnv15 = (root, (new Binding ++  ("Y" -> 6)) ++("X" -> 4))
-        testInterStateEnv(sEnv13, sEnv14, Some(sEnv15))
-        				
-        // test 2
-        val env16  = new Binding ++ ("X" -> 4) ++ ("Y" -> 6) -- ("Z" -> Set(3,5))
-        val env17  = (new Binding ++ ("Y" -> 6)) -- ("X" -> Set(3,5)) -- ("Z" -> Set(7,9))
-        val sEnv16 = (root, env16) 
-        val sEnv17 = (root, env17) 
-        val sEnv18 = (root, new Binding ++  ("Y" -> 6, "X" -> 4) -- ("Z" -> Set(3,5,7,9)))
-        testInterStateEnv(sEnv16, sEnv17, Some(sEnv18))
-        				
-        // test 3
-        val env19  = new Binding ++ ("X" -> 4, "Y" -> 6) -- ("Z" -> Set(3,5))
-        val env20  = (new Binding ++ ("Y" -> 6)) -- ("X" -> Set(3,5), "Z" -> Set(7,9))
-        val sEnv19 = (left, env19) 
-        val sEnv20 = (root, env20) 
-        val sEnv21 = None
-        testInterStateEnv(sEnv19, sEnv20, sEnv21)
-        
-        println("\nTesting existsone...")
-        // test 4
-        assertEquals(checker.existsone("X", sEnv19), (left, new Binding ++ ("Y" -> 6) -- ("Z" -> Set(3,5))))
-        
-        // test 5 
-        assertEquals(checker.existsone("Z", sEnv19), (left, new Binding ++ ("X" -> 4, "Y" -> 6)))
-        
-        println("\nTesting negone...")
-        // test 6   
-        val notX     = new Binding -- ("X" -> Set(4))
-        val notY     = new Binding -- ("Y" -> Set(6))
-        val notZ1    = new Binding ++ ("Z" ->     3 )
-        val notZ2    = new Binding ++ ("Z" ->     5 )
-        val expected = Set((root,notX),(root,notY),(root,notZ1),(root,notZ2)) ++ Set((left,new Binding ),(right,new Binding))
-        assertEquals(checker.negone((root,env19)),expected)
-        				
-        println("\nTesting disj...")
-        // test 7
-        val set1: Set[StateEnv] = Set((root,notX),(root,notY),(left,notZ1),(right,notZ2))
-        val set2: Set[StateEnv] = Set((left,new Binding),(right,new Binding), (left,notZ1))
-        assertEquals(checker.disj(set1, set2), Set((root,notX),(root,notY),(left,notZ1),(right,notZ2), (left,new Binding),(right,new Binding)))
-        				
-        println("\nTesting Disj...")
-        // test 8
-        val set3: Set[StateEnv] = Set(sEnv19,sEnv20)
-        assertEquals(checker.Disj(Set(set1, set2, set3)), 
-        		Set((root,notX),(root,notY), (left,notZ1),(right,notZ2), (left,new Binding),(right,new Binding), sEnv19,sEnv20))
-        						
-        println("\nTesting conj...")
-        // test 9
-        assertEquals(checker.conj(set1, set2), Set((left,notZ1),(right,notZ2)))      
-        // test 10
-        assertEquals(checker.conj(set1, set3), Set((root, (new Binding ++ ("Y" -> 6)) -- ("X" -> Set(3,5,4), "Z" -> Set(7,9)))))
-        
-        println("\nTesting conjFold...")
-        // test 11
-        assertEquals(checker.conjFold(Set(set1, set2)), Set((left,notZ1),(right,notZ2)))
-        // test 12
-        assertEquals(checker.conjFold(Set(set1, set3)), Set((root, (new Binding ++ ("Y" -> 6)) -- ("X" -> Set(3,5,4), "Z" -> Set(7,9)))))
-        // test 13
-        assertEquals(checker.conjFold(Set(set1, set2, set3)), Set())
-        // test 14
-        val set4 : Set[StateEnv] = Set((root, (new Binding ++ ("Z" -> 8)) -- ("X" -> Set(3,5,4), "Z" -> Set(7,9))))
-        assertEquals(checker.conjFold(Set(set1, set4, set3)), Set((root, (new Binding ++ ("Y" -> 6)) ++ ("Z" -> 8) -- ("X" -> Set(3,5,4)))))
-    
-        println("\nTesting neg...")
-        // test 15
-        println(checker.neg(set1))
-    
-        println("\nTesting preA...")
-        // test 15
-//        val set5: Set[StateEnv] = Set((left, new Binding ++ ("X" -> 2)),(right, new Binding ++ ("X" -> 2)))
-//        println(checker.preA(set5))
+//        // test 0
+//        val shift = checker.shift(root,Set((root,Bottom),(left,env11),(root,env12),(right,Bottom)),left)
+//        assertEquals(shift,Set[(GNode,Env)]((left,Bottom),(left,env12)))
+//        				
+//        println("\nTesting interStateEnv...")
+//        // test 1
+//        val sEnv11 = (root, env11) 
+//        val sEnv12 = (root, env12) 
+//        				
+//        val env13  = new Binding ++ ("X" -> 4)
+//        val env14  = (new Binding ++ ("Y" -> 6)) -- ("X" -> Set(3,5))
 //        
+//        val sEnv13 = (root, env13) 
+//        val sEnv14 = (root, env14) 
+//        val sEnv15 = (root, (new Binding ++  ("Y" -> 6)) ++("X" -> 4))
+//        testInterStateEnv(sEnv13, sEnv14, Some(sEnv15))
+//        				
+//        // test 2
+//        val env16  = new Binding ++ ("X" -> 4) ++ ("Y" -> 6) -- ("Z" -> Set(3,5))
+//        val env17  = (new Binding ++ ("Y" -> 6)) -- ("X" -> Set(3,5)) -- ("Z" -> Set(7,9))
+//        val sEnv16 = (root, env16) 
+//        val sEnv17 = (root, env17) 
+//        val sEnv18 = (root, new Binding ++  ("Y" -> 6, "X" -> 4) -- ("Z" -> Set(3,5,7,9)))
+//        testInterStateEnv(sEnv16, sEnv17, Some(sEnv18))
+//        				
+//        // test 3
+//        val env19  = new Binding ++ ("X" -> 4, "Y" -> 6) -- ("Z" -> Set(3,5))
+//        val env20  = (new Binding ++ ("Y" -> 6)) -- ("X" -> Set(3,5), "Z" -> Set(7,9))
+//        val sEnv19 = (left, env19) 
+//        val sEnv20 = (root, env20) 
+//        val sEnv21 = None
+//        testInterStateEnv(sEnv19, sEnv20, sEnv21)
+//        
+//        println("\nTesting existsone...")
+//        // test 4
+//        assertEquals(checker.existsone("X", sEnv19), (left, new Binding ++ ("Y" -> 6) -- ("Z" -> Set(3,5))))
+//        
+//        // test 5 
+//        assertEquals(checker.existsone("Z", sEnv19), (left, new Binding ++ ("X" -> 4, "Y" -> 6)))
+//        
+//        println("\nTesting negone...")
+//        // test 6   
+//        val notX     = new Binding -- ("X" -> Set(4))
+//        val notY     = new Binding -- ("Y" -> Set(6))
+//        val notZ1    = new Binding ++ ("Z" ->     3 )
+//        val notZ2    = new Binding ++ ("Z" ->     5 )
+//        val expected = Set((root,notX),(root,notY),(root,notZ1),(root,notZ2)) ++ Set((left,new Binding ),(right,new Binding))
+//        assertEquals(checker.negone((root,env19)),expected)
+//        				
+//        println("\nTesting disj...")
+//        // test 7
+//        val set1: Set[StateEnv] = Set((root,notX),(root,notY),(left,notZ1),(right,notZ2))
+//        val set2: Set[StateEnv] = Set((left,new Binding),(right,new Binding), (left,notZ1))
+//        assertEquals(checker.disj(set1, set2), Set((root,notX),(root,notY),(left,notZ1),(right,notZ2), (left,new Binding),(right,new Binding)))
+//        				
+//        println("\nTesting Disj...")
+//        // test 8
+//        val set3: Set[StateEnv] = Set(sEnv19,sEnv20)
+//        assertEquals(checker.Disj(Set(set1, set2, set3)), 
+//        		Set((root,notX),(root,notY), (left,notZ1),(right,notZ2), (left,new Binding),(right,new Binding), sEnv19,sEnv20))
+//        						
+//        println("\nTesting conj...")
+//        // test 9
+//        assertEquals(checker.conj(set1, set2), Set((left,notZ1),(right,notZ2)))      
+//        // test 10
+//        assertEquals(checker.conj(set1, set3), Set((root, (new Binding ++ ("Y" -> 6)) -- ("X" -> Set(3,5,4), "Z" -> Set(7,9)))))
+//        
+//        println("\nTesting conjFold...")
+//        // test 11
+//        assertEquals(checker.conjFold(Set(set1, set2)), Set((left,notZ1),(right,notZ2)))
+//        // test 12
+//        assertEquals(checker.conjFold(Set(set1, set3)), Set((root, (new Binding ++ ("Y" -> 6)) -- ("X" -> Set(3,5,4), "Z" -> Set(7,9)))))
+//        // test 13
+//        assertEquals(checker.conjFold(Set(set1, set2, set3)), Set())
+//        // test 14
+//        val set4 : Set[StateEnv] = Set((root, (new Binding ++ ("Z" -> 8)) -- ("X" -> Set(3,5,4), "Z" -> Set(7,9))))
+//        assertEquals(checker.conjFold(Set(set1, set4, set3)), Set((root, (new Binding ++ ("Y" -> 6)) ++ ("Z" -> 8) -- ("X" -> Set(3,5,4)))))
+//    
+//        println("\nTesting neg...")
+//        // test 15
+//        println(checker.neg(set1))
+//    
+//        println("\nTesting preA...")
+//        // test 15
+        val set5: Set[StateEnv] = Set((left, new Binding ++ ("X" -> 2)), (left, new Binding ++ ("X" -> 2)))
+        println(checker.preA(set5))
+//        println("\nTesting preE...")
+//        println(checker.preE(set5))        
 //        println(checker.preE(set5))
     }
         
@@ -172,9 +160,6 @@ object TestModelChecker extends App with TestUtils with Convert{
         assertEquals(mcB.evalExpr(f("x") && AX(Exists("y",g("y") && AX(h("x","y"))))),Set((rootB,new Binding ++ ("x" -> 1))))
         // test 4
         assertEquals(mcC.evalExpr(f("x") && AX(Exists("y",g("y") && AX(h("x","y"))))),Set())
-        // test 5
-//        println(mcC.evalExpr(f("x") AU g("y")))
-        //assertEquals(mcC.evalExpr(f("x") AU g("y")),Set())
     }
     
     // example of the figure 2.a in popl.pdf
@@ -219,19 +204,6 @@ object TestModelChecker extends App with TestUtils with Convert{
         root
     }
     
-//    def example2d = {
-//        val root   = new GNode(F(1))
-//        val center = new 
-//        val left1  = new GNode(G(2))
-//        val left2  = new GNode(H(1,3))
-//        val right1 = new GNode(G(3))
-//        val right2 = new GNode(H(1,3))
-//                
-//        root >> left1  >> left2  >> left2
-//        root >> right1 >> right2 >> right2
-//        
-//        root
-//    }
 }
 
 abstract class Node(val id: Int) {

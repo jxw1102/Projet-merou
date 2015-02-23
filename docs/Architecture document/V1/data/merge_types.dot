@@ -1,0 +1,19 @@
+digraph hierarchy {
+	node[shape=record,style=filled,fillcolor=gray95]
+	edge[dir=back, arrowtail=empty]
+
+    // nodes
+    M [label="CFGMetaVar"]   
+	MV [label="MetaVariable"] 	
+	V [label="CFGVal"]  
+	TypeOf [label="TypeOf[CFGVal]"]
+	CFGExpr [label="{CFGExpr|expr: Expr}"]  
+	CFGDecl [label="{CFGDecl|ident: String}"]  
+    
+    // links    
+    MV -> M
+	Value -> V
+	TypeOf -> V
+	M -> CFGExpr
+	M -> CFGDecl
+}

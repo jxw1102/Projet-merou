@@ -1,0 +1,17 @@
+digraph hierarchy {
+	node[shape=record,style=filled,fillcolor=gray95]
+	edge[dir=back, arrowtail=empty]
+
+    // nodes
+    ASTNode [label="{ASTNode|depth: Int \nchildren: ArrayBuffer[ASTNode]|mkString: String \naddString: StringBuilder}"]   
+    ConcreteASTNode [label="{ConcreteASTNode|ofType, id, data: String\npos: CodeRange}"]
+    OtherASTNode [label="{OtherASTNode|data: String}"]
+    CodeRange [label="{CodeRange|lineRange, colRange: Range}"]
+    
+    // links    
+    ASTNode -> ConcreteASTNode
+    ASTNode -> NullASTNode
+    ASTNode -> OtherASTNode
+	ConcreteASTNode -> CodeRange [arrowtail=odiamond]
+	ASTNode -> ASTNode [arrowtail=odiamond]
+}

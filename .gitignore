@@ -12,6 +12,7 @@ bin
 # Eclipse settings and caches
 .settings
 .cache
+.classpath
 
 # Latex files
 docs/**/*.log

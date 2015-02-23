@@ -55,19 +55,20 @@ class ProgramNodeFactory(rootNodes: Iterable[Decl], labelNodes: Map[String,Sourc
      */
     def handle(node: SourceCodeNode, next: Option[GNode], exit: Option[GNode], entry: Option[GNode]): GNode = 
         node match {
-            case IfStmt(_,_,_)       => handleIf(node,next,exit,entry)
-            case ForStmt(_,_,_,_)    => handleFor(node,next,exit,entry)
-            case WhileStmt(_,_)      => handleWhile(node,next,exit,entry)
-            case DoWhileStmt(_,_)    => handleDoWhile(node,next,exit,entry)
-            case CompoundStmt(_)     => handleCompoundStmt(node,next,exit,entry)
-            case ReturnStmt(_)       => toGraphNode(node)
-            case BreakStmt()         => handleJump(node,exit )
-            case ContinueStmt()      => handleJump(node,entry)
-            case GotoStmt(label)     => handleJump(node,Some(getLabel(label)))
-            case SwitchStmt(_,_)     => handleSwitch(node, next, exit, entry)
-            case LabelStmt(_,_)      => handleLabel(node,next,exit,entry)
-            case FunctionDecl(_,_,_) => handleFunDecl(node,next,exit,entry)
-            case _                   => handleNormal(node,next)
+            case IfStmt(_,_,_)         => handleIf(node,next,exit,entry)
+            case ForStmt(_,_,_,_)      => handleFor(node,next,exit,entry)
+            case WhileStmt(_,_)        => handleWhile(node,next,exit,entry)
+            case DoWhileStmt(_,_)      => handleDoWhile(node,next,exit,entry)
+            case CompoundStmt(_)       => handleCompoundStmt(node,next,exit,entry)
+            case ReturnStmt(_)         => toGraphNode(node)
+            case BreakStmt()           => handleJump(node,exit )
+            case ContinueStmt()        => handleJump(node,entry)
+            case GotoStmt(label)       => handleJump(node,Some(getLabel(label)))
+            case SwitchStmt(_,_)       => handleSwitch(node, next, exit, entry)
+            case LabelStmt(_,_)        => handleLabel(node,next,exit,entry)
+            case FunctionDecl(_,_,_,_) => handleFunDecl(node,next,exit,entry)
+            case DeclStmt(_)           => handleDeclStmt(node,next,exit,entry)
+            case _                     => handleNormal(node,next)
     }
     
     private def emptyNode = {
@@ -152,9 +153,15 @@ class ProgramNodeFactory(rootNodes: Iterable[Decl], labelNodes: Map[String,Sourc
     }
     
     private def handleFunDecl(funDecl: SourceCodeNode, next: Option[GNode], exit: Option[GNode], entry: Option[GNode]) = funDecl match {
-        case FunctionDecl(_,_,body) => 
-            val res = toGraphNode(funDecl)
-            res >> handle(body,next,entry,exit)
+        case FunctionDecl(_,_,args,body) => 
+            val res        = toGraphNode(funDecl)
+            val handleHead = (h: SourceCodeNode, next: Option[GNode]) => handle(h,next,exit,entry) 
+            val bodyNode   = handle(body,next,entry,exit)
+            val head       = linkElements(args,Some(bodyNode))(handleHead)
+            head match {
+                case None    => res >> bodyNode
+                case Some(x) => res >> x
+            }
             res
     }
     
@@ -173,7 +180,7 @@ class ProgramNodeFactory(rootNodes: Iterable[Decl], labelNodes: Map[String,Sourc
         val head = cmpdStmt match {
             case CompoundStmt(elts) =>
                 val handleHead = (h: SourceCodeNode, next: Option[GNode]) => handle(h,next,exit,entry) 
-                 linkElements(elts.reverse,next)(handleHead)
+                linkElements(elts.reverse,next)(handleHead)
         }
         val res = toGraphNode(cmpdStmt)
         head match {
@@ -181,6 +188,15 @@ class ProgramNodeFactory(rootNodes: Iterable[Decl], labelNodes: Map[String,Sourc
             case None    => if (next.isDefined) res >> next.get
         }
         res
+    }
+    
+    private def handleDeclStmt(decl: SourceCodeNode, next: Option[GNode], exit: Option[GNode], entry: Option[GNode]) =  decl match {
+        case DeclStmt(decls) =>
+            val handleHead = (h: SourceCodeNode, next: Option[GNode]) => handle(h,next,exit,entry) 
+            linkElements(decls,next)(handleHead) match {
+            	case None    => throw new ConversionFailedException("DeclStmt has to be at least one child")
+            	case Some(x) => x
+            }
     }
     
     private def handleSwitch(node: SourceCodeNode, nextOpt: Option[GNode], exit: Option[GNode], entry: Option[GNode]) = {

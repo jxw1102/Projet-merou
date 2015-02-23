@@ -15,8 +15,8 @@ import ast.SourceCodeNodeFactory
  */
 object Main extends App {
     def process(filePath: String, fileName: String, dot: String="dot") = {
-        val cmd    = "clang -Xclang -ast-dump -fsyntax-only " + filePath
-        val basePath = filePath.substring(0,filePath.indexOf(fileName))
+        val cmd       = "clang -Xclang -ast-dump -fsyntax-only " + filePath
+        val basePath  = filePath.substring(0,filePath.lastIndexOf(fileName))
         val clangPath = basePath + fileName + ".txt"
         println(clangPath)
         
@@ -43,7 +43,7 @@ object Main extends App {
         "open test.png".!!
     } else {
         val folder = "various"
-        new File("ModelChecker/unitary_tests/%s/".format(folder)).listFiles.filter(_.getName.endsWith("cpp")).foreach { file => 
+        new File("ModelChecker/unitary_tests/ast/%s/".format(folder)).listFiles.filter(_.getName.endsWith("cpp")).foreach { file => 
             val name = file.getName
             val s    = name.substring(0,name.lastIndexOf('.'))
             

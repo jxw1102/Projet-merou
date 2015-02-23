@@ -5,7 +5,6 @@ import ast.model.Expr
 import cfg.CFGDecl
 import cfg.CFGExpr
 import cfg.CFGVal
-import cfg.DeclIdentifier
 import ctl.GraphNode
 import ast.model.CompoundAssignOp
 import ast.model.UnaryOp
@@ -45,13 +44,9 @@ object SourceCodeNode {
     def apply(node: SourceCodeNode, codeRange: CodeRange, id: String) = { node.codeRange = codeRange; node.id = id; node }
 }
 
-/**
- * Case-classes that will be the values of the CFG nodes. They implement the Visitor pattern against the ProgramNodeLabelizer
- * visitor class
- */
 object ProgramNode {
    private def getAllExpr(expr: Expr): Set[CFGVal] = {
-     val subExpr: Set[CFGVal]   = expr match {
+     val subExpr: Set[CFGVal] = expr match {
          case  BinaryOp           (left, right, _)         => Set(CFGExpr(left), CFGExpr(right))                             
          case  UnaryOp            (operand, _, _)          => Set(CFGExpr(operand))
          case  CompoundAssignOp   (left, right, _)         => Set(CFGExpr(left), CFGExpr(right))                               
@@ -64,23 +59,14 @@ object ProgramNode {
      subExpr + CFGExpr(expr)
    }
     
-    
-    // assignement to study 
-    def convert: (ProgramNode => Set[CFGVal]) = (p : ProgramNode)  => p match {
-        case If        (expr,_,_) => getAllExpr(expr)
-        case While     (expr,_,_) => getAllExpr(expr)
-        case Expression(expr,_,_) => getAllExpr(expr)
-        case Switch    (expr,_,_) => getAllExpr(expr)
-        case Statement (stmt,_,_) => 
-            if(stmt.isInstanceOf[Decl]) 
-                Set(CFGDecl(DeclIdentifier(stmt.asInstanceOf[Decl].name)))
-            else 
-                Set()
-        case For       (expr,_,_) => expr match {
-            case Some(value) => getAllExpr(value)
-            case _           => Set()   
-        }
-        case _ => Set()
+    def convert: (ProgramNode => Set[CFGVal]) = (p: ProgramNode) => p match {
+        case If        (expr,_,_)       => getAllExpr(expr)
+        case While     (expr,_,_)       => getAllExpr(expr)
+        case Expression(expr,_,_)       => getAllExpr(expr)
+        case Switch    (expr,_,_)       => getAllExpr(expr)
+        case For       (Some(expr),_,_) => getAllExpr(expr)
+        case Statement (decl: Decl,_,_) => Set(CFGDecl(decl.name))
+        case _                          => Set()
     }
 }
 
@@ -92,8 +78,6 @@ sealed abstract class ProgramNode(val id: String) {
         case _              => false
     }
     override def hashCode = id.hashCode
-
-    
     override def toString = {
         val format = (name: String, a: Any, id: String, cr: CodeRange) => "\"%s %s at %s %s\"".format(name,a,cr,id)
         this match {
@@ -109,6 +93,9 @@ sealed abstract class ProgramNode(val id: String) {
     }
 }
 
+/**
+ * Case-classes that will be the values of the CFG nodes
+ */
 final case class If        (e: Expr             , cr: CodeRange, _id: String) extends ProgramNode(_id)
 final case class For       (e: Option[Expr]     , cr: CodeRange, _id: String) extends ProgramNode(_id)
 final case class While     (e: Expr             , cr: CodeRange, _id: String) extends ProgramNode(_id)
@@ -118,11 +105,6 @@ final case class Expression(e: Expr             , cr: CodeRange, _id: String) ex
 final case class Switch    (e: Expr             , cr: CodeRange, _id: String) extends ProgramNode(_id)
 // only used during the construction of the graph, should never be used in an actual CFG
 private[ast] final case class Empty(              cr: CodeRange, _id: String) extends ProgramNode(_id)
-
-
-object CFGNode {
-    //convert 
-}
 
 class CFGNode(value: ProgramNode) extends GraphNode[ProgramNode](value) {
     override def equals(that: Any) = that match { case x: CFGNode => value == x.value case _ => false }

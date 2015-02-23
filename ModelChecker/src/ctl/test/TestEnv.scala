@@ -8,7 +8,7 @@ import scala.reflect.runtime.universe
  * @author Xiaowen Ji
  * @author David Courtinot
  */
-object TestEnv extends App with TestUtils with Convert {
+object TestEnv extends App with TestUtils with ConvertEnv {
 	type Binding = BindingsEnv[Identifier,Identifier]
     type Env     = Environment[Identifier,Identifier]
     

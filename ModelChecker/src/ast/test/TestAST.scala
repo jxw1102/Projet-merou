@@ -30,10 +30,9 @@ object TestAST extends App {
     }
     
     val folder = "various"
-    new File("ModelChecker/unitary_tests/%s/".format(folder)).listFiles.filter(_.getName.endsWith("cpp")).foreach { file => 
+    new File("ModelChecker/unitary_tests/ast/%s/".format(folder)).listFiles.filter(_.getName.endsWith("cpp")).foreach { file => 
          val name = file.getName
          val s    = name.substring(0,name.lastIndexOf('.'))
          process(file.getPath,s)
      }
-    
 }

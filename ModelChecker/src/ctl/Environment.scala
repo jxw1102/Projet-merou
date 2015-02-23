@@ -38,9 +38,9 @@ object BottomEnv {
 	}  
 }
 
-trait Convert {
-  implicit def botTobot[M <: MetaVariable: TypeTag, V <: Value: TypeTag](b: Bottom): BottomEnv[M,V] = 
-      BottomEnv.create[M, V]
+trait ConvertEnv {
+  implicit def botTobot[M <: MetaVariable: TypeTag,V <: Value: TypeTag](b: Bottom): BottomEnv[M,V] = 
+      BottomEnv.create[M,V]
 }
 
 sealed abstract class MetaVarBinding[V <: Value]
@@ -57,8 +57,8 @@ case class NegBinding[V <: Value](values: Set[V]) extends MetaVarBinding[V]{
     }
 }
 
-case class BindingsEnv[M <: MetaVariable: TypeTag,V <: Value: TypeTag](bindings: Map[M, MetaVarBinding[V]] = Map[M, MetaVarBinding[V]]()) 
-	extends Environment[M,V] with Convert {
+case class BindingsEnv[M <: MetaVariable: TypeTag,V <: Value: TypeTag] private[ctl] (bindings: Map[M, MetaVarBinding[V]] = Map[M, MetaVarBinding[V]]()) 
+	extends Environment[M,V] with ConvertEnv {
     
     def this() = this(Map[M, MetaVarBinding[V]]())
     
@@ -93,6 +93,7 @@ case class BindingsEnv[M <: MetaVariable: TypeTag,V <: Value: TypeTag](bindings:
                     	case (Some(PosBinding(x)),Some(NegBinding(y))) => PosBinding(x)
                     	case (_                  ,Some(x)            ) => x
                     	case (Some(x)            ,_                  ) => x
+                    	case _ => throw new MatchError
                 }}).toSeq: _*)
             case _  => that
         }
@@ -100,9 +101,9 @@ case class BindingsEnv[M <: MetaVariable: TypeTag,V <: Value: TypeTag](bindings:
 
 	def -(variable: M) = BindingsEnv(bindings - variable)
 	
-	private lazy val _hashCode  = bindings.hashCode
-	override def hashCode       = _hashCode
+	override lazy val hashCode  = bindings.hashCode
     override def equals(a: Any) = a match {
+        // a tester
 	    case BindingsEnv(b) => bindings == b
 	    case _              => false
     }
@@ -117,6 +118,6 @@ case class BindingsEnv[M <: MetaVariable: TypeTag,V <: Value: TypeTag](bindings:
 }
 
 object BindingsEnv {
-    def apply[M <: MetaVariable: TypeTag, V <: Value: TypeTag](bindings: (M,MetaVarBinding[V])*): BindingsEnv[M,V] = 
-        BindingsEnv(Map(bindings: _*))
+    private[ctl] def apply[M <: MetaVariable: TypeTag, V <: Value: TypeTag](bindings: (M,MetaVarBinding[V])*): BindingsEnv[M,V] = 
+        new BindingsEnv(Map(bindings: _*))
 }

@@ -1,0 +1,22 @@
+digraph hierarchy {
+	node[shape=record,style=filled,fillcolor=gray95]
+	edge[dir=back,arrowtail=empty]
+	
+    // nodes
+    Stmt [label="{Stmt}",color=red]
+    Decl [label="{Decl|name: String}"]
+    SCN [label="{SourceCodeNode|id: Option[String]\ncodeRange: Option[CodeRange]}"]
+    FD [label="{FunctionDecl|args: List[ParamVarDecl]\ntypeName: String\nbody: CompoundStmt}"]
+    VD [label="{VarDecl|typeName: String\nvalue: Option[Expr]}"]
+    PVD [label="{ParamVarDecl|typeName: String}"]
+        
+    // links
+	SCN -> Stmt
+	SCN -> Decl
+    
+	Decl -> FD
+	Decl -> PVD
+	Decl -> VD
+	
+	FD -> PVD [arrowtail=odiamond]
+}

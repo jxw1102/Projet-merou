@@ -45,7 +45,7 @@ horizontal_strip_color=0.70,0.10,0.10
 inf_strip_color=0.00,0.00,0.00
 description_size=1.2
 ##
-> latex ##
+>> latex ##
 \chapter*{Changelog}
 \begin{center}
 \begin{tabular}{|c|l|l|}
