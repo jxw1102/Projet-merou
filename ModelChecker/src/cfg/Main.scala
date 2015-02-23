@@ -15,6 +15,7 @@ import ctl.EX
 import ast.model.Literal
 import ast.model.DeclRefExpr
 import ctl.EU
+import ctl.AU
 
 
 /**
@@ -59,24 +60,26 @@ object Main extends App {
     val mainGraph = cfg.decls("main")
     val checker   = new ModelChecker[CFGMetaVar, ProgramNode, CFGVal](mainGraph, ProgramNode.convert)
            
-    val res = checker.evalExpr(EU(Predicate(new StatementLabelizer(VarDeclPattern(DefinedDecl("j"), "int"))),
-            Predicate(new ExpressionLabelizer(CallExprPattern(List(DefinedExpr(DeclRefExpr("", "f","","")), DefinedExpr(DeclRefExpr("", "q","",""))))))))
-
-//    val res = checker.evalExpr(
-//            Predicate(new StatementLabelizer(VarDeclPattern(DefinedDecl("q"), "int")))
-//            AU
-//            Predicate(new ExpressionLabelizer(BinaryOpPattern(DefinedExpr(DeclRefExpr("", "q","","")), UndefinedExpr(CfgMetaVar("X")), "="))))
+//    val res = checker.evalExpr(EU(Predicate(new StatementLabelizer(VarDeclPattern(DefinedDecl("j"), "int"))),
+//            Predicate(new ExpressionLabelizer(CallExprPattern(List(DefinedExpr(DeclRefExpr("", "f","","")), DefinedExpr(DeclRefExpr("", "q","",""))))))))
+//
+//    val res = checker.evalExpr(AU(
+//            Predicate(new StatementLabelizer(VarDeclPattern(DefinedDecl("q"), "int"))),
+//            Predicate(new ExpressionLabelizer(BinaryOpPattern(DefinedExpr(DeclRefExpr("", "q","","")), UndefinedVar(CFGMetaVar("X")), "=")))))
 
             
-//    val res = checker.evalExpr(Predicate(new StatementLabelizer(VarDeclPattern(UndefinedExpr(CfgMetaVar("X")), "int"))))
+//    val res = checker.evalExpr(Predicate(new StatementLabelizer(VarDeclPattern(UndefinedVar(CFGMetaVar("X")), "int"))))
+//    val res = checker.evalExpr(Predicate(new ExpressionLabelizer(OnePattern(UndefinedVar(CFGMetaVar("X"))))))
     
-//    val res = checker.evalExpr(Predicate(new ExpressionLabelizer(CallExprPattern(List(DefinedExpr(DeclRefExpr("", "f","","")), UndefinedExpr(CfgMetaVar("X")))))))
     
-//    val res = checker.evalExpr(AX(Predicate(new IfLabelizer(BinaryOpPattern(UndefinedExpr(CfgMetaVar("X")),UndefinedExpr(CfgMetaVar("X")), "==")))))
-//    val res = checker.evalExpr(AX(Predicate(new IfLabelizer(BinaryOpPattern(UndefinedExpr(CfgMetaVar("X")), 
-//            UndefinedExpr(CfgMetaVar("Y")), "==")))))
+    
+    val res = checker.evalExpr(Predicate(new UseLabelizer(CallExprPattern(List(DefinedExpr(DeclRefExpr("", "f","","")), UndefinedVar(CFGMetaVar("X")))))))
+    
+//    val res = checker.evalExpr(AX(Predicate(new IfLabelizer(BinaryOpPattern(UndefinedVar(CFGMetaVar("X")),UndefinedVar(CFGMetaVar("X")), "==")))))
+//    val res = checker.evalExpr(AX(Predicate(new IfLabelizer(BinaryOpPattern(UndefinedVar(CFGMetaVar("X")), 
+//            UndefinedVar(CFGMetaVar("Y")), "==")))))
 //    
-//    val res = checker.evalExpr(AU(Predicate(new IfLabelizer(BinaryOpPattern(UndefinedExpr(CfgMetaVar("X")), 
+//    val res = checker.evalExpr(AU(Predicate(new IfLabelizer(BinaryOpPattern(UndefinedVar(CFGMetaVar("X")), 
 //     
     
     println("Res : " +res)

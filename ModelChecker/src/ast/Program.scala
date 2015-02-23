@@ -13,6 +13,8 @@ import ast.model.ConditionalOperator
 import ast.model.ArraySubscriptExpr
 import ast.model.CallExpr
 import ast.model.InitListExpr
+import ast.model.VarDecl
+import ast.model.DeclRefExpr
 
 /**
  * Those classes represent the most abstract and final form of the transformations of the source code
@@ -65,7 +67,7 @@ object ProgramNode {
         case Expression(expr,_,_)       => getAllExpr(expr)
         case Switch    (expr,_,_)       => getAllExpr(expr)
         case For       (Some(expr),_,_) => getAllExpr(expr)
-        case Statement (decl: Decl,_,_) => Set(CFGDecl(decl.name))
+        case Statement (decl: VarDecl,_,_) => Set(DeclRefExpr(decl.typeName, decl.name, decl.id.get, "Var"))
         case _                          => Set()
     }
 }

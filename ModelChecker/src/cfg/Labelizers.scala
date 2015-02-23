@@ -1,25 +1,31 @@
 package cfg
 
+import scala.reflect.runtime.universe
+
 import ast.Expression
 import ast.For
-import ast.Identifier
 import ast.If
+import ast.ProgramNode
 import ast.Statement
 import ast.While
-import ast.model._
-import ctl.Bottom
-import ctl.Environment
-import ctl.ConvertEnv
-import ctl.MetaVariable
-import ctl.Value
+import ast.model.BinaryOp
+import ast.model.CallExpr
+import ast.model.CompoundAssignOp
+import ast.model.ConditionalOperator
+import ast.model.Decl
+import ast.model.DeclRefExpr
+import ast.model.Expr
+import ast.model.OpPosition
+import ast.model.UnaryOp
+import ast.model.VarDecl
 import ctl.BindingsEnv
-import com.sun.xml.internal.bind.v2.schemagen.episode.Bindings
+import ctl.Bottom
+import ctl.ConvertEnv
+import ctl.Environment
 import ctl.Labelizer
-import ast.ProgramNode
+import ctl.MetaVariable
 import ctl.TypeOf
-import ctl.MetaVarBinding
-import ctl.NegBinding
-import ctl.PosBinding
+import ctl.Value
 
 /**
  * @author Zohour Abouakil
@@ -32,6 +38,7 @@ import ctl.PosBinding
 case class CFGMetaVar(name: String) extends MetaVariable {
     override def hashCode       = name.hashCode
     override def toString       = name
+
     override def equals(a: Any) = a match {
         case CFGMetaVar(value) => value == name
         case _                 => false 
@@ -43,7 +50,7 @@ final case class CFGExpr(expr: Expr) extends CFGVal {
     override def toString        = expr.toString
     override def cast(n: CFGVal) = n match { case CFGExpr(_) => true; case _ => false }    
 }
-final case class CFGDecl (ident: String) extends CFGVal {
+final case class CFGDecl (ident: DeclRefExpr) extends CFGVal {
     override def cast(n: CFGVal) = n match { case CFGDecl(_) => true; case _ => false }
 }
 
@@ -59,9 +66,9 @@ sealed abstract class Pattern extends ConvertEnv {
         case _                               => Bottom
     }
     
-    def matchDeclName(n: String): Env = this match {
+    def matchDeclName(n: String, t: String, id: String): Env = this match {
         case DefinedDecl  (s   : String)     => if (s == n) new BindingsEnv else Bottom
-        case UndefinedVar (name: CFGMetaVar) => new BindingsEnv ++ (name -> CFGDecl(n)) 
+        case UndefinedVar (name: CFGMetaVar) => new BindingsEnv ++ (name -> CFGDecl(DeclRefExpr(t, n, id, "Var"))) 
         case _                               => Bottom
     }
 }
@@ -70,44 +77,92 @@ case class UndefinedVar (name: CFGMetaVar) extends Pattern
 case class DefinedExpr  (expr: Expr      ) extends Pattern
 case class DefinedDecl  (name: String    ) extends Pattern
 
-trait ExprPattern extends ConvertEnv {
-    type Env = Environment[CFGMetaVar,CFGVal]
-    def matches(expr: Expr): Option[Env]
+trait ExprPattern extends Pattern with ConvertEnv {
+    def matches (expr: Expr): Option[Env] = expr match {
+          case CallExpr(rtn,paramsFun)        => matchesCallExpr(rtn, paramsFun)
+          case CompoundAssignOp (l,r,_)       => matchesCompoundAssignOp(l,r)
+          case BinaryOp         (l,r,op)      => matchesBinaryOp(l,r,op)
+          case UnaryOp          (x,op,k)      => matchesUnaryOp(x,op,k)
+          case ConditionalOperator((x,y,z),_) => matchesConditionalOperator(x,y,z)
+          case _                              => None
+        }
+
+    def matchesCallExpr         (rtn: String, paramsFun: List[Expr]) : Option[Env] = None
+    def matchesCompoundAssignOp (l: Expr, r: Expr) : Option[Env] = (this.matches(l),this.matches(r)) match {
+                  case (Some(bind1), Some(bind2)) => 
+                      val temp = bind1 & bind2
+                      temp match {
+                          case BindingsEnv(_) => Some(temp)
+                          case _              => None
+                      }
+                  case (Some(bind), _) => Some(bind)
+                  case (_, Some(bind)) => Some(bind)
+                  case _                => None 
+              }
+    def matchesBinaryOp (l: Expr, r: Expr, op: String) : Option[Env] = (this.matches(l),this.matches(r)) match {
+                  case (Some(bind1), Some(bind2)) => 
+                      val temp = bind1 & bind2
+                      temp match {
+                          case BindingsEnv(_) => Some(temp)
+                          case _              => None
+                      }
+                  case (Some(bind), _) => Some(bind)
+                  case (_, Some(bind)) => Some(bind)
+                  case _                => None 
+              }
+    def matchesConditionalOperator(x: Expr, y: Expr,z: Expr) : Option[Env] = (this.matches(x),this.matches(y),this.matches(z)) match {
+                  case (Some(bind1), Some(bind2), Some(bind3)) => 
+                      val temp = bind1 & bind2 & bind3
+                      temp match {
+                          case BindingsEnv(_) => Some(temp)
+                          case _              => None
+                      }
+                  case (Some(bind), _, _) => Some(bind)
+                  case (_, Some(bind), _) => Some(bind)
+                  case (_, _, Some(bind)) => Some(bind)
+                  case _                  => None 
+              }
+    def matchesUnaryOp (operand: Expr, operator: String, kind: OpPosition): Option[Env] = this.matches(operand) 
+
 }
 
-// This class works for BinaryOp and CompoundAssignOp
-case class BinaryOpPattern (left: Pattern, right: Pattern, op: String) extends ExprPattern {   
+// This class works for just an expression 
+case class OnePattern (op: Pattern) extends ExprPattern {   
     override def matches(expr: Expr): Option[Env] = {
-        expr match {
-          case BinaryOp(l,r,operator) => 
-              if (operator == op) {
-                  val inter = left.matchEnv(l) & right.matchEnv(r)
-                  inter match {
-                      case BindingsEnv(_) => Some(inter)
-                      case _              => None
-                  }
-              }
-              else None
-          case _ => None
+        val mat = op.matchEnv(expr) 
+        mat match {
+            case BindingsEnv(_) => Some(mat)
+            case _              => None
         }
+    }
+}
+
+
+// This class works for BinaryOp and CompoundAssignOp
+case class BinaryOpPattern (left: Pattern, right: Pattern, op: String) extends ExprPattern { 
+
+    override def matchesBinaryOp (l: Expr, r: Expr, operator: String): Option[Env] = {
+        if (operator == op) {
+            val inter = left.matchEnv(l) & right.matchEnv(r)
+            inter match {
+                case BindingsEnv(_) => Some(inter)
+                case _              => None
+            }    
+        }
+        else None
     }
 }
 
 case class UnaryOpPattern (operand: Pattern, op: String, kind: OpPosition) extends ExprPattern {
-    override def matches(expr: Expr): Option[Env] = {
-        expr match {
-          case UnaryOp(operand,operator,kind) =>  
-              if (operator == op && this.kind == kind) {
-                  val env = this.operand.matchEnv(operand)
-                  env match {
-                      case BindingsEnv(_) => Some(env)
-                      case _                 => None
-                  }
-              }
-              else None
-          case _ => None
+    override def matchesUnaryOp (operand: Expr, operator: String, kind: OpPosition): Option[Env] = 
+        if (operator == op && this.kind == kind) {
+            val env = this.operand.matchEnv(operand)
+            env match {
+                case BindingsEnv(_) => Some(env)
+                case _                 => None
+            }
         }
-    }
+        else None        
 }
 
 case class CallExprPattern(params: List[Pattern], rtnType: Option[String] = None) extends ExprPattern {
@@ -125,51 +180,49 @@ case class CallExprPattern(params: List[Pattern], rtnType: Option[String] = None
         Some(binding)
     }
     
-    override def matches(expr: Expr): Option[Env] = {
-        expr match {
-          case CallExpr(rtn,paramsFun) =>  
-              if (paramsFun.size == params.size) {
+    override def matchesCallExpr (rtn: String, paramsFun: List[Expr]) : Option[Env] = {
+        if (paramsFun.size == params.size) {
                   rtnType match {
-                      case Some(value) => if (this.rtnType == rtnType) matchesParams(paramsFun) else None
+                      case Some(value) => if (value == rtn) matchesParams(paramsFun) else None
                       case _           => matchesParams(paramsFun)
                   } 
               }
               else 
                   None
-          case _ => None
+    }
+}
+
+trait DeclPattern extends Pattern with ConvertEnv {
+	def matches(decl: Decl): Option[Env]
+}
+
+case class VarDeclPattern(varName: Pattern, typeNameDecl: Option[String], valueDecl: Option[Pattern] = None) extends DeclPattern {
+    override def matches(decl: Decl): Option[Env] = {
+        decl match {   
+            case VarDecl(name, typeName, value)  => 
+                var typeDecl: String = ""
+                typeNameDecl match {
+                    case Some(value) => if(typeName != value) return None else typeDecl = value 
+                    case _           => 
+                }
+                
+                val nameEnv = varName.matchDeclName(name, typeDecl, decl.id.get)
+                val resEnv: Option[Env] = (value,valueDecl) match {
+                    case (Some(expr), Some(exprDecl)) => Some(nameEnv & exprDecl.matchEnv(expr))  
+                    case (None, None)                 => Some(nameEnv & new BindingsEnv)    
+                    case (_, _)                       => None
+                }
+                    
+                resEnv match {
+                    case Some(BindingsEnv(bind)) => resEnv
+                    case _                       => None
+                }
+            case _  => None
         }
     }
 }
 
-trait DeclPattern extends ConvertEnv {
-	type Env = Environment[CFGMetaVar, CFGVal]
-	def matches(decl: Decl): Option[Env]
-}
 
-case class VarDeclPattern(varName: Pattern, typeNameDecl: String, valueDecl: Option[Pattern] = None) extends DeclPattern {
-	override def matches(decl: Decl) = {
-        decl match {          
-			case VarDecl(name, typeName, value)  => 
-                if(typeName == typeNameDecl) {
-                    val valueEnv: Option[Env] = (value,valueDecl) match {
-                        case (Some(expr), Some(exprDecl)) => Some(exprDecl.matchEnv(expr))  
-                        case (None, None)                 => Some(new BindingsEnv)    
-                        case (_, _)                       => None
-                    }
-                    
-                    val nameEnv = varName.matchDeclName(name)
-                    val resEnv  = nameEnv & valueEnv.get
-                    resEnv match {
-                        case BindingsEnv(bind) => Some(resEnv)
-                        case _                 => None
-                    }
-    			}
-    			else None
-			case _  => None
-		}
-	}
-}
-    
 /* 
  * /////////////////////// Labilizers ///////////////////////
  */
@@ -196,30 +249,26 @@ class WhileLabelizer(val pattern: ExprPattern) extends Labelizer[CFGMetaVar, Pro
 
 class ExpressionLabelizer(val pattern: ExprPattern) extends Labelizer[CFGMetaVar, ProgramNode, CFGVal] {
 	override def test(t: ProgramNode) = t match {
-	case Expression(e,_,_) => pattern.matches(e)
-	case _                 => None 
+    	case Expression(e,_,_) => pattern.matches(e)
+    	case _                 => None 
 	}
 }
 
 
 class StatementLabelizer(val pattern: DeclPattern) extends Labelizer[CFGMetaVar, ProgramNode, CFGVal] {
-    override def test(t: ProgramNode): Option[Environment[CFGMetaVar, CFGVal]] = {
-//        println("node " + t + " ::  "+ t.getClass)
-        t match {
-//          case Statement(stmt: Decl,_,_)      => pattern.matches(stmt)
-            case Statement(DeclStmt(decls),_,_) =>
-                val listDecl = (for(d <- decls; if (d.isInstanceOf[VarDecl]);
-                                resDecl=pattern.matches(d.asInstanceOf[VarDecl]); if(resDecl.isDefined))
-                                yield resDecl.get)
-               if(!listDecl.isEmpty){
-                   val temp = listDecl.reduce(_ & _)
-                   temp match {
-                       case BindingsEnv(value) => Some(temp)
-                       case _                  => None
-                   }
-               }
-               else None
-            case _ => None 
-        }
+    override def test(t: ProgramNode): Option[Environment[CFGMetaVar, CFGVal]] = t match {
+        case Statement(stmt: Decl,_,_)      => pattern.matches(stmt)
+        case _ => None     
+    }
+}
+
+class UseLabelizer(val pattern: ExprPattern) extends Labelizer[CFGMetaVar, ProgramNode, CFGVal] {
+    override def test(t: ProgramNode) = t match {
+        case Expression(e,_,_)                      => pattern.matches(e)
+        case While     (e,_,_)                      => pattern.matches(e)
+        case If        (e,_,_)                      => pattern.matches(e) 
+        case For       (Some(e),_,_)                => pattern.matches(e) 
+        case Statement (VarDecl(_, _, Some(e)),_,_) => pattern.matches(e)
+        case _                                      => None 
     }
 }
