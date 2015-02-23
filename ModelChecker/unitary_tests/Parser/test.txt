@@ -1,3 +1,6 @@
+-9
+-9-9
+.end.
 sofia(poisson,bleu)
 x++
 (x)
@@ -5,13 +8,18 @@ x++
 !s
 9
 -8
+-8-9
 x++ % 8
 x-- + o + ghjgj
 ++A + !B
 h||n
+d *= -a*b
 X==1
+a & b
+a && b
 x += a & b
 x = a && b
+.end.
 david *= a * b
 g *= *s * b
 g *= *s * *b

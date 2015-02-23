@@ -16,8 +16,7 @@ import ast.model.DeclRefExpr
  */
 object CTLInterpreter extends JavaTokenParsers{
     type E = Expr
-    
-    //  CompoundAssignOp   (left: Expr, right: Expr, operator: String) 
+     
     def assignment: Parser[Expr] = (ident ~ "(\\+|-|^|&|<<|>>|\\*|\\||)=".r) ~ expr ^^ {  case x ~ op ~ y => CompoundAssignOp(DeclRefExpr("",x,"",""),y,op) }
         
     def literal : Parser[Expr]= funCall |
@@ -25,7 +24,7 @@ object CTLInterpreter extends JavaTokenParsers{
         floatingPointNumber ^^ { case x => 
             if (x.toInt == x.toDouble) Literal("double", x) else Literal("int", x)
         }
-    def unary: Parser[String] =  "\\+\\+|--|-(?=[^=])|~(?=[^=])|&(?=[^=])|\\*(?=[^=])|!(?=[^=])".r
+    def unary: Parser[String] = "\\+\\+|--|(?=\\W)-(?=[^=])|(?=\\W)~(?=[^=])|(?=\\W)&(?=[^=])|(?=\\W)\\*(?=[^=])|(?=\\W)!(?=[^=])".r
     def bop0: Parser[String]  = "\\*(?=[^=])|/(?=[^=])|%".r
     def bop1: Parser[String]  = "\\+(?=[^=])|-(?=[^=])".r
     def bop2: Parser[String]  = "<<(?=[^=])|>>(?=[^=])".r
@@ -33,15 +32,15 @@ object CTLInterpreter extends JavaTokenParsers{
     def bop4: Parser[String]  = "==|!=".r
     def bop5: Parser[String]  = "&(?=[^&=])".r
     def bop6: Parser[String]  = "\\^".r
-    def bop7: Parser[String]  = "\\|(?=[^=\\|])".r
-    def bop8: Parser[String]  = "&&".r
+    def bop7: Parser[String]  = "&&".r
+    def bop8: Parser[String]  = "\\|(?=[^=\\|])".r
     def bop9: Parser[String]  = "\\|\\|".r
 
     
     def recurrenceRelation(expr:Parser[E], parsop:Parser[E=>E] )    = expr ~ rep(parsop) ^^ { case a ~ b   => (a /: b)((acc,f) => f(acc)) }
     def parseOp(bop: Parser[String], expr: Parser[E]): Parser[E=>E] = bop ~ expr ^^ { case op ~ y => BinaryOp(_,y,op) }
      
-    def expr: Parser[Expr]  =  assignment | expr10
+    def expr: Parser[Expr]  =  assignment | expr2
     def paren = "(" ~> expr <~ ")"
     def expr0: Parser[Expr] = paren | 
      ((unary?) ~ (paren | literal) ~ (unary?)) ^^ {
