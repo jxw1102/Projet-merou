@@ -1,7 +1,7 @@
 import ast.model.Expr
-import ast.model.Decl
+import ast.model.DeclRefExpr
 
 package object cfg {
-    implicit def exprToCFGExpr(e: Expr  ): CFGVal = CFGExpr(e)
-    implicit def strToCFGDecl (s: String): CFGVal = CFGDecl(s)
+    implicit def exprToCFGExpr(e: Expr  )     : CFGVal = CFGExpr(e)
+    implicit def strToCFGDecl (d: DeclRefExpr): CFGVal = CFGDecl(d)
 }

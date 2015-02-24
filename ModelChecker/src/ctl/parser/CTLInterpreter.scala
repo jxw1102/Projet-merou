@@ -16,13 +16,17 @@ import ast.model.DeclRefExpr
  */
 object CTLInterpreter extends JavaTokenParsers{
     type E = Expr
+
      
-    def assignment: Parser[Expr] = (ident ~ "(\\+|-|^|&|<<|>>|\\*|\\||)=".r) ~ expr ^^ {  case x ~ op ~ y => CompoundAssignOp(DeclRefExpr("",x,"",""),y,op) }
+   // def assignment: Parser[Expr] = (ident ~ "(\\+|-|^|&|<<|>>|\\*|\\||)=".r) ~ expr ^^ {  case x ~ op ~ y => CompoundAssignOp(DeclRefExpr("",x,"",""),y,op) }
+    
+    //  CompoundAssignOp   (left: Expr, right: Expr, operator: String) 
+    def assignment: Parser[Expr] = (ident ~ "(\\+|-|^|&|<<|>>|\\*|\\||)=".r) ~ expr ^^ {  case x ~ op ~ y => CompoundAssignOp("",DeclRefExpr("","",x,"",""),y,op) }
         
     def literal : Parser[Expr]= funCall |
-        ident               ^^ { case id => DeclRefExpr("",id,"","") } | 
+        ident               ^^ { case id => DeclRefExpr("","",id,"","") } | 
         floatingPointNumber ^^ { case x => 
-            if (x.toInt == x.toDouble) Literal("double", x) else Literal("int", x)
+            if (x.toInt == x.toDouble) Literal("","double", x) else Literal("","int", x)
         }
     def unary: Parser[String] = "\\+\\+|--|(?=\\W)-(?=[^=])|(?=\\W)~(?=[^=])|(?=\\W)&(?=[^=])|(?=\\W)\\*(?=[^=])|(?=\\W)!(?=[^=])".r
     def bop0: Parser[String]  = "\\*(?=[^=])|/(?=[^=])|%".r
@@ -38,14 +42,14 @@ object CTLInterpreter extends JavaTokenParsers{
 
     
     def recurrenceRelation(expr:Parser[E], parsop:Parser[E=>E] )    = expr ~ rep(parsop) ^^ { case a ~ b   => (a /: b)((acc,f) => f(acc)) }
-    def parseOp(bop: Parser[String], expr: Parser[E]): Parser[E=>E] = bop ~ expr ^^ { case op ~ y => BinaryOp(_,y,op) }
+    def parseOp(bop: Parser[String], expr: Parser[E]): Parser[E=>E] = bop ~ expr ^^ { case op ~ y => BinaryOp("",_,y,op) }
      
     def expr: Parser[Expr]  =  assignment | expr2
     def paren = "(" ~> expr <~ ")"
     def expr0: Parser[Expr] = paren | 
      ((unary?) ~ (paren | literal) ~ (unary?)) ^^ {
-         case None    ~ el ~ Some(u) if (u == "++" || u == "--") => UnaryOp(el,u,OpPosition("postfix"))
-         case Some(u) ~ el ~ None     => UnaryOp(el,u,OpPosition("prefix" ))
+         case None    ~ el ~ Some(u) if (u == "++" || u == "--") => UnaryOp("",el,u,OpPosition("postfix"))
+         case Some(u) ~ el ~ None     => UnaryOp("",el,u,OpPosition("prefix" ))
          case None    ~ el ~ None     => el
      }
      
@@ -66,7 +70,7 @@ object CTLInterpreter extends JavaTokenParsers{
      }
      // params.head is the name of the function
      def funCall: Parser[Expr]    = (ident <~ "(") ~ params <~ ")" ^^ { case id ~ params => 
-         CallExpr("",DeclRefExpr("",id,"","") :: params)
+         CallExpr("",DeclRefExpr("","",id,"","") :: params)
      }
      
      def main(args : Array[String]) = {

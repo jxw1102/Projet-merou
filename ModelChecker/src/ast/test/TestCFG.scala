@@ -13,7 +13,7 @@ import ast.SourceCodeNodeFactory
  * @author Sofia Boutahar
  * @author David Courtinot
  */
-object Main extends App {
+object TestCFG extends App {
     def process(filePath: String, fileName: String, dot: String="dot") = {
         val cmd       = "clang -Xclang -ast-dump -fsyntax-only " + filePath
         val basePath  = filePath.substring(0,filePath.lastIndexOf(fileName))
@@ -36,6 +36,8 @@ object Main extends App {
         
         // generate the png image
         Seq(dot,"-Tpng",basePath + "test.dot","-o",basePath + fileName + ".png") !
+        
+        cfg
     }
     
     if (args.length > 0) {

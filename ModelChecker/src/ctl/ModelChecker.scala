@@ -71,16 +71,25 @@ class ModelChecker[M <: MetaVariable: TypeTag, N, V <: Value : TypeTag](private 
     def exists(varType: (M,TypeOf[V]), T: CheckerResult)     = for (t <- T ; if (ex_binding(varType._1, varType._2,t))) yield existsone(varType._1,t)
     
     def preA(T: CheckerResult) = root.states.flatMap(s => conjFold(s.next.toSet.map((sNext: GNode) => shift(sNext,T,s))))   
-    def preE(T: CheckerResult) = root.states.flatMap(s => Disj(s.next.toSet.map((sNext: GNode) => shift(sNext,T,s))))
+    def preE(T: CheckerResult) = root.states.flatMap(s => Disj(s.next.toSet.map((sNext: GNode) => shift(sNext,T,s))))   
+
     def SAT_AU                 = SAT_UU(preA)(_,_)
     def SAT_EU                 = SAT_UU(preE)(_,_)
     
     private def SAT_UU(f: CheckerResult => CheckerResult)(T1: CheckerResult , T2: CheckerResult) = {
-        var (w,x,y) = (T1,T2,T2)
+        var (w,y,x) = (T1,T2,T2)
         do {
+//            println("w :: " + w + "\n , x :: " + x + "\n , y :: " + y)
+            
             x = y 
             y = disj(y, conj(w, f(y)))
+            
+//            println("Le pre " + f(y) + " Le conj " + conj(w, f(y)))
+            
+//            println("\nx :: " + x + "\n , y :: " + y)
+            
         } while(!same(x,y))           
+            println("\nJe sors => x :: " + x + " , y :: " + y)
         y
     }
 }
