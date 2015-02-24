@@ -6,16 +6,6 @@ import ctl._
 import ast.ProgramNode
 import java.io.File
 
-
-class A {
-    def f = "coucou"
-    def g = f
-}
-
-class B extends A {
-	override def f = "zohour"
-}
-
 object Properties extends App {
 	val UNREACHABLE_CODE = Predicate(ReturnLabelizer(Anything)) && EX(True)
 	val DEAD_CODE        = Predicate(DeadIfLabelizer())
@@ -32,8 +22,6 @@ object Properties extends App {
 	
 //	println(checker.evalExpr(UNREACHABLE_CODE))
 //	println(checker.evalExpr(DEAD_CODE))
-	
 	println(checker.evalExpr(ARITH_POINTER))
-	println((new B).g)
 }
 

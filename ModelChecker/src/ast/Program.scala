@@ -13,6 +13,8 @@ import ast.model.ConditionalOperator
 import ast.model.ArraySubscriptExpr
 import ast.model.CallExpr
 import ast.model.InitListExpr
+import ast.model.VarDecl
+import ast.model.DeclRefExpr
 
 /**
  * Those classes represent the most abstract and final form of the transformations of the source code
@@ -60,13 +62,18 @@ object ProgramNode {
    }
     
     def convert: (ProgramNode => Set[CFGVal]) = (p: ProgramNode) => p match {
-        case If        (expr,_,_)       => getAllExpr(expr)
-        case While     (expr,_,_)       => getAllExpr(expr)
-        case Expression(expr,_,_)       => getAllExpr(expr)
-        case Switch    (expr,_,_)       => getAllExpr(expr)
-        case For       (Some(expr),_,_) => getAllExpr(expr)
-        case Statement (decl: Decl,_,_) => Set(CFGDecl(decl.name))
-        case _                          => Set()
+        case If        (expr,_,_)          => getAllExpr(expr)
+        case While     (expr,_,_)          => getAllExpr(expr)
+        case Expression(expr,_,_)          => getAllExpr(expr)
+        case Switch    (expr,_,_)          => getAllExpr(expr)
+        case For       (Some(expr),_,_)    => getAllExpr(expr)
+        /////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Cette ligne est bizarre ! Encore ce "Var" sans lien avec l'AST, et pourquoi ajouter une DeclRefExpr ?
+        // Où passent les déclarations ? On n'a plus que des expressions dans nos CFGVal
+        /////////////////////////////////////////////////////////////////////////////////////////////////////
+        case Statement (decl: VarDecl,_,_) => Set(DeclRefExpr("",decl.typeName, decl.name, decl.id.get, "Var"))
+        /////////////////////////////////////////////////////////////////////////////////////////////////////
+        case _                             => Set()
     }
 }
 
