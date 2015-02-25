@@ -1,21 +1,16 @@
 package cfg
 
-import java.io.PrintWriter
-import ast.ProgramNodeFactory
-import ast.ASTParser
-import ast.SourceCodeNodeFactory
-import scala.sys.process._
 import java.io.File
+import java.io.PrintWriter
+import scala.sys.process._
+import ast.ASTParser
 import ast.ProgramNode
+import ast.ProgramNodeFactory
+import ast.SourceCodeNodeFactory
 import ctl.ModelChecker
 import ctl.ModelChecker
-import ctl.AX
-import ctl.Predicate
-import ctl.EX
-import ast.model.Literal
 import ast.model.DeclRefExpr
-import ctl.EU
-import ctl.AU
+import ctl.Predicate
 
 
 /**
@@ -23,6 +18,8 @@ import ctl.AU
  * @author David Courtinot
  */
 object Main extends App {
+    implicit def strToMeta(s: String): CFGMetaVar = CFGMetaVar(s)
+    
     def buildGraph(filePath: String, fileName: String, dot: String="dot") = {
         val cmd    = "clang -Xclang -ast-dump -fsyntax-only " + filePath
         val basePath = filePath.substring(0,filePath.indexOf(fileName))
@@ -58,8 +55,15 @@ object Main extends App {
     // generate the Clang AST and print it in a file
     val cfg       = buildGraph(file.getPath,s)
     val mainGraph = cfg.decls("main")
-    val checker   = new ModelChecker[CFGMetaVar, ProgramNode, CFGVal](mainGraph, ProgramNode.convert)
+    val checker   = new ModelChecker[CFGMetaVar,ProgramNode,CFGVal](mainGraph,ConvertNodes.convert)
            
+//    val res = checker.evalExpr(Predicate(new FindExprLabelizer(CallExprPattern(List(DefinedExpr(DeclRefExpr("", "f","","")),UndefinedVar("X"))))))
+//     val res = checker.evalExpr(Predicate(new FindExprLabelizer(DefinedExpr(DeclRefExpr("", "j","","")))))
+    
+    val j = DefinedExpr(DeclRefExpr("", "j","",""))
+    val assignJ = BinaryOpPattern(j,UndefinedVar("X"),"==")
+    val res = checker.evalExpr(Predicate(new FindExprLabelizer(assignJ)))
+    
 //    val res = checker.evalExpr(EU(Predicate(new StatementLabelizer(VarDeclPattern(DefinedDecl("j"), "int"))),
 //            Predicate(new ExpressionLabelizer(CallExprPattern(List(DefinedExpr(DeclRefExpr("", "f","","")), DefinedExpr(DeclRefExpr("", "q","",""))))))))
 //
@@ -73,7 +77,7 @@ object Main extends App {
     
     
     
-    val res = checker.evalExpr(Predicate(new UseLabelizer(CallExprPattern(List(DefinedExpr(DeclRefExpr("","", "f","","")), UndefinedVar(CFGMetaVar("X")))))))
+//    val res = checker.evalExpr(Predicate(new UseLabelizer(CallExprPattern(List(DefinedExpr(DeclRefExpr("", "f","","")), UndefinedVar(CFGMetaVar("X")))))))
     
 //    val res = checker.evalExpr(AX(Predicate(new IfLabelizer(BinaryOpPattern(UndefinedVar(CFGMetaVar("X")),UndefinedVar(CFGMetaVar("X")), "==")))))
 //    val res = checker.evalExpr(AX(Predicate(new IfLabelizer(BinaryOpPattern(UndefinedVar(CFGMetaVar("X")), 

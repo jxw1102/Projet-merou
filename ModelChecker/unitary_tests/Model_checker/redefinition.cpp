@@ -1,31 +1,24 @@
-int f(int i) {
- if (i >= 0) goto end;
- return 0;
- end:
- return 1;
+void f(int i) {
+if (i > 0) {
+  i = 2;
+} else {
+ i = 3;
+}
+i = 4;
 }
 
-int main(int argc, char** argv) {
-	int *p, *q;
-	p = p + 1;	
-	
-	{
-		int *p;
-	}
-	
-	for(int i=0; i< 2; i++){
-		float p = 1.2f;
-	}
-	
-	const char* s;
-	s = 0 ? "sofia" : "sofiati";
-	
-	float f = 3;
-	
-	f += 5;
-	
-	double arr[] = { 3,2,1,4};
-	double a = arr[0];
-	float *z;
-	return 0;
+void g(int i ) {
+if (i > 0) {
+  i = 2;
+}
+else {
+  i = 3;
+}
+}
+
+void h(int i ) {
+if (i > 0) {
+  i = 2;
+}
+ i = 3;
 }

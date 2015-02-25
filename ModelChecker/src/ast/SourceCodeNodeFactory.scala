@@ -140,7 +140,7 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[String,String]) {
     private def literal(node: ASTNode) = node match {
         case ConcreteASTNode(_,_,id,codeRange,data) => 
             val dataList = data.dataList
-            setAndReturn(Literal(dataList.head,dataList.get(-2),dataList.get(-1)),codeRange,id)
+            setAndReturn(Literal(dataList.get(-2),dataList.get(-1)),codeRange,id)
         case _                                      => concreteNodeExpected(node)
     }
     
@@ -204,7 +204,7 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[String,String]) {
     private def declRefExpr(node: ASTNode) = node match {
         case ConcreteASTNode(_,_,id,codeRange,data) => 
             val dataList = data.dataList
-            val decl     = DeclRefExpr(dataList.get(-6),dataList.last,dataList.get(-2),dataList.get(-3),dataList.get(-4))
+            val decl     = DeclRefExpr(dataList.last,dataList.get(-2),dataList.get(-3),dataList.get(-4))
             setAndReturn(decl,codeRange,id)
         case _ => concreteNodeExpected(node)
     }
@@ -227,7 +227,7 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[String,String]) {
         	val dataList = data.dataList
             node.children.map(handleExpr).toList match {
                 case condition :: yes :: no :: Nil => 
-                    setAndReturn(ConditionalOperator(dataList.head,(condition,yes,no),dataList.last),codeRange,id)
+                    setAndReturn(ConditionalOperator(dataList.last,(condition,yes,no)),codeRange,id)
                 case _ => conversionFailed(node)
             }
         case _ => concreteNodeExpected(node)

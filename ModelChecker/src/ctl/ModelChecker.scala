@@ -14,15 +14,15 @@ class ModelChecker[M <: MetaVariable: TypeTag, N, V <: Value : TypeTag](private 
     private lazy val Val: Set[V] = root.states.flatMap(g => convert(g.value)).toSet
     
     def evalExpr(expr : CtlExpr[M,N,V]): CheckerResult = expr match {
-            case And      (x, y) => conj  (evalExpr(x),evalExpr(y))
-            case Or       (x, y) => disj  (evalExpr(x),evalExpr(y))
-            case AU       (x, y) => SAT_AU(evalExpr(x),evalExpr(y))
-            case EU       (x, y) => SAT_EU(evalExpr(x),evalExpr(y))
-            case AX       (x   ) => preA  (evalExpr(x))
-            case EX       (x   ) => preE  (evalExpr(x))
-            case Not      (x   ) => neg   (evalExpr(x))
-            case Exists   (x, y) => exists(x,evalExpr(y))
-            case Predicate(x   ) => for (n <- root.states ; env = x.test(n.value) ; if(env.isDefined)) yield (n,env.get)         
+            case And       (x, y) => conj  (evalExpr(x),evalExpr(y))
+            case Or        (x, y) => disj  (evalExpr(x),evalExpr(y))
+            case AU        (x, y) => SAT_AU(evalExpr(x),evalExpr(y))
+            case EU        (x, y) => SAT_EU(evalExpr(x),evalExpr(y))
+            case AX        (x   ) => preA  (evalExpr(x))
+            case EX        (x   ) => preE  (evalExpr(x))
+            case Not       (x   ) => neg   (evalExpr(x))
+            case Exists    (x, y) => exists(x,evalExpr(y))
+            case Predicate (x   ) => for (n <- root.states ; env = x.test(n.value) ; if(env.isDefined)) yield (n,env.get)         
     }
     
     def interStateEnv(se1: StateEnv, se2: StateEnv): Option[StateEnv] = {

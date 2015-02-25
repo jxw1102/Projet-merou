@@ -18,12 +18,12 @@ object CTLInterpreter extends JavaTokenParsers{
     type E = Expr
     
     //  CompoundAssignOp   (left: Expr, right: Expr, operator: String) 
-    def assignment: Parser[Expr] = (ident ~ "(\\+|-|^|&|<<|>>|\\*|\\||)=".r) ~ expr ^^ {  case x ~ op ~ y => CompoundAssignOp("",DeclRefExpr("","",x,"",""),y,op) }
+    def assignment: Parser[Expr] = (ident ~ "(\\+|-|^|&|<<|>>|\\*|\\||)=".r) ~ expr ^^ {  case x ~ op ~ y => CompoundAssignOp(x,DeclRefExpr("",x,"",""),y,op) }
         
     def literal : Parser[Expr]= funCall |
-        ident               ^^ { case id => DeclRefExpr("","",id,"","") } | 
+        ident               ^^ { case id => DeclRefExpr("",id,"","") } | 
         floatingPointNumber ^^ { case x => 
-            if (x.toInt == x.toDouble) Literal("","double", x) else Literal("","int", x)
+            if (x.toInt == x.toDouble) Literal("double", x) else Literal("int", x)
         }
     def unary: Parser[String] =  "\\+\\+|--|-(?=[^=])|~(?=[^=])|&(?=[^=])|\\*(?=[^=])|!(?=[^=])".r
     def bop0: Parser[String]  = "\\*(?=[^=])|/(?=[^=])|%".r
@@ -67,7 +67,7 @@ object CTLInterpreter extends JavaTokenParsers{
      }
      // params.head is the name of the function
      def funCall: Parser[Expr]    = (ident <~ "(") ~ params <~ ")" ^^ { case id ~ params => 
-         CallExpr("",DeclRefExpr("","",id,"","") :: params)
+         CallExpr("",DeclRefExpr("",id,"","") :: params)
      }
      
      def main(args : Array[String]) = {
