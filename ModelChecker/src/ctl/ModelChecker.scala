@@ -57,9 +57,8 @@ class ModelChecker[M <: MetaVariable: TypeTag, N, V <: Value : TypeTag](private 
         case _ => false
     }
     
-    def conj(T1: CheckerResult , T2: CheckerResult) = {
+    def conj(T1: CheckerResult , T2: CheckerResult) = 
         for (t1 <- T1 ; t2 <- T2 ; inter = interStateEnv(t1,t2) ; if (inter.isDefined)) yield inter.get
-    }
         
     def disj    (t1: CheckerResult , t2: CheckerResult)   = t1 ++ t2
     def shift   (s1: GNode , T: CheckerResult, s2: GNode) = T.filter { case(a,b) => a == s1 }.map{ case(a,b) => (s2,b) }
@@ -79,17 +78,9 @@ class ModelChecker[M <: MetaVariable: TypeTag, N, V <: Value : TypeTag](private 
     private def SAT_UU(f: CheckerResult => CheckerResult)(T1: CheckerResult , T2: CheckerResult) = {
         var (w,y,x) = (T1,T2,T2)
         do {
-//            println("w :: " + w + "\n , x :: " + x + "\n , y :: " + y)
-            
             x = y 
             y = disj(y, conj(w, f(y)))
-            
-//            println("Le pre " + f(y) + " Le conj " + conj(w, f(y)))
-            
-//            println("\nx :: " + x + "\n , y :: " + y)
-            
         } while(!same(x,y))           
-            println("\nJe sors => x :: " + x + " , y :: " + y)
         y
     }
 }

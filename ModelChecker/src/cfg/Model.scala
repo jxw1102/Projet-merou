@@ -85,8 +85,8 @@ object ConvertNodes {
         // Où passent les déclarations ? On n'a plus que des expressions dans nos CFGVal
         /////////////////////////////////////////////////////////////////////////////////////////////////////
         case Statement (decl: VarDecl,_,_) => 
-            val res: Set[CFGVal] = Set(CFGExpr(DeclRefExpr(decl.typeName, decl.name, decl.id.get, "Var")))
-            if (decl.value.isDefined) res + CFGExpr(decl.value.get) else res 
+//            val res: Set[CFGVal] = Set(CFGExpr(DeclRefExpr(decl.typeName, decl.name, decl.id.get, "Var")))
+            if (decl.value.isDefined) Set(CFGExpr(decl.value.get)) else Set()
         /////////////////////////////////////////////////////////////////////////////////////////////////////
         case _                             => Set()
     }

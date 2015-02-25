@@ -21,15 +21,15 @@ sealed trait Pattern extends ConvertEnv {
     type Env = Environment[CFGMetaVar,CFGVal]
 }
 
-trait DeclPattern extends Pattern with ConvertEnv {
+trait DeclPattern extends Pattern {
 	def matches(decl: Decl): Option[Env]
 }
 
-trait StringPattern extends Pattern with ConvertEnv {
+trait StringPattern extends Pattern {
 	def matches(s: String): Option[Env]
 }
 
-trait ExprPattern extends Pattern with ConvertEnv {
+trait ExprPattern extends Pattern {
     def matches (expr: Expr): Option[Env] 
 }
 
@@ -51,13 +51,13 @@ trait AtomicExprPattern extends ExprPattern
 case class UndefinedVar (name: CFGMetaVar) extends AtomicExprPattern with DeclPattern with StringPattern {
     override def matches(expr: Expr  ) = Some(new BindingsEnv ++ (name -> expr))
     override def matches(decl: Decl  ) = Some(new BindingsEnv ++ (name -> decl))
-    override def matches(s   : String) = Some(new BindingsEnv ++ (name -> s   ))
+    override def matches(s   : String) = Some(new BindingsEnv ++ (name -> s))
 }
 case class DefinedExpr  (expr: Expr) extends AtomicExprPattern {
     override def matches(e: Expr) = if (e matches expr) Some(new BindingsEnv) else None
 }
-case class DefinedString(typeOf: String) extends StringPattern {
-    override def matches(s: String) = if (s == typeOf) Some(new BindingsEnv) else None
+case class DefinedString(name: String) extends StringPattern {
+    override def matches(s: String) = if (s == name) Some(new BindingsEnv) else None
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -110,10 +110,31 @@ case class CallExprPattern(params: List[AtomicExprPattern], rtnType: Option[Stri
    }
 }
 
-case class VarDeclPattern(name: StringPattern, typeOf: StringPattern, value: Option[ExprPattern]=None) extends DeclPattern {
-    // TODO
-    override def matches(decl: Decl): Option[Env] = ???
+case class VarDeclPattern(typeOf: Option[String], name: StringPattern) extends DeclPattern {
+    private def matchDecl(decl: Decl): Option[Env] = (name.matches(decl.name),name) match {
+        case (Some(_),UndefinedVar(x))  => Some(new BindingsEnv ++ (x -> CFGDecl(decl.id.get,decl.typeOf,decl.name)))
+        case (Some(_),DefinedString(_)) => Some(new BindingsEnv)
+        case (None,_)    => None
+    }
+    
+    override def matches(decl: Decl): Option[Env] = decl match {
+        case VarDecl(declName,typeName,_) =>
+            (typeOf) match {
+                case Some(value) if(value == typeName) => matchDecl(decl)
+                case None                              => matchDecl(decl)
+                case _                                 => None 
+            }
+        case _ => None
+    }
 }
+
+//case class FunctionDeclPattern(name: StringPattern, typeName: String, args: List[ParamVarDecl])  extends DeclPattern {
+//    private def matchDecl(decl: Decl): Option[Env] = (name.matches(decl.name),name) match {
+//        case (Some(_),UndefinedVar(x))  => Some(new BindingsEnv ++ (x -> CFGDecl(decl.id.get,decl.typeOf,decl.name)))
+//        case (Some(_),DefinedString(_)) => Some(new BindingsEnv)
+//        case (None,_)    => None
+//    }
+//}
 
 //case class VarDeclPattern(varName: Pattern, typeNameDecl: Option[String], valueDecl: Option[Pattern] = None) extends DeclPattern {
 //    override def matches(decl: Decl): Option[Env] = {

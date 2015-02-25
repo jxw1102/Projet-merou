@@ -1,7 +1,6 @@
 package cfg
 
 import scala.reflect.runtime.universe
-
 import ast.Expression
 import ast.For
 import ast.If
@@ -17,6 +16,7 @@ import ctl.Labelizer
 import ctl.MetaVariable
 import ctl.TypeOf
 import ctl.Value
+import ctl.PosBinding
 
 /**
  * @author Zohour Abouakil
@@ -31,11 +31,6 @@ import ctl.Value
 /* 
  * /////////////////////// Labelizers ///////////////////////
  */
-case class FindExprLabelizer(pattern: ExprPattern) extends Labelizer[CFGMetaVar, ProgramNode, CFGVal] {
-    private def foldRec(exprs: List[Expr])        = exprs.foldLeft[Option[Env]](None)((res,e) => if (res.isDefined) res else recMatch(e))
-    private def recMatch(expr: Expr): Option[Env] = pattern.matches(expr).orElse(foldRec(expr.getSubExprs))
-	override def test(t: ProgramNode)             = foldRec(ConvertNodes.getExprs(t))
-}
 
 class IfLabelizer(val pattern: ExprPattern) extends Labelizer[CFGMetaVar, ProgramNode, CFGVal] {
     override def test(t: ProgramNode) = t match {
@@ -65,6 +60,12 @@ class ExpressionLabelizer(val pattern: ExprPattern) extends Labelizer[CFGMetaVar
 	}
 }
 
+case class FindExprLabelizer(pattern: ExprPattern) extends Labelizer[CFGMetaVar, ProgramNode, CFGVal] {
+	private def foldRec(exprs: List[Expr])        = exprs.foldLeft[Option[Env]](None)((res,e) => if (res.isDefined) res else recMatch(e))
+	private def recMatch(expr: Expr): Option[Env] = pattern.matches(expr).orElse(foldRec(expr.getSubExprs))
+	override def test(t: ProgramNode)             = foldRec(ConvertNodes.getExprs(t))
+}
+
 case class ArithmeticPointerLabelizer() extends Labelizer[CFGMetaVar, ProgramNode, CFGVal] {
     override def test(t: ProgramNode) = 
     	ConvertNodes.getExprs(t).find {
@@ -85,17 +86,6 @@ class StatementLabelizer(val pattern: DeclPattern) extends Labelizer[CFGMetaVar,
     }
 }
 
-class UseLabelizer(val pattern: ExprPattern) extends Labelizer[CFGMetaVar, ProgramNode, CFGVal] {
-    override def test(t: ProgramNode) = t match {
-        case Expression(e,_,_)                      => pattern.matches(e)
-        case While     (e,_,_)                      => pattern.matches(e)
-        case If        (e,_,_)                      => pattern.matches(e) 
-        case For       (Some(e),_,_)                => pattern.matches(e) 
-        case Statement (VarDecl(_, _, Some(e)),_,_) => pattern.matches(e)
-        case _                                      => None 
-    }
-} 
-
 case class DeadIfLabelizer() extends Labelizer[CFGMetaVar,ProgramNode,CFGVal] {
     override def test(t: ProgramNode) = t match {
         case If(Literal(_,_),_,_) => Some(new BindingsEnv) 
@@ -111,20 +101,40 @@ case class ReturnLabelizer(pattern: ExprPattern)  extends Labelizer[CFGMetaVar,P
 }
 
 case class VarDeclLabelizer(pattern: VarDeclPattern) extends Labelizer[CFGMetaVar,ProgramNode,CFGVal] {
-    // TODO : on renvoie ici des CFGDecl dans l'environnement
-    override def test(t: ProgramNode) = ???
+    override def test(t: ProgramNode) = t match {
+        case Statement(decl: Decl,_,_) => pattern.matches(decl)
+        case _                         => None
+    }
 }
 
 case class VarDefLabelizer(pattern: VarDeclPattern) extends Labelizer[CFGMetaVar,ProgramNode,CFGVal] {
-    // TODO : on renvoie ici des CFGDef dans l'environnement. 
-    // NB : il y a sans doute du code en commun avec VarDeclLabelizer, factoriser n'est pas une mauvaise idée !
-    override def test(t: ProgramNode) = ???
+    override def test(t: ProgramNode) = t match {
+        case Statement(decl: Decl,_,_) => 
+            val env: Option[Env] = pattern.matches(decl)
+            env match {
+                case Some(BindingsEnv(b)) => 
+                    val values: Seq[(CFGMetaVar,CFGVal)] = 
+                        b.mapValues { case PosBinding(CFGDecl(_,x,y)) => CFGDef(x,y) }.toSeq
+                    Some((new BindingsEnv).++(values: _*))
+                case _                    => None
+            }
+        case _ => None
+    }
 }
 
+case class UnusedLabelizer(pattern: UndefinedVar) extends Labelizer[CFGMetaVar,ProgramNode,CFGVal] {
+//    private def foldRec(exprs: List[Expr])        = exprs.foldLeft[Option[Env]](None)((res,e) => if (res.isDefined) res else recMatch(e))
+//    private def recMatch(expr: Expr): Option[Env] = pattern.matches(expr).orElse(foldRec(expr.getSubExprs))
 
-//case class DeclLabelizer()  extends Labelizer[CFGMetaVar,ProgramNode,CFGVal] {
-//    override def test(t: ProgramNode): Option[Environment[CFGMetaVar, CFGVal]] = t match {
-//        case Decl() => 
-//        case _                                 => None
-//    }
-//}
+    override def test(t: ProgramNode) = {
+        val x = ConvertNodes.getExprs(t).filter(_.isInstanceOf[DeclRefExpr]).toSet 
+        
+        if(x.isEmpty)
+            None 
+        else{
+        	val unusedVar:Set[CFGVal] = x.map{ case elt: DeclRefExpr => CFGDecl(elt.targetId, elt.typeOf, elt.targetName)}
+        	Some(new BindingsEnv -- (pattern.name -> unusedVar))
+        }
+    }
+        
+}
