@@ -16,8 +16,12 @@ int main(int argc, char** argv) {
     		if (j = q) {
     			q = j;
     		}
+    	switch (5 + 6 * 3) {
+    		case 2: break;
+    	}
     } 
     
+    while (j = 3 + 4*(6 - 7));
 
     while (true) {
     	if (0);

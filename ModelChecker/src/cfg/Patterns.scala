@@ -114,7 +114,7 @@ case class VarDeclPattern(typeOf: Option[String], name: StringPattern) extends D
     private def matchDecl(decl: Decl): Option[Env] = (name.matches(decl.name),name) match {
         case (Some(_),UndefinedVar(x))  => Some(new BindingsEnv ++ (x -> CFGDecl(decl.id.get,decl.typeOf,decl.name)))
         case (Some(_),DefinedString(_)) => Some(new BindingsEnv)
-        case (None,_)    => None
+        case _                          => None
     }
     
     override def matches(decl: Decl): Option[Env] = decl match {

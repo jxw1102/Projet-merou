@@ -25,14 +25,6 @@ import ast.Switch
  * @author David Courtinot
  */
 
-// TODO
-// unused variables : Decl(X) and AX(Unused(X))
-// hidden definitions : Decl(X) and EF(Decl(Y) and SameDef(X,Y))
-
-/* 
- * /////////////////////// Labelizers ///////////////////////
- */
-
 class IfLabelizer(val pattern: ExprPattern) extends Labelizer[CFGMetaVar, ProgramNode, CFGVal] {
     override def test(t: ProgramNode) = t match {
         case If(expr,_,_) => pattern.matches(expr) 
@@ -91,11 +83,13 @@ class StatementLabelizer(val pattern: DeclPattern) extends Labelizer[CFGMetaVar,
 case class InfeasiblePathLabelizer() extends Labelizer[CFGMetaVar,ProgramNode,CFGVal] {
 	import InfeasiblePathLabelizer._
 	
-	private def checkPattern(expr: Expr): Option[Env] = IDENTITY.matches(expr).orElse(LITERAL_ASSIGN(expr)) match {
-		case Some(_) => Some(new BindingsEnv)
-		case None    => None
-	}
-	
+	private def checkPattern(expr: Expr): Option[Env] = IDENTITY.matches(expr)
+		.orElse(LITERAL_ASSIGN(expr)) 
+		.orElse(LITERAL_EXPR(expr)) match {
+			case Some(_) => Some(new BindingsEnv)
+			case None    => None
+		}
+
 	override def test(t: ProgramNode) = t match {
 		case If(Literal(_,_),_,_) | While(Literal(_,_),_,_) | For(None|Some(Literal(_,_)),_,_) |
 			Switch (Literal(_,_),_,_) => Some(new BindingsEnv) 
@@ -109,17 +103,34 @@ case class InfeasiblePathLabelizer() extends Labelizer[CFGMetaVar,ProgramNode,CF
 
 object InfeasiblePathLabelizer {
     private val IDENTITY       = BinaryOpPattern(UndefinedVar("X"),UndefinedVar("X"),"==")
+    private val LITERAL_EXPR   = (expr: Expr) => if (isAllLiteral(expr)) Some(new BindingsEnv) else None
     private val LITERAL_ASSIGN = (expr: Expr) => {
         val pattern = BinaryOpPattern(UndefinedVar("X"),UndefinedVar("Y"),"=")
         pattern.matches(expr) match {
             case Some(env) => env("Y") match {
-                case CFGExpr(e) if (e.isInstanceOf[Literal]) => Some(new BindingsEnv)
+                case CFGExpr(e) if (isAllLiteral(e)) => Some(new BindingsEnv)
                 case _                                       => None
             }
             case _  => None
         }
     }
+    
+    private def isAllLiteral(expr: Expr): Boolean = expr match {
+        case Literal(_, _) => true
+        case _             => 
+            val exprs = expr.getSubExprs
+            if (exprs.isEmpty) false else exprs.forall(isAllLiteral(_))
+    }
 }
+//case class DeadIfLabelizer() extends Labelizer[CFGMetaVar,ProgramNode,CFGVal] {
+//    
+//        
+//    override def test(t: ProgramNode) = t match {
+//        case If(BinaryOp   (_,_,r,"="),_,_) if (isAllLiteral(r))    => Some(new BindingsEnv) 
+//        case If(expr,_,_)                   if (isAllLiteral(expr)) => Some(new BindingsEnv)
+//        case _                                                        => None
+//    }
+//}
 
 case class ReturnLabelizer(pattern: ExprPattern)  extends Labelizer[CFGMetaVar,ProgramNode,CFGVal] {
     override def test(t: ProgramNode) = t match {

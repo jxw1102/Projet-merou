@@ -63,15 +63,13 @@ object ConvertNodes {
     
     // TODO : mettre à jour avec les nouveaux types de valeurs
     def convert: (ProgramNode => Set[CFGVal]) = (p: ProgramNode) => p match {
-        case If        (expr,_,_)       => getAllExpr(expr)
-        case While     (expr,_,_)       => getAllExpr(expr)
-        case Expression(expr,_,_)       => getAllExpr(expr)
-        case Switch    (expr,_,_)       => getAllExpr(expr)
-        case For       (Some(expr),_,_) => getAllExpr(expr)
-        case Statement (decl: VarDecl,_,_) => 
-//            val res: Set[CFGVal] = Set(CFGExpr(DeclRefExpr(decl.typeName, decl.name, decl.id.get, "Var")))
-            if (decl.value.isDefined) Set(CFGExpr(decl.value.get)) else Set()
-        case _                          => Set()
+        case If        (expr,_,_)          => getAllExpr(expr)
+        case While     (expr,_,_)          => getAllExpr(expr)
+        case Expression(expr,_,_)          => getAllExpr(expr)
+        case Switch    (expr,_,_)          => getAllExpr(expr)
+        case For       (Some(expr),_,_)    => getAllExpr(expr)
+        case Statement (decl: VarDecl,_,_) => if (decl.value.isDefined) Set(CFGExpr(decl.value.get)) else Set()
+        case _                             => Set()
     }
     
     def getAllExprs(node: ProgramNode) = convert(node)
