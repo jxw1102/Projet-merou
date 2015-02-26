@@ -6,6 +6,7 @@ import scala.sys.process._
 import ast.ASTParser
 import ast.ProgramNodeFactory
 import ast.SourceCodeNodeFactory
+import ast.Program
 
 /**
  * This class enables automated test of the AST to CFG transformation. Everything is handled from
@@ -15,7 +16,7 @@ import ast.SourceCodeNodeFactory
  */
 object TestCFG extends App {
     def process(filePath: String, fileName: String, dot: String="dot") = {
-        val cmd       = "clang -Xclang -ast-dump -fsyntax-only " + filePath
+        val cmd       = "clang -Xclang -ast-dump -std=c++11 -fsyntax-only " + filePath
         val basePath  = filePath.substring(0,filePath.lastIndexOf(fileName))
         val clangPath = basePath + fileName + ".txt"
         println(clangPath)
@@ -35,8 +36,7 @@ object TestCFG extends App {
         writer.close
         
         // generate the png image
-        Seq(dot,"-Tpng",basePath + "test.dot","-o",basePath + fileName + ".png") !
-        
+        Seq(dot,"-Tpng",basePath + "test.dot","-o",basePath + fileName + ".png").!
         cfg
     }
     

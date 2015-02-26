@@ -13,7 +13,7 @@ import java.io.File
  */
 object TestAST extends App {
     def process(filePath: String, fileName: String, dot: String="dot") = {
-        val cmd       = "clang -Xclang -ast-dump -fsyntax-only " + filePath
+        val cmd       = "clang -Xclang -ast-dump -std=c++11 -fsyntax-only " + filePath
         val basePath  = filePath.substring(0,filePath.indexOf(fileName))
         val clangPath = basePath + fileName + ".txt"
         println(clangPath)

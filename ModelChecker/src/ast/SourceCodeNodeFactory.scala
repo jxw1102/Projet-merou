@@ -22,10 +22,7 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[String,String]) {
     // some utility methods
     private val concreteNodeExpected = (node: ASTNode) => throw new IllegalArgumentException(node + " should be a ConcreteASTNode")
     private val conversionFailed     = (node: ASTNode) => throw new ConversionFailedException("BinaryOperator " + node.mkString)
-    private def setAndReturn[T <: SCN](node: T, range: CodeRange, id: String) = {
-        SourceCodeNode(node,range,id)
-        node
-    }
+    private def setAndReturn[T <: SCN](node: T, range: CodeRange, id: String) = { SourceCodeNode(node,range,id); node }
     
     /**
      * General facade for handling most kind of nodes
@@ -140,7 +137,7 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[String,String]) {
     private def literal(node: ASTNode) = node match {
         case ConcreteASTNode(_,_,id,codeRange,data) => 
             val dataList = data.dataList
-            setAndReturn(Literal(dataList.head,dataList.get(-2),dataList.get(-1)),codeRange,id)
+            setAndReturn(Literal(dataList.get(-2),dataList.get(-1)),codeRange,id)
         case _                                      => concreteNodeExpected(node)
     }
     
@@ -162,7 +159,7 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[String,String]) {
         case ConcreteASTNode(_,_,id,codeRange,data) => 
             val dataList = data.dataList
             node.children.map(handleASTNode).toList match {
-                case (a: Expr) :: Nil => setAndReturn(UnaryOp(dataList.head,a,dataList.get(-1),OpPosition(dataList.get(-2))),codeRange,id)
+                case (a: Expr) :: Nil => setAndReturn(UnaryOp(dataList.get(-3),a,dataList.get(-1),OpPosition(dataList.get(-2))),codeRange,id)
                 case _                => conversionFailed(node)
             }
         case _ => concreteNodeExpected(node)
@@ -171,10 +168,11 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[String,String]) {
     def compoundAssignOperator(node: ASTNode) = node match {
         case ConcreteASTNode(_,_,id,codeRange,data) => 
             val dataList = data.dataList
-            node.children.map(handleExpr).toList match {
-                case (a: Expr) :: (b: Expr) :: Nil => setAndReturn(CompoundAssignOp(dataList.head,a,b,dataList.get(-3)),codeRange,id)
+            val x = node.children.map(handleExpr).toList match {
+                case (a: Expr) :: (b: Expr) :: Nil => setAndReturn(CompoundAssignOp(dataList.get(-5),a,b,dataList.get(-3)),codeRange,id)
                 case _ => conversionFailed(node)
             }
+            x
         case _ => concreteNodeExpected(node)
     }
     
@@ -204,7 +202,7 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[String,String]) {
     private def declRefExpr(node: ASTNode) = node match {
         case ConcreteASTNode(_,_,id,codeRange,data) => 
             val dataList = data.dataList
-            val decl     = DeclRefExpr(dataList.get(-6),dataList.last,dataList.get(-2),dataList.get(-3),dataList.get(-4))
+            val decl     = DeclRefExpr(dataList.last,dataList.get(-2),dataList.get(-3),dataList.get(-4))
             setAndReturn(decl,codeRange,id)
         case _ => concreteNodeExpected(node)
     }
@@ -227,7 +225,7 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[String,String]) {
         	val dataList = data.dataList
             node.children.map(handleExpr).toList match {
                 case condition :: yes :: no :: Nil => 
-                    setAndReturn(ConditionalOperator(dataList.head,(condition,yes,no),dataList.last),codeRange,id)
+                    setAndReturn(ConditionalOperator(dataList.last,(condition,yes,no)),codeRange,id)
                 case _ => conversionFailed(node)
             }
         case _ => concreteNodeExpected(node)

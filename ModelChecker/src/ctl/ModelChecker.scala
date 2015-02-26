@@ -14,15 +14,15 @@ class ModelChecker[M <: MetaVariable: TypeTag, N, V <: Value : TypeTag](private 
     private lazy val Val: Set[V] = root.states.flatMap(g => convert(g.value)).toSet
     
     def evalExpr(expr : CtlExpr[M,N,V]): CheckerResult = expr match {
-            case And      (x, y) => conj  (evalExpr(x),evalExpr(y))
-            case Or       (x, y) => disj  (evalExpr(x),evalExpr(y))
-            case AU       (x, y) => SAT_AU(evalExpr(x),evalExpr(y))
-            case EU       (x, y) => SAT_EU(evalExpr(x),evalExpr(y))
-            case AX       (x   ) => preA  (evalExpr(x))
-            case EX       (x   ) => preE  (evalExpr(x))
-            case Not      (x   ) => neg   (evalExpr(x))
-            case Exists   (x, y) => exists(x,evalExpr(y))
-            case Predicate(x   ) => for (n <- root.states ; env = x.test(n.value) ; if(env.isDefined)) yield (n,env.get)         
+            case And       (x, y) => conj  (evalExpr(x),evalExpr(y))
+            case Or        (x, y) => disj  (evalExpr(x),evalExpr(y))
+            case AU        (x, y) => SAT_AU(evalExpr(x),evalExpr(y))
+            case EU        (x, y) => SAT_EU(evalExpr(x),evalExpr(y))
+            case AX        (x   ) => preA  (evalExpr(x))
+            case EX        (x   ) => preE  (evalExpr(x))
+            case Not       (x   ) => neg   (evalExpr(x))
+            case Exists    (x, y) => exists(x,evalExpr(y))
+            case Predicate (x   ) => for (n <- root.states ; env = x.test(n.value) ; if(env.isDefined)) yield (n,env.get)         
     }
     
     def interStateEnv(se1: StateEnv, se2: StateEnv): Option[StateEnv] = {
@@ -57,9 +57,8 @@ class ModelChecker[M <: MetaVariable: TypeTag, N, V <: Value : TypeTag](private 
         case _ => false
     }
     
-    def conj(T1: CheckerResult , T2: CheckerResult) = {
+    def conj(T1: CheckerResult , T2: CheckerResult) = 
         for (t1 <- T1 ; t2 <- T2 ; inter = interStateEnv(t1,t2) ; if (inter.isDefined)) yield inter.get
-    }
         
     def disj    (t1: CheckerResult , t2: CheckerResult)   = t1 ++ t2
     def shift   (s1: GNode , T: CheckerResult, s2: GNode) = T.filter { case(a,b) => a == s1 }.map{ case(a,b) => (s2,b) }
@@ -67,8 +66,8 @@ class ModelChecker[M <: MetaVariable: TypeTag, N, V <: Value : TypeTag](private 
     def conjFold(x: Set[CheckerResult]): CheckerResult    = 
         if (x.isEmpty) Set() else x.foldLeft(root.states.map(node => inj(node, new BindingsEnv)))(conj)
     
-    def neg     (T: CheckerResult)                        = conjFold(T.map(negone))
-    def exists(varType: (M,TypeOf[V]), T: CheckerResult)     = for (t <- T ; if (ex_binding(varType._1, varType._2,t))) yield existsone(varType._1,t)
+    def neg   (T: CheckerResult)                         = conjFold(T.map(negone))
+    def exists(varType: (M,TypeOf[V]), T: CheckerResult) = for (t <- T ; if (ex_binding(varType._1, varType._2,t))) yield existsone(varType._1,t)
     
     def preA(T: CheckerResult) = root.states.flatMap(s => conjFold(s.next.toSet.map((sNext: GNode) => shift(sNext,T,s))))   
     def preE(T: CheckerResult) = root.states.flatMap(s => Disj(s.next.toSet.map((sNext: GNode) => shift(sNext,T,s))))   
@@ -79,17 +78,9 @@ class ModelChecker[M <: MetaVariable: TypeTag, N, V <: Value : TypeTag](private 
     private def SAT_UU(f: CheckerResult => CheckerResult)(T1: CheckerResult , T2: CheckerResult) = {
         var (w,y,x) = (T1,T2,T2)
         do {
-//            println("w :: " + w + "\n , x :: " + x + "\n , y :: " + y)
-            
             x = y 
             y = disj(y, conj(w, f(y)))
-            
-//            println("Le pre " + f(y) + " Le conj " + conj(w, f(y)))
-            
-//            println("\nx :: " + x + "\n , y :: " + y)
-            
         } while(!same(x,y))           
-            println("\nJe sors => x :: " + x + " , y :: " + y)
         y
     }
 }

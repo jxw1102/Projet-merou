@@ -1,6 +1,7 @@
 package ctl
 
 import scala.reflect.runtime.universe._
+import java.util.NoSuchElementException
 
 trait MetaVariable
 trait Value
@@ -11,9 +12,11 @@ trait Value
  * @author David Courtinot
  */
 sealed abstract class Environment[M <: MetaVariable, V <: Value] {
-	def unary_!                    : Set[Environment[M,V]] 
-	def &(that: Environment[M, V]) : Environment[M,V]
-	def -(variable: M)             : Environment[M,V]
+	def unary_!                          : Set[Environment[M,V]] 
+	def &      (that: Environment[M, V]) : Environment[M,V]
+	def -      (variable: M)             : Environment[M,V]
+	def apply  (m: M)                    : V
+	def get    (m: M)                    : Option[V]
 }
 
 sealed abstract class Bottom
@@ -23,6 +26,8 @@ class BottomEnv[M <: MetaVariable: TypeTag, V <: Value: TypeTag] private () exte
 	override def unary_!                    = Set(BindingsEnv(Map[M,MetaVarBinding[V]]()))
 	override def &(that: Environment[M, V]) = this
 	override def -(variable: M)             = this
+	override def apply(m: M)                = throw new NoSuchElementException
+	override def get(m: M)                  = None
 	override def toString                   = "Bottom"
 }
 
@@ -99,11 +104,18 @@ case class BindingsEnv[M <: MetaVariable: TypeTag,V <: Value: TypeTag] private[c
         }
     }
 
-	def -(variable: M) = BindingsEnv(bindings - variable)
+	override def -(variable: M) = BindingsEnv(bindings - variable)
+	override def apply(m: M)    = bindings(m) match {
+	    case PosBinding(x) => x
+	    case NegBinding(_) => throw new NoSuchElementException("No positive binding for this metavariable")
+	}
+	override def get(m: M)    = bindings.get(m) match {
+	    case Some(PosBinding(x)) => Some(x)
+	    case _                   => throw new NoSuchElementException("No positive binding for this metavariable")
+	} 
 	
 	override lazy val hashCode  = bindings.hashCode
     override def equals(a: Any) = a match {
-        // a tester
 	    case BindingsEnv(b) => bindings == b
 	    case _              => false
     }
