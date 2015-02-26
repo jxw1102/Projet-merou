@@ -66,8 +66,8 @@ class ModelChecker[M <: MetaVariable: TypeTag, N, V <: Value : TypeTag](private 
     def conjFold(x: Set[CheckerResult]): CheckerResult    = 
         if (x.isEmpty) Set() else x.foldLeft(root.states.map(node => inj(node, new BindingsEnv)))(conj)
     
-    def neg     (T: CheckerResult)                        = conjFold(T.map(negone))
-    def exists(varType: (M,TypeOf[V]), T: CheckerResult)     = for (t <- T ; if (ex_binding(varType._1, varType._2,t))) yield existsone(varType._1,t)
+    def neg   (T: CheckerResult)                         = conjFold(T.map(negone))
+    def exists(varType: (M,TypeOf[V]), T: CheckerResult) = for (t <- T ; if (ex_binding(varType._1, varType._2,t))) yield existsone(varType._1,t)
     
     def preA(T: CheckerResult) = root.states.flatMap(s => conjFold(s.next.toSet.map((sNext: GNode) => shift(sNext,T,s))))   
     def preE(T: CheckerResult) = root.states.flatMap(s => Disj(s.next.toSet.map((sNext: GNode) => shift(sNext,T,s))))   

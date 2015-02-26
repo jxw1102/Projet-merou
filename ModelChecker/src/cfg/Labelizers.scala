@@ -87,9 +87,18 @@ class StatementLabelizer(val pattern: DeclPattern) extends Labelizer[CFGMetaVar,
 }
 
 case class DeadIfLabelizer() extends Labelizer[CFGMetaVar,ProgramNode,CFGVal] {
+    
+    def isAllLiteral(expr: Expr): Boolean = expr match {
+        case Literal (_, _) => true
+        case _              => 
+            val tempList = expr.getSubExprs
+            tempList.map(isAllLiteral(_)).foldLeft(!tempList.isEmpty)((a,b) => a && b)
+        }
+        
     override def test(t: ProgramNode) = t match {
-        case If(Literal(_,_),_,_) => Some(new BindingsEnv) 
-        case _                    => None
+        case If(BinaryOp   (_,_,r,"="),_,_) if (isAllLiteral(r))    => Some(new BindingsEnv) 
+        case If(expr,_,_)                   if (isAllLiteral(expr)) => Some(new BindingsEnv)
+        case _                                                        => None
     }
 }
 
@@ -136,5 +145,4 @@ case class UnusedLabelizer(pattern: UndefinedVar) extends Labelizer[CFGMetaVar,P
         	Some(new BindingsEnv -- (pattern.name -> unusedVar))
         }
     }
-        
 }
