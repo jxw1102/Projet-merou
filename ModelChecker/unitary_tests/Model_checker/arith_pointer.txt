@@ -1,62 +1,74 @@
-TranslationUnitDecl 0x389f0e0 <<invalid sloc>> <invalid sloc>
-|-TypedefDecl 0x389f3d0 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'char *'
-|-FunctionDecl 0x389f4d0 <ModelChecker\unitary_tests\Model_checker\arith_pointer.cpp:1:1, line:3:1> line:1:5 f 'int (int, int)'
-| |-ParmVarDecl 0x389f410 <col:7, col:11> col:11 a 'int'
-| |-ParmVarDecl 0x389f450 <col:14, col:18> col:18 b 'int'
-| `-CompoundStmt 0x389f578 <col:20, line:3:1>
-|   `-ReturnStmt 0x389f568 <line:2:2, col:9>
-|     `-IntegerLiteral 0x389f548 <col:9> 'int' 1
-`-FunctionDecl 0x389f680 <line:5:1, line:21:1> line:5:5 main 'int (int, char **)'
-  |-ParmVarDecl 0x389f5a0 <col:10, col:14> col:14 argc 'int'
-  |-ParmVarDecl 0x389f600 <col:20, col:27> col:27 argv 'char **'
-  `-CompoundStmt 0x389fee0 <col:33, line:21:1>
-    |-DeclStmt 0x389f7c0 <line:6:2, col:12>
-    | |-VarDecl 0x389f730 <col:2, col:7> col:7 used p 'int *'
-    | `-VarDecl 0x389f780 <col:2, col:11> col:11 q 'int *'
-    |-BinaryOperator 0x389f848 <line:7:2, col:10> 'int *' lvalue '='
-    | |-DeclRefExpr 0x389f7d0 <col:2> 'int *' lvalue Var 0x389f730 'p' 'int *'
-    | `-BinaryOperator 0x389f830 <col:6, col:10> 'int *' '+'
-    |   |-ImplicitCastExpr 0x389f820 <col:6> 'int *' <LValueToRValue>
-    |   | `-DeclRefExpr 0x389f7e8 <col:6> 'int *' lvalue Var 0x389f730 'p' 'int *'
-    |   `-IntegerLiteral 0x389f800 <col:10> 'int' 1
-    |-DeclStmt 0x389f8c0 <line:10:2, col:15>
-    | `-VarDecl 0x389f890 <col:2, col:14> col:14 used s 'const char *'
-    |-BinaryOperator 0x389fa60 <line:11:2, col:20> 'const char *' lvalue '='
-    | |-DeclRefExpr 0x389f8d0 <col:2> 'const char *' lvalue Var 0x389f890 's' 'const char *'
-    | `-ConditionalOperator 0x389fa40 <col:6, col:20> 'const char *'
-    |   |-ImplicitCastExpr 0x389fa10 <col:6> '_Bool' <IntegralToBoolean>
-    |   | `-IntegerLiteral 0x389f8e8 <col:6> 'int' 0
-    |   |-ImplicitCastExpr 0x389fa20 <col:10> 'const char *' <ArrayToPointerDecay>
-    |   | `-StringLiteral 0x389f968 <col:10> 'const char [6]' lvalue "sofia"
-    |   `-ImplicitCastExpr 0x389fa30 <col:20> 'const char *' <ArrayToPointerDecay>
-    |     `-StringLiteral 0x389f9e8 <col:20> 'const char [8]' lvalue "sofiati"
-    |-DeclStmt 0x389faf0 <line:13:2, col:13>
-    | `-VarDecl 0x389fa90 <col:2, col:12> col:8 used f 'float' cinit
-    |   `-ImplicitCastExpr 0x389fae0 <col:12> 'float' <IntegralToFloating>
-    |     `-IntegerLiteral 0x389fac0 <col:12> 'int' 3
-    |-CompoundAssignOperator 0x389fb48 <line:15:2, col:7> 'float' lvalue '+=' ComputeLHSTy='float' ComputeResultTy='float'
-    | |-DeclRefExpr 0x389fb00 <col:2> 'float' lvalue Var 0x389fa90 'f' 'float'
-    | `-ImplicitCastExpr 0x389fb38 <col:7> 'float' <IntegralToFloating>
-    |   `-IntegerLiteral 0x389fb18 <col:7> 'int' 5
-    |-DeclStmt 0x389fd48 <line:17:2, col:27>
-    | `-VarDecl 0x389fbb0 <col:2, col:26> col:9 used arr 'double [4]' cinit
-    |   `-InitListExpr 0x389fc98 <col:17, col:26> 'double [4]'
-    |     |-ImplicitCastExpr 0x389fcc0 <col:19> 'double' <IntegralToFloating>
-    |     | `-IntegerLiteral 0x389fbe0 <col:19> 'int' 3
-    |     |-ImplicitCastExpr 0x389fcd0 <col:21> 'double' <IntegralToFloating>
-    |     | `-IntegerLiteral 0x389fc00 <col:21> 'int' 2
-    |     |-ImplicitCastExpr 0x389fce8 <col:23> 'double' <IntegralToFloating>
-    |     | `-IntegerLiteral 0x389fc20 <col:23> 'int' 1
-    |     `-ImplicitCastExpr 0x389fd08 <col:25> 'double' <IntegralToFloating>
-    |       `-IntegerLiteral 0x389fc40 <col:25> 'int' 4
-    |-DeclStmt 0x389fe30 <line:18:2, col:19>
-    | `-VarDecl 0x389fd70 <col:2, col:18> col:9 a 'double' cinit
-    |   `-ImplicitCastExpr 0x389fe20 <col:13, col:18> 'double' <LValueToRValue>
-    |     `-ArraySubscriptExpr 0x389fe08 <col:13, col:18> 'double' lvalue
-    |       |-ImplicitCastExpr 0x389fdf8 <col:13> 'double *' <ArrayToPointerDecay>
-    |       | `-DeclRefExpr 0x389fda0 <col:13> 'double [4]' lvalue Var 0x389fbb0 'arr' 'double [4]'
-    |       `-IntegerLiteral 0x389fdb8 <col:17> 'int' 0
-    |-DeclStmt 0x389fea0 <line:19:2, col:10>
-    | `-VarDecl 0x389fe70 <col:2, col:9> col:9 z 'float *'
-    `-ReturnStmt 0x389fed0 <line:20:2, col:9>
-      `-IntegerLiteral 0x389feb0 <col:9> 'int' 0
+TranslationUnitDecl 0xbebca0 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0xbebf90 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'char *'
+|-FunctionDecl 0xbec090 <ModelChecker\unitary_tests\Model_checker\arith_pointer.cpp:1:1, line:3:1> line:1:5 f 'int (int, int)'
+| |-ParmVarDecl 0xbebfd0 <col:7, col:11> col:11 a 'int'
+| |-ParmVarDecl 0xbec010 <col:14, col:18> col:18 b 'int'
+| `-CompoundStmt 0xbec138 <col:20, line:3:1>
+|   `-ReturnStmt 0xbec128 <line:2:2, col:9>
+|     `-IntegerLiteral 0xbec108 <col:9> 'int' 1
+`-FunctionDecl 0xbec240 <line:5:1, line:24:1> line:5:5 main 'int (int, char **)'
+  |-ParmVarDecl 0xbec160 <col:10, col:14> col:14 argc 'int'
+  |-ParmVarDecl 0xbec1c0 <col:20, col:27> col:27 argv 'char **'
+  `-CompoundStmt 0xc33168 <col:33, line:24:1>
+    |-DeclStmt 0xbec380 <line:6:2, col:12>
+    | |-VarDecl 0xbec2f0 <col:2, col:7> col:7 used p 'int *'
+    | `-VarDecl 0xbec340 <col:2, col:11> col:11 q 'int *'
+    |-BinaryOperator 0xbec408 <line:7:2, col:10> 'int *' lvalue '='
+    | |-DeclRefExpr 0xbec390 <col:2> 'int *' lvalue Var 0xbec2f0 'p' 'int *'
+    | `-BinaryOperator 0xbec3f0 <col:6, col:10> 'int *' '+'
+    |   |-ImplicitCastExpr 0xbec3e0 <col:6> 'int *' <LValueToRValue>
+    |   | `-DeclRefExpr 0xbec3a8 <col:6> 'int *' lvalue Var 0xbec2f0 'p' 'int *'
+    |   `-IntegerLiteral 0xbec3c0 <col:10> 'int' 1
+    |-DeclStmt 0xbec480 <line:9:2, col:14>
+    | `-VarDecl 0xbec450 <col:2, col:13> col:13 used s 'const int *'
+    |-BinaryOperator 0xbec588 <line:10:2, col:18> 'const int *' lvalue '='
+    | |-DeclRefExpr 0xbec490 <col:2> 'const int *' lvalue Var 0xbec450 's' 'const int *'
+    | `-ConditionalOperator 0xbec568 <col:6, col:18> 'const int *'
+    |   |-ImplicitCastExpr 0xbec548 <col:6> '_Bool' <IntegralToBoolean>
+    |   | `-IntegerLiteral 0xbec4a8 <col:6> 'int' 0
+    |   |-ImplicitCastExpr 0xbec558 <col:10> 'const int *' <NullToPointer>
+    |   | `-IntegerLiteral 0xbec4c8 <col:10> 'int' 0
+    |   `-BinaryOperator 0xbec530 <col:14, col:18> 'const int *' '+'
+    |     |-ImplicitCastExpr 0xbec520 <col:14> 'const int *' <LValueToRValue>
+    |     | `-DeclRefExpr 0xbec4e8 <col:14> 'const int *' lvalue Var 0xbec450 's' 'const int *'
+    |     `-IntegerLiteral 0xbec500 <col:18> 'int' 1
+    |-DeclStmt 0xbec628 <line:12:2, col:14>
+    | `-VarDecl 0xbec5b0 <col:2, col:13> col:8 used f 'float' cinit
+    |   `-ImplicitCastExpr 0xbec618 <col:12, col:13> 'float' <IntegralToFloating>
+    |     `-UnaryOperator 0xbec600 <col:12, col:13> 'int' prefix '-'
+    |       `-IntegerLiteral 0xbec5e0 <col:13> 'int' 3
+    |-CompoundAssignOperator 0xbec680 <line:14:2, col:7> 'float' lvalue '+=' ComputeLHSTy='float' ComputeResultTy='float'
+    | |-DeclRefExpr 0xbec638 <col:2> 'float' lvalue Var 0xbec5b0 'f' 'float'
+    | `-ImplicitCastExpr 0xbec670 <col:7> 'float' <IntegralToFloating>
+    |   `-IntegerLiteral 0xbec650 <col:7> 'int' 5
+    |-DeclStmt 0xbec878 <line:16:2, col:27>
+    | `-VarDecl 0xbec6e0 <col:2, col:26> col:9 used arr 'double [4]' cinit
+    |   `-InitListExpr 0xbec7c8 <col:17, col:26> 'double [4]'
+    |     |-ImplicitCastExpr 0xbec7f0 <col:19> 'double' <IntegralToFloating>
+    |     | `-IntegerLiteral 0xbec710 <col:19> 'int' 3
+    |     |-ImplicitCastExpr 0xbec800 <col:21> 'double' <IntegralToFloating>
+    |     | `-IntegerLiteral 0xbec730 <col:21> 'int' 2
+    |     |-ImplicitCastExpr 0xbec818 <col:23> 'double' <IntegralToFloating>
+    |     | `-IntegerLiteral 0xbec750 <col:23> 'int' 1
+    |     `-ImplicitCastExpr 0xbec838 <col:25> 'double' <IntegralToFloating>
+    |       `-IntegerLiteral 0xbec770 <col:25> 'int' 4
+    |-DeclStmt 0xbec960 <line:17:2, col:19>
+    | `-VarDecl 0xbec8a0 <col:2, col:18> col:9 a 'double' cinit
+    |   `-ImplicitCastExpr 0xbec950 <col:13, col:18> 'double' <LValueToRValue>
+    |     `-ArraySubscriptExpr 0xbec938 <col:13, col:18> 'double' lvalue
+    |       |-ImplicitCastExpr 0xbec928 <col:13> 'double *' <ArrayToPointerDecay>
+    |       | `-DeclRefExpr 0xbec8d0 <col:13> 'double [4]' lvalue Var 0xbec6e0 'arr' 'double [4]'
+    |       `-IntegerLiteral 0xbec8e8 <col:17> 'int' 0
+    |-DeclStmt 0xbec9d0 <line:18:2, col:10>
+    | `-VarDecl 0xbec9a0 <col:2, col:9> col:9 used z 'float *'
+    |-DeclStmt 0xbeca60 <line:19:2, col:16>
+    | `-VarDecl 0xbeca00 <col:2, col:14> col:9 y 'float *' cinit
+    |   `-UnaryOperator 0xbeca48 <col:13, col:14> 'float *' postfix '++'
+    |     `-DeclRefExpr 0xbeca30 <col:13> 'float *' lvalue Var 0xbec9a0 'z' 'float *'
+    |-DeclStmt 0xbecac0 <line:20:2, col:10>
+    | `-VarDecl 0xbeca90 <col:2, col:9> col:9 used x 'float *'
+    |-CompoundAssignOperator 0xbecb08 <line:21:2, col:7> 'float *' lvalue '+=' ComputeLHSTy='float *' ComputeResultTy='float *'
+    | |-DeclRefExpr 0xbecad0 <col:2> 'float *' lvalue Var 0xbeca90 'x' 'float *'
+    | `-IntegerLiteral 0xbecae8 <col:7> 'int' 3
+    `-ReturnStmt 0xc33158 <line:23:2, col:9>
+      `-IntegerLiteral 0xc33138 <col:9> 'int' 0

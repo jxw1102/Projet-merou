@@ -18,8 +18,6 @@ import ctl.Predicate
  * @author David Courtinot
  */
 object Main extends App {
-    implicit def strToMeta(s: String): CFGMetaVar = CFGMetaVar(s)
-    
     def buildGraph(filePath: String, fileName: String, dot: String="dot") = {
         val cmd    = "clang -Xclang -ast-dump -fsyntax-only " + filePath
         val basePath = filePath.substring(0,filePath.indexOf(fileName))

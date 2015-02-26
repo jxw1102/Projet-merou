@@ -1,13 +1,13 @@
 package ast
 
-import scala.collection.mutable.ArrayBuffer
+import scala.collection.immutable.{Map => IMap}
 import scala.collection.mutable.Map
-import scala.collection.immutable.{ Map => IMap }
 import scala.collection.mutable.Set
+
 import ast.model._
-import ctl.GraphNode
 import ast.model.DoWhileStmt
 import ast.model.ForStmt
+import ctl.GraphNode
 
 /**
  * This class performs a conversion from SourceCodeNode to ProgramNode and a transformation from AST to
@@ -26,12 +26,23 @@ class ProgramNodeFactory(rootNodes: Iterable[Decl], labelNodes: Map[String,Sourc
     private var labels = Map[String,GNode]()
     private def getLabel(label: String) = labels.getOrElseUpdate(label,toGraphNode(labelNodes(label)))
 
-    lazy val result = 
-        Program(IMap(rootNodes.map(decl => decl.name -> {
+    lazy val result =  {
+        val res = Map(rootNodes.map(decl => decl.name -> {
             val res = handle(decl,None,None,None)
             clean(res,Set())
             res
-        }).toSeq: _*))
+        }).toSeq: _*)
+        
+        // align declarations above the main
+        val main = res("main")
+        res += "main" -> res.filterKeys(_ != "main").values.map(_.value).foldLeft(main)((next,decl) => decl match {
+            case Statement(VarDecl(x,y,z)       ,a,b) => next << new GNode(Statement(VarDecl     (x,y,z)  ,a,b))
+            case Statement(FunctionDecl(x,y,z,t),a,b) => next << new GNode(Statement(FunctionDecl(x,y,z,t),a,b))
+            case _ => throw new MatchError("There should be nothing else than variable and function declarations " +
+            	"outside the main function")
+        })
+        Program(res.toMap)
+    }
         
     /**
      * This methods removes all the Empty nodes used for construction and updates the links in

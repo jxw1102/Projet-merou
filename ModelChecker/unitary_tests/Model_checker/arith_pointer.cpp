@@ -4,18 +4,21 @@ int f(int a, int b){
 
 int main(int argc, char** argv) {
 	int *p, *q;
-	p = p + 1;	
-	
-	
-	const char* s;
-	s = 0 ? "sofia" : "sofiati";
-	
-	float f = 3;
-	
+	p = p + 1;
+
+	const int* s;
+	s = 0 ? 0 : s + 1;
+
+	float f = -3;
+
 	f += 5;
-	
+
 	double arr[] = { 3,2,1,4};
 	double a = arr[0];
 	float *z;
+	float *y = z++;
+	float *x;
+	x += 3;
+//	x = x + 6;
 	return 0;
 }
