@@ -72,11 +72,11 @@ object True extends True
 class False
 object False extends False
 
-abstract class TypeOf[V]{
+abstract class TypeOf[V] {
     def cast(n: V): Boolean
     def filter(set: Set[V]) = set.filter(cast)
 }
 
-class NoType[V] extends TypeOf[V] {
+case class NoType[V]() extends TypeOf[V] {
     def cast(n: V) = true
 }

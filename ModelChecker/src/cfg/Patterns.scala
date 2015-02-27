@@ -60,38 +60,41 @@ case class DefinedExpr  (expr: Expr) extends AtomicExprPattern {
 case class DefinedString(name: String) extends StringPattern {
     override def matches(s: String) = if (s == name) Some(new BindingsEnv) else None
 }
-case class NotString    (not: Set[String]) extends StringPattern {
+case class NotString    (not: Set[String]=Set()) extends StringPattern {
     override def matches(s: String) = if (not contains s) None else Some(new BindingsEnv)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //                                ADVANCED PATTERNS
 ////////////////////////////////////////////////////////////////////////////////
-case class BinaryOpPattern (left: AtomicExprPattern, right: AtomicExprPattern, op: String) extends ExprPattern { 
+case class BinaryOpPattern (left: AtomicExprPattern, right: AtomicExprPattern, op: StringPattern=NotString()) extends ExprPattern { 
+    import ExprPattern._
     override def matches(expr: Expr) = expr match {
-    	case BinaryOp(_,l,r,operator) if operator == op => ExprPattern.intersection(left.matches(l),right.matches(r))
-        case _                                          => None
+    	case BinaryOp(_,l,r,operator) => intersection(intersection(op.matches(operator),left.matches(l)),right.matches(r))
+        case _                        => None
    }
 }
 
-//case class AssignmentPattern(left: AtomicExprPattern, right: AtomicExprPattern, op: String) extends ExprPattern {
-//    private val pattern: ExprPattern = op match {
-//        case "="                       => BinaryOpPattern        (left,right,op)
-//        case "+=" | "-=" | "*=" | "/=" => CompoundAssignOpPattern(left,right,op)
-//        case _                         => throw new IllegalArgumentException(op + " is not an assignment operator")
-//    }
-//    override def matches(expr: Expr): Option[Environment[CFGMetaVar,CFGVal]] = pattern.matches(expr)
-//}
-
-case class CompoundAssignOpPattern (left: AtomicExprPattern, right: AtomicExprPattern, op: Option[String]=None) extends ExprPattern { 
-    override def matches (expr: Expr) = (expr,op) match {
-    	case (CompoundAssignOp(_,l,r,operator), Some(value)) if operator == value => 
-            ExprPattern.intersection(left.matches(l),right.matches(r))
-        case (CompoundAssignOp(_,l,r,operator), None)                             => 
-            ExprPattern.intersection(left.matches(l),right.matches(r))
-        case _                                                  => None
-   }
+case class CompoundAssignOpPattern (left: AtomicExprPattern, right: AtomicExprPattern, op: StringPattern=NotString()) extends ExprPattern { 
+	import ExprPattern._
+	override def matches (expr: Expr) = expr match {
+		case CompoundAssignOp(_,l,r,operator) => intersection(intersection(op.matches(operator),left.matches(l)),right.matches(r))
+		case _                                => None
+	}
 }
+
+case class AssignmentPattern(left: AtomicExprPattern, right: AtomicExprPattern, op: StringPattern=NotString()) extends ExprPattern {
+    import ExprPattern._
+    private val patterns: List[ExprPattern] = op match {
+        case DefinedString("=")                       => List(BinaryOpPattern        (left,right,op))
+        case DefinedString("+=" | "-=" | "*=" | "/=") => List(CompoundAssignOpPattern(left,right,op))
+        case DefinedString(_)                         => throw new IllegalArgumentException(op + " is not an assignment operator")
+        case _                                        => List(BinaryOpPattern        (left,right,op),
+                											  CompoundAssignOpPattern(left,right,op))
+    }
+    override def matches(expr: Expr): Option[Environment[CFGMetaVar,CFGVal]] = patterns.map(_.matches(expr)).reduce(intersection(_,_))
+}
+
 
 case class UnaryOpPattern (operand: AtomicExprPattern, op: String, kind: OpPosition) extends ExprPattern {
     override def matches (expr: Expr) = expr match {

@@ -59,7 +59,7 @@ object Main extends App {
 //     val res = checker.evalExpr(Predicate(new FindExprLabelizer(DefinedExpr(DeclRefExpr("", "j","","")))))
     
     val j = DefinedExpr(DeclRefExpr("", "j","",""))
-    val assignJ = BinaryOpPattern(j,UndefinedVar("X"),"==")
+    val assignJ = BinaryOpPattern(j,UndefinedVar("X"),DefinedString("=="))
     val res = checker.evalExpr(Predicate(new FindExprLabelizer(assignJ)))
     
 //    val res = checker.evalExpr(EU(Predicate(new StatementLabelizer(VarDeclPattern(DefinedDecl("j"), "int"))),

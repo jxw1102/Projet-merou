@@ -31,32 +31,35 @@ case class CFGMetaVar(name: String) extends MetaVariable {
     }
 }
 
-sealed abstract class CFGVal extends TypeOf[CFGVal] with Value
+sealed abstract class CFGVal extends Value
 final case class CFGExpr(expr: Expr) extends CFGVal {
     override def toString        = expr.toString
-    override def cast(n: CFGVal) = n match { case CFGExpr(_) => true; case _ => false }    
 }
+object CFGExpr extends TypeOf[CFGVal] {
+	override def cast(n: CFGVal) = n match { case CFGExpr(_) => true; case _ => false }    
+}
+
 /**
  * CFGDecl represents a C++ declaration. The equality between two CFGDecl is based on their ID in
  * the AST.
  */
 final case class CFGDecl(id: String, typeOf: String, name: String) extends CFGVal {
-    override def cast(n: CFGVal) = n match { case CFGDecl(_,_,_) => true; case _ => false }
     override val hashCode        = id.hashCode
     override def equals(a: Any)  = a match { case CFGDecl(id,_,_) => id == this.id; case _ => false }
 }
+object CFGDecl extends TypeOf[CFGVal] { override def cast(n: CFGVal) = n match { case CFGDecl(_,_,_) => true; case _ => false } }
+
 /**
  * CFGDef, just like CFGDecl represents a C++ declaration. However, while CFGDecl corresponds to an
  * actual declaration, CFGDef only represents the semantic of a declaration and not the declaration
  * itself. Indeed, two CFGDef are considered equal if they declare a variable of the same name and 
  * the same type.
  */
-final case class CFGDef(typeOf: String, name: String) extends CFGVal {
-    override def cast(n: CFGVal) = n match { case CFGDef(_,_) => true; case _ => false }
-}
-final case class CFGString(s: String) extends CFGVal {
-    override def cast(n: CFGVal) = n match { case CFGString(_) => true; case _ => false }
-}
+final case class CFGDef(typeOf: String, name: String) extends CFGVal 
+object CFGDef extends TypeOf[CFGVal] { override def cast(n: CFGVal) = n match { case CFGDef(_,_) => true; case _ => false } }
+
+final case class CFGString(s: String) extends CFGVal 
+object CFG extends TypeOf[CFGVal] { override def cast(n: CFGVal) = n match { case CFGString(_) => true; case _ => false } }
 
 object ConvertNodes {
     private def getAllExpr(expr: Expr): Set[CFGVal] = expr.getSubExprs.map(CFGExpr(_)).toSet + CFGExpr(expr)
