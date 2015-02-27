@@ -236,11 +236,11 @@ case class G(x: Int)         extends Node(Node.getId)
 case class H(x: Int, y: Int) extends Node(Node.getId)
 
 case class NodeLabelizer(op: String, metavars: Identifier*) extends Labelizer[Identifier,Node,IntVal] {
-    def test(n: Node): Option[Environment[Identifier, IntVal]] = (n,op.toLowerCase) match {
-        case (F(x)  ,"f") => Some(new BindingsEnv ++ (metavars(0) -> IntVal(x)))
-        case (G(x)  ,"g") => Some(new BindingsEnv ++ (metavars(0) -> IntVal(x)))
-        case (H(x,y),"h") => Some(new BindingsEnv ++ (metavars(0) -> IntVal(x),metavars(1) -> IntVal(y)))
-        case _            => None
+    def test(n: Node) = (n,op.toLowerCase) match {
+        case (F(x)  ,"f") => Set(new BindingsEnv ++ (metavars(0) -> IntVal(x)))
+        case (G(x)  ,"g") => Set(new BindingsEnv ++ (metavars(0) -> IntVal(x)))
+        case (H(x,y),"h") => Set(new BindingsEnv ++ (metavars(0) -> IntVal(x),metavars(1) -> IntVal(y)))
+        case _            => Set()
     }
 }
 

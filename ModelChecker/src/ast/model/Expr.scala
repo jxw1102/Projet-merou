@@ -9,14 +9,14 @@ sealed abstract class Expr(typeOf: String) extends ForInitializer {
     def isPointer = typeOf.last == '*' 
     
     def getSubExprs = this match {
-		case BinaryOp           (_,l,r,_)   => List(l,r)     
-		case UnaryOp            (_,op,_,_)  => List(op)
-		case CompoundAssignOp   (_,l,r,_)   => List(l,r)
-		case ConditionalOperator(_,(x,y,z)) => List(x,y,z)                              
-		case ArraySubscriptExpr (_,(l,r))   => List(l,r)                                 
-		case InitListExpr       (_,exprs)   => exprs
-		case CallExpr           (_,params)  => params
-		case _                              => List()
+		case BinaryOp           (_,l,r,_)      => List(l,r)     
+		case UnaryOp            (_,op,_,_)     => List(op)
+		case CompoundAssignOp   (_,l,r,_)      => List(l,r)
+		case ConditionalOperator(_,(x,y,z))    => List(x,y,z)                              
+		case ArraySubscriptExpr (_,(l,r))      => List(l,r)                                 
+		case InitListExpr       (_,exprs)      => exprs
+		case CallExpr           (_,ref,params) => ref :: params
+		case _                                 => List()
     }    
         
     def matches(that: Expr): Boolean = (this,that) match {
@@ -28,7 +28,7 @@ sealed abstract class Expr(typeOf: String) extends ForInitializer {
         case (ConditionalOperator(_,x),ConditionalOperator(_,y))         => (x._1 matches y._1) && (x._2 matches y._2) && (x._3 matches y._3)
         case (ArraySubscriptExpr(_,x),ArraySubscriptExpr(_,y))           => (x._1 matches y._1) && (x._2 matches y._2)
         case (InitListExpr(_,x),InitListExpr(_,y))                       => x.zip(y).forall(p => p._1 matches p._2)
-        case (CallExpr(_,x),CallExpr(_,y))                               => x.zip(y).forall(p => p._1 matches p._2)
+        case (CallExpr(_,x,y),CallExpr(_,z,t))                           => (x matches z) && y.zip(t).forall(p => p._1 matches p._2)
         case _                                                           => false
     }
     
@@ -42,8 +42,8 @@ sealed abstract class Expr(typeOf: String) extends ForInitializer {
         case ArraySubscriptExpr (_,(x,y))      => "%s[%s]".format(x,y)
         case InitListExpr       (_,exprs)      => exprs.mkString("{ ",","," }")
         case DeclRefExpr        (_,x,_,_)      => x
-        case CallExpr           (_,params)     => params.head match {
-            case DeclRefExpr    (_,name,_,_)   => "%s(%s)".format(name,params.drop(1).mkString(","))
+        case CallExpr           (_,ref,params) => ref match {
+            case DeclRefExpr(_,name,_,_) => "%s(%s)".format(name,params.mkString(","))
             case _ => throw new IllegalStateException("The first child of a CallExpr should always be a DeclRefExpr")
         }
     }
@@ -56,9 +56,7 @@ final case class DeclRefExpr        (typeOf: String, targetName: String, targetI
 final case class ConditionalOperator(typeOf: String, exprs: (Expr,Expr,Expr))                               extends Expr(typeOf)
 final case class ArraySubscriptExpr (typeOf: String, exprs: (Expr, Expr))                                   extends Expr(typeOf)
 final case class InitListExpr       (typeOf: String, exprs: List[Expr])                                     extends Expr(typeOf)
-final case class CallExpr           (typeOf: String, params: List[Expr])                                    extends Expr(typeOf) {
-	val funcDeclExpr = params.head
-}
+final case class CallExpr           (typeOf: String, ref: DeclRefExpr, params: List[Expr])                  extends Expr(typeOf)
 
 sealed abstract class OpPosition 
 object OpPosition {

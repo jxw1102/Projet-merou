@@ -13,6 +13,7 @@ import ast.model.BinaryOp
 import ast.model.UnaryOp
 import ast.model.Decl
 import ast.model.CompoundAssignOp
+import ast.model.ParamVarDecl
 
 ////////////////////////////////////////////////////////////////////////////////
 //                                BASE PATTERNS
@@ -59,15 +60,13 @@ case class DefinedExpr  (expr: Expr) extends AtomicExprPattern {
 case class DefinedString(name: String) extends StringPattern {
     override def matches(s: String) = if (s == name) Some(new BindingsEnv) else None
 }
+case class NotString    (not: Set[String]) extends StringPattern {
+    override def matches(s: String) = if (not contains s) None else Some(new BindingsEnv)
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 //                                ADVANCED PATTERNS
 ////////////////////////////////////////////////////////////////////////////////
-
-case object Anything extends ExprPattern {
-    override def matches(expr: Expr): Option[Env] = Some(new BindingsEnv)
-}
-
 case class BinaryOpPattern (left: AtomicExprPattern, right: AtomicExprPattern, op: String) extends ExprPattern { 
     override def matches(expr: Expr) = expr match {
     	case BinaryOp(_,l,r,operator) if operator == op => ExprPattern.intersection(left.matches(l),right.matches(r))
@@ -75,9 +74,21 @@ case class BinaryOpPattern (left: AtomicExprPattern, right: AtomicExprPattern, o
    }
 }
 
-case class CompoundAssignOpPattern (left: AtomicExprPattern, right: AtomicExprPattern, op: String) extends ExprPattern { 
-    override def matches (expr: Expr) = expr match {
-    	case CompoundAssignOp(_,l,r,operator) if operator == op => ExprPattern.intersection(left.matches(l),right.matches(r))
+//case class AssignmentPattern(left: AtomicExprPattern, right: AtomicExprPattern, op: String) extends ExprPattern {
+//    private val pattern: ExprPattern = op match {
+//        case "="                       => BinaryOpPattern        (left,right,op)
+//        case "+=" | "-=" | "*=" | "/=" => CompoundAssignOpPattern(left,right,op)
+//        case _                         => throw new IllegalArgumentException(op + " is not an assignment operator")
+//    }
+//    override def matches(expr: Expr): Option[Environment[CFGMetaVar,CFGVal]] = pattern.matches(expr)
+//}
+
+case class CompoundAssignOpPattern (left: AtomicExprPattern, right: AtomicExprPattern, op: Option[String]=None) extends ExprPattern { 
+    override def matches (expr: Expr) = (expr,op) match {
+    	case (CompoundAssignOp(_,l,r,operator), Some(value)) if operator == value => 
+            ExprPattern.intersection(left.matches(l),right.matches(r))
+        case (CompoundAssignOp(_,l,r,operator), None)                             => 
+            ExprPattern.intersection(left.matches(l),right.matches(r))
         case _                                                  => None
    }
 }
@@ -89,24 +100,32 @@ case class UnaryOpPattern (operand: AtomicExprPattern, op: String, kind: OpPosit
    }
 }
 
-case class CallExprPattern(params: List[AtomicExprPattern], rtnType: Option[String]=None) extends ExprPattern {
-    def matchesParams (paramsFun : List[Expr]): Option[Env] = {
-        var binding: Option[Env] = Some(new BindingsEnv)
-
-        for(tup <- this.params.zip(paramsFun)) tup match {
-            case (pe,e) => binding = ExprPattern.intersection(binding,pe.matches(e)); if (binding.isEmpty) return None
-            case _      => return None
-        }
-        binding
+case class CallExprPattern(
+        name : StringPattern, 
+        params: Option[List[AtomicExprPattern]]=None,
+        typeOf: StringPattern=NotString(Set())) extends ExprPattern {
+    
+    def matchesParams (paramsFun : List[Expr]): Option[Env] = params match {
+        case None        => Some(new BindingsEnv)
+        case Some(value) =>
+            if (paramsFun.size != value.size) None 
+            else value.zip(paramsFun).foldLeft[Option[Env]](Some(new BindingsEnv)) { 
+                case (acc,(pe,e)) => if (acc.isEmpty) None else ExprPattern.intersection(acc,pe.matches(e)) 
+            }
     }
     
-    override def matches (expr: Expr) = expr match {
-    	case CallExpr (rtn, paramsFun) if (paramsFun.size == params.size)  => 
-    		rtnType match {
-    			case Some(value) => if (value == rtn) matchesParams(paramsFun) else None
-                case _           => matchesParams(paramsFun)
-            } 
-        case _ => None
+    private def matchFun(ref: DeclRefExpr): Option[Env] = (name.matches(ref.targetName),name) match {
+        case (Some(_),UndefinedVar(x))  => Some(new BindingsEnv ++ (x -> CFGExpr(ref)))
+        case (Some(_),DefinedString(_)) => Some(new BindingsEnv)
+        case _                          => None
+    }
+    
+    override def matches(expr: Expr) = expr match {
+    	case CallExpr(rtn,ref,paramsFun) => typeOf.matches(rtn) match {
+            case Some(_) => ExprPattern.intersection(matchFun(ref),matchesParams(paramsFun)) 
+            case _       => None
+        } 
+        case _                           => None
    }
 }
 
@@ -128,13 +147,19 @@ case class VarDeclPattern(typeOf: Option[String], name: StringPattern) extends D
     }
 }
 
-//case class FunctionDeclPattern(name: StringPattern, typeName: String, args: List[ParamVarDecl])  extends DeclPattern {
+//case class ParamVarDeclPattern extends DeclPattern {
+//    
+//}
+
+//case class FunctionDeclPattern(name: StringPattern, args: Option[List[ParamVarDeclPattern]]) extends DeclPattern {
 //    private def matchDecl(decl: Decl): Option[Env] = (name.matches(decl.name),name) match {
 //        case (Some(_),UndefinedVar(x))  => Some(new BindingsEnv ++ (x -> CFGDecl(decl.id.get,decl.typeOf,decl.name)))
 //        case (Some(_),DefinedString(_)) => Some(new BindingsEnv)
 //        case (None,_)    => None
 //    }
 //}
+
+
 
 //case class VarDeclPattern(varName: Pattern, typeNameDecl: Option[String], valueDecl: Option[Pattern] = None) extends DeclPattern {
 //    override def matches(decl: Decl): Option[Env] = {

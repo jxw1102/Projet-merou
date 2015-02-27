@@ -22,7 +22,7 @@ class ModelChecker[M <: MetaVariable: TypeTag, N, V <: Value : TypeTag](private 
             case EX        (x   ) => preE  (evalExpr(x))
             case Not       (x   ) => neg   (evalExpr(x))
             case Exists    (x, y) => exists(x,evalExpr(y))
-            case Predicate (x   ) => for (n <- root.states ; env = x.test(n.value) ; if(env.isDefined)) yield (n,env.get)         
+            case Predicate (x   ) => root.states.flatMap(n => x.test(n.value).map((n,_)))
     }
     
     def interStateEnv(se1: StateEnv, se2: StateEnv): Option[StateEnv] = {
@@ -60,14 +60,12 @@ class ModelChecker[M <: MetaVariable: TypeTag, N, V <: Value : TypeTag](private 
     def conj(T1: CheckerResult , T2: CheckerResult) = 
         for (t1 <- T1 ; t2 <- T2 ; inter = interStateEnv(t1,t2) ; if (inter.isDefined)) yield inter.get
         
-    def disj    (t1: CheckerResult , t2: CheckerResult)   = t1 ++ t2
-    def shift   (s1: GNode , T: CheckerResult, s2: GNode) = T.filter { case(a,b) => a == s1 }.map{ case(a,b) => (s2,b) }
-    def Disj    (x: Set[CheckerResult])                   = x.foldLeft(Set[StateEnv]())(disj)
-    def conjFold(x: Set[CheckerResult]): CheckerResult    = 
-        if (x.isEmpty) Set() else x.foldLeft(root.states.map(node => inj(node, new BindingsEnv)))(conj)
-    
-    def neg   (T: CheckerResult)                         = conjFold(T.map(negone))
-    def exists(varType: (M,TypeOf[V]), T: CheckerResult) = for (t <- T ; if (ex_binding(varType._1, varType._2,t))) yield existsone(varType._1,t)
+    def disj    (t1: CheckerResult , t2: CheckerResult)    = t1 ++ t2
+    def shift   (s1: GNode , T: CheckerResult, s2: GNode)  = T.filter { case(a,b) => a == s1 }.map{ case(a,b) => (s2,b) }
+    def neg     (T: CheckerResult)                         = conjFold(T.map(negone))
+    def exists  (varType: (M,TypeOf[V]), T: CheckerResult) = for (t <- T ; if (ex_binding(varType._1, varType._2,t))) yield existsone(varType._1,t)
+    def Disj    (x: Set[CheckerResult])                    = x.foldLeft(Set[StateEnv]())(disj)
+    def conjFold(x: Set[CheckerResult]): CheckerResult     = x.foldLeft(root.states.map(node => inj(node, new BindingsEnv)))(conj)
     
     def preA(T: CheckerResult) = root.states.flatMap(s => conjFold(s.next.toSet.map((sNext: GNode) => shift(sNext,T,s))))   
     def preE(T: CheckerResult) = root.states.flatMap(s => Disj(s.next.toSet.map((sNext: GNode) => shift(sNext,T,s))))   

@@ -209,7 +209,8 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[String,String]) {
     
     private def callExpr(node: ASTNode) = node match {
         case ConcreteASTNode(_,_,id,codeRange,data) => 
-            setAndReturn(CallExpr(data.dataList.get(-1),node.children.map(handleExpr).toList),codeRange,id)
+            val children = node.children.map(handleExpr).toList
+            setAndReturn(CallExpr(data.dataList.get(-1),children.head.asInstanceOf[DeclRefExpr],children.tail),codeRange,id)
         case _ => concreteNodeExpected(node)
     }
     

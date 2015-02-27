@@ -32,15 +32,15 @@ final case class Predicate [M <: MetaVariable,N,V <: Value](label  : Labelizer[M
 
 abstract class Labelizer[M <: MetaVariable,N,V <: Value] {
 	protected type Env = Environment[M,V]
-    def test(n: N): Option[Environment[M,V]]
+    def test(n: N): Set[Env]
 }
 
 private[ctl] final class FalseLabelizer[M <: MetaVariable: TypeTag,N: TypeTag,V <: Value: TypeTag] private[ctl]() extends Labelizer[M,N,V] {
-    def test(n: N): Option[Environment[M,V]] = None
+    def test(n: N): Set[Env] = Set()
 }
 
 private[ctl] final class TrueLabelizer[M <: MetaVariable: TypeTag,N: TypeTag,V <: Value: TypeTag] private[ctl]() extends Labelizer[M,N,V] {
-    def test(n: N): Option[Environment[M,V]] = Some(new BindingsEnv)
+    def test(n: N): Set[Env] = Set(new BindingsEnv)
 }
 
 object Labelizer {
