@@ -18,9 +18,12 @@ import ctl.TypeOf
 import ctl.Value
 import ast.Switch
 
-/* 
- * /////////////////////// Generic type definitions : Value and MetaVariable ///////////////////////
+/**
+ * This file contains the model we are going to use to link the AST classes with the CTL ones.
+ * @author Zohour Abouakil
+ * @author David Courtinot
  */
+
 case class CFGMetaVar(name: String) extends MetaVariable {
     override def hashCode       = name.hashCode
     override def toString       = name
@@ -32,8 +35,12 @@ case class CFGMetaVar(name: String) extends MetaVariable {
 }
 
 sealed abstract class CFGVal extends Value
+
+/**
+ * CFGExpr represents any expression that can be found or extracted by an ExprPattern on a CFG node
+ */
 final case class CFGExpr(expr: Expr) extends CFGVal {
-    override def toString        = expr.toString
+    override def toString = expr.toString
 }
 object CFGExpr extends TypeOf[CFGVal] {
 	override def cast(n: CFGVal) = n match { case CFGExpr(_) => true; case _ => false }    
@@ -58,23 +65,36 @@ object CFGDecl extends TypeOf[CFGVal] { override def cast(n: CFGVal) = n match {
 final case class CFGDef(typeOf: String, name: String) extends CFGVal 
 object CFGDef extends TypeOf[CFGVal] { override def cast(n: CFGVal) = n match { case CFGDef(_,_) => true; case _ => false } }
 
+/**
+ * CFGString represents any string that can be matched by a StringPattern (operator symbol, type name...).
+ */
 final case class CFGString(s: String) extends CFGVal 
-object CFG extends TypeOf[CFGVal] { override def cast(n: CFGVal) = n match { case CFGString(_) => true; case _ => false } }
+object CFGString extends TypeOf[CFGVal] { override def cast(n: CFGVal) = n match { case CFGString(_) => true; case _ => false } }
 
+/**
+ * ConvertNodes contains various methods enabling to fetch expressions contained by a CFGNode of any kind.
+ */
 object ConvertNodes {
     private def getAllExpr(expr: Expr): Set[CFGVal] = expr.getSubExprs.map(CFGExpr(_)).toSet + CFGExpr(expr)
     
+    /**
+     * Returns the single expression contained by a node, if any.
+     */
     def getExpr(p: ProgramNode): Option[Expr] = p match {
         case If        (expr,_,_)                       => Some(expr)
         case While     (expr,_,_)                       => Some(expr)
         case Expression(expr,_,_)                       => Some(expr)
         case Switch    (expr,_,_)                       => Some(expr)
         case For       (Some(expr),_,_)                 => Some(expr)
-        // see comment in convert
+        // see comment in the convert method
         case Statement (VarDecl(name,typeOf,expr),_,id) => expr.map(BinaryOp(typeOf,DeclRefExpr(typeOf,name,id),_,"="))
         case _                                          => None
     }
     
+    /**
+     * Returns a conversion function from ProgramNode to the Set[CFGVal] likely to be extracted
+     * by Pattern(s) matching
+     */
     // TODO : mettre à jour avec les nouveaux types de valeurs
     def convert: (ProgramNode => Set[CFGVal]) = (p: ProgramNode) => p match {
         case If        (expr,_,_)                       => getAllExpr(expr)
@@ -89,10 +109,4 @@ object ConvertNodes {
             expr.map(e => CFGExpr(BinaryOp(typeOf,DeclRefExpr(typeOf,name,id),e,"=")))
         case _                                          => Set()
     }
-    
-    def getAllExprs(node: ProgramNode) = convert(node)
-    	.filter(_.isInstanceOf[CFGExpr])
-    	// just to avoid the warning in the next map
-    	.map(_.asInstanceOf[CFGExpr])
-    	.map { case CFGExpr(expr) => expr }.toList
 }

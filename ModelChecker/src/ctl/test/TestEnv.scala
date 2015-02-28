@@ -4,6 +4,8 @@ import ctl._
 import scala.reflect.runtime.universe
 
 /**
+ * This class contains automated tests for the environments classes. It basically consists in unitary tests
+ * of each elementary operation implemented by an Environment.
  * @author Zohour Abouakil
  * @author Xiaowen Ji
  * @author David Courtinot

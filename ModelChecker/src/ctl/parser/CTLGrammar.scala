@@ -17,6 +17,9 @@
 //import ast.model.DeclRefExpr
 //import ctl._
 //
+///**
+// * @author Fabien Sauce
+// */
 //class CTLGrammar extends JavaTokenParsers  {
 //   type M = CFGMetaVar
 //   type N =  ProgramNode

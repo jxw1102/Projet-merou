@@ -6,18 +6,21 @@ import scala.reflect.runtime.universe
 import ctl._
 
 /**
+ * This class contains automated tests for the ModelChecker. More specifically, it includes unitary tests
+ * for some elementary methods of the ModelChecker as well as more advanced tests which consists in evaluating
+ * some CTL expressions on basic graphs.
  * @author Zohour Abouakil
  * @author Xiaowen Ji
  * @author David Courtinot
  */
-object TestModelChecker extends App with TestUtils with ConvertEnv{
+object TestModelChecker extends App with TestUtils with ConvertEnv {
     type GNode    = GraphNode[Node]
     type Binding  = BindingsEnv[Identifier, IntVal]
     type Env      = Environment[Identifier, IntVal]
     type StateEnv = (GNode, Environment[Identifier, IntVal])
     
-    implicit def intToVal(n: Int): IntVal = IntVal(n)
-    implicit def posTupleId(s: (String,Int)): (Identifier,IntVal) = Identifier(s._1) -> IntVal(s._2)
+    implicit def intToVal  (n: Int)              : IntVal                   = IntVal(n)
+    implicit def posTupleId(s: (String,Int))     : (Identifier,IntVal)      = Identifier(s._1) -> IntVal(s._2)
     implicit def negTupleId(s: (String,Set[Int])): (Identifier,Set[IntVal]) = Identifier(s._1) -> s._2.map(IntVal(_))
     
     newTestSession
