@@ -21,8 +21,8 @@ object TestModelChecker extends App with TestUtils with ConvertEnv{
     implicit def negTupleId(s: (String,Set[Int])): (Identifier,Set[IntVal]) = Identifier(s._1) -> s._2.map(IntVal(_))
     
     newTestSession
-//    println("Unitary tests...\n-----------------------")
-//    unitaryTests
+    println("Unitary tests...\n-----------------------")
+    unitaryTests
     
     newTestSession
     println("\nAdvanced tests...\n-----------------------")
@@ -162,10 +162,6 @@ object TestModelChecker extends App with TestUtils with ConvertEnv{
         assertEquals(mcC.evalExpr(f("x") && AX(Exists("y",g("y") && AX(h("x","y"))))),Set())
         // test 5
         println(mcA.evalExpr(AU(f("x"), (g("x")))))
-        // My analize
-        // 
-        
-        
     }
     
     // example of the figure 2.a in popl.pdf

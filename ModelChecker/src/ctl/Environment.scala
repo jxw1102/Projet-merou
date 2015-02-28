@@ -22,8 +22,8 @@ sealed abstract class Environment[M <: MetaVariable, V <: Value] {
 sealed abstract class Bottom
 object Bottom extends Bottom
 
-class BottomEnv[M <: MetaVariable: TypeTag, V <: Value: TypeTag] private () extends Environment[M, V] {
-	override def unary_!                    = Set(BindingsEnv(Map[M,MetaVarBinding[V]]()))
+class BottomEnv[M <: MetaVariable: TypeTag, V <: Value: TypeTag] private () extends Environment[M,V] with ConvertEnv {
+	override def unary_!                    = Set(Top)
 	override def &(that: Environment[M, V]) = this
 	override def -(variable: M)             = this
 	override def apply(m: M)                = throw new NoSuchElementException
@@ -33,19 +33,19 @@ class BottomEnv[M <: MetaVariable: TypeTag, V <: Value: TypeTag] private () exte
 
 object BottomEnv {
 	private[this] val map = new scala.collection.mutable.HashMap[(Type,Type),BottomEnv[_,_]]
-  
-	def create[M <: MetaVariable: TypeTag, V <: Value: TypeTag]: BottomEnv[M,V] = map.get(typeTag[M].tpe,typeTag[V].tpe) match {
-	    case Some(bottom) => bottom.asInstanceOf[BottomEnv[M,V]]
-	    case None => 
-	    	val bottom = new BottomEnv[M,V]()
-	     	map += (typeTag[M].tpe, typeTag[V].tpe) -> bottom
-	    	bottom
-	}  
+	private[ctl] def create[M <: MetaVariable: TypeTag, V <: Value: TypeTag]: BottomEnv[M,V] = 
+	    map.get(typeTag[M].tpe,typeTag[V].tpe) match {
+	    	case Some(bottom) => bottom.asInstanceOf[BottomEnv[M,V]]
+	    	case None => 
+	    		val bottom = new BottomEnv[M,V]()
+	    		map += (typeTag[M].tpe, typeTag[V].tpe) -> bottom
+	    		bottom
+		}  
 }
 
 trait ConvertEnv {
-  implicit def botTobot[M <: MetaVariable: TypeTag,V <: Value: TypeTag](b: Bottom): BottomEnv[M,V] = 
-      BottomEnv.create[M,V]
+  implicit def botTobot[M <: MetaVariable: TypeTag,V <: Value: TypeTag](b: Bottom): BottomEnv  [M,V] = BottomEnv  .create[M,V]
+  implicit def topTotop[M <: MetaVariable: TypeTag,V <: Value: TypeTag](b: Top   ): BindingsEnv[M,V] = BindingsEnv.create[M,V]
 }
 
 sealed abstract class MetaVarBinding[V <: Value]
@@ -55,7 +55,7 @@ case class PosBinding[V <: Value](value : V     ) extends MetaVarBinding[V] {
         case _             => false 
     }
 }
-case class NegBinding[V <: Value](values: Set[V]) extends MetaVarBinding[V]{
+case class NegBinding[V <: Value](values: Set[V]) extends MetaVarBinding[V] {
     override def equals (a: Any) = a match {
         case NegBinding(v) => v == values
         case _             => false 
@@ -123,13 +123,26 @@ case class BindingsEnv[M <: MetaVariable: TypeTag,V <: Value: TypeTag] private[c
 	def ++(pos: (M,V)*)      = BindingsEnv(Map(pos.map { case (k,v) => (k,PosBinding(v)) }: _*) ++ bindings)
 	def --(neg: (M,Set[V])*) = BindingsEnv(Map(neg.map { case (k,v) => (k,NegBinding(v)) }: _*) ++ bindings)
 	
-	override def toString = bindings.map {
+	override def toString = if (bindings.isEmpty) "Top" else bindings.map {
 	    case (k,PosBinding(v)) => "%s -> %s" .format(k,v)
 	    case (k,NegBinding(v)) => "%s -/> %s".format(k,v.mkString("{ ",", "," }")) 
 	}.mkString("Env(",", ",")")
 }
 
 object BindingsEnv {
+	private[this] val map = new scala.collection.mutable.HashMap[(Type,Type),BindingsEnv[_,_]]
     private[ctl] def apply[M <: MetaVariable: TypeTag, V <: Value: TypeTag](bindings: (M,MetaVarBinding[V])*): BindingsEnv[M,V] = 
         new BindingsEnv(Map(bindings: _*))
+    
+    private[ctl] def create[M <: MetaVariable: TypeTag, V <: Value: TypeTag]: BindingsEnv[M,V] = 
+        map.get(typeTag[M].tpe,typeTag[V].tpe) match {
+        	case Some(top) => top.asInstanceOf[BindingsEnv[M,V]]
+        	case None => 
+	    		val top = new BindingsEnv
+	    		map += (typeTag[M].tpe, typeTag[V].tpe) -> top
+	    		top
+		} 
 }
+
+sealed abstract class Top
+object Top extends Top

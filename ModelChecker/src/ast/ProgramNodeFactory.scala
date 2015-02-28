@@ -94,21 +94,21 @@ class ProgramNodeFactory(rootNodes: Iterable[Decl], labelNodes: Map[String,Sourc
      * General facade for converting SourceCodeNode to a fresh and unlinked GNode
      */
     private def toGraphNode(node: SourceCodeNode) = (node,node.codeRange.get,node.id.get) match {
-        case (ForStmt(init,cond,update,body)     ,range,id) => new GNode(For       (cond,range,id))
-        case (DoWhileStmt(cond,body)             ,range,id) => new GNode(While     (cond,range,id))
-        case (WhileStmt(cond,body)               ,range,id) => new GNode(While     (cond,range,id))
-        case (SwitchStmt(expr,_)                 ,range,id) => new GNode(Switch    (expr,range,id))
-        case (IfStmt(expr,_,_)                   ,range,id) => new GNode(If        (expr,range,id))
-        case (CaseStmt(expr,_)                   ,range,id) => new GNode(Expression(expr,range,id))
-        case (expr: Expr                         ,range,id) => new GNode(Expression(expr,range,id))
-        case (CompoundStmt(_)                    ,range,id) => emptyNode                (range,id)
-        case (ContinueStmt()                     ,range,id) => emptyNode                (range,id)
-        case (LabelStmt(_,_)                     ,range,id) => emptyNode                (range,id)
-        case (DefaultStmt(_)                     ,range,id) => emptyNode                (range,id)
-        case (BreakStmt()                        ,range,id) => emptyNode                (range,id)
-        case (GotoStmt(_)                        ,range,id) => emptyNode                (range,id)
-        case (NullStmt()                         ,range,id) => emptyNode                (range,id)
-        case (_                                  ,range,id) => new GNode(Statement (node,range,id))
+        case (ForStmt(init,cond,update,body),range,id) => new GNode(For       (cond,range,id))
+        case (DoWhileStmt(cond,body)        ,range,id) => new GNode(While     (cond,range,id))
+        case (WhileStmt(cond,body)          ,range,id) => new GNode(While     (cond,range,id))
+        case (SwitchStmt(expr,_)            ,range,id) => new GNode(Switch    (expr,range,id))
+        case (IfStmt(expr,_,_)              ,range,id) => new GNode(If        (expr,range,id))
+        case (CaseStmt(expr,_)              ,range,id) => new GNode(Expression(expr,range,id))
+        case (expr: Expr                    ,range,id) => new GNode(Expression(expr,range,id))
+        case (CompoundStmt(_)               ,range,id) => emptyNode                (range,id)
+        case (ContinueStmt()                ,range,id) => emptyNode                (range,id)
+        case (LabelStmt(_,_)                ,range,id) => emptyNode                (range,id)
+        case (DefaultStmt(_)                ,range,id) => emptyNode                (range,id)
+        case (BreakStmt()                   ,range,id) => emptyNode                (range,id)
+        case (GotoStmt(_)                   ,range,id) => emptyNode                (range,id)
+        case (NullStmt()                    ,range,id) => emptyNode                (range,id)
+        case (_                             ,range,id) => new GNode(Statement (node,range,id))
     }
     
     private def handleIf(ifStmt: SourceCodeNode, next: Option[GNode], exit: Option[GNode], entry: Option[GNode]) = ifStmt match {

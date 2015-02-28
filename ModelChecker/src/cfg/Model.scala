@@ -64,15 +64,30 @@ object CFG extends TypeOf[CFGVal] { override def cast(n: CFGVal) = n match { cas
 object ConvertNodes {
     private def getAllExpr(expr: Expr): Set[CFGVal] = expr.getSubExprs.map(CFGExpr(_)).toSet + CFGExpr(expr)
     
+    def getExpr(p: ProgramNode): Option[Expr] = p match {
+        case If        (expr,_,_)                       => Some(expr)
+        case While     (expr,_,_)                       => Some(expr)
+        case Expression(expr,_,_)                       => Some(expr)
+        case Switch    (expr,_,_)                       => Some(expr)
+        case For       (Some(expr),_,_)                 => Some(expr)
+        // see comment in convert
+        case Statement (VarDecl(name,typeOf,expr),_,id) => expr.map(BinaryOp(typeOf,DeclRefExpr(typeOf,name,id),_,"="))
+        case _                                          => None
+    }
+    
     // TODO : mettre à jour avec les nouveaux types de valeurs
     def convert: (ProgramNode => Set[CFGVal]) = (p: ProgramNode) => p match {
-        case If        (expr,_,_)          => getAllExpr(expr)
-        case While     (expr,_,_)          => getAllExpr(expr)
-        case Expression(expr,_,_)          => getAllExpr(expr)
-        case Switch    (expr,_,_)          => getAllExpr(expr)
-        case For       (Some(expr),_,_)    => getAllExpr(expr)
-        case Statement (decl: VarDecl,_,_) => if (decl.value.isDefined) Set(CFGExpr(decl.value.get)) else Set()
-        case _                             => Set()
+        case If        (expr,_,_)                       => getAllExpr(expr)
+        case While     (expr,_,_)                       => getAllExpr(expr)
+        case Expression(expr,_,_)                       => getAllExpr(expr)
+        case Switch    (expr,_,_)                       => getAllExpr(expr)
+        case For       (Some(expr),_,_)                 => getAllExpr(expr)
+        case Statement (VarDecl(name,typeOf,expr),_,id) => 
+            // for a VarDecl node, we instantiate an artificial assignment because the expr attribute
+            // only represents the right part of the assignment included in the declaration
+            Set(CFGDecl(p.id,typeOf,name),CFGDef(typeOf,name)) ++ 
+            expr.map(e => CFGExpr(BinaryOp(typeOf,DeclRefExpr(typeOf,name,id),e,"=")))
+        case _                                          => Set()
     }
     
     def getAllExprs(node: ProgramNode) = convert(node)

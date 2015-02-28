@@ -202,7 +202,7 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[String,String]) {
     private def declRefExpr(node: ASTNode) = node match {
         case ConcreteASTNode(_,_,id,codeRange,data) => 
             val dataList = data.dataList
-            val decl     = DeclRefExpr(dataList.last,dataList.get(-2),dataList.get(-3),dataList.get(-4))
+            val decl     = DeclRefExpr(dataList.last,dataList.get(-2),dataList.get(-3))
             setAndReturn(decl,codeRange,id)
         case _ => concreteNodeExpected(node)
     }
