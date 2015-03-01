@@ -16,6 +16,14 @@ import ast.model.OpPosition
 import ast.model.CompoundAssignOp
 import ast.model.DeclRefExpr
 import ctl._
+import ctl.Labelizer
+import cfg.ExprPattern
+import cfg.ExpressionLabelizer
+import cfg.ExpressionLabelizer
+import cfg.CompoundAssignOpPattern
+import cfg.DefinedExpr
+import cfg.ExpressionLabelizer
+import cfg.ExpressionLabelizer
 
 class CTLGrammar extends JavaTokenParsers  {
    type M = CFGMetaVar
@@ -51,23 +59,31 @@ class CTLGrammar extends JavaTokenParsers  {
                                                    "EX" ~> ctl3                                                                     ^^  { case x => EX(x)}                               |
                                                    ((("exists" ~>  ident) <~ "(") ~ ctl5 <~ ")") ^^ { case x ~ y => Exists( (CFGMetaVar(x),new NoType[V]) , y) }                           | 
                                                    "NOT" ~> "(" ~> ctl5 <~ ")" ^^ { case x => !x }                                                                             | ctl2
-  lazy val ctl2:Parser[CtlExpr[M,N,V]] = ctl1 | assignement
+  lazy val ctl2:Parser[CtlExpr[M,N,V]] = ctl1 | assignment ^^ { case x => Predicate(ExpressionLabelizer(DefinedExpr(x))) }
   lazy val ctl1:Parser[CtlExpr[M,N,V]] = "(" ~> ctl5 <~ ")"
   
   
   /***********************************************************************************/
+//  val assignment2 :Parser[CtlExpr[M,N,V]] = ass
+//  val ass:Parser[CtlExpr[M,N,V]] = opt(ident ~ ("="|"+="|"-="|"*="|"/="|"%="|"&="|"|="|"^="|"<<="|">>=")) ~ exp123 ^^ { 
+//    case None ~ right => right
+//    case Some(leftIdent ~ leftOp) ~ right => CompoundAssignOp(leftIdent,DeclRefExpr("",leftIdent,"",""),right,leftOp) 
+//  }
+//  val expr123 :Parser[E] = opt(ident ~ ("="|"+="|"-="|"*="|"/="|"%="|"&="|"|="|"^="|"<<="|">>=")) ~ exp12 ^^ { 
+//    case None ~ right => right
+//    case Some(leftIdent ~ leftOp) ~ right => Predicate(ExpressionLabelizer(DefinedExpr(CompoundAssignOp(leftIdent,DeclRefExpr("",leftIdent,"",""),right,leftOp) )
+//  } 
+//  opt(ident ~ ("="|"+="|"-="|"*="|"/="|"%="|"&="|"|="|"^="|"<<="|">>=")) ~ exp12 ^^ { 
+//    case None ~ right => right
+//    case Some(leftIdent ~ leftOp) ~ right => CompoundAssignOpPattern(DeclRefExpr("",leftIdent,"",""),right,leftOp) 
+//  } | exp12 ^^ { case x => x }
   
-  val assignment :Parser[E] = //ident ^^  { case ident => "ident : "+ident }
-  opt(ident ~ ("="|"+="|"-="|"*="|"/="|"%="|"&="|"|="|"^="|"<<="|">>=")) ~ exp12 ^^ { 
+  val assignment :Parser[E] = opt(ident ~ ("="|"+="|"-="|"*="|"/="|"%="|"&="|"|="|"^="|"<<="|">>=")) ~ exp12 ^^ { 
     case None ~ right => right
-    case Some(leftIdent ~ leftOp) ~ right => CompoundAssignOp(leftIdent,DeclRefExpr("",leftIdent,"",""),right,leftOp)  //"ass:("+leftIdent+ " "+leftOp + " "+ right +")"
+    case Some(leftIdent ~ leftOp) ~ right => CompoundAssignOp(leftIdent,DeclRefExpr("",leftIdent,"",""),right,leftOp) 
   } | exp12 ^^ { case x => x }
   
-  
-//  def bopRec(list:List[E], op:String):E = list match {
-//     case List(elem) => elem
-//     case elem::tail =>  BinaryOp("",elem,bopRec(tail,op),op)
-//     }
+ 
   
   def bopRec(list:List[~[String,E]]):E = list match {
      case List(~(op,elem)) => elem
