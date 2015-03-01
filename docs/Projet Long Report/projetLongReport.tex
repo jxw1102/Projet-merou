@@ -8,6 +8,7 @@
 \usepackage{textcomp}
 \usepackage{listings}
 \usepackage{epigraph}
+\usepackage{longtable}
 \usepackage{setspace}
 \usepackage[some]{background}
 \usepackage{gensymb}
@@ -275,8 +276,7 @@ take part in a project called "Projet long" in teams of five students
 to work on a common project.The project started on January 19, 
 and will last eight weeks. It ends up with a defense in which we
  promote our work in front of a jury which evaluates us against 
-different aspects :
-}
+different aspects :}
 
 \vspace{3mm}
 \begin{itemize}
@@ -329,8 +329,7 @@ a prototype for pattern matching in a C++ code.}
 opportunity to apply a lot of techniques that we saw in our three 
 years of courses in ENSEEIHT and new techniques that we learned
 while working on it. We took our project management courses as a reference to 
-organize our time and to catch up with the deadlines. 
-}
+organize our time and to catch up with the deadlines.}
 
 \paragraph{}
 \hspace{4mm}\textnormal{To deliver a good product at the end, we realized that the good coordination
@@ -341,7 +340,7 @@ and production of relevant documents are main keys of success.}
 \hspace{4mm}\textnormal{From the technical view, the clients expect us to design and create 
 a tool written in Scala that would detect patterns in a C++ code
  using temporal logic expressions. They specified that our project 
-would be a combination of two main parts: }
+would be a combination of two main parts:}
 
 \vspace{3mm}
 \begin{itemize}
@@ -487,7 +486,7 @@ engaged in project work.
 
 \section{Development plan}
 
-\subsection{Development organization }
+\subsection{Development organization}
 
 \paragraph{}
 \hspace{4mm}\textnormal{We used the Scrum method, which is widely used, 
@@ -597,10 +596,175 @@ because Git is a free and open source
 project in a very efficient way. It also supports rapid branching and merging, 
 and includes specific tools for visualizing and 
 navigating through the development history.
+All the delivrable documents are managed on a git repository, including documentation and reports. Anyone is allowed to commit at anytime, however any push must have been authorized by the quality responsible after the code has been thoroughly tested against a set of tests by the test responsible.}
+
+\subsection{Communication between team members}
+
+\paragraph{}
+\hspace{4mm}\textnormal{We used Google Drive to share all the documents 
+between the team members. Our drive was organized by folders: 
+one with all the papers and the interesting documents
+ that we found or we received from our clients,
+one that contains all the documents that are related 
+to the project management,
+one with the notes that we take during the meetings either with 
+the clients or the industrial coordinator,  
+and the last one that contains all the useful links to have deeper
+knowledge about the project's subject or the technologies used.}
+
+\chapter{Code and documentation management}
+
+\section{Quality checking}
+
+\paragraph{}
+\hspace{4mm}\textnormal{For ensuring that our coding rules are respected and
+ evaluating the quality of our sources,
+ we used a tool called Scalastyle that enables
+, using an easy-to-use xml configuration file,
+ to examine the scala code and indicates potential problems with it.
+ Combined with a specific pulgin, this can be used to generate 
+warnings or errors in the IDE the developer is using. 
+Our settings are the following :}
+
+\definecolor{mygray}{gray}{0.4}
+\renewcommand{\arraystretch}{1.2}
+\begin{center}
+\begin{longtable}{|l|l|l|}
+\hline
+\textbf{\textcolor{mygray}{Rule}} & \textbf{\textcolor{mygray}{Description}} & \textbf{\textcolor{mygray}{Value}}  \\
+\hline
+FileLengthChecker & \small{Check the number of lines in a file} & 1500  \\
+\hline
+FileLineLengthChecker & \small{Check the number of characters in a line} & 140 \\
+\hline
+FileTabChecker & \small{Check that there are no tabs in a file} & enabled \\
+\hline
+ClassNamesChecker & \small{Check that class names match a regular}  & \^ [A-Z][A-a-z]*\$ \\
+& \small{expression} & \\
+\hline
+\small{ClassTypeParameterChecker} & \small{Checks that type parameter to a class matches a} & \^[A-Z\_]\$ \\
+& regular expression & \\
+\hline
+FileTabChecker & \small{Check that there are no tabs in a file} & enabled \\
+\hline
+\small{CyclomaticComplexityChecker} & \small{Checks that the cyclomatic complexity of a method} & 12 \\
+&  \small{does exceed a value} & \\
+\hline
+EmptyClassChecker & \small{If a class/trait has no members, the braces are} & enabled \\
+&  \small{unnecessary} & \\
+\hline
+\small{EqualsHashCodeChecker} & \small{Check that if a class implements either equals} & enabled \\ 
+ & \small{or hashCode, it should implement the other} & \\
+\hline
+MethodLengthChecker & \small{Checks that methods do not exceed a maximum} & 50 \\
+& \small{length} & \\
+\hline
+MethodNamesChecker & \small{Check that method names match a regular} & \^[a-z][A-Za-z0-9]*(\_=)?\$ \\
+\tiny{.} & \small{expression} & \\
+\hline
+\small{MultipleStringLiteralsChecker} & \small{Checks that a string literal does not appear} & allowed = 2 \\
+& \small{multiple times} & \\
+\hline
+\small{NotImplementedErrorUsage} & \small{Checks that the code does not have ??? operators} & enabled \\
+\hline
+NullChecker & \small{Check that null is not used} & enabled \\
+\hline
+\small{NumberOfMethodsInTypeChecker} & \small{Check that a class/trait/object does not have too} & maxMethods = 30 \\
+& \small{many methods} & \\
+\hline
+NumberOfTypesChecker & \small{Checks that there are not too many types} & maxTypes = 20 \\
+& \small{declared in a file} & \\
+\hline
+ObjectNamesChecker & \small{Check that object names match a regular}  & \^[A-Z][A-Za-z]*\$ \\
+& \small{expression} & \\
+\hline
+ParameterNumberChecker & \small{Maximum number of parameters for a method} & maxParameters = 5 \\
+\hline
+RedundantIfChecker & \small{Checks that if expressions are not redundant, ie} & enabled \\
+& \small{easily replaced by a variant of the condition} &  \\
+\hline
+ScalaDocChecker & \small{Checks that the ScalaDoc on documentable}  & enabled \\
+& \small{members is well-formed} & \\
+\hline
+\end{longtable} 
+\end{center}
+\paragraph{}
+\hspace{4mm}\textnormal{This project meets a need from our clients. 
+Therefore our codes will probably be used, studied and modified. 
+That is why we have set up this quality approach. 
+All our codes should be understandable and well commented. 
+To achieve that, our programs were constantly reviewed by our clients
+as we gave them the link to our Git repository. 
 }
 
-\subsection{}
+\section{Verification and validation process}
 
-\section{Quality checking and validation}
+\subsection{Verification process}
+
+\paragraph{}
+\hspace{4mm}\textnormal{Verification is the process in which we determine
+whether the right solution is being developed.
+Once a functionality of our product is completed, 
+we analyze the results in order to
+ verify that the requirements have been satisfied. 
+ In addition, the verification is an ongoing process:
+ at the each completion of each milestone, 
+we performed a verification analysis to make 
+sure we are still on track.
+}
+
+\paragraph{}
+\hspace{4mm}\textnormal{As we have chosen the \textsc{Extreme Programming} model for the programming 
+aspect of the project, we considered that a code would have passed
+ the quality test if at least the two members of a pair have checked 
+it. This is up to the quality manager to ensure this has been done, 
+otherwise he should do it himself. This is specific to the code quality 
+checks and does not apply to the rest of the delivrable documents.}
+
+\subsection{Validation process}
+
+\paragraph{}
+\hspace{4mm}\textnormal{Validation is the process in which we make sure that the solution
+that we came up with is 
+constructed correctly and according to the requirements 
+and the specifications.
+In this process, we performed various testing procedures on
+ the code and tried to remove the defects as soon as possible. 
+Once the found defects have being fixed, the process repeats itself.}
+
+\paragraph{}
+\hspace{4mm}\textnormal{}
+
+\chapter{Technical aspects}
+
+\section{Context}
+
+\subsection{Motivations}
+
+\paragraph{}
+\hspace{4mm}\textnormal{   Embedded systems and robotics are designed to interact with 
+humans sometimes. Therefore, a single failure or a malfunction 
+can really be catastrophic.  This is why various analyses are 
+undertaken to limit and prevent such problems. Theses analysis aim
+ to study the embedded code and prove that it does what it is 
+supposed to do. The goal of our project is to find out whether the
+ embedded code meets a number of programming rules by 
+defining authorized and prohibited patterns. 
+Our clients have an existing tool named Coccinelle that is 
+developed at INRIA. This tool detects patterns and also offers
+ the possibility to modify the code. However, this tool only works
+ on C code. 
+}
+
+\paragraph{}
+\hspace{4mm}\textnormal{The model checking, which consists in asserting properties 
+on a model thanks to graph search algorithms (for example),
+ is one of those fields that can be applied to this matter.
+ In this project, we are trying to build a model checker working
+ on C++ code which takes the source code as an input and is 
+transformed a few times in various abstract representations to end 
+with a graph model that we are able to send to a model checker.}
+
+\subsubsection{}
 
 \end{document}
