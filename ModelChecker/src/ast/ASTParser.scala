@@ -64,22 +64,31 @@ class ASTParser {
                     case (Some(codeRange),Some(id),data,indent,_) =>
                         val cnode = ConcreteASTNode(indent/2,id.group(1),id.group(2),codeRange,data)
                         id.group(1) match {
-                            case "LabelStmt" => labels += cnode.id -> cnode.data.dataList.last
-                            case _           =>
+                            case "LabelStmt" => labels += cnode.id -> cnode.data.dataList.last; cnode
+                            case x if x.endsWith("Stmt") => cnode
+                            case x if x.endsWith("Expr") => cnode
+                            case x if x.endsWith("Operator") => cnode
+                            case x if x.contains("Literal") => cnode
+                            case "VarDecl" | "FunctionDecl" | "ParmVarDecl" => cnode
+                            case _           => OtherASTNode(indent/2,data)
                         }
-                        cnode
                     case (None,None,data,indent,_) =>
                         data match {
                             case "<<<NULL>>>" => NullASTNode(indent/2)
                             case _            => OtherASTNode(indent/2,data)
                         }
                     case (_,_,_,_,line) => throw new ParseFailedException(line)
-                }    
-            
+                }
+                
                 while (node.depth <= stack.head.depth) stack.pop
                 stack.head.children += node
                 stack.push(node)
         })
+        
+        val children = tree.children.filterNot(_.isInstanceOf[OtherASTNode])
+        tree.children.clear()
+        tree.children ++= children
+        
         new ASTParserResult(tree,labels)
     }
 }

@@ -81,13 +81,13 @@ object ConvertNodes {
      * Returns the single expression contained by a node, if any.
      */
     def getExpr(p: ProgramNode): Option[Expr] = p match {
-        case If        (expr,_,_)                       => Some(expr)
-        case While     (expr,_,_)                       => Some(expr)
-        case Expression(expr,_,_)                       => Some(expr)
-        case Switch    (expr,_,_)                       => Some(expr)
-        case For       (Some(expr),_,_)                 => Some(expr)
+        case If        (expr,_,_,_)                       => Some(expr)
+        case While     (expr,_,_,_)                       => Some(expr)
+        case Expression(expr,_,_,_)                       => Some(expr)
+        case Switch    (expr,_,_,_)                       => Some(expr)
+        case For       (Some(expr),_,_,_)                 => Some(expr)
         // see comment in the convert method
-        case Statement (VarDecl(name,typeOf,expr),_,id) => expr.map(BinaryOp(typeOf,DeclRefExpr(typeOf,name,id),_,"="))
+        case Statement (VarDecl(name,typeOf,expr),_,id,_) => expr.map(BinaryOp(typeOf,DeclRefExpr(typeOf,name,id),_,"="))
         case _                                          => None
     }
     
@@ -97,12 +97,12 @@ object ConvertNodes {
      */
     // TODO : mettre à jour avec les nouveaux types de valeurs
     def convert: (ProgramNode => Set[CFGVal]) = (p: ProgramNode) => p match {
-        case If        (expr,_,_)                       => getAllExpr(expr)
-        case While     (expr,_,_)                       => getAllExpr(expr)
-        case Expression(expr,_,_)                       => getAllExpr(expr)
-        case Switch    (expr,_,_)                       => getAllExpr(expr)
-        case For       (Some(expr),_,_)                 => getAllExpr(expr)
-        case Statement (VarDecl(name,typeOf,expr),_,id) => 
+        case If        (expr,_,_,_)                       => getAllExpr(expr)
+        case While     (expr,_,_,_)                       => getAllExpr(expr)
+        case Expression(expr,_,_,_)                       => getAllExpr(expr)
+        case Switch    (expr,_,_,_)                       => getAllExpr(expr)
+        case For       (Some(expr),_,_,_)                 => getAllExpr(expr)
+        case Statement (VarDecl(name,typeOf,expr),_,id,_) => 
             // for a VarDecl node, we instantiate an artificial assignment because the expr attribute
             // only represents the right part of the assignment included in the declaration
             Set(CFGDecl(p.id,typeOf,name),CFGDef(typeOf,name)) ++ 
