@@ -10,8 +10,8 @@ import ast.model.ForStmt
 import ctl.GraphNode
 
 /**
- * This class performs a conversion from SourceCodeNode to ProgramNode and a transformation from AST to
- * CFG at the same time
+ * This class performs the conversion from SourceCodeNode to ProgramNode and the transformation from AST to
+ * CFG at the same time. It is the last step of the conversion from AST to CFG.
  * @author Sofia Boutahar
  * @author Xiaowen Ji
  * @author David Courtinot
@@ -26,14 +26,17 @@ class ProgramNodeFactory(rootNodes: Iterable[Decl], labelNodes: Map[String,Sourc
     private var labels = Map[String,GNode]()
     private def getLabel(label: String) = labels.getOrElseUpdate(label,toGraphNode(labelNodes(label)))
 
+    // the result is lazily computed
     lazy val result =  {
+        // compute separately all the declaration nodes
         val res = Map(rootNodes.map(decl => decl.name -> {
             val res = handle(decl,None,None,None)
             clean(res,Set())
             res
         }).toSeq: _*)
         
-        // align declarations above the main
+        // align declarations above the main : first copy the root node of each declaration without its link to the
+        // declaration body, and then connect it to the main
         val main = res("main")
         res += "main" -> res.filterKeys(_ != "main").values.map(_.value).foldLeft(main)((next,decl) => decl match {
             case Statement(VarDecl(x,y,z)       ,a,b) => next << new GNode(Statement(VarDecl     (x,y,z)  ,a,b))
@@ -44,10 +47,8 @@ class ProgramNodeFactory(rootNodes: Iterable[Decl], labelNodes: Map[String,Sourc
         Program(res.toMap)
     }
         
-    /**
-     * This methods removes all the Empty nodes used for construction and updates the links in
-     * consequence. It is called just before returning the result.
-     */
+    // this method removes all the Empty nodes used for construction and updates the links in
+    // consequence. It is called just before returning the result.
     private def clean(node: GNode, explored: Set[GNode]): Unit = {
         if (explored contains node) return
 
@@ -62,10 +63,9 @@ class ProgramNodeFactory(rootNodes: Iterable[Decl], labelNodes: Map[String,Sourc
         next.foreach(clean(_,explored))
     }
     
-    /**
-     * General facade for handling the SourceCodeNode(s)
-     */
-    def handle(node: SourceCodeNode, next: Option[GNode], exit: Option[GNode], entry: Option[GNode]): GNode = 
+    
+     // general facade for handling the SourceCodeNode(s)
+    private def handle(node: SourceCodeNode, next: Option[GNode], exit: Option[GNode], entry: Option[GNode]): GNode = 
         node match {
             case IfStmt(_,_,_)         => handleIf(node,next,exit,entry)
             case ForStmt(_,_,_,_)      => handleFor(node,next,exit,entry)
@@ -90,25 +90,23 @@ class ProgramNodeFactory(rootNodes: Iterable[Decl], labelNodes: Map[String,Sourc
     }
     private def emptyNode(range: CodeRange, id: String) = new GNode(Empty(range,id))
     
-    /**
-     * General facade for converting SourceCodeNode to a fresh and unlinked GNode
-     */
+    // general facade for converting SourceCodeNode to a fresh and unlinked GNode
     private def toGraphNode(node: SourceCodeNode) = (node,node.codeRange.get,node.id.get) match {
-        case (ForStmt(init,cond,update,body)     ,range,id) => new GNode(For       (cond,range,id))
-        case (DoWhileStmt(cond,body)             ,range,id) => new GNode(While     (cond,range,id))
-        case (WhileStmt(cond,body)               ,range,id) => new GNode(While     (cond,range,id))
-        case (SwitchStmt(expr,_)                 ,range,id) => new GNode(Switch    (expr,range,id))
-        case (IfStmt(expr,_,_)                   ,range,id) => new GNode(If        (expr,range,id))
-        case (CaseStmt(expr,_)                   ,range,id) => new GNode(Expression(expr,range,id))
-        case (expr: Expr                         ,range,id) => new GNode(Expression(expr,range,id))
-        case (CompoundStmt(_)                    ,range,id) => emptyNode                (range,id)
-        case (ContinueStmt()                     ,range,id) => emptyNode                (range,id)
-        case (LabelStmt(_,_)                     ,range,id) => emptyNode                (range,id)
-        case (DefaultStmt(_)                     ,range,id) => emptyNode                (range,id)
-        case (BreakStmt()                        ,range,id) => emptyNode                (range,id)
-        case (GotoStmt(_)                        ,range,id) => emptyNode                (range,id)
-        case (NullStmt()                         ,range,id) => emptyNode                (range,id)
-        case (_                                  ,range,id) => new GNode(Statement (node,range,id))
+        case (ForStmt(init,cond,update,body),range,id) => new GNode(For       (cond,range,id))
+        case (DoWhileStmt(cond,body)        ,range,id) => new GNode(While     (cond,range,id))
+        case (WhileStmt(cond,body)          ,range,id) => new GNode(While     (cond,range,id))
+        case (SwitchStmt(expr,_)            ,range,id) => new GNode(Switch    (expr,range,id))
+        case (IfStmt(expr,_,_)              ,range,id) => new GNode(If        (expr,range,id))
+        case (CaseStmt(expr,_)              ,range,id) => new GNode(Expression(expr,range,id))
+        case (expr: Expr                    ,range,id) => new GNode(Expression(expr,range,id))
+        case (CompoundStmt(_)               ,range,id) => emptyNode                (range,id)
+        case (ContinueStmt()                ,range,id) => emptyNode                (range,id)
+        case (LabelStmt(_,_)                ,range,id) => emptyNode                (range,id)
+        case (DefaultStmt(_)                ,range,id) => emptyNode                (range,id)
+        case (BreakStmt()                   ,range,id) => emptyNode                (range,id)
+        case (GotoStmt(_)                   ,range,id) => emptyNode                (range,id)
+        case (NullStmt()                    ,range,id) => emptyNode                (range,id)
+        case (_                             ,range,id) => new GNode(Statement (node,range,id))
     }
     
     private def handleIf(ifStmt: SourceCodeNode, next: Option[GNode], exit: Option[GNode], entry: Option[GNode]) = ifStmt match {
@@ -177,6 +175,8 @@ class ProgramNodeFactory(rootNodes: Iterable[Decl], labelNodes: Map[String,Sourc
             res
     }
     
+    // this method is used for various conversion methods for converting and linking elements of a list.
+    // A specific treatment (passed as a parameter) is applied to the head of the list.
     private def linkElements(list: List[SourceCodeNode], next: Option[GNode])
                             (handleHead: (SourceCodeNode,Option[GNode]) => GNode): Option[GNode] = list match {
         case h :: q => 
@@ -192,6 +192,10 @@ class ProgramNodeFactory(rootNodes: Iterable[Decl], labelNodes: Map[String,Sourc
         val head = cmpdStmt match {
             case CompoundStmt(elts) =>
                 val handleHead = (h: SourceCodeNode, next: Option[GNode]) => handle(h,next,exit,entry) 
+                // as we need to convert and link at the same time, we cannot traverse the list in the normal order because
+                // when we convert list(i), converted(list(i+1)) still does not exist. However, we know that the last element
+                // will be next (if next.isDefined), which is already converted. It means that we can process the conversion
+                // and linking starting from the end, therefore we first reverse the list.
                 linkElements(elts.reverse,next)(handleHead)
         }
         val res = toGraphNode(cmpdStmt)

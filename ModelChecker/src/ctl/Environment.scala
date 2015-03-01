@@ -3,27 +3,60 @@ package ctl
 import scala.reflect.runtime.universe._
 import java.util.NoSuchElementException
 
-trait MetaVariable
-trait Value
 
 /**
+ * This file contains all the definitions required to represent the environmnents used by the model-checking
+ * algorithm
  * @author Zohour Abouakil
  * @author Fabien Sauce
  * @author David Courtinot
  */
+
+/**
+ * Any type that can be used as a key for a binding must extend MetaVariable
+ */
+trait MetaVariable
+
+/**
+ * Any type that can be used as a value for a binding must extend Value
+ */
+trait Value
+
 sealed abstract class Environment[M <: MetaVariable, V <: Value] {
-	def unary_!                          : Set[Environment[M,V]] 
-	def &      (that: Environment[M, V]) : Environment[M,V]
-	def -      (variable: M)             : Environment[M,V]
-	def apply  (m: M)                    : V
-	def get    (m: M)                    : Option[V]
+    /**
+     * This methods returns the complementary of an environment, which is a set of environments
+     */
+	def unary_! : Set[Environment[M,V]] 
+	
+	/** 
+     * This method returns the intersection of two environments
+     */
+	def &(that: Environment[M, V]) : Environment[M,V]
+
+    /**
+     * Creates a new Environment by removing the binding of a given key from the original environment
+     */
+    def -(variable: M): Environment[M, V]
+	
+	/**
+	 * Retrieve the positive binding of key m
+	 * @throws NoSuchElementException iff there is no positive binding associated to m
+	 */
+	def apply(m: M): V
+	
+	/**
+	 * Retrieve the value of the positive binding associated with key m, if any
+	 */
+	def get(m: M): Option[V]
 }
 
-sealed abstract class Bottom
-object Bottom extends Bottom
-
-class BottomEnv[M <: MetaVariable: TypeTag, V <: Value: TypeTag] private () extends Environment[M, V] {
-	override def unary_!                    = Set(BindingsEnv(Map[M,MetaVarBinding[V]]()))
+/**
+ * Represents the Bottom environment, which is an environment containing conflicting bindings.
+ * @note for some implementation reasons, BottomEnv is not defined as a singleton, however it will
+ *       behave like a singleton for a given combination of types [M,N,V].
+ */
+class BottomEnv[M <: MetaVariable: TypeTag, V <: Value: TypeTag] private () extends Environment[M,V] with ConvertEnv {
+	override def unary_!                    = Set(Top)
 	override def &(that: Environment[M, V]) = this
 	override def -(variable: M)             = this
 	override def apply(m: M)                = throw new NoSuchElementException
@@ -33,43 +66,50 @@ class BottomEnv[M <: MetaVariable: TypeTag, V <: Value: TypeTag] private () exte
 
 object BottomEnv {
 	private[this] val map = new scala.collection.mutable.HashMap[(Type,Type),BottomEnv[_,_]]
-  
-	def create[M <: MetaVariable: TypeTag, V <: Value: TypeTag]: BottomEnv[M,V] = map.get(typeTag[M].tpe,typeTag[V].tpe) match {
-	    case Some(bottom) => bottom.asInstanceOf[BottomEnv[M,V]]
-	    case None => 
-	    	val bottom = new BottomEnv[M,V]()
-	     	map += (typeTag[M].tpe, typeTag[V].tpe) -> bottom
-	    	bottom
-	}  
-}
-
-trait ConvertEnv {
-  implicit def botTobot[M <: MetaVariable: TypeTag,V <: Value: TypeTag](b: Bottom): BottomEnv[M,V] = 
-      BottomEnv.create[M,V]
+	private[ctl] def create[M <: MetaVariable: TypeTag, V <: Value: TypeTag]: BottomEnv[M,V] = 
+	    map.get(typeTag[M].tpe,typeTag[V].tpe) match {
+	    	case Some(bottom) => bottom.asInstanceOf[BottomEnv[M,V]]
+	    	case None => 
+	    		val bottom = new BottomEnv[M,V]()
+	    		map += (typeTag[M].tpe, typeTag[V].tpe) -> bottom
+	    		bottom
+		}  
 }
 
 sealed abstract class MetaVarBinding[V <: Value]
-case class PosBinding[V <: Value](value : V     ) extends MetaVarBinding[V] {
+
+/**
+ * Represents the value of a positive binding. 
+ * @note A positive binding is a key -> value association where key is a meta-variable and value a given value
+ *       that is the only value allowed for this meta-variable.
+ */
+case class PosBinding[V <: Value](value: V) extends MetaVarBinding[V] {
     override def equals (a: Any) = a match {
         case PosBinding(v) => v == value
         case _             => false 
     }
 }
-case class NegBinding[V <: Value](values: Set[V]) extends MetaVarBinding[V]{
+
+/**
+ * Represents the value of a negative binding. 
+ * @note A positive binding is a key -> values association where key is a meta-variable and values set of values
+ *       that are not allowed for this meta-variable.
+ */
+case class NegBinding[V <: Value](values: Set[V]) extends MetaVarBinding[V] {
     override def equals (a: Any) = a match {
         case NegBinding(v) => v == values
         case _             => false 
     }
 }
 
+/**
+ * Represents any environment containing non-conflicting positive and negative bindings.
+ */
 case class BindingsEnv[M <: MetaVariable: TypeTag,V <: Value: TypeTag] private[ctl] (bindings: Map[M, MetaVarBinding[V]] = Map[M, MetaVarBinding[V]]()) 
 	extends Environment[M,V] with ConvertEnv {
     
     def this() = this(Map[M, MetaVarBinding[V]]())
     
-    /**
-     * This function returns the complementary of an environment, which is a set of environments
-     */
 	override def unary_! = {
     	bindings.flatMap { 
             case (key,PosBinding(value)) => Set(BindingsEnv(key -> NegBinding(Set(value))))
@@ -77,9 +117,6 @@ case class BindingsEnv[M <: MetaVariable: TypeTag,V <: Value: TypeTag] private[c
         }.toSet
     }
 	
-    /** 
-     * This function return the intersection of two environment. First, it verifies the conflict
-     */
 	override def &(that: Environment[M,V]): Environment[M,V] = {
         that match {
             case BindingsEnv(b) => 
@@ -120,16 +157,45 @@ case class BindingsEnv[M <: MetaVariable: TypeTag,V <: Value: TypeTag] private[c
 	    case _              => false
     }
 	
+	/**
+	 * Returns a new Environement by adding some positive bindings
+	 */
 	def ++(pos: (M,V)*)      = BindingsEnv(Map(pos.map { case (k,v) => (k,PosBinding(v)) }: _*) ++ bindings)
-	def --(neg: (M,Set[V])*) = BindingsEnv(Map(neg.map { case (k,v) => (k,NegBinding(v)) }: _*) ++ bindings)
+    
+	/**
+     * Returns a new Environement by adding some negative bindings
+     */
+    def --(neg: (M, Set[V])*) = BindingsEnv(Map(neg.map { case (k, v) => (k, NegBinding(v)) }: _*) ++ bindings)
 	
-	override def toString = bindings.map {
+	override def toString = if (bindings.isEmpty) "Top" else bindings.map {
 	    case (k,PosBinding(v)) => "%s -> %s" .format(k,v)
 	    case (k,NegBinding(v)) => "%s -/> %s".format(k,v.mkString("{ ",", "," }")) 
 	}.mkString("Env(",", ",")")
 }
 
 object BindingsEnv {
+	private[this] val map = new scala.collection.mutable.HashMap[(Type,Type),BindingsEnv[_,_]]
     private[ctl] def apply[M <: MetaVariable: TypeTag, V <: Value: TypeTag](bindings: (M,MetaVarBinding[V])*): BindingsEnv[M,V] = 
         new BindingsEnv(Map(bindings: _*))
+    
+    private[ctl] def create[M <: MetaVariable: TypeTag, V <: Value: TypeTag]: BindingsEnv[M,V] = 
+        map.get(typeTag[M].tpe,typeTag[V].tpe) match {
+        	case Some(top) => top.asInstanceOf[BindingsEnv[M,V]]
+        	case None => 
+	    		val top = new BindingsEnv
+	    		map += (typeTag[M].tpe, typeTag[V].tpe) -> top
+	    		top
+		} 
 }
+
+// all the following classes are used for adding some syntactic sugar for representation of Top and Bottom environments
+trait ConvertEnv {
+  implicit def botTobot[M <: MetaVariable: TypeTag,V <: Value: TypeTag](b: Bottom): BottomEnv  [M,V] = BottomEnv  .create[M,V]
+  implicit def topTotop[M <: MetaVariable: TypeTag,V <: Value: TypeTag](b: Top   ): BindingsEnv[M,V] = BindingsEnv.create[M,V]
+}
+
+sealed abstract class Bottom
+object Bottom extends Bottom
+
+sealed abstract class Top
+object Top extends Top

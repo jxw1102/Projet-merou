@@ -4,9 +4,11 @@ import scala.collection.mutable.ArrayBuffer
 import ast.SourceCodeNode
 
 /**
+ * Classes used to represent main kinds of declarations within the program. They most often correspond to a specific
+ * Clang class.
  * @author Sofia Boutahar
- * @author Xiaowen Ji
  * @author David Courtinot
+ * @author Xiaowen Ji
  */
 abstract class Decl(_name: String, _typeOf: String) extends SourceCodeNode {
     def name   = _name

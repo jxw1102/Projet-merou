@@ -29,14 +29,14 @@ chapterName=Part
 \pagestyle{fancy}
 ##
 > title[titlePage.projet-merouTemplate] ##
-date=February $22^{th}$ 2015
+date=March, $1^{st}$ 2015
 ref=model-checking.archi
 first_author_name=Zohour \textsc{Abouakil} ~\\ Sofia \textsc{Boutahar} ~\\ David \textsc{Courtinot} ~\\ Xiaowen \textsc{Ji} ~\\ Fabien \textsc{Sauce}
 title_size=0.7
 sup_strip_color=0.70,0.70,0.70
 inf_strip_color=0.00,0.00,0.00
 title=Architecture document
-version=2
+version=3
 ##
 >> latex ##
 \chapter*{Changelog}
@@ -45,13 +45,15 @@ version=2
   \hline
   Version & Date & Change  \\
   \hline
-  V2 & February $21^{th}$  & fixed the class diagrams, which did not respect the UML standard \\
+  V3 & February $21^{th}$  & fixed the class diagrams, which did not respect the UML standard \\
   & February $21^{th}$ & minor changes in explications \\
   & February $21^{th}$ & added the CTL part \\
   & February $21^{th}$ & changed the code presentation for it to be printable in black and white \\
   & February $21^{th}$ & changed most resources from png to pdf for better quality and scalability \\
   & February $22^{th}$ & added the merge part \\
   \hline
+  V4 & March $1^{st}$ & completed the merge part with patterns and labelizers \\
+ \hline
 \end{tabular}
 \end{center}
 ##
@@ -406,8 +408,27 @@ Merge
 Choice of M, N and V
 ##
 >>> paragraph ##
-Considering the kind of predicates we wanted to use and the types of node we were using (as a recall, type N will be ProgramNode for the CFG), we
-thought that we only needed Expr and Decl values in our environment. The following diagram is self-explanatory :
+Considering the kind of predicates we wanted to use and the types of node we were using (as a recall, type N will be ProgramNode for the CFG), it was kind
+of obvious that we would need Expr values in our environment, so we introduced the type CFGExpr, which simply wraps an Expr object. However, it was not so easy determining what other kinds
+of values would be required. To solve this question, we thought about the labelizers and properties we wanted to be able to implement to deduce our needs. 
+Two important properties led us to introduce types CFGDecl and CFGExpr :
+##
+>>> list ##
+<< There should be no hidden declarations  (declaration of an entity of the same kind, same type and same name in different scopes) >>;
+<< There should be no declared entity which is never used >>
+##
+>>> paragraph ##
+We can see there that \textit{declaration} has a slightly different meaning in those two cases. In the first case,
+two declarations are considered equal (this is the way we have to interpret \textit{hidden} in order to create conflicts in the environments in case
+of hidden declarations) if they declare an entity of the same kind, type and 
+name. We prefer calling that a \textit{definition} rather than a \textit{declaration}. In the second case,
+all declarations have to be considered unique because we do not care if a variable of the same type and name corresponding to a declaration was used in the code,
+we want to know if every declaration, individually, was used. Thus, CFGDef will be used to represent a definition, and CFGDecl to represent a declaration.
+The only difference between those two is that CFGDecl takes an id as a parameter and bases its equality check on this id whereas CFGDef bases it on the pair (type,name).
+##
+>>> paragraph ##
+Finally, we saw that it could be interesting to make some type checks, or for example, when looking for arithmetic on pointers, which requires to distinguish the = operator, which is allowed for pointers, from + or -, which are deprecated).
+Therefore, we also allowed strings to be values of the environment, so we created a wrapper type CFGString. The following diagram sums this all up :
 ##
 >>> image ##
 data/merge_types;
@@ -415,18 +436,69 @@ Concrete implementation of the generic types of the CTL part;
 0.65
 ##
 >> section ##
-Matching expression patterns
+Labelize our nodes
 ##
->>> paragraph ##
-The last thing we have had to do was to find a way to efficiently match expressions pattern
-constituing our predicates. For this, we created some classes to describe an expression pattern and explore an expression
-to try to find a match. Our classes are only able to describe patterns that do not explore more than one level of depth of the expression.
-Deeper exploration of the expression tree would be pointless for the properties we aim to assert on the CFG, moreover
-some patterns may be ambiguous or more bothering to define if we explored the tree deeper (for example, 5 +x + y + 6 can be matched in several ways by the X + Y patterns, 
-X and Y being meta-variables).
+>>> subsection ##
+Patterns
 ##
->>> paragraph ##
-Therefore, we created a Pattern class extended by several case-classes representing the presence or absence of a fixed value
-for a sub-expression. If there is no fixed value, the match method will look for a value that makes the expression compliant with the pattern, if any.
-An ExprPattern is a combination of fixed and unfixed expressions.
+>>>> paragraph ##
+Most of the predicates we need to use were based on the idea of a pattern of code. For example, $X = 0$ is a pattern describing all the assignments to 0
+of a variable to be determined (using capital-size letter means that this is a meta-variable and not a variable of the code). Using patterns, we are able 
+to tell many things about a node and express many base properties. The patterns had to be able to match all kinds of entities in a code and allow for 
+returning bindings between the meta-variables of the pattern and the matching values in case of success of the matching. For the same reasons as in the
+previous part, we determined that we needed :
+##
+>>>> list ##
+patterns for expressions : ExprPattern;
+patterns for declarations : DeclPattern;
+patterns for string values : StringPattern
+##
+>>>> paragraph ##
+For expression patterns, we did not want to explore more than one level of depth of the expressions.
+Deeper exploration of the expression tree would be nearly pointless for the properties we aim to assert on the CFG, moreover
+some patterns may be ambiguous or more bothering to define if we explored the tree deeper (for example, $5 + x + y + 6$ can be matched in several ways by the $X + Y$ patterns, 
+X and Y being meta-variables). Even if the AST generated by an expression is deterministic, which makes deep pattern matching possible, we thought it was not very clear for the user
+what he would get when using deep patterns. Therefore, we introduced the AtomicExprPattern, which is only extended by leaves expressions patterns and is the only kind of ExprPattern
+that can be passed as a parameter to a non-leave expression pattern. This choice is entirely reversible and has no consequence on the rest of our design.
+##
+>>>> paragraph ##
+StringPattern and ExprPattern have in common the fact that they can be whether an UndefinedVar, which is a simple wrapper of a meta-variable that matches anything
+and returns the appropriate binding, or a specific value (DefinedExpr, DefinedString). StringPattern can also be a NotString, which is comparable to a negative binding : it is a set
+of forbidden values. We did not need to use such thing for ExprPatttern, but nothing in our conception prevents us from adding it later.
+##
+>>>> paragraph ##
+Finally, DeclPattern is a bit different than the other two. It can also be an UndefinedVar, but we did not see any use-case for a DefinedDecl pattern. 
+We actually only treated variable declarations, which required to have a powerful pattern-matching based on the name, the type and the assigned expression, if any.
+We needed two patterns doing mostly the same thing but returning in one case a CFGDecl, and in the other case a CFGDef. Consequently, we factorized the code of those two patterns
+in VarDeclMatcher. The specific behaviour of VarDefPattern and VarDeclPattern is implemented in the conversion method passed as a parameter in the constructor of VarDeclMatcher.
+##
+>>>> image ##
+data/patterns;
+Hierarchy of the Pattern type;
+0.55
+##
+>>>> image ##
+data/expr_pattern;
+Detail of all the expression patterns;
+0.45
+##
+>>> subsection ##
+Labelizers
+##
+>>>> paragraph ##
+Basically, our labelizers simply wrap a Pattern to add a specific semantic. Here is the list of all the labelizers, with their semantic :
+##
+>>>> list ##
+\textbf{IfLabelizer}, \textbf{ForLabelizer}, \textbf{WhileLabelizer}, \textbf{SwitchLabelizer}, \textbf{ExpressionLabelizer} :
+all those labelizers firstly check than the node considered is of the appropriate type (respectively : If, For, While, Switch, Expression) and then if the expression
+it eventually holds matches a given pattern.;
+\textbf{VarDeclLabelizer}, \textbf{VarDefLabelizer} : match any Statement node containing a VarDecl matching a given pattern. The difference betwen those two classs is the kind of CGVal returned
+in case of success (CFGDecl or CFGDef).;
+\textbf{FindExprLabelizer} : matches any node containing at least an occurrence of a given pattern. Returns all the occurrences of the pattern in the node.;
+\textbf{MatchesExprLabelizer} : matches any node holding an expression that exactly matches a given pattern. It returns a single value in case of success, which makes it different from FindExprLabelizer.;
+##
+>>>> image ##
+data/labels.png;
+Detail of all the labelizers we implemented;
+0.55
 ##

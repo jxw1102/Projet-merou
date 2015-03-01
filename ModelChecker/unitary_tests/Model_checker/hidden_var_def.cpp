@@ -8,7 +8,13 @@ int main(int argc, char** argv) {
 	{
 		int j = 3;
 		{
-			float j;
+			float j = 15.0f;
+			{
+				float j;
+				{
+					int j = 18;
+				}
+			}
 		}
 	}
     if (j == 2)

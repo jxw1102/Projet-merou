@@ -10,7 +10,8 @@ import ast.Program
 
 /**
  * This class enables automated test of the AST to CFG transformation. Everything is handled from
- * the call to the Clang compiler to the creation of a png representing the graph.
+ * the call to the Clang compiler to the creation of a png representing the graph. See the associated 
+ * README for use.
  * @author Sofia Boutahar
  * @author David Courtinot
  */
@@ -40,17 +41,12 @@ object TestCFG extends App {
         cfg
     }
     
-    if (args.length > 0) {
-        process("./"+args(0),args(0).substring(0,args(0).lastIndexOf('.')),"/usr/local/bin/dot")
-        "open test.png".!!
-    } else {
-        val folder = "various"
-        new File("ModelChecker/unitary_tests/ast/%s/".format(folder)).listFiles.filter(_.getName.endsWith("cpp")).foreach { file => 
-            val name = file.getName
-            val s    = name.substring(0,name.lastIndexOf('.'))
+    val folder = "various"
+    new File("ModelChecker/unitary_tests/ast/%s/".format(folder)).listFiles.filter(_.getName.endsWith("cpp")).foreach { file => 
+        val name = file.getName
+        val s    = name.substring(0,name.lastIndexOf('.'))
             
-            // generate the Clang AST and print it in a file
-            process(file.getPath,s)
-        }
+        // generate the Clang AST and print it in a file
+        process(file.getPath,s)
     }
 }

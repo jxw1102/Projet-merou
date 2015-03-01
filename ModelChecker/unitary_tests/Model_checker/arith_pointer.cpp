@@ -6,6 +6,8 @@ int main(int argc, char** argv) {
 	int *p, *q;
 	p = p + 1;
 
+	int *r = p + 1;
+
 	const int* s;
 	s = 0 ? 0 : s + 1;
 
@@ -19,6 +21,6 @@ int main(int argc, char** argv) {
 	float *y = z++;
 	float *x;
 	x += 3;
-//	x = x + 6;
+	x = x + 6;
 	return 0;
 }

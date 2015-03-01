@@ -5,7 +5,8 @@ import scala.collection.mutable.Map
 import ast.model._
 
 /**
- * This class provides all necessary methods to convert an ASTNode into a SourceCodeNode
+ * The SourceCodeNodeFactory, given the data held by an ASTParserResult, converts the ASTNode tree
+ * into a higher level tree data-structure, namely SourceCodeNode.
  * @author Sofia Boutahar
  * @author Xiaowen Ji
  * @author David Courtinot
@@ -13,10 +14,18 @@ import ast.model._
 class SourceCodeNodeFactory(root: ASTNode, labels: Map[String,String]) {
     type SCN = SourceCodeNode 
     
+    /**
+     * labelNodes maps the id of the labels to their corresponding SourceCodeNode conversion
+     */
     private val labelNodes = Map[String,SCN]()
     
     // the result of the whole AST's transformation is lazily computed
     lazy val result = new SourceCodeResult(root.children.map(handleASTNode).map(_.asInstanceOf[Decl]),labelNodes)
+    
+    /**
+     * Contains the result of the conversion : the root nodes (declarations out of the main method, and the main itself),
+     * and a map mapping the labels' id to their corresponding SourceCodeNode conversion.
+     */
     final class SourceCodeResult(val rootNodes: ArrayBuffer[Decl], val labelNodes: Map[String,SCN])
     
     // some utility methods
@@ -24,9 +33,7 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[String,String]) {
     private val conversionFailed     = (node: ASTNode) => throw new ConversionFailedException("BinaryOperator " + node.mkString)
     private def setAndReturn[T <: SCN](node: T, range: CodeRange, id: String) = { SourceCodeNode(node,range,id); node }
     
-    /**
-     * General facade for handling most kind of nodes
-     */
+    // general facade for handling most kind of nodes
     private def handleASTNode(node: ASTNode): SCN = node match {
            case ConcreteASTNode(_,typeOf,_,_,_) => typeOf match {
                case "CompoundStmt"   => compoundStmt(node)
@@ -51,12 +58,13 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[String,String]) {
            case _                    => concreteNodeExpected(node)
     }
     
-    def lookFor[T](n: ASTNode, convert: ASTNode => T) = n match {
-            case NullASTNode(_) => None
-            case x              => Some(convert(n))
+    private def lookFor[T](n: ASTNode, convert: ASTNode => T) = n match {
+        case NullASTNode(_) => None
+        case x              => Some(convert(n))
     }
     
-    def handleExpr(node: ASTNode): Expr = node match {
+    // general facade for handling expression nodes
+    private def handleExpr(node: ASTNode): Expr = node match {
         case ConcreteASTNode(_,typeOf,_,_,_) => typeOf match {
             case "UnaryOperator"              => unaryOperator            (node)
             case "BinaryOperator"             => binaryOperator           (node)
@@ -76,9 +84,9 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[String,String]) {
     private def forStmt(node: ASTNode) = { 
         node match {
             case ConcreteASTNode(_,_,id,codeRange,_) => 
-                val init   = lookFor(node.children(0),handleASTNode                      )
-                val cond   = lookFor(node.children(2),handleExpr                         )
-                val update = lookFor(node.children(3),handleExpr                         )
+                val init   = lookFor(node.children(0),handleASTNode)
+                val cond   = lookFor(node.children(2),handleExpr   )
+                val update = lookFor(node.children(3),handleExpr   )
                 val body   = handleASTNode(node.children(4)).asInstanceOf[Stmt]
                 SourceCodeNode(ForStmt(init,cond,update,body),codeRange,id)
             case _ => concreteNodeExpected(node)
@@ -155,7 +163,7 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[String,String]) {
         case _  => concreteNodeExpected(node)
     }
     
-    def unaryOperator(node: ASTNode) = node match {
+    private def unaryOperator(node: ASTNode) = node match {
         case ConcreteASTNode(_,_,id,codeRange,data) => 
             val dataList = data.dataList
             node.children.map(handleASTNode).toList match {
@@ -165,7 +173,7 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[String,String]) {
         case _ => concreteNodeExpected(node)
     }
     
-    def compoundAssignOperator(node: ASTNode) = node match {
+    private def compoundAssignOperator(node: ASTNode) = node match {
         case ConcreteASTNode(_,_,id,codeRange,data) => 
             val dataList = data.dataList
             val x = node.children.map(handleExpr).toList match {
@@ -202,14 +210,15 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[String,String]) {
     private def declRefExpr(node: ASTNode) = node match {
         case ConcreteASTNode(_,_,id,codeRange,data) => 
             val dataList = data.dataList
-            val decl     = DeclRefExpr(dataList.last,dataList.get(-2),dataList.get(-3),dataList.get(-4))
+            val decl     = DeclRefExpr(dataList.last,dataList.get(-2),dataList.get(-3))
             setAndReturn(decl,codeRange,id)
         case _ => concreteNodeExpected(node)
     }
     
     private def callExpr(node: ASTNode) = node match {
         case ConcreteASTNode(_,_,id,codeRange,data) => 
-            setAndReturn(CallExpr(data.dataList.get(-1),node.children.map(handleExpr).toList),codeRange,id)
+            val children = node.children.map(handleExpr).toList
+            setAndReturn(CallExpr(data.dataList.get(-1),children.head.asInstanceOf[DeclRefExpr],children.tail),codeRange,id)
         case _ => concreteNodeExpected(node)
     }
     

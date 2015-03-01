@@ -17,13 +17,12 @@ import ast.model.VarDecl
 import ast.model.DeclRefExpr
 
 /**
- * Those classes represent the most abstract and final form of the transformations of the source code
- * from AST just before the CFG conversion.
+ * Program contains the whole CFG in form of a map mapping the name of each global declaration
+ * of the source code to the root node of its corresponding CFG.
  * @author David Courtinot 
  * @author Sofia Boutahar
  * @author Xiaowen Ji      
  */
-
 case class Program(val decls: Map[String,GraphNode[ProgramNode]]) {
     override def toString = decls.values.map(_.mkString).addString(new StringBuilder).toString
 }
@@ -46,6 +45,10 @@ object SourceCodeNode {
     def apply(node: SourceCodeNode, codeRange: CodeRange, id: String) = { node.codeRange = codeRange; node.id = id; node }
 }
 
+/**
+ * ProgramNode is a very basic representation of the code. There is no notion of block and no relation between
+ * different kind of nodes. It is meant to be the type of the values of a GraphNode representing a CFG.
+ */
 sealed abstract class ProgramNode(val id: String) {
     type SCN = SourceCodeNode
     
@@ -69,9 +72,7 @@ sealed abstract class ProgramNode(val id: String) {
     }
 }
 
-/**
- * Case-classes that will be the values of the CFG nodes
- */
+// those classes will be the values of the CFG nodes
 final case class If        (e: Expr             , cr: CodeRange, _id: String) extends ProgramNode(_id)
 final case class For       (e: Option[Expr]     , cr: CodeRange, _id: String) extends ProgramNode(_id)
 final case class While     (e: Expr             , cr: CodeRange, _id: String) extends ProgramNode(_id)

@@ -18,7 +18,7 @@ digraph hierarchy {
 
 	TypeOf [label="{TypeOf[V]||cast(n: V): Boolean}"]
 	NoType [label="NoType[V]"]
-	Labelizer [label="{Labelizer[M \<: MetaVariable,N,V \<: Value]|| abstract test(n: N): Option[Environment[M,V]}"]
+	Labelizer [label="{Labelizer[M \<: MetaVariable,N,V \<: Value]|| abstract test(n: N): Set[Environment[M,V]]}"]
 	
 	// links
 	Ctl -> And
