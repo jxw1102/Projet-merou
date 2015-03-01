@@ -9,7 +9,7 @@ import scala.collection.mutable.{HashSet => MHSet}
 import scala.collection.mutable.{Set => MSet}
 
 /**
- * This class represents an oriented unweighted graph of labelizable nodes
+ * This class represents an oriented unweighted graph
  * @author David Courtinot
  * @author Xiaowen Ji
  */
@@ -23,8 +23,7 @@ class GraphNode[N](val value: N) {
     def next = _next
     
     /**
-     * 'states' contains all the states of the graph accessible from this GraphNode.
-     * It should be computed on the root node.
+     * states contains all the states of the graph reachable from this GraphNode.
      */
     lazy val states = getStates(Set())
     private def getStates(set: Set[GNode]): Set[GNode] = {
@@ -37,11 +36,13 @@ class GraphNode[N](val value: N) {
     
     /**
      * Creates a bidirectional binding from nodes this and v : this <- v
+     * @return the head v of the link, in order to be able to chain the << calls
      */
     def <<(v: GNode) = { _prev += v; v._next += this; v }
     
     /**
      * Creates a bidirectional binding from nodes this and v : this -> v
+     * @return the head this of the link, in order to be able to chain the >> calls
      */
     def >>(v: GNode) = { _next += v; v._prev += this; v } 
     

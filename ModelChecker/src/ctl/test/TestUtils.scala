@@ -4,6 +4,7 @@ import ctl.MetaVariable
 import ctl.Value
 
 /**
+ * Utility class for automated testing
  * @author David Courtinot
  */
 trait TestUtils {
@@ -15,7 +16,7 @@ trait TestUtils {
 	    i += 1
 	}
     def assertEquals[T](a0: T, a1: T) = printMsg(a0 != a1)
-    def assertTrue  (b: Boolean)      = printMsg(!b)
+    def assertTrue     (b: Boolean)   = printMsg(!b)
     
     implicit def strToId(s: String): Identifier = Identifier(s)
     

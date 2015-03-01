@@ -8,6 +8,8 @@ import scala.sys.process._
 import java.io.File
 
 /**
+ * Test file for AST parsing. All the transformation steps are automated but the output require manual
+ * checking. See the associated README for use.
  * @author Sofia Boutahar
  * @author David Courtinot
  */

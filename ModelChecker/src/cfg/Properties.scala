@@ -11,9 +11,11 @@ import ctl._
  * @author Zohour Abouakil
  * @author David Courtinot
  */
+
 object Properties {
     type CTL = CtlExpr[CFGMetaVar,ProgramNode,CFGVal]
     
+//    val FIND_FUNCTION_PARAMS = Predicate(FindExprLabelizer(CallExprPattern(UndefinedVar("X"), Some(List(UndefinedVar("Y"),UndefinedVar("Z"))))))
 //    val UNUSED_VAR       = (Predicate(VarDeclLabelizer(VarDeclPattern(None, UndefinedVar("X")))) 
 //              && AX(AG(Predicate(UnusedLabelizer(UndefinedVar("X"))))))
     
@@ -33,8 +35,11 @@ object Properties {
     	Predicate(IfLabelizer    (pattern)) || Predicate(WhileLabelizer (pattern))    ||
         Predicate(SwitchLabelizer(pattern)) || Predicate(ForLabelizer(Some(pattern))) 
     
-    val FIND_FUNCTION_PARAMS = Predicate(FindExprLabelizer(CallExprPattern(UndefinedVar("X"), Some(List(UndefinedVar("Y"),UndefinedVar("Z"))))))
-
+    /**
+     * Detects all function call returning a value that is unused. Any expression which is not stored or used
+     * for a test is considered unused. This property will return all the unused expressions containing a function
+     * call.
+     */
     val FUNCTION_UNUSED_VALUE =  {
         val nonVoidFunctionCall: CTL = Predicate(FindExprLabelizer(CallExprPattern(UndefinedVar("Z"),None,NotString("void"))))
         val existsExpr         : CTL = Exists(("X",CFGExpr),Predicate(ExpressionLabelizer(UndefinedVar("X"))))
@@ -54,9 +59,28 @@ object Properties {
      */
     val HIDDEN_VAR_DEF     = Predicate(VarDefLabelizer(VarDefPattern(NotString(),UndefinedVar("X")))) &&
     		EX(EF(Predicate(VarDefLabelizer(VarDefPattern(NotString(),UndefinedVar("X"))))))
+    		
+    /**
+     * This property detects all the assignments in the CFG. It includes the = assignment as wel as compound assignment
+     * operators (+=, *=, -=, /=).
+     */
     val ASSIGNMENT         = Predicate(MatchExprLabelizer(AssignmentPattern(UndefinedVar("X"),UndefinedVar("Y"))))
+    
+    /**
+     * This property detects all the nodes holding a literal expression. A literal expression is an expression which
+     * all leaves are literals.
+     */
     val LITERAL_EXPR       = Predicate(MatchExprLabelizer(LiteralExprPattern(UndefinedVar("X"))))
+    
+    /**
+     * This property detects all the assignments of a literal expression to any variable.
+     */
     val LITERAL_ASSIGNMENT = Predicate(MatchExprLabelizer(AssignmentPattern(UndefinedVar("X"),LiteralExprPattern(UndefinedVar("Y")))))
+    
+    /**
+     * This property detects any arithmetic expression involving a pointer type. Only assignments and increment/decrement operators
+     * are allowed.
+     */
     val ARITHMETIC_POINTER = {
         val pointerExpr        = Predicate(FindExprLabelizer(PointerExperPattern    (UndefinedVar("Z"))))
         val compoundAssign     = Predicate(FindExprLabelizer(CompoundAssignOpPattern(UndefinedVar("X"),UndefinedVar("Y"))))
@@ -64,6 +88,10 @@ object Properties {
         val arithmeticUnaryOp  = Predicate(FindExprLabelizer(UnaryOpPattern         (UndefinedVar("X"),NotString("--","++"))))
         pointerExpr && (compoundAssign || arithmeticBinaryOp || arithmeticUnaryOp)
     }
+    
+    /**
+     * This property detects all the flow-control nodes which condition is evaluated to the same value on every execution path.
+     */
     val INFEASIBLE_PATH    = {
         val literalAssignmentPattern = AssignmentPattern(UndefinedVar("X"),LiteralExprPattern(UndefinedVar("Y")))
         val literalExprPattern       = LiteralExprPattern(UndefinedVar("X"))

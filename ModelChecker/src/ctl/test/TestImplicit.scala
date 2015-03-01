@@ -10,7 +10,13 @@ import ctl.True
 import ctl.Value
 import ctl.CtlExpr
 
-object Main extends App with ConvertEnv {
+/**
+ * This file tests our implicit declarations and syntactic sugar for environments. In particular,
+ * we want to assert that BottomEnv behaves as a singleton for a given [M,V] types pair.
+ * @author Zohour Abouakil
+ * @author David Courtinot
+ */
+object TestImplicit extends App with ConvertEnv {
   class MyVariable extends MetaVariable
   class MyValue    extends Value
   

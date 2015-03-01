@@ -9,6 +9,11 @@ import cfg.CFGMetaVar
 import cfg.CFGVal
 import cfg.Properties._
 
+/**
+ * This class enables to test the properties defined in cfg.Properties
+ * @author Zohour Abouakil
+ * @author David Courtinot
+ */
 object Main extends App {
 	type CTL     = CtlExpr[CFGMetaVar,ProgramNode,CFGVal]
 	type Checker = ModelChecker[CFGMetaVar,ProgramNode,CFGVal]

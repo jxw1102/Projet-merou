@@ -17,28 +17,51 @@ import ast.model.ParamVarDecl
 import ast.model.Literal
 import ctl.Top
 
+/**
+ * This file contains all the Pattern definitions for our CFG. Patterns enable to analyze the expression(s)
+ * held by a CFGNode in order to extract (or not) environments for which a pattern is matched. They are 
+ * intensively used by the labelizers.
+ * @author Zohour Abouakil
+ * @author David Courtinot
+ */
+
 ////////////////////////////////////////////////////////////////////////////////
 //                                BASE PATTERNS
 ////////////////////////////////////////////////////////////////////////////////
+
 sealed trait Pattern extends ConvertEnv {
     type Env = Environment[CFGMetaVar,CFGVal]
 }
 
-trait DeclPattern extends Pattern {
+/**
+ * Represents any class able to tell whether a Decl object matches a DeclPattern or not.
+ */
+sealed trait DeclPattern extends Pattern {
 	def matches(decl: Decl): Option[Env]
 }
 
-trait StringPattern extends Pattern {
+/**
+ * Represents any class able to tell whether a String object matches a StringPattern or not.
+ */
+sealed trait StringPattern extends Pattern {
 	def matches(s: String): Option[Env]
 }
 
-trait ExprPattern extends Pattern {
+/**
+ * Represents any class able to tell whether an Expr object matches an ExprPattern or not.
+ */
+sealed trait ExprPattern extends Pattern {
     def matches (expr: Expr): Option[Env] 
 }
 
 object ExprPattern {
     type Env = Environment[CFGMetaVar,CFGVal]
     
+    /**
+     * Computes the intersection of the result of two matchers.
+     * @note This will return a non-None result iff both arguments are defined and contain compatible
+     *       environments
+     */
     def intersection(e0: Option[Env], e1: Option[Env]) = (e0,e1) match {
         case (Some(x),Some(y)) => val inter = x & y; inter match { case BindingsEnv(_) => Some(inter) case _ => None }
         case _                 => None
@@ -52,17 +75,34 @@ object ExprPattern {
 // you want to allow it.
 trait AtomicExprPattern extends ExprPattern
 
+/**
+ * Represents the most general Pattern : it matches anything, returning a positive binding between
+ * a given meta-variable and the matched value.
+ */
 case class UndefinedVar (name: CFGMetaVar) extends AtomicExprPattern with DeclPattern with StringPattern {
     override def matches(expr: Expr  ) = Some(new BindingsEnv ++ (name -> expr))
     override def matches(decl: Decl  ) = Some(new BindingsEnv ++ (name -> decl))
     override def matches(s   : String) = Some(new BindingsEnv ++ (name -> s))
 }
+
+/**
+ * Matches an expression iff it exactly matches the expression used to construct the DefinedExpr object
+ */
 case class DefinedExpr  (expr: Expr) extends AtomicExprPattern {
     override def matches(e: Expr) = if (e matches expr) Some(Top) else None
 }
+
+/**
+ * Matches a String iff it is equal to the String used to construct the DefinedString object
+ */
 case class DefinedString(name: String) extends StringPattern {
     override def matches(s: String) = if (s == name) Some(Top) else None
 }
+
+/**
+ * Matches a String iff it different to all the elements of the Set[String] used to construct the 
+ * NotString object
+ */
 case class NotString    (not: Set[String]=Set()) extends StringPattern {
     override def matches(s: String) = if (not contains s) None else Some(Top)
 }
@@ -73,6 +113,10 @@ object NotString {
 ////////////////////////////////////////////////////////////////////////////////
 //                                ADVANCED PATTERNS
 ////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Matches any expression which all leaves are literals.
+ */
 case class LiteralExprPattern(metavar: UndefinedVar) extends AtomicExprPattern {  
     private def forallLiteral(exprs: List[Expr]) = if (exprs.isEmpty) false else exprs.forall(isAllLiteral(_))
     
@@ -86,7 +130,10 @@ case class LiteralExprPattern(metavar: UndefinedVar) extends AtomicExprPattern {
     override def matches(expr: Expr) = if (isAllLiteral(expr)) Some(Top ++ (metavar.name -> expr)) else None
 }
 
-case class BinaryOpPattern (left: AtomicExprPattern, right: AtomicExprPattern, op: StringPattern=NotString()) extends ExprPattern { 
+/**
+ * Matches any BinaryOp expression which operands and operator symbol match a given pattern.
+ */
+case class BinaryOpPattern(left: AtomicExprPattern, right: AtomicExprPattern, op: StringPattern=NotString()) extends ExprPattern { 
     import ExprPattern._
     override def matches(expr: Expr) = expr match {
     	case BinaryOp(_,l,r,operator) => intersection(intersection(op.matches(operator),left.matches(l)),right.matches(r))
@@ -94,7 +141,10 @@ case class BinaryOpPattern (left: AtomicExprPattern, right: AtomicExprPattern, o
    }
 }
 
-case class CompoundAssignOpPattern (left: AtomicExprPattern, right: AtomicExprPattern, op: StringPattern=NotString()) extends ExprPattern { 
+/**
+ * Matches any CompoundAssignOp expression which operands and operator symbol match a given pattern.
+ */
+case class CompoundAssignOpPattern(left: AtomicExprPattern, right: AtomicExprPattern, op: StringPattern=NotString()) extends ExprPattern { 
 	import ExprPattern._
 	override def matches (expr: Expr) = expr match {
 		case CompoundAssignOp(_,l,r,operator) => intersection(intersection(op.matches(operator),left.matches(l)),right.matches(r))
@@ -102,6 +152,11 @@ case class CompoundAssignOpPattern (left: AtomicExprPattern, right: AtomicExprPa
 	}
 }
 
+/**
+ * Matches any assignment expression which operands and operator symbol match a given pattern.
+ * @pre if op is a DefinedString, passing any other value than "=", "+=", "-=", "*=", "/=" will result
+ *      in an IllegalArgumentException to be thrown
+ */
 case class AssignmentPattern(left: AtomicExprPattern, right: AtomicExprPattern, op: StringPattern=NotString()) extends ExprPattern {
     import ExprPattern._
     private val patterns: List[ExprPattern] = op match {
@@ -116,23 +171,34 @@ case class AssignmentPattern(left: AtomicExprPattern, right: AtomicExprPattern, 
 }
 
 
-case class UnaryOpPattern (operand: AtomicExprPattern, op: StringPattern=NotString()) extends ExprPattern {
+/**
+ * Matches any assignment expression which operands and operator symbol match a given pattern.
+ */
+case class UnaryOpPattern(operand: AtomicExprPattern, op: StringPattern=NotString()) extends ExprPattern {
     override def matches(expr: Expr) = expr match {
     	case UnaryOp(_,operand,operator,_) => ExprPattern.intersection(op.matches(operator),this.operand.matches(operand))
         case _                             => None
    }
 }
 
-case class PointerExperPattern(pattern: UndefinedVar) extends ExprPattern {
-    override def matches (expr: Expr) = if (expr.isPointer) Some(Top ++ (pattern.name -> expr)) else None
+/**
+ * Matches any expression which has a pointer type.
+ */
+case class PointerExperPattern(metavar: UndefinedVar) extends ExprPattern {
+    override def matches (expr: Expr) = if (expr.isPointer) Some(Top ++ (metavar.name -> expr)) else None
 }
 
+/**
+ * Matches any CallExpr expression which name, parameters and type match a given pattern.
+ * @note matching the parameters is optional. If you only want to base the matching on the name
+ *       and type, you should pass None for params
+ */
 case class CallExprPattern(
         name : StringPattern, 
         params: Option[List[AtomicExprPattern]]=None,
         typeOf: StringPattern=NotString()) extends ExprPattern {
     
-    def matchesParams (paramsFun : List[Expr]): Option[Env] = params match {
+    private def matchesParams(paramsFun : List[Expr]): Option[Env] = params match {
         case None        => Some(Top)
         case Some(value) =>
             if (paramsFun.size != value.size) None 
@@ -156,6 +222,13 @@ case class CallExprPattern(
    }
 }
 
+/**
+ * Matches any VarDecl which name and type match a given pattern.
+ * @note if there's a match and name is an UndefinedVar, it will return an environment containing a positive binding
+ *       between the meta-variable held by name and a CFGVal resulting of the conversion of the matched Decl by the 
+ *       conversion function passed as a parameter. This class is used to factorize the code of VarDeclPattern and
+ *       VarDefPattern.
+ */
 sealed class VarDeclMatcher(typeOf: StringPattern, name: StringPattern)(convert: Decl => CFGVal) extends DeclPattern {
     private def matchDecl(decl: Decl): Option[Env] = (name.matches(decl.name),name) match {
         case (Some(_),UndefinedVar(x))  => Some(Top ++ (x -> convert(decl)))
@@ -175,9 +248,20 @@ sealed class VarDeclMatcher(typeOf: StringPattern, name: StringPattern)(convert:
         case _ => None
     }
 }
+
+/**
+ * Matches any VarDecl which name and type match a given pattern.
+ * @note if there's a match and name is an UndefinedVar, it will return an environment containing a positive binding
+ *       between the meta-variable held by name and a CFGDecl
+ */
 case class VarDeclPattern(typeOf: StringPattern, name: StringPattern)
 	extends VarDeclMatcher(typeOf,name)(decl => CFGDecl(decl.id.get,decl.typeOf,decl.name))
 
+/**
+ * Matches any VarDecl which name and type match a given pattern.
+ * @note if there's a match and name is an UndefinedVar, it will return an environment containing a positive binding
+ *       between the meta-variable held by name and a CFGDef
+ */
 case class VarDefPattern(typeOf: StringPattern, name: StringPattern) 
 	extends VarDeclMatcher(typeOf,name)(decl => CFGDef(decl.typeOf,decl.name))
 
