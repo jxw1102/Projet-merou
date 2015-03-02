@@ -41,7 +41,7 @@ object TestCFG extends App {
         cfg
     }
     
-    val folder = "various"
+    val folder = "dev"
     new File("ModelChecker/unitary_tests/ast/%s/".format(folder)).listFiles.filter(_.getName.endsWith("cpp")).foreach { file => 
         val name = file.getName
         val s    = name.substring(0,name.lastIndexOf('.'))

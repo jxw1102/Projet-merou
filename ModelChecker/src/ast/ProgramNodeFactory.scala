@@ -39,8 +39,8 @@ class ProgramNodeFactory(rootNodes: Iterable[Decl], labelNodes: Map[String,Sourc
         // declaration body, and then connect it to the main
         val main = res("main")
         res += "main" -> res.filterKeys(_ != "main").values.map(_.value).foldLeft(main)((next,decl) => decl match {
-            case Statement(VarDecl(x,y,z)       ,a,b,_) => next << new GNode(Statement(VarDecl     (x,y,z)  ,a,b,true))
-            case Statement(FunctionDecl(x,y,z,t),a,b,_) => next << new GNode(Statement(FunctionDecl(x,y,z,t),a,b,true))
+            case Statement(VarDecl(x,y,z)       ,a,b) => next << new GNode(Statement(VarDecl     (x,y,z)  ,a,b))
+            case Statement(FunctionDecl(x,y,z,t),a,b) => next << new GNode(Statement(FunctionDecl(x,y,z,t),a,b))
             case _ => throw new MatchError("There should be nothing else than variable and function declarations " +
             	"outside the main function")
         })
@@ -54,7 +54,7 @@ class ProgramNodeFactory(rootNodes: Iterable[Decl], labelNodes: Map[String,Sourc
 
         val (prev,next) = (node.prev.toList,node.next.toList)
         node.value match {
-            case Empty(_,_,_) =>
+            case Empty(_,_) =>
                 prev.foreach { y => y.next -= node; y.next ++= node.next }
                 next.foreach { y => y.prev -= node; y.prev ++= node.prev }
             case _ => 
@@ -67,20 +67,20 @@ class ProgramNodeFactory(rootNodes: Iterable[Decl], labelNodes: Map[String,Sourc
      // general facade for handling the SourceCodeNode(s)
     private def handle(node: SourceCodeNode, next: Option[GNode], exit: Option[GNode], entry: Option[GNode]): GNode = 
         node match {
-            case IfStmt(_,_,_)         => handleIf(node,next,exit,entry)
-            case ForStmt(_,_,_,_)      => handleFor(node,next,exit,entry)
-            case WhileStmt(_,_)        => handleWhile(node,next,exit,entry)
-            case DoWhileStmt(_,_)      => handleDoWhile(node,next,exit,entry)
+            case IfStmt      (_,_,_)   => handleIf          (node,next,exit,entry)
+            case ForStmt     (_,_,_,_) => handleFor         (node,next,exit,entry)
+            case WhileStmt   (_,_)     => handleWhile       (node,next,exit,entry)
+            case DoWhileStmt (_,_)     => handleDoWhile     (node,next,exit,entry)
+            case SwitchStmt  (_,_)     => handleSwitch      (node,next,exit,entry)
+            case LabelStmt   (_,_)     => handleLabel       (node,next,exit,entry)
+            case FunctionDecl(_,_,_,_) => handleFunDecl     (node,next,exit,entry)
+            case DeclStmt    (_)       => handleDeclStmt    (node,next,exit,entry)
             case CompoundStmt(_)       => handleCompoundStmt(node,next,exit,entry)
-            case ReturnStmt(_,_)       => toGraphNode(node)
-            case BreakStmt()           => handleJump(node,exit )
-            case ContinueStmt()        => handleJump(node,entry)
-            case GotoStmt(label)       => handleJump(node,Some(getLabel(label)))
-            case SwitchStmt(_,_)       => handleSwitch(node, next, exit, entry)
-            case LabelStmt(_,_)        => handleLabel(node,next,exit,entry)
-            case FunctionDecl(_,_,_,_) => handleFunDecl(node,next,exit,entry)
-            case DeclStmt(_)           => handleDeclStmt(node,next,exit,entry)
-            case _                     => handleNormal(node,next)
+            case ContinueStmt()        => handleJump        (node          ,entry)
+            case BreakStmt   ()        => handleJump        (node     ,exit      )
+            case GotoStmt    (label)   => handleJump        (node,Some(getLabel(label)))
+            case ReturnStmt  (_,_)     => toGraphNode       (node)
+            case _                     => handleNormal      (node,next)
     }
     
     private def emptyNode = {

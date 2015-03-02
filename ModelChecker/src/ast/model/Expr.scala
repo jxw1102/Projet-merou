@@ -34,30 +34,30 @@ sealed abstract class Expr(typeOf: String) extends ForInitializer {
     
     private def formatBinary(s1: Any, s2: String, s3: Any) = "(%s %s %s)".format(s1,s2,s3)
     override def toString = this match {
-        case ConditionalOperator(_,(x,y,z))    => "(%s ? %s : %s)".format(x,y,z)
-        case CompoundAssignOp   (_,l,r,op)     => formatBinary(l,op,r)
-        case BinaryOp           (_,l,r,op)     => formatBinary(l,op,r)
-        case UnaryOp            (_,x,op,pos)   => (if (pos == Prefix) List(op,x) else List(x,op)).mkString
-        case Literal            (_,y)          => y
-        case ArraySubscriptExpr (_,(x,y))      => "%s[%s]".format(x,y)
-        case InitListExpr       (_,exprs)      => exprs.mkString("{ ",","," }")
-        case DeclRefExpr        (_,x,_)        => x
-        case CallExpr           (_,ref,params) => "%s(%s)".format(ref.targetName,params.mkString(","))
-        case MemberExpr         (_,t)          => "-> %s".format(t)
-        case UnaryExprOrTypeTraitExpr(_,t,v,e) => e match { case Some(ex) => "%s(%s)".format(v,ex); case None => v }
+        case ConditionalOperator     (_,(x,y,z))    => "(%s ? %s : %s)".format(x,y,z)
+        case CompoundAssignOp        (_,l,r,op)     => formatBinary(l,op,r)
+        case BinaryOp                (_,l,r,op)     => formatBinary(l,op,r)
+        case UnaryOp                 (_,x,op,pos)   => (if (pos == Prefix) List(op,x) else List(x,op)).mkString
+        case Literal                 (_,y)          => y
+        case ArraySubscriptExpr      (_,(x,y))      => "%s[%s]".format(x,y)
+        case InitListExpr            (_,exprs)      => exprs.mkString("{ ",","," }")
+        case DeclRefExpr             (_,x,_)        => x
+        case CallExpr                (_,ref,params) => "%s(%s)".format(ref.targetName,params.mkString(","))
+        case MemberExpr              (_,t)          => "-> %s".format(t)
+        case UnaryExprOrTypeTraitExpr(t,v,e)   => e match { case Some(ex) => "%s(%s)".format(v,ex); case None => v }
     }
 }
-final case class BinaryOp           (typeOf: String, left: Expr, right: Expr, operator: String)        extends Expr(typeOf)
-final case class UnaryOp            (typeOf: String, operand: Expr, operator: String, pos: OpPosition) extends Expr(typeOf)
-final case class CompoundAssignOp   (typeOf: String, left: Expr, right: Expr, operator: String)        extends Expr(typeOf)
-final case class Literal            (typeOf: String, value: String)                                    extends Expr(typeOf)
-final case class DeclRefExpr        (typeOf: String, targetName: String, targetId: String)             extends Expr(typeOf)
-final case class ConditionalOperator(typeOf: String, exprs: (Expr,Expr,Expr))                          extends Expr(typeOf)
-final case class ArraySubscriptExpr (typeOf: String, exprs: (Expr, Expr))                              extends Expr(typeOf)
-final case class InitListExpr       (typeOf: String, exprs: List[Expr])                                extends Expr(typeOf)
-final case class CallExpr           (typeOf: String, ref: DeclRefExpr, params: List[Expr])             extends Expr(typeOf)
-final case class MemberExpr         (typeOf: String, target: DeclRefExpr)                              extends Expr(typeOf)
-final case class UnaryExprOrTypeTraitExpr(typeOf: String, typeName: String, value: String, expr: Option[Expr]) extends Expr(typeOf)
+final case class BinaryOp                (typeOf: String, left: Expr, right: Expr, operator: String)        extends Expr(typeOf)
+final case class UnaryOp                 (typeOf: String, operand: Expr, operator: String, pos: OpPosition) extends Expr(typeOf)
+final case class CompoundAssignOp        (typeOf: String, left: Expr, right: Expr, operator: String)        extends Expr(typeOf)
+final case class Literal                 (typeOf: String, value: String)                                    extends Expr(typeOf)
+final case class DeclRefExpr             (typeOf: String, targetName: String, targetId: String)             extends Expr(typeOf)
+final case class ConditionalOperator     (typeOf: String, exprs: (Expr,Expr,Expr))                          extends Expr(typeOf)
+final case class ArraySubscriptExpr      (typeOf: String, exprs: (Expr, Expr))                              extends Expr(typeOf)
+final case class InitListExpr            (typeOf: String, exprs: List[Expr])                                extends Expr(typeOf)
+final case class CallExpr                (typeOf: String, ref: DeclRefExpr, params: List[Expr])             extends Expr(typeOf)
+final case class MemberExpr              (typeOf: String, target: DeclRefExpr)                              extends Expr(typeOf)
+final case class UnaryExprOrTypeTraitExpr(typeOf: String, value: String, expr: Option[Expr])                extends Expr(typeOf)
 
 sealed abstract class OpPosition 
 object OpPosition {

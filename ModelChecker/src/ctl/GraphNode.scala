@@ -47,16 +47,21 @@ class GraphNode[N](val value: N) {
     def >>(v: GNode) = { _next += v; v._prev += this; v } 
     
     override def toString = value.toString
-    def mkString          = addString(new StringBuilder,MSet()).toString
+    def toDot             = addString(new StringBuilder,MSet())(_.toString).toString
+    def toDot(name: N => String, label: N => String) = {
+        def escape     (s   : String) = s.replaceAll("\"","\\\\\"")
+    	def formatValue(node: GNode ) = "{%s [label=\"%s\"]}".format(escape(name(node.value)),escape(label(node.value)))
+        addString(new StringBuilder,MSet())(formatValue(_)).toString
+    }
     
-    private  def addString(sb: StringBuilder, set: MSet[GNode]): StringBuilder = {
+    def addString(sb: StringBuilder, set: MSet[GNode])(convert: GNode => String): StringBuilder = {
         if (set contains this) sb 
-        else if (_next.isEmpty) sb.append(this + "\n")
+        else if (_next.isEmpty) sb.append(convert(this) + "\n")
         else {
             set += this
-            _next.foreach(node => sb.append("%s -> %s\n".format(this,node)))
-            _next.filterNot(set contains _).foreach(_.addString(sb,set))
+            _next.foreach(node => sb.append("%s -> %s\n".format(convert(this),convert(node))))
+            _next.filterNot(set contains _).foreach(_.addString(sb,set)(convert))
             sb
-        }
+        }   
     }
 }

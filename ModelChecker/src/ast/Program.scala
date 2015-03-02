@@ -24,7 +24,9 @@ import ast.model.DeclRefExpr
  * @author Xiaowen Ji      
  */
 case class Program(val decls: Map[String,GraphNode[ProgramNode]]) {
-    override def toString = decls.values.map(_.mkString).addString(new StringBuilder).toString
+    override def toString = decls.map { case (k,v) => v.toDot(n => k + n.id,n => n.toString) }
+                                 .addString(new StringBuilder)
+                                 .toString
 }
 
 /**
@@ -49,7 +51,7 @@ object SourceCodeNode {
  * ProgramNode is a very basic representation of the code. There is no notion of block and no relation between
  * different kind of nodes. It is meant to be the type of the values of a GraphNode representing a CFG.
  */
-sealed abstract class ProgramNode(val id: String, val isCopy: Boolean) {
+sealed abstract class ProgramNode(val id: String) {
     type SCN = SourceCodeNode
     
     override def equals(that: Any) = that match {
@@ -58,31 +60,28 @@ sealed abstract class ProgramNode(val id: String, val isCopy: Boolean) {
     }
     override def hashCode = id.hashCode
     override def toString = {
-        val pref = if(isCopy) "idc" else "id"
-        val format = (name: String, a: Any, id: String, cr: CodeRange) => "{%s [label=\"%s %s at %s\"]}".format(pref.concat(id),name,a,cr)
+        val format = (name: String, a: Any, id: String, cr: CodeRange) => "%s %s at %s %s".format(name,a,cr,id)
         this match {
-            case If        (e   ,cr,id,_) => format("if"          ,e ,id,cr)
-            case While     (e   ,cr,id,_) => format("while"       ,e ,id,cr)
-            case Statement (stmt,cr,id,_) => format(stmt.toString ,"",id,cr)
-            case Identifier(s   ,cr,id,_) => format("Identifier"  ,s ,id,cr)
-            case Expression(e   ,cr,id,_) => format(e.toString,""    ,id,cr)
-            case Switch    (e   ,cr,id,_) => format("switch"       ,e,id,cr)
-            case For       (e   ,cr,id,_) => format("for"         ,if (e.isDefined) e.get else "no_cond",id,cr)
-            case Empty     (_   ,   id,_) => format("Empty"       ,"",id,CodeRange(0,0,0,0))
+            case If        (e   ,cr,id) => format("if"          ,e ,id,cr)
+            case While     (e   ,cr,id) => format("while"       ,e ,id,cr)
+            case Statement (stmt,cr,id) => format(stmt.toString ,"",id,cr)
+            case Expression(e   ,cr,id) => format(e.toString,""    ,id,cr)
+            case Switch    (e   ,cr,id) => format("switch"       ,e,id,cr)
+            case For       (e   ,cr,id) => format("for"         ,if (e.isDefined) e.get else "no_cond",id,cr)
+            case Empty     (_   ,   id) => format("Empty"       ,"",id,CodeRange(0,0,0,0))
         }
     }
 }
 
 // those classes will be the values of the CFG nodes
-final case class If        (e: Expr             , cr: CodeRange, _id: String, _isCopy: Boolean = false) extends ProgramNode(_id,_isCopy)
-final case class For       (e: Option[Expr]     , cr: CodeRange, _id: String, _isCopy: Boolean = false) extends ProgramNode(_id,_isCopy)
-final case class While     (e: Expr             , cr: CodeRange, _id: String, _isCopy: Boolean = false) extends ProgramNode(_id,_isCopy)
-final case class Statement (stmt: SourceCodeNode, cr: CodeRange, _id: String, _isCopy: Boolean = false) extends ProgramNode(_id,_isCopy)
-final case class Identifier(s: String           , cr: CodeRange, _id: String, _isCopy: Boolean = false) extends ProgramNode(_id,_isCopy)
-final case class Expression(e: Expr             , cr: CodeRange, _id: String, _isCopy: Boolean = false) extends ProgramNode(_id,_isCopy)
-final case class Switch    (e: Expr             , cr: CodeRange, _id: String, _isCopy: Boolean = false) extends ProgramNode(_id,_isCopy)
+final case class If        (e: Expr             , cr: CodeRange, _id: String) extends ProgramNode(_id)
+final case class For       (e: Option[Expr]     , cr: CodeRange, _id: String) extends ProgramNode(_id)
+final case class While     (e: Expr             , cr: CodeRange, _id: String) extends ProgramNode(_id)
+final case class Statement (stmt: SourceCodeNode, cr: CodeRange, _id: String) extends ProgramNode(_id)
+final case class Expression(e: Expr             , cr: CodeRange, _id: String) extends ProgramNode(_id)
+final case class Switch    (e: Expr             , cr: CodeRange, _id: String) extends ProgramNode(_id)
 // only used during the construction of the graph, should never be used in an actual CFG
-private[ast] final case class Empty(              cr: CodeRange, _id: String, _isCopy: Boolean = false) extends ProgramNode(_id,_isCopy)
+private[ast] final case class Empty(              cr: CodeRange, _id: String) extends ProgramNode(_id)
 
 class CFGNode(value: ProgramNode) extends GraphNode[ProgramNode](value) {
     override def equals(that: Any) = that match { case x: CFGNode => value == x.value case _ => false }
