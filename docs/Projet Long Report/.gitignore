@@ -1,0 +1,6 @@
+# Latex files
+projetLongReport.pdf
+*.aux
+*.toc
+*.orig
+*.synctex

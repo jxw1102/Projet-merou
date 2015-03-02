@@ -67,20 +67,20 @@ class ProgramNodeFactory(rootNodes: Iterable[Decl], labelNodes: Map[String,Sourc
      // general facade for handling the SourceCodeNode(s)
     private def handle(node: SourceCodeNode, next: Option[GNode], exit: Option[GNode], entry: Option[GNode]): GNode = 
         node match {
-            case IfStmt(_,_,_)         => handleIf(node,next,exit,entry)
-            case ForStmt(_,_,_,_)      => handleFor(node,next,exit,entry)
-            case WhileStmt(_,_)        => handleWhile(node,next,exit,entry)
-            case DoWhileStmt(_,_)      => handleDoWhile(node,next,exit,entry)
+            case IfStmt      (_,_,_)   => handleIf          (node,next,exit,entry)
+            case ForStmt     (_,_,_,_) => handleFor         (node,next,exit,entry)
+            case WhileStmt   (_,_)     => handleWhile       (node,next,exit,entry)
+            case DoWhileStmt (_,_)     => handleDoWhile     (node,next,exit,entry)
+            case SwitchStmt  (_,_)     => handleSwitch      (node,next,exit,entry)
+            case LabelStmt   (_,_)     => handleLabel       (node,next,exit,entry)
+            case FunctionDecl(_,_,_,_) => handleFunDecl     (node,next,exit,entry)
+            case DeclStmt    (_)       => handleDeclStmt    (node,next,exit,entry)
             case CompoundStmt(_)       => handleCompoundStmt(node,next,exit,entry)
-            case ReturnStmt(_,_)       => toGraphNode(node)
-            case BreakStmt()           => handleJump(node,exit )
-            case ContinueStmt()        => handleJump(node,entry)
-            case GotoStmt(label)       => handleJump(node,Some(getLabel(label)))
-            case SwitchStmt(_,_)       => handleSwitch(node, next, exit, entry)
-            case LabelStmt(_,_)        => handleLabel(node,next,exit,entry)
-            case FunctionDecl(_,_,_,_) => handleFunDecl(node,next,exit,entry)
-            case DeclStmt(_)           => handleDeclStmt(node,next,exit,entry)
-            case _                     => handleNormal(node,next)
+            case ContinueStmt()        => handleJump        (node          ,entry)
+            case BreakStmt   ()        => handleJump        (node     ,exit      )
+            case GotoStmt    (label)   => handleJump        (node,Some(getLabel(label)))
+            case ReturnStmt  (_,_)     => toGraphNode       (node)
+            case _                     => handleNormal      (node,next)
     }
     
     private def emptyNode = {

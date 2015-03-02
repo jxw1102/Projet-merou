@@ -1,4 +1,10 @@
 \select@language {english}
+\contentsline {paragraph}{}{2}
+\contentsline {paragraph}{}{2}
+\contentsline {paragraph}{}{3}
+\contentsline {paragraph}{}{3}
+\contentsline {paragraph}{}{3}
+\contentsline {paragraph}{}{3}
 \contentsline {chapter}{\numberline {I}Project presentation}{4}
 \contentsline {section}{\numberline {I.1}Overview}{4}
 \contentsline {paragraph}{}{4}
@@ -27,11 +33,12 @@
 \contentsline {section}{\numberline {II.4}Development plan}{8}
 \contentsline {subsection}{\numberline {II.4.1}Development organization}{8}
 \contentsline {paragraph}{}{8}
-\contentsline {subsection}{\numberline {II.4.2}Team organization approach}{8}
+\contentsline {subsection}{\numberline {II.4.2}Team organization approach for coding}{8}
 \contentsline {paragraph}{}{8}
 \contentsline {subsection}{\numberline {II.4.3}Tasks organization}{8}
 \contentsline {subsubsection}{Task definition}{8}
 \contentsline {paragraph}{}{8}
+\contentsline {paragraph}{}{9}
 \contentsline {paragraph}{}{9}
 \contentsline {paragraph}{}{9}
 \contentsline {subsubsection}{Task planning}{9}
@@ -46,20 +53,55 @@
 \contentsline {paragraph}{}{10}
 \contentsline {subsection}{\numberline {II.6.2}Communication between team members}{10}
 \contentsline {paragraph}{}{10}
-\contentsline {chapter}{\numberline {III}Code and documentation management}{12}
-\contentsline {section}{\numberline {III.1}Quality checking}{12}
+\contentsline {section}{\numberline {II.7}Code and documentation}{11}
+\contentsline {subsection}{\numberline {II.7.1}Quality checking}{11}
+\contentsline {paragraph}{}{11}
 \contentsline {paragraph}{}{12}
+\contentsline {subsection}{\numberline {II.7.2}Verification and validation process}{12}
+\contentsline {subsubsection}{Verification}{12}
+\contentsline {paragraph}{}{12}
+\contentsline {paragraph}{}{12}
+\contentsline {subsubsection}{Validation}{12}
+\contentsline {paragraph}{}{12}
+\contentsline {chapter}{\numberline {III}Technical aspects}{13}
+\contentsline {section}{\numberline {III.1}Context}{13}
+\contentsline {subsection}{\numberline {III.1.1}Motivations}{13}
 \contentsline {paragraph}{}{13}
-\contentsline {section}{\numberline {III.2}Verification and validation process}{13}
-\contentsline {subsection}{\numberline {III.2.1}Verification process}{13}
+\contentsline {subsection}{\numberline {III.1.2}Objectives}{13}
+\contentsline {paragraph}{}{13}
+\contentsline {section}{\numberline {III.2}Definitions}{13}
+\contentsline {subsection}{\numberline {III.2.1}The AST - Abstract Syntax Tree}{13}
+\contentsline {subsection}{\numberline {III.2.2}CTL - Computation Tree Logic}{13}
+\contentsline {paragraph}{}{13}
+\contentsline {section}{\numberline {III.3}Model checking}{13}
 \contentsline {paragraph}{}{13}
 \contentsline {paragraph}{}{13}
-\contentsline {subsection}{\numberline {III.2.2}Validation process}{13}
-\contentsline {paragraph}{}{13}
-\contentsline {paragraph}{}{13}
-\contentsline {chapter}{\numberline {IV}Technical aspects}{14}
-\contentsline {section}{\numberline {IV.1}Context}{14}
-\contentsline {subsection}{\numberline {IV.1.1}Motivations}{14}
+\contentsline {paragraph}{}{14}
+\contentsline {subsection}{\numberline {III.3.1}Representation of the environments}{14}
+\contentsline {paragraph}{Definition 1}{14}
+\contentsline {paragraph}{Definition 2}{14}
+\contentsline {paragraph}{Definition 3}{14}
+\contentsline {paragraph}{Definition 4}{14}
 \contentsline {paragraph}{}{14}
 \contentsline {paragraph}{}{14}
-\contentsline {subsubsection}{}{14}
+\contentsline {paragraph}{}{15}
+\contentsline {paragraph}{}{15}
+\contentsline {paragraph}{}{15}
+\contentsline {subsection}{\numberline {III.3.2}CTL expressions}{15}
+\contentsline {paragraph}{}{15}
+\contentsline {paragraph}{}{16}
+\contentsline {paragraph}{}{16}
+\contentsline {paragraph}{}{16}
+\contentsline {subsection}{\numberline {III.3.3}Model checker}{16}
+\contentsline {paragraph}{}{16}
+\contentsline {section}{\numberline {III.4}Merge}{17}
+\contentsline {subsection}{\numberline {III.4.1}Choice of M, N and V}{17}
+\contentsline {paragraph}{}{17}
+\contentsline {paragraph}{}{17}
+\contentsline {paragraph}{}{17}
+\contentsline {subsection}{\numberline {III.4.2}Labelize our nodes}{18}
+\contentsline {paragraph}{}{18}
+\contentsline {paragraph}{}{18}
+\contentsline {paragraph}{}{18}
+\contentsline {paragraph}{}{18}
+\contentsline {paragraph}{}{19}

@@ -160,7 +160,11 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[String,String]) {
         case ConcreteASTNode(_,_,id,codeRange,data) => 
             var expr     = if (node.children.isEmpty) None else Some(node.children.map(handleExpr).head)
             val dataList = data.dataList
-            val args     = (if (dataList.last == "cinit") List(-3,-2) else List(-2,-1)).map(dataList.get(_))
+            val args     = ((dataList.last,dataList.get(-2)) match { 
+                case ("cinit","static")          => List(-4,-3)
+                case ("cinit",_) | (_ ,"static") => List(-3,-2)
+                case _                           => List(-2,-1)
+            }).map(dataList.get(_))
             SourceCodeNode(VarDecl(args.head,args.last,expr),codeRange,id)
         case _ => concreteNodeExpected(node)
     }
@@ -254,9 +258,9 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[String,String]) {
     private def unaryExprOrTypeTraitExpr(node: ASTNode) = node match {
         case ConcreteASTNode(_,_,id,codeRange,data) => 
             val children = node.children.map(handleExpr).toList
-            val list = node.children.map(handleExpr).toList
-            val expr = if (list.length == 0) None else Some(list.last)
-            setAndReturn(UnaryExprOrTypeTraitExpr(data.dataList.get(-1),data.dataList.get(-2),data.dataList.get(-1),expr),codeRange,id)
+            val list     = node.children.map(handleExpr).toList
+            val expr     = if (list.isEmpty) None else Some(list.last)
+            setAndReturn(UnaryExprOrTypeTraitExpr(data.dataList.get(-2),data.dataList.get(-1),expr),codeRange,id)
         case _ => concreteNodeExpected(node)
     }
     
