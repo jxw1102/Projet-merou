@@ -39,8 +39,8 @@ class ProgramNodeFactory(rootNodes: Iterable[Decl], labelNodes: Map[String,Sourc
         // declaration body, and then connect it to the main
         val main = res("main")
         res += "main" -> res.filterKeys(_ != "main").values.map(_.value).foldLeft(main)((next,decl) => decl match {
-            case Statement(VarDecl(x,y,z)       ,a,b,_) => next << new GNode(Statement(VarDecl     (x,y,z)  ,a,b,true))
-            case Statement(FunctionDecl(x,y,z,t),a,b,_) => next << new GNode(Statement(FunctionDecl(x,y,z,t),a,b,true))
+            case Statement(VarDecl(x,y,z)       ,a,b) => next << new GNode(Statement(VarDecl     (x,y,z)  ,a,b))
+            case Statement(FunctionDecl(x,y,z,t),a,b) => next << new GNode(Statement(FunctionDecl(x,y,z,t),a,b))
             case _ => throw new MatchError("There should be nothing else than variable and function declarations " +
             	"outside the main function")
         })
@@ -54,7 +54,7 @@ class ProgramNodeFactory(rootNodes: Iterable[Decl], labelNodes: Map[String,Sourc
 
         val (prev,next) = (node.prev.toList,node.next.toList)
         node.value match {
-            case Empty(_,_,_) =>
+            case Empty(_,_) =>
                 prev.foreach { y => y.next -= node; y.next ++= node.next }
                 next.foreach { y => y.prev -= node; y.prev ++= node.prev }
             case _ => 

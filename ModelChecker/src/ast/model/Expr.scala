@@ -9,14 +9,14 @@ sealed abstract class Expr(typeOf: String) extends ForInitializer {
     def isPointer = typeOf.last == '*' 
     
     def getSubExprs = this match {
-		case BinaryOp           (_,l,r,_)      => List(l,r)     
-		case UnaryOp            (_,op,_,_)     => List(op)
-		case CompoundAssignOp   (_,l,r,_)      => List(l,r)
-		case ConditionalOperator(_,(x,y,z))    => List(x,y,z)                              
-		case ArraySubscriptExpr (_,(l,r))      => List(l,r)                                 
-		case InitListExpr       (_,exprs)      => exprs
-		case CallExpr           (_,ref,params) => ref :: params
-		case _                                 => List()
+        case BinaryOp           (_,l,r,_)      => List(l,r)     
+        case UnaryOp            (_,op,_,_)     => List(op)
+        case CompoundAssignOp   (_,l,r,_)      => List(l,r)
+        case ConditionalOperator(_,(x,y,z))    => List(x,y,z)                              
+        case ArraySubscriptExpr (_,(l,r))      => List(l,r)                                 
+        case InitListExpr       (_,exprs)      => exprs
+        case CallExpr           (_,ref,params) => ref :: params
+        case _                                 => List()
     }    
         
     def matches(that: Expr): Boolean = (this,that) match {
@@ -43,8 +43,10 @@ sealed abstract class Expr(typeOf: String) extends ForInitializer {
         case InitListExpr       (_,exprs)      => exprs.mkString("{ ",","," }")
         case DeclRefExpr        (_,x,_)        => x
         case CallExpr           (_,ref,params) => "%s(%s)".format(ref.targetName,params.mkString(","))
-        case MemberExpr         (_,t)          => "-> %s".format(t)
+        case MemberExpr         (_,t,m)        => "%s%s".format(t,m)
         case UnaryExprOrTypeTraitExpr(_,t,v,e) => e match { case Some(ex) => "%s(%s)".format(v,ex); case None => v }
+        case CXXNewExpr(_,t,c)                 => val tp = t.substring(0, t.length()-2); c match { case Some(cnt) => "new %s[%s]".format(tp,cnt); case None => "new %s".format(tp) }
+        case CXXDeleteExpr(_,_,c)              => "delete %s".format(c)
     }
 }
 final case class BinaryOp           (typeOf: String, left: Expr, right: Expr, operator: String)        extends Expr(typeOf)
@@ -56,8 +58,11 @@ final case class ConditionalOperator(typeOf: String, exprs: (Expr,Expr,Expr))   
 final case class ArraySubscriptExpr (typeOf: String, exprs: (Expr, Expr))                              extends Expr(typeOf)
 final case class InitListExpr       (typeOf: String, exprs: List[Expr])                                extends Expr(typeOf)
 final case class CallExpr           (typeOf: String, ref: DeclRefExpr, params: List[Expr])             extends Expr(typeOf)
-final case class MemberExpr         (typeOf: String, target: DeclRefExpr)                              extends Expr(typeOf)
+final case class MemberExpr         (typeOf: String, target: DeclRefExpr, member: String)              extends Expr(typeOf)
 final case class UnaryExprOrTypeTraitExpr(typeOf: String, typeName: String, value: String, expr: Option[Expr]) extends Expr(typeOf)
+final case class CXXNewExpr         (typeOf: String, typeName: String, count: Option[Expr])            extends Expr(typeOf)
+final case class CXXDeleteExpr      (typeOf: String, typeName: String, target: Expr)                   extends Expr(typeOf)
+final case class CXXConstructExpr   (typeOf: String, typeName: String, target: Expr)                   extends Expr(typeOf)
 
 sealed abstract class OpPosition 
 object OpPosition {

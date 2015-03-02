@@ -2,40 +2,7 @@ package ast
 
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.Map
-
-import ast.model.ArraySubscriptExpr
-import ast.model.BinaryOp
-import ast.model.BreakStmt
-import ast.model.CallExpr
-import ast.model.CaseStmt
-import ast.model.CompoundAssignOp
-import ast.model.CompoundStmt
-import ast.model.ConditionalOperator
-import ast.model.ContinueStmt
-import ast.model.Decl
-import ast.model.DeclRefExpr
-import ast.model.DeclStmt
-import ast.model.DefaultStmt
-import ast.model.DoWhileStmt
-import ast.model.Expr
-import ast.model.ForStmt
-import ast.model.FunctionDecl
-import ast.model.GotoStmt
-import ast.model.IfStmt
-import ast.model.InitListExpr
-import ast.model.LabelStmt
-import ast.model.Literal
-import ast.model.MemberExpr
-import ast.model.NullStmt
-import ast.model.OpPosition
-import ast.model.ParamVarDecl
-import ast.model.ReturnStmt
-import ast.model.Stmt
-import ast.model.SwitchStmt
-import ast.model.UnaryExprOrTypeTraitExpr
-import ast.model.UnaryOp
-import ast.model.VarDecl
-import ast.model.WhileStmt
+import ast.model._
 
 /**
  * The SourceCodeNodeFactory, given the data held by an ASTParserResult, converts the ASTNode tree
@@ -103,6 +70,8 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[String,String]) {
             case "BinaryOperator"             => binaryOperator           (node)
             case "CallExpr"                   => callExpr                 (node)
             case "UnaryExprOrTypeTraitExpr"   => unaryExprOrTypeTraitExpr (node)
+            case "CXXNewExpr"                 => newExpr                  (node)
+            case "CXXDeleteExpr"              => deleteExpr               (node)
             case "MemberExpr"                 => memberExpr               (node)
             case "DeclRefExpr"                => declRefExpr              (node)
             case "ArraySubscriptExpr"         => arraySubscriptExpr       (node)
@@ -263,7 +232,22 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[String,String]) {
     private def memberExpr(node: ASTNode) = node match {
         case ConcreteASTNode(_,_,id,codeRange,data) => 
             val children = node.children.map(handleExpr).toList
-            setAndReturn(MemberExpr(data.dataList.get(-1),children.head.asInstanceOf[DeclRefExpr]),codeRange,id)
+            setAndReturn(MemberExpr(data.dataList.get(-1),children.head.asInstanceOf[DeclRefExpr],data.dataList.get(-2)),codeRange,id)
+        case _ => concreteNodeExpected(node)
+    }
+    
+    private def newExpr(node: ASTNode) = node match {
+        case ConcreteASTNode(_,_,id,codeRange,data) => 
+            val children = node.children.map(handleExpr).toList
+            val cntExpr = if(children.isEmpty) None else Some(children.last)
+            setAndReturn(CXXNewExpr(data.dataList.get(-1),data.dataList.last,cntExpr),codeRange,id)
+        case _ => concreteNodeExpected(node)
+    }
+    
+    private def deleteExpr(node: ASTNode) = node match {
+        case ConcreteASTNode(_,_,id,codeRange,data) => 
+            val children = node.children.map(handleExpr).toList
+            setAndReturn(CXXDeleteExpr(data.dataList.get(-1),data.dataList.last,children.last),codeRange,id)
         case _ => concreteNodeExpected(node)
     }
     

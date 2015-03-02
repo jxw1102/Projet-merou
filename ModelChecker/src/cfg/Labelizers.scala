@@ -34,7 +34,7 @@ protected abstract class CFGLabelizer extends Labelizer[CFGMetaVar, ProgramNode,
  */
 case class IfLabelizer(pattern: ExprPattern) extends CFGLabelizer {
     override def test(t: ProgramNode) = t match {
-        case If(expr,_,_,_) => pattern.matches(expr).toSet
+        case If(expr,_,_) => pattern.matches(expr).toSet
         case _            => Set()
     }
 }
@@ -45,8 +45,8 @@ case class IfLabelizer(pattern: ExprPattern) extends CFGLabelizer {
  */
 case class ForLabelizer(pattern: Option[ExprPattern]) extends CFGLabelizer  {
     override def test(t: ProgramNode) = (t,pattern) match {
-        case (For(Some(expr),_,_,_),Some(pattern)) => pattern.matches(expr).toSet
-        case (For(None,_,_,_),None)                => Set(Top)
+        case (For(Some(expr),_,_),Some(pattern)) => pattern.matches(expr).toSet
+        case (For(None,_,_),None)                => Set(Top)
         case _                                   => Set() 
     }
 }
@@ -56,7 +56,7 @@ case class ForLabelizer(pattern: Option[ExprPattern]) extends CFGLabelizer  {
  */
 case class WhileLabelizer(pattern: ExprPattern) extends CFGLabelizer  {
     override def test(t: ProgramNode) = t match {
-        case While(expr,_,_,_) => pattern.matches(expr).toSet
+        case While(expr,_,_) => pattern.matches(expr).toSet
         case _               => Set()
     }
 }
@@ -66,7 +66,7 @@ case class WhileLabelizer(pattern: ExprPattern) extends CFGLabelizer  {
  */
 case class SwitchLabelizer(pattern: ExprPattern) extends CFGLabelizer  {
     override def test(t: ProgramNode) = t match {
-        case Switch(expr,_,_,_) => pattern.matches(expr).toSet
+        case Switch(expr,_,_) => pattern.matches(expr).toSet
         case _                => Set()
     }
 }
@@ -76,7 +76,7 @@ case class SwitchLabelizer(pattern: ExprPattern) extends CFGLabelizer  {
  */
 case class ExpressionLabelizer(pattern: ExprPattern) extends CFGLabelizer {
 	override def test(t: ProgramNode) = t match {
-		case Expression(e,_,_,_) => pattern.matches(e).toSet
+		case Expression(e,_,_) => pattern.matches(e).toSet
 		case _                 => Set() 
 	}
 }
@@ -110,7 +110,7 @@ case class MatchExprLabelizer(pattern: ExprPattern) extends CFGLabelizer {
  */
 case class VarDeclLabelizer(pattern: VarDeclPattern) extends Labelizer[CFGMetaVar,ProgramNode,CFGVal] {
     override def test(t: ProgramNode) = t match {
-        case Statement(decl: Decl,_,_,_) => pattern.matches(decl).toSet
+        case Statement(decl: Decl,_,_) => pattern.matches(decl).toSet
         case _                         => Set()
     }
 }
@@ -122,7 +122,7 @@ case class VarDeclLabelizer(pattern: VarDeclPattern) extends Labelizer[CFGMetaVa
  */
 case class VarDefLabelizer(pattern: VarDefPattern) extends Labelizer[CFGMetaVar,ProgramNode,CFGVal] {
     override def test(t: ProgramNode) = t match {
-        case Statement(decl: Decl,_,_,_) => pattern.matches(decl).toSet
+        case Statement(decl: Decl,_,_) => pattern.matches(decl).toSet
         case _                         => Set()
     }
 }

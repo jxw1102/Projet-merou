@@ -5,7 +5,7 @@ package object ast {
     }
     
     implicit object DataProcessor {
-        private val splitReg = "<[^>]+>+|('[^']+'|[^\\s']+)+".r
+        private val splitReg = "<[^>]+>+|(\"[^\"]+\")|('[^']+'|[^\\s']+)+".r
     }
     
     // enables negative indexes for look-up on a Seq

@@ -59,4 +59,19 @@ class GraphNode[N](val value: N) {
             sb
         }
     }
+    
+    def mkString(name: N => String, label: N => String) = addString(name,label,new StringBuilder,MSet()).toString
+
+    private  def addString(name: N => String, label: N => String, sb: StringBuilder, set: MSet[GNode]): StringBuilder = {
+        def formatValue(node: GNode) = "{%s [label=\"%s\"]}".format(name(node.value),label(node.value)).replaceAll("\"","''")
+        
+        if (set contains this) sb
+        else if (_next.isEmpty) sb.append(formatValue(this) + "\n")
+        else {
+            set += this
+            _next.foreach(node => sb.append("%s -> %s\n".format(formatValue(this),formatValue(node))))
+            _next.filterNot(set contains _).foreach(_.addString(sb,set))
+            sb
+        }
+    }
 }
