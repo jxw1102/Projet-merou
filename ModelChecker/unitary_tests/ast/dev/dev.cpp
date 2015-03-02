@@ -1,5 +1,7 @@
+//#include <iostream>
+
 int f(int a, int b){
-	return 1;
+	return 10;
 }
 
 void g() { }
@@ -18,12 +20,14 @@ struct point {
 	int x;
 	int y;
 	float *data;
+	point() : x(0), y(0) {}
+	~point() {}
 };
 
 typedef struct point pt_alias;
 
 enum color {
-	RED,
+	RED=9,
 	GREEN,
 	BLUE
 };

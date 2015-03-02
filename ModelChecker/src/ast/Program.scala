@@ -24,7 +24,8 @@ import ast.model.DeclRefExpr
  * @author Xiaowen Ji      
  */
 case class Program(val decls: Map[String,GraphNode[ProgramNode]]) {
-    override def toString = decls.map { case (k,v) => v.toDot(n => k + n.id,n => n.toString) }
+                                                                   // node name cannot contain symbols
+    override def toString = decls.map { case (k,v) => v.toDot(n => k.replaceAll("[^a-zA-Z0-9_]","_") + n.id,n => n.toString) }
                                  .addString(new StringBuilder)
                                  .toString
 }
@@ -60,19 +61,11 @@ sealed abstract class ProgramNode(val id: String) {
     }
     override def hashCode = id.hashCode
     override def toString = {
-<<<<<<< HEAD
-        val format = (name: String, a: Any, id: String, cr: CodeRange) => "\"%s %s at %s\"".format(name,a,cr)
-=======
         val format = (name: String, a: Any, id: String, cr: CodeRange) => "%s %s at %s %s".format(name,a,cr,id)
->>>>>>> 1b8d1c554ce902a81f530998ccea3a2b8fbd25be
         this match {
             case If        (e   ,cr,id) => format("if"          ,e ,id,cr)
             case While     (e   ,cr,id) => format("while"       ,e ,id,cr)
             case Statement (stmt,cr,id) => format(stmt.toString ,"",id,cr)
-<<<<<<< HEAD
-            case Identifier(s   ,cr,id) => format("Identifier"  ,s ,id,cr)
-=======
->>>>>>> 1b8d1c554ce902a81f530998ccea3a2b8fbd25be
             case Expression(e   ,cr,id) => format(e.toString,""    ,id,cr)
             case Switch    (e   ,cr,id) => format("switch"       ,e,id,cr)
             case For       (e   ,cr,id) => format("for"         ,if (e.isDefined) e.get else "no_cond",id,cr)
@@ -86,10 +79,7 @@ final case class If        (e: Expr             , cr: CodeRange, _id: String) ex
 final case class For       (e: Option[Expr]     , cr: CodeRange, _id: String) extends ProgramNode(_id)
 final case class While     (e: Expr             , cr: CodeRange, _id: String) extends ProgramNode(_id)
 final case class Statement (stmt: SourceCodeNode, cr: CodeRange, _id: String) extends ProgramNode(_id)
-<<<<<<< HEAD
 final case class Identifier(s: String           , cr: CodeRange, _id: String) extends ProgramNode(_id)
-=======
->>>>>>> 1b8d1c554ce902a81f530998ccea3a2b8fbd25be
 final case class Expression(e: Expr             , cr: CodeRange, _id: String) extends ProgramNode(_id)
 final case class Switch    (e: Expr             , cr: CodeRange, _id: String) extends ProgramNode(_id)
 // only used during the construction of the graph, should never be used in an actual CFG

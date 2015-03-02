@@ -1,0 +1,45 @@
+digraph {
+{fruit0x103834940 [label="typedef enum _fruit:enum _fruit fruit  at (37:41,1:3) 0x103834940"]}
+{f0x102825fd0 [label="int (int, int) f(int a, int b)  at (5,1:1) 0x102825fd0"]} -> {f0x102825e90 [label="int a  at (3,7:11) 0x102825e90"]}
+{f0x102825e90 [label="int a  at (3,7:11) 0x102825e90"]} -> {f0x102825f00 [label="int b  at (3,14:18) 0x102825f00"]}
+{f0x102825f00 [label="int b  at (3,14:18) 0x102825f00"]} -> {f0x1028260a0 [label="ReturnStmt(int,10)  at (4,2:9) 0x1028260a0"]}
+{f0x1028260a0 [label="ReturnStmt(int,10)  at (4,2:9) 0x1028260a0"]}
+{main0x102825fd0 [label="int (int, int) f(int a, int b)  at (5,1:1) 0x102825fd0"]} -> {main0x103833c60 [label="float (void) fun()  at (13:15,1:1) 0x103833c60"]}
+{main0x103833c60 [label="float (void) fun()  at (13:15,1:1) 0x103833c60"]} -> {main0x102826130 [label="void (void) g()  at (7,1:12) 0x102826130"]}
+{main0x102826130 [label="void (void) g()  at (7,1:12) 0x102826130"]} -> {main0x103833ad0 [label="void (int) h(int a)  at (9:11,1:1) 0x103833ad0"]}
+{main0x103833ad0 [label="void (int) h(int a)  at (9:11,1:1) 0x103833ad0"]} -> {main0x10383d920 [label="int (int, char **) main(int argc, char **:char ** argv)  at (57:78,1:1) 0x10383d920"]}
+{main0x10383d920 [label="int (int, char **) main(int argc, char **:char ** argv)  at (57:78,1:1) 0x10383d920"]} -> {main0x10383d2b0 [label="int argc  at (57,10:14) 0x10383d2b0"]}
+{main0x10383d2b0 [label="int argc  at (57,10:14) 0x10383d2b0"]} -> {main0x10383d810 [label="char **:char ** argv  at (57,20:31) 0x10383d810"]}
+{main0x10383d810 [label="char **:char ** argv  at (57,20:31) 0x10383d810"]} -> {main0x10383d9e0 [label="char * s  = \"fuck you, bitch!\"  at (58,2:12) 0x10383d9e0"]}
+{main0x10383d9e0 [label="char * s  = \"fuck you, bitch!\"  at (58,2:12) 0x10383d9e0"]} -> {main0x10383dc20 [label="g()  at (59,2:4) 0x10383dc20"]}
+{main0x10383dc20 [label="g()  at (59,2:4) 0x10383dc20"]} -> {main0x10383dc60 [label="int i  = (f(5,6) + 3)  at (60,2:19) 0x10383dc60"]}
+{main0x10383dc60 [label="int i  = (f(5,6) + 3)  at (60,2:19) 0x10383dc60"]} -> {main0x10383df30 [label="f(3,4)  at (61,2:7) 0x10383df30"]}
+{main0x10383df30 [label="f(3,4)  at (61,2:7) 0x10383df30"]} -> {main0x10383df80 [label="int n  = sizeof((i * f(1,2)))  at (62,2:25) 0x10383df80"]}
+{main0x10383df80 [label="int n  = sizeof((i * f(1,2)))  at (62,2:25) 0x10383df80"]} -> {main0x10383e200 [label="int * list  = new int[10]  at (63,2:24) 0x10383e200"]}
+{main0x10383e200 [label="int * list  = new int[10]  at (63,2:24) 0x10383e200"]} -> {main0x10383ecc0 [label="double * ptr  = new double  at (64,2:20) 0x10383ecc0"]}
+{main0x10383ecc0 [label="double * ptr  = new double  at (64,2:20) 0x10383ecc0"]} -> {main0x10383efc0 [label="if fun() at (65:66,2:17) 0x10383efc0"]}
+{main0x10383efc0 [label="if fun() at (65:66,2:17) 0x10383efc0"]} -> {main0x10383eed8 [label="(i = 0)  at (65,13:17) 0x10383eed8"]}
+{main0x10383efc0 [label="if fun() at (65:66,2:17) 0x10383efc0"]} -> {main0x10383ef98 [label="fun()  at (66,13:17) 0x10383ef98"]}
+{main0x10383eed8 [label="(i = 0)  at (65,13:17) 0x10383eed8"]} -> {main0x10383f7c8 [label="while f(5,fun()) at (67:70,2:2) 0x10383f7c8"]}
+{main0x10383f7c8 [label="while f(5,fun()) at (67:70,2:2) 0x10383f7c8"]} -> {main0x10383f830 [label="delete list  at (71,2:11) 0x10383f830"]}
+{main0x10383f7c8 [label="while f(5,fun()) at (67:70,2:2) 0x10383f7c8"]} -> {main0x10383f300 [label="(f(1,6) + 1)  at (68,3:12) 0x10383f300"]}
+{main0x10383f830 [label="delete list  at (71,2:11) 0x10383f830"]} -> {main0x10383f898 [label="delete ptr  at (72,2:9) 0x10383f898"]}
+{main0x10383f898 [label="delete ptr  at (72,2:9) 0x10383f898"]} -> {main0x10383f8e0 [label="ReturnStmt(int,0)  at (77,2:9) 0x10383f8e0"]}
+{main0x10383f8e0 [label="ReturnStmt(int,0)  at (77,2:9) 0x10383f8e0"]}
+{main0x10383f300 [label="(f(1,6) + 1)  at (68,3:12) 0x10383f300"]} -> {main0x10383f770 [label="if (f(4,2) + fun()) at (69,3:37) 0x10383f770"]}
+{main0x10383f770 [label="if (f(4,2) + fun()) at (69,3:37) 0x10383f770"]} -> {main0x10383f7c8 [label="while f(5,fun()) at (67:70,2:2) 0x10383f7c8"]}
+{main0x10383f770 [label="if (f(4,2) + fun()) at (69,3:37) 0x10383f770"]} -> {main0x10383f748 [label="(5 * (i - (9 * fun())))  at (69,23:37) 0x10383f748"]}
+{main0x10383f748 [label="(5 * (i - (9 * fun())))  at (69,23:37) 0x10383f748"]} -> {main0x10383f7c8 [label="while f(5,fun()) at (67:70,2:2) 0x10383f7c8"]}
+{main0x10383ef98 [label="fun()  at (66,13:17) 0x10383ef98"]} -> {main0x10383f7c8 [label="while f(5,fun()) at (67:70,2:2) 0x10383f7c8"]}
+{color0x1038344d0 [label="enum color  at (29:33,1:1) 0x1038344d0"]}
+{pt_alias0x103834480 [label="typedef struct point:struct point pt_alias  at (27,1:22) 0x103834480"]}
+{_fruit0x103834750 [label="enum _fruit  at (37:41,9:1) 0x103834750"]}
+{g0x102826130 [label="void (void) g()  at (7,1:12) 0x102826130"]}
+{color_alias0x103834700 [label="typedef enum color:enum color color_alias  at (35,1:20) 0x103834700"]}
+{coordinate0x10383cfe0 [label="typedef struct _coordinate:struct _coordinate coordinate  at (43:48,1:3) 0x10383cfe0"]}
+{fun0x103833c60 [label="float (void) fun()  at (13:15,1:1) 0x103833c60"]} -> {fun0x103833d20 [label="ReturnStmt(float,1.000000e+00)  at (14,2:9) 0x103833d20"]}
+{fun0x103833d20 [label="ReturnStmt(float,1.000000e+00)  at (14,2:9) 0x103833d20"]}
+{h0x103833ad0 [label="void (int) h(int a)  at (9:11,1:1) 0x103833ad0"]} -> {h0x103833a10 [label="int a  at (9,8:12) 0x103833a10"]}
+{h0x103833a10 [label="int a  at (9,8:12) 0x103833a10"]} -> {h0x103833bc0 [label="(a = 0)  at (10,2:6) 0x103833bc0"]}
+{h0x103833bc0 [label="(a = 0)  at (10,2:6) 0x103833bc0"]}
+}

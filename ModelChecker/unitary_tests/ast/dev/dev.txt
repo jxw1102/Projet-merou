@@ -1,0 +1,191 @@
+TranslationUnitDecl 0x1028254d0 <<invalid sloc>>
+|-TypedefDecl 0x102825a10 <<invalid sloc>> __int128_t '__int128'
+|-TypedefDecl 0x102825a70 <<invalid sloc>> __uint128_t 'unsigned __int128'
+|-TypedefDecl 0x102825e30 <<invalid sloc>> __builtin_va_list '__va_list_tag [1]'
+|-FunctionDecl 0x102825fd0 <unitary_tests/ast/dev/dev.cpp:3:1, line:5:1> f 'int (int, int)'
+| |-ParmVarDecl 0x102825e90 <line:3:7, col:11> a 'int'
+| |-ParmVarDecl 0x102825f00 <col:14, col:18> b 'int'
+| `-CompoundStmt 0x1028260c0 <col:20, line:5:1>
+|   `-ReturnStmt 0x1028260a0 <line:4:2, col:9>
+|     `-IntegerLiteral 0x102826080 <col:9> 'int' 10
+|-FunctionDecl 0x102826130 <line:7:1, col:12> g 'void (void)'
+| `-CompoundStmt 0x1028261d0 <col:10, col:12>
+|-FunctionDecl 0x103833ad0 <line:9:1, line:11:1> h 'void (int)'
+| |-ParmVarDecl 0x103833a10 <line:9:8, col:12> a 'int'
+| `-CompoundStmt 0x103833be8 <col:15, line:11:1>
+|   `-BinaryOperator 0x103833bc0 <line:10:2, col:6> 'int' lvalue '='
+|     |-DeclRefExpr 0x103833b78 <col:2> 'int' lvalue ParmVar 0x103833a10 'a' 'int'
+|     `-IntegerLiteral 0x103833ba0 <col:6> 'int' 0
+|-FunctionDecl 0x103833c60 <line:13:1, line:15:1> fun 'float (void)'
+| `-CompoundStmt 0x103833d40 <line:13:13, line:15:1>
+|   `-ReturnStmt 0x103833d20 <line:14:2, col:9>
+|     `-FloatingLiteral 0x103833d00 <col:9> 'float' 1.000000e+00
+|-CXXRecordDecl 0x103833d60 <line:19:1, line:25:1> struct point definition
+| |-CXXRecordDecl 0x103833e70 <line:19:1, col:8> struct point
+| |-FieldDecl 0x103833f10 <line:20:2, col:6> x 'int'
+| |-FieldDecl 0x103833f70 <line:21:2, col:6> y 'int'
+| |-FieldDecl 0x103834000 <line:22:2, col:9> data 'float *'
+| |-CXXConstructorDecl 0x1038340c0 <line:23:2, col:24> point 'void (void)'
+| | |-CXXCtorInitializer Field 0x103833f10 'x' 'int'
+| | | |-IntegerLiteral 0x1038342b8 <col:14> 'int' 0
+| | |-CXXCtorInitializer Field 0x103833f70 'y' 'int'
+| | | |-IntegerLiteral 0x103834338 <col:20> 'int' 0
+| | `-CompoundStmt 0x1038343c8 <col:23, col:24>
+| |-CXXDestructorDecl 0x1038341d0 <line:24:2, col:12> ~point 'void (void) noexcept'
+| | `-CompoundStmt 0x103834410 <col:11, col:12>
+| |-CXXConstructorDecl 0x10383c7c0 <line:19:8> point 'void (const struct point &)' inline noexcept-unevaluated 0x10383c7c0
+| | `-ParmVarDecl 0x10383c900 <col:8> 'const struct point &'
+| `-CXXMethodDecl 0x10383cd00 <col:8, <invalid sloc>> operator= 'struct point &(const struct point &)' inline noexcept-unevaluated 0x10383cd00
+|   `-ParmVarDecl 0x10383ce20 <col:8> 'const struct point &'
+|-TypedefDecl 0x103834480 <line:27:1, col:22> pt_alias 'struct point':'struct point'
+|-EnumDecl 0x1038344d0 <line:29:1, line:33:1> color
+| |-EnumConstantDecl 0x1038345a0 <line:30:2, col:6> RED 'enum color'
+| | `-ImplicitCastExpr 0x103834690 <col:6> 'unsigned int' <IntegralCast>
+| |   `-IntegerLiteral 0x103834580 <col:6> 'int' 9
+| |-EnumConstantDecl 0x1038345f0 <line:31:2> GREEN 'enum color'
+| `-EnumConstantDecl 0x103834640 <line:32:2> BLUE 'enum color'
+|-TypedefDecl 0x103834700 <line:35:1, col:20> color_alias 'enum color':'enum color'
+|-EnumDecl 0x103834750 <line:37:9, line:41:1> _fruit
+| |-EnumConstantDecl 0x103834800 <line:38:2> APPLE 'enum _fruit'
+| |-EnumConstantDecl 0x103834850 <line:39:2> PEAR 'enum _fruit'
+| `-EnumConstantDecl 0x1038348a0 <line:40:2> BANANA 'enum _fruit'
+|-TypedefDecl 0x103834940 <line:37:1, line:41:3> fruit 'enum _fruit':'enum _fruit'
+|-CXXRecordDecl 0x10383c410 <line:43:9, line:48:1> struct _coordinate definition
+| |-CXXRecordDecl 0x10383c520 <line:43:9, col:16> struct _coordinate
+| |-FieldDecl 0x10383c5c0 <line:44:2, col:9> lat 'double'
+| |-FieldDecl 0x10383c620 <line:45:2, col:9> lng 'double'
+| |-FieldDecl 0x10383c690 <line:46:2, col:15> p 'struct point':'struct point'
+| |-FieldDecl 0x10383c710 <line:47:2, col:8> f 'fruit':'enum _fruit'
+| |-CXXConstructorDecl 0x10383c980 <line:43:16> _coordinate 'void (struct _coordinate &&)' inline noexcept-unevaluated 0x10383c980
+| | `-ParmVarDecl 0x10383cac0 <col:16> 'struct _coordinate &&'
+| |-CXXMethodDecl 0x10383cb50 <col:16, <invalid sloc>> operator= 'struct _coordinate &(struct _coordinate &&)' inline noexcept-unevaluated 0x10383cb50
+| | `-ParmVarDecl 0x10383cc70 <col:16> 'struct _coordinate &&'
+| `-CXXDestructorDecl 0x10383cea0 <col:16> ~_coordinate 'void (void)' inline noexcept-unevaluated 0x10383cea0
+|-TypedefDecl 0x10383cfe0 <col:1, line:48:3> coordinate 'struct _coordinate':'struct _coordinate'
+|-CXXRecordDecl 0x10383d040 <line:50:1, line:53:1> union number definition
+| |-CXXRecordDecl 0x10383d150 <line:50:1, col:7> union number
+| |-FieldDecl 0x10383d1f0 <line:51:5, col:9> entier 'int'
+| `-FieldDecl 0x10383d250 <line:52:5, col:12> reel 'double'
+|-FunctionDecl 0x10383d920 <line:57:1, line:78:1> main 'int (int, char **)'
+| |-ParmVarDecl 0x10383d2b0 <line:57:10, col:14> argc 'int'
+| |-ParmVarDecl 0x10383d810 <col:20, col:31> argv 'char **':'char **'
+| `-CompoundStmt 0x10383f900 <col:34, line:78:1>
+|   |-DeclStmt 0x10383db48 <line:58:2, col:30>
+|   | `-VarDecl 0x10383d9e0 <col:2, col:12> s 'char *'
+|   |   `-ImplicitCastExpr 0x10383db30 <col:12> 'char *' <NoOp>
+|   |     `-ImplicitCastExpr 0x10383db18 <col:12> 'const char *' <ArrayToPointerDecay>
+|   |       `-StringLiteral 0x10383dab8 <col:12> 'const char [17]' lvalue "fuck you, bitch!"
+|   |-CallExpr 0x10383dc20 <line:59:2, col:4> 'void'
+|   | `-ImplicitCastExpr 0x10383dc08 <col:2> 'void (*)(void)' <FunctionToPointerDecay>
+|   |   `-DeclRefExpr 0x10383dbb8 <col:2> 'void (void)' lvalue Function 0x102826130 'g' 'void (void)'
+|   |-DeclStmt 0x10383de40 <line:60:2, col:20>
+|   | `-VarDecl 0x10383dc60 <col:2, col:19> i 'int'
+|   |   `-BinaryOperator 0x10383de18 <col:10, col:19> 'int' '+'
+|   |     |-CallExpr 0x10383ddc0 <col:10, col:15> 'int'
+|   |     | |-ImplicitCastExpr 0x10383dda8 <col:10> 'int (*)(int, int)' <FunctionToPointerDecay>
+|   |     | | `-DeclRefExpr 0x10383dd50 <col:10> 'int (int, int)' lvalue Function 0x102825fd0 'f' 'int (int, int)'
+|   |     | |-IntegerLiteral 0x10383dd10 <col:12> 'int' 5
+|   |     | `-IntegerLiteral 0x10383dd30 <col:14> 'int' 6
+|   |     `-IntegerLiteral 0x10383ddf8 <col:19> 'int' 3
+|   |-CallExpr 0x10383df30 <line:61:2, col:7> 'int'
+|   | |-ImplicitCastExpr 0x10383df18 <col:2> 'int (*)(int, int)' <FunctionToPointerDecay>
+|   | | `-DeclRefExpr 0x10383def0 <col:2> 'int (int, int)' lvalue Function 0x102825fd0 'f' 'int (int, int)'
+|   | |-IntegerLiteral 0x10383deb0 <col:4> 'int' 3
+|   | `-IntegerLiteral 0x10383ded0 <col:6> 'int' 4
+|   |-DeclStmt 0x10383e1a8 <line:62:2, col:26>
+|   | `-VarDecl 0x10383df80 <col:2, col:25> n 'int'
+|   |   `-ImplicitCastExpr 0x10383e190 <col:10, col:25> 'int' <IntegralCast>
+|   |     `-UnaryExprOrTypeTraitExpr 0x10383e170 <col:10, col:25> 'unsigned long' sizeof
+|   |       `-ParenExpr 0x10383e150 <col:16, col:25> 'int'
+|   |         `-BinaryOperator 0x10383e128 <col:17, col:24> 'int' '*'
+|   |           |-ImplicitCastExpr 0x10383e110 <col:17> 'int' <LValueToRValue>
+|   |           | `-DeclRefExpr 0x10383dfd8 <col:17> 'int' lvalue Var 0x10383dc60 'i' 'int'
+|   |           `-CallExpr 0x10383e0d8 <col:19, col:24> 'int'
+|   |             |-ImplicitCastExpr 0x10383e0c0 <col:19> 'int (*)(int, int)' <FunctionToPointerDecay>
+|   |             | `-DeclRefExpr 0x10383e098 <col:19> 'int (int, int)' lvalue Function 0x102825fd0 'f' 'int (int, int)'
+|   |             |-IntegerLiteral 0x10383e058 <col:21> 'int' 1
+|   |             `-IntegerLiteral 0x10383e078 <col:23> 'int' 2
+|   |-DeclStmt 0x10383ec68 <line:63:2, col:25>
+|   | `-VarDecl 0x10383e200 <col:2, col:24> list 'int *'
+|   |   `-CXXNewExpr 0x10383ec10 <col:14, col:24> 'int *'
+|   |     `-IntegerLiteral 0x10383e258 <col:22> 'int' 10
+|   |-DeclStmt 0x10383ed78 <line:64:2, col:26>
+|   | `-VarDecl 0x10383ecc0 <col:2, col:20> ptr 'double *'
+|   |   `-CXXNewExpr 0x10383ed28 <col:16, col:20> 'double *'
+|   |-IfStmt 0x10383efc0 <line:65:2, line:66:17>
+|   | |-<<<NULL>>>
+|   | |-ImplicitCastExpr 0x10383ee78 <line:65:6, col:10> '_Bool' <FloatingToBoolean>
+|   | | `-CallExpr 0x10383ee50 <col:6, col:10> 'float'
+|   | |   `-ImplicitCastExpr 0x10383ee38 <col:6> 'float (*)(void)' <FunctionToPointerDecay>
+|   | |     `-DeclRefExpr 0x10383ede8 <col:6> 'float (void)' lvalue Function 0x103833c60 'fun' 'float (void)'
+|   | |-BinaryOperator 0x10383eed8 <col:13, col:17> 'int' lvalue '='
+|   | | |-DeclRefExpr 0x10383ee90 <col:13> 'int' lvalue Var 0x10383dc60 'i' 'int'
+|   | | `-IntegerLiteral 0x10383eeb8 <col:17> 'int' 0
+|   | `-CallExpr 0x10383ef98 <line:66:13, col:17> 'float'
+|   |   `-ImplicitCastExpr 0x10383ef80 <col:13> 'float (*)(void)' <FunctionToPointerDecay>
+|   |     `-DeclRefExpr 0x10383ef58 <col:13> 'float (void)' lvalue Function 0x103833c60 'fun' 'float (void)'
+|   |-WhileStmt 0x10383f7c8 <line:67:2, line:70:2>
+|   | |-<<<NULL>>>
+|   | |-ImplicitCastExpr 0x10383f1b8 <line:67:9, col:18> '_Bool' <IntegralToBoolean>
+|   | | `-CallExpr 0x10383f168 <col:9, col:18> 'int'
+|   | |   |-ImplicitCastExpr 0x10383f150 <col:9> 'int (*)(int, int)' <FunctionToPointerDecay>
+|   | |   | `-DeclRefExpr 0x10383f128 <col:9> 'int (int, int)' lvalue Function 0x102825fd0 'f' 'int (int, int)'
+|   | |   |-IntegerLiteral 0x10383f048 <col:11> 'int' 5
+|   | |   `-ImplicitCastExpr 0x10383f1a0 <col:13, col:17> 'int' <FloatingToIntegral>
+|   | |     `-CallExpr 0x10383f100 <col:13, col:17> 'float'
+|   | |       `-ImplicitCastExpr 0x10383f0e8 <col:13> 'float (*)(void)' <FunctionToPointerDecay>
+|   | |         `-DeclRefExpr 0x10383f0c0 <col:13> 'float (void)' lvalue Function 0x103833c60 'fun' 'float (void)'
+|   | `-CompoundStmt 0x10383f7a0 <col:21, line:70:2>
+|   |   |-BinaryOperator 0x10383f300 <line:68:3, col:12> 'int' '+'
+|   |   | |-CallExpr 0x10383f2a8 <col:3, col:8> 'int'
+|   |   | | |-ImplicitCastExpr 0x10383f290 <col:3> 'int (*)(int, int)' <FunctionToPointerDecay>
+|   |   | | | `-DeclRefExpr 0x10383f268 <col:3> 'int (int, int)' lvalue Function 0x102825fd0 'f' 'int (int, int)'
+|   |   | | |-IntegerLiteral 0x10383f228 <col:5> 'int' 1
+|   |   | | `-IntegerLiteral 0x10383f248 <col:7> 'int' 6
+|   |   | `-IntegerLiteral 0x10383f2e0 <col:12> 'int' 1
+|   |   `-IfStmt 0x10383f770 <line:69:3, col:37>
+|   |     |-<<<NULL>>>
+|   |     |-ImplicitCastExpr 0x10383f538 <col:7, col:20> '_Bool' <FloatingToBoolean>
+|   |     | `-BinaryOperator 0x10383f510 <col:7, col:20> 'float' '+'
+|   |     |   |-ImplicitCastExpr 0x10383f4f8 <col:7, col:12> 'float' <IntegralToFloating>
+|   |     |   | `-CallExpr 0x10383f400 <col:7, col:12> 'int'
+|   |     |   |   |-ImplicitCastExpr 0x10383f3e8 <col:7> 'int (*)(int, int)' <FunctionToPointerDecay>
+|   |     |   |   | `-DeclRefExpr 0x10383f3c0 <col:7> 'int (int, int)' lvalue Function 0x102825fd0 'f' 'int (int, int)'
+|   |     |   |   |-IntegerLiteral 0x10383f380 <col:9> 'int' 4
+|   |     |   |   `-IntegerLiteral 0x10383f3a0 <col:11> 'int' 2
+|   |     |   `-CallExpr 0x10383f4d0 <col:16, col:20> 'float'
+|   |     |     `-ImplicitCastExpr 0x10383f4b8 <col:16> 'float (*)(void)' <FunctionToPointerDecay>
+|   |     |       `-DeclRefExpr 0x10383f490 <col:16> 'float (void)' lvalue Function 0x103833c60 'fun' 'float (void)'
+|   |     |-BinaryOperator 0x10383f748 <col:23, col:37> 'float' '*'
+|   |     | |-ImplicitCastExpr 0x10383f730 <col:23> 'float' <IntegralToFloating>
+|   |     | | `-IntegerLiteral 0x10383f550 <col:23> 'int' 5
+|   |     | `-ParenExpr 0x10383f710 <col:25, col:37> 'float'
+|   |     |   `-BinaryOperator 0x10383f6e8 <col:26, col:36> 'float' '-'
+|   |     |     |-ImplicitCastExpr 0x10383f6d0 <col:26> 'float' <IntegralToFloating>
+|   |     |     | `-ImplicitCastExpr 0x10383f6b8 <col:26> 'int' <LValueToRValue>
+|   |     |     |   `-DeclRefExpr 0x10383f570 <col:26> 'int' lvalue Var 0x10383dc60 'i' 'int'
+|   |     |     `-BinaryOperator 0x10383f690 <col:30, col:36> 'float' '*'
+|   |     |       |-ImplicitCastExpr 0x10383f678 <col:30> 'float' <IntegralToFloating>
+|   |     |       | `-IntegerLiteral 0x10383f598 <col:30> 'int' 9
+|   |     |       `-CallExpr 0x10383f650 <col:32, col:36> 'float'
+|   |     |         `-ImplicitCastExpr 0x10383f638 <col:32> 'float (*)(void)' <FunctionToPointerDecay>
+|   |     |           `-DeclRefExpr 0x10383f610 <col:32> 'float (void)' lvalue Function 0x103833c60 'fun' 'float (void)'
+|   |     `-<<<NULL>>>
+|   |-CXXDeleteExpr 0x10383f830 <line:71:2, col:11> 'void'
+|   | `-ImplicitCastExpr 0x10383f818 <col:11> 'int *' <LValueToRValue>
+|   |   `-DeclRefExpr 0x10383f7f0 <col:11> 'int *' lvalue Var 0x10383e200 'list' 'int *'
+|   |-CXXDeleteExpr 0x10383f898 <line:72:2, col:9> 'void'
+|   | `-ImplicitCastExpr 0x10383f880 <col:9> 'double *' <LValueToRValue>
+|   |   `-DeclRefExpr 0x10383f858 <col:9> 'double *' lvalue Var 0x10383ecc0 'ptr' 'double *'
+|   `-ReturnStmt 0x10383f8e0 <line:77:2, col:9>
+|     `-IntegerLiteral 0x10383f8c0 <col:9> 'int' 0
+|-FunctionDecl 0x10383e2d0 <<invalid sloc>> operator new 'void *(unsigned long)'
+| |-ParmVarDecl 0x10383e3b0 <<invalid sloc>> 'unsigned long'
+| `-MallocAttr 0x10383e370 <<invalid sloc>> Implicit
+|-FunctionDecl 0x10383e410 <<invalid sloc>> operator new[] 'void *(unsigned long)'
+| |-ParmVarDecl 0x10383e4f0 <<invalid sloc>> 'unsigned long'
+| `-MallocAttr 0x10383e4b0 <<invalid sloc>> Implicit
+|-FunctionDecl 0x10383e5d0 <<invalid sloc>> operator delete 'void (void *) noexcept'
+| `-ParmVarDecl 0x10383e670 <<invalid sloc>> 'void *'
+`-FunctionDecl 0x10383e6d0 <<invalid sloc>> operator delete[] 'void (void *) noexcept'
+  `-ParmVarDecl 0x10383e770 <<invalid sloc>> 'void *'

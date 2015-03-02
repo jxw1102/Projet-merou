@@ -18,7 +18,7 @@ sealed abstract class Expr(typeOf: String) extends ForInitializer {
         case CallExpr           (_,ref,params) => ref :: params
         case _                                 => List()
     }    
-        
+    
     def matches(that: Expr): Boolean = (this,that) match {
         case (BinaryOp(_,xl,xr,xo),BinaryOp(_,yl,yr,yo))                 => (xo == yo) && (xl matches yl) && (xr matches yr)
         case (UnaryOp(_,xopd,xopr,xkind),UnaryOp(_,yopd,yopr,ykind))     => (xkind == ykind) && (xopr == yopr) && (xopd matches yopd)
@@ -44,7 +44,7 @@ sealed abstract class Expr(typeOf: String) extends ForInitializer {
         case DeclRefExpr        (_,x,_)        => x
         case CallExpr           (_,ref,params) => "%s(%s)".format(ref.targetName,params.mkString(","))
         case MemberExpr         (_,t,m)        => "%s%s".format(t,m)
-        case UnaryExprOrTypeTraitExpr(_,t,v,e) => e match { case Some(ex) => "%s(%s)".format(v,ex); case None => v }
+        case UnaryExprOrTypeTraitExpr(_,v,e)   => e match { case Some(ex) => "%s(%s)".format(v,ex); case None => v }
         case CXXNewExpr(_,t,c)                 => val tp = t.substring(0, t.length()-2); c match { case Some(cnt) => "new %s[%s]".format(tp,cnt); case None => "new %s".format(tp) }
         case CXXDeleteExpr(_,_,c)              => "delete %s".format(c)
     }
@@ -59,7 +59,7 @@ final case class ArraySubscriptExpr (typeOf: String, exprs: (Expr, Expr))       
 final case class InitListExpr       (typeOf: String, exprs: List[Expr])                                extends Expr(typeOf)
 final case class CallExpr           (typeOf: String, ref: DeclRefExpr, params: List[Expr])             extends Expr(typeOf)
 final case class MemberExpr         (typeOf: String, target: DeclRefExpr, member: String)              extends Expr(typeOf)
-final case class UnaryExprOrTypeTraitExpr(typeOf: String, typeName: String, value: String, expr: Option[Expr]) extends Expr(typeOf)
+final case class UnaryExprOrTypeTraitExpr(typeOf: String, value: String, expr: Option[Expr])           extends Expr(typeOf)
 final case class CXXNewExpr         (typeOf: String, typeName: String, count: Option[Expr])            extends Expr(typeOf)
 final case class CXXDeleteExpr      (typeOf: String, typeName: String, target: Expr)                   extends Expr(typeOf)
 final case class CXXConstructExpr   (typeOf: String, typeName: String, target: Expr)                   extends Expr(typeOf)

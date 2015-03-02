@@ -69,7 +69,9 @@ class ASTParser {
                             case x if x.endsWith("Expr") => cnode
                             case x if x.endsWith("Operator") => cnode
                             case x if x.contains("Literal") => cnode
-                            case "VarDecl" | "FunctionDecl" | "ParmVarDecl" => cnode
+                            case "VarDecl" | "FunctionDecl" | "ParmVarDecl"
+//                                | "CXXRecordDecl" | "CXXConstructorDecl" | "CXXDestructorDecl" | "CXXMethodDecl" | "CXXCtorInitializer"
+                                | "TypedefDecl" | "FieldDecl" | "EnumDecl" | "EnumConstantDecl" => cnode
                             case _           => OtherASTNode(indent/2,data)
                         }
                     case (None,None,data,indent,_) =>
