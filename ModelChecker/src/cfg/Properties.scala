@@ -14,11 +14,7 @@ import ctl._
 
 object Properties {
     type CTL = CtlExpr[CFGMetaVar,ProgramNode,CFGVal]
-    
-//    val FIND_FUNCTION_PARAMS = Predicate(FindExprLabelizer(CallExprPattern(UndefinedVar("X"), Some(List(UndefinedVar("Y"),UndefinedVar("Z"))))))
-//    val UNUSED_VAR       = (Predicate(VarDeclLabelizer(VarDeclPattern(None, UndefinedVar("X")))) 
-//              && AX(AG(Predicate(UnusedLabelizer(UndefinedVar("X"))))))
-    
+
     /**
      * Macro predicate to compute the conjunction of pattern-based predicates for each If, While, For,
      * and Switch node
@@ -100,10 +96,25 @@ object Properties {
         anyFlowControlNodes(identityPattern)          || Predicate(ForLabelizer(None))
     }
     
-    val UNUSED_DECALRED_VAR = {
+    val UNUSED_DECLARED_VAR = {
         val declaredVariable = Predicate(VarDeclLabelizer(VarDeclPattern(NotString(),UndefinedVar("X"))))
         val usedVariable     = Predicate(UseLabelizer(UndefinedVar("X")))
         declaredVariable && AG(!usedVariable)
+    }
+    
+    
+    val NON_PAIRED_FUNCTION_CALL = (f1: String, f2: String) => {
+        val fun1       = Predicate(FindExprLabelizer(CallExprPattern(DefinedString(f1))))
+        val assignment = Predicate(MatchExprLabelizer(AssignmentPattern(UndefinedVar("X"),UndefinedVar("Y"),DefinedString("="))))
+        val fun2       = Predicate(FindExprLabelizer(CallExprPattern(DefinedString(f2),Some(List(UndefinedVar("X"))))))
+        (!assignment && fun1) || (fun1 && assignment && EX(EG(!fun2)))
+    }
+    
+    val NEW_WITHOUT_DELETE = {
+//        val alloc      = Predicate(FindExprLabelizer(CXXNewExprPattern(DefinedString(f1))))
+//        val assignment = Predicate(MatchExprLabelizer(AssignmentPattern(UndefinedVar("X"),UndefinedVar("Y"),DefinedString("="))))
+//        val dealloc    = Predicate(FindExprLabelizer(CXXDeleteExprPattern(DefinedString(f2),Some(List(UndefinedVar("X"))))))
+//        fun1 && assignment && EX(EG(!fun2))
     }
     
 }
