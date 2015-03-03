@@ -100,6 +100,13 @@ object Properties {
         anyFlowControlNodes(identityPattern)          || Predicate(ForLabelizer(None))
     }
     
+    val UNUSED_DECALRED_VAR = {
+        val declaredVariable = Predicate(VarDeclLabelizer(VarDeclPattern(NotString(),UndefinedVar("X"))))
+        val usedVariable     = Predicate(UseLabelizer(UndefinedVar("X")))
+        declaredVariable && AG(!usedVariable)
+    }
+    
+    
     val NON_PAIRED_FUNCTION_CALL = (f1: String, f2: String) => {
         val fun1       = Predicate(FindExprLabelizer(CallExprPattern(DefinedString(f1))))
         val assignment = Predicate(MatchExprLabelizer(AssignmentPattern(UndefinedVar("X"),UndefinedVar("Y"),DefinedString("="))))

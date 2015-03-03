@@ -77,18 +77,24 @@ object Main extends App {
         println("Testing the ARITHMETIC_POINTER property...")
         printTest("Following lines contain an arithmetic expression involving a pointer :",checker5,ARITHMETIC_POINTER)
     }
-    
-    lazy val checker6 = loadChecker("file_operation")
+
+	lazy val checker6 = loadChecker("unused_var")
     lazy val test8 = {
-        println("Testing the NON_PAIRED_FUNCTION_CALL property...")
-        printTest("Following lines contain non-closed files :",checker6,NON_PAIRED_FUNCTION_CALL("fopen","fclose"))
+        println("Testing the UNUSED_DECALRED_VAR property...")
+        printTest("Following lines contain variable definition that are not used :",checker6,UNUSED_DECALRED_VAR)
     }
     
     lazy val checker7 = loadChecker("file_operation")
     lazy val test9 = {
+        println("Testing the NON_PAIRED_FUNCTION_CALL property...")
+        printTest("Following lines contain non-closed files :",checker6,NON_PAIRED_FUNCTION_CALL("fopen","fclose"))
+    }
+    
+    lazy val checker8 = loadChecker("memory")
+    lazy val test10 = {
         println("Testing the NEW_WITHOUT_DELETE property...")
 //        printTest("Following lines contain leaked memories :",checker7,NEW_WITHOUT_DELETE)
     }
     
-    test8
+    test10
 }

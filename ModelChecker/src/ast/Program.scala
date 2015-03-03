@@ -47,7 +47,7 @@ abstract class SourceCodeNode {
 }
 
 object SourceCodeNode {
-    def apply(node: SourceCodeNode, codeRange: CodeRange, id: String) = { node.codeRange = codeRange; node.id = id; node }
+    def apply[T <: SourceCodeNode](node: T, codeRange: CodeRange, id: String) = { node.codeRange = codeRange; node.id = id; node }
 }
 
 /**
