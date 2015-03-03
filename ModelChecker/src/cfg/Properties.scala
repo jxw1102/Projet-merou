@@ -99,4 +99,11 @@ object Properties {
         anyFlowControlNodes(literalAssignmentPattern) || anyFlowControlNodes(literalExprPattern) || 
         anyFlowControlNodes(identityPattern)          || Predicate(ForLabelizer(None))
     }
+    
+    val UNUSED_DECALRED_VAR = {
+        val declaredVariable = Predicate(VarDeclLabelizer(VarDeclPattern(NotString(),UndefinedVar("X"))))
+        val usedVariable     = Predicate(UseLabelizer(UndefinedVar("X")))
+        declaredVariable && AG(!usedVariable)
+    }
+    
 }
