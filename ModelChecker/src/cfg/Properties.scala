@@ -99,4 +99,19 @@ object Properties {
         anyFlowControlNodes(literalAssignmentPattern) || anyFlowControlNodes(literalExprPattern) || 
         anyFlowControlNodes(identityPattern)          || Predicate(ForLabelizer(None))
     }
+    
+    val NON_PAIRED_FUNCTION_CALL = (f1: String, f2: String) => {
+        val fun1       = Predicate(FindExprLabelizer(CallExprPattern(DefinedString(f1))))
+        val assignment = Predicate(MatchExprLabelizer(AssignmentPattern(UndefinedVar("X"),UndefinedVar("Y"),DefinedString("="))))
+        val fun2       = Predicate(FindExprLabelizer(CallExprPattern(DefinedString(f2),Some(List(UndefinedVar("X"))))))
+        (!assignment && fun1) || (fun1 && assignment && EX(EG(!fun2)))
+    }
+    
+    val NEW_WITHOUT_DELETE = {
+//        val alloc      = Predicate(FindExprLabelizer(CXXNewExprPattern(DefinedString(f1))))
+//        val assignment = Predicate(MatchExprLabelizer(AssignmentPattern(UndefinedVar("X"),UndefinedVar("Y"),DefinedString("="))))
+//        val dealloc    = Predicate(FindExprLabelizer(CXXDeleteExprPattern(DefinedString(f2),Some(List(UndefinedVar("X"))))))
+//        fun1 && assignment && EX(EG(!fun2))
+    }
+    
 }

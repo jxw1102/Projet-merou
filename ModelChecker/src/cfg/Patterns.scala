@@ -264,6 +264,35 @@ case class VarDeclPattern(typeOf: StringPattern, name: StringPattern)
  */
 case class VarDefPattern(typeOf: StringPattern, name: StringPattern) 
 	extends VarDeclMatcher(typeOf,name)(decl => CFGDef(decl.typeOf,decl.name))
+    
+//case class CXXNewExprPattern(
+//        name : StringPattern, 
+//        params: Option[List[AtomicExprPattern]]=None,
+//        typeOf: StringPattern=NotString()) extends ExprPattern {
+//    
+//    private def matchesParams(paramsFun : List[Expr]): Option[Env] = params match {
+//        case None        => Some(Top)
+//        case Some(value) =>
+//            if (paramsFun.size != value.size) None 
+//            else value.zip(paramsFun).foldLeft[Option[Env]](Some(Top)) { 
+//                case (acc,(pe,e)) => if (acc.isEmpty) None else ExprPattern.intersection(acc,pe.matches(e)) 
+//            }
+//    }
+//    
+//    private def matchFun(ref: DeclRefExpr): Option[Env] = (name.matches(ref.targetName),name) match {
+//        case (Some(_),UndefinedVar(x))  => Some(Top ++ (x -> CFGExpr(ref)))
+//        case (Some(_),DefinedString(_)) => Some(Top)
+//        case _                          => None
+//    }
+//    
+//    override def matches(expr: Expr) = expr match {
+//        case CallExpr(rtn,ref,paramsFun) => typeOf.matches(rtn) match {
+//            case Some(_) => ExprPattern.intersection(matchFun(ref),matchesParams(paramsFun)) 
+//            case _       => None
+//        } 
+//        case _                           => None
+//   }
+//}
 
 //case class FunctionDeclPattern(name: StringPattern, args: Option[List[ParamVarDeclPattern]]) extends DeclPattern {
 //    private def matchDecl(decl: Decl): Option[Env] = (name.matches(decl.name),name) match {

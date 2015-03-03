@@ -77,7 +77,7 @@ object Labelizer {
 		    	val trueLabel = new TrueLabelizer[M,N,V]
 		     	mapTrue += (typeTag[M].tpe,typeTag[N].tpe,typeTag[V].tpe) -> trueLabel
 		    	trueLabel
-		}  
+		}
     
     def createFalse[M <: MetaVariable: TypeTag, N: TypeTag, V <: Value: TypeTag]: FalseLabelizer[M,N,V] = 
         mapFalse.get(typeTag[M].tpe,typeTag[N].tpe,typeTag[V].tpe) match {
