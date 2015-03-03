@@ -131,7 +131,7 @@ object TestModelChecker extends App with TestUtils with ConvertEnv {
     
         println("\nTesting neg...")
         // test 15
-        println(checker.neg(set1))
+        println(checker.conjFold(Set()) + " ****")
     
         println("\nTesting preA...")
         // test 15

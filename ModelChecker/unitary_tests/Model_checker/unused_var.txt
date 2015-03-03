@@ -1,0 +1,31 @@
+TranslationUnitDecl 0x35ce180 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0x35ce6c0 <<invalid sloc>> <invalid sloc> implicit __int128_t '__int128'
+|-TypedefDecl 0x35ce720 <<invalid sloc>> <invalid sloc> implicit __uint128_t 'unsigned __int128'
+|-TypedefDecl 0x35ceae0 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list '__va_list_tag [1]'
+|-FunctionDecl 0x35ceb80 <ModelChecker/unitary_tests/Model_checker/unused_var.cpp:1:1, line:3:1> line:1:5 used f 'int (void)'
+| `-CompoundStmt 0x35cec60 <col:9, line:3:1>
+|   `-ReturnStmt 0x35cec40 <line:2:2, col:9>
+|     `-IntegerLiteral 0x35cec20 <col:9> 'int' 2
+`-FunctionDecl 0x360cbc0 <line:5:1, line:15:1> line:5:5 main 'int (int, char **)'
+  |-ParmVarDecl 0x35cec90 <col:10, col:14> col:14 argc 'int'
+  |-ParmVarDecl 0x35ced60 <col:20, col:27> col:27 argv 'char **'
+  `-CompoundStmt 0x360d030 <col:33, line:15:1>
+    |-DeclStmt 0x360ccd8 <line:7:2, col:7>
+    | `-VarDecl 0x360cc80 <col:2, col:6> col:6 used x 'int'
+    |-DeclStmt 0x360cd58 <line:8:2, col:7>
+    | `-VarDecl 0x360cd00 <col:2, col:6> col:6 used y 'int'
+    |-DeclStmt 0x360cdd8 <line:9:2, col:7>
+    | `-VarDecl 0x360cd80 <col:2, col:6> col:6 z 'int'
+    |-BinaryOperator 0x360cfc8 <line:11:2, col:16> 'int' '+'
+    | |-BinaryOperator 0x360ceb8 <col:2, col:10> 'int' '+'
+    | | |-BinaryOperator 0x360ce70 <col:2, col:6> 'int' '+'
+    | | | |-ImplicitCastExpr 0x360ce40 <col:2> 'int' <LValueToRValue>
+    | | | | `-DeclRefExpr 0x360cdf0 <col:2> 'int' lvalue Var 0x360cc80 'x' 'int'
+    | | | `-ImplicitCastExpr 0x360ce58 <col:6> 'int' <LValueToRValue>
+    | | |   `-DeclRefExpr 0x360ce18 <col:6> 'int' lvalue Var 0x360cd00 'y' 'int'
+    | | `-IntegerLiteral 0x360ce98 <col:10> 'int' 2
+    | `-CallExpr 0x360cfa0 <col:14, col:16> 'int'
+    |   `-ImplicitCastExpr 0x360cf88 <col:14> 'int (*)(void)' <FunctionToPointerDecay>
+    |     `-DeclRefExpr 0x360cf38 <col:14> 'int (void)' lvalue Function 0x35ceb80 'f' 'int (void)'
+    `-ReturnStmt 0x360d010 <line:13:2, col:9>
+      `-IntegerLiteral 0x360cff0 <col:9> 'int' 0

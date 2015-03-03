@@ -71,5 +71,10 @@ object Main extends App {
 		printTest("Following lines contain an arithmetic expression involving a pointer :",checker5,ARITHMETIC_POINTER)
 	}
 	
-	test7
+    lazy val checker6 = loadChecker("unused_var")
+    lazy val test8 = {
+        println("Testing the UNUSED_DECALRED_VAR property...")
+        printTest("Following lines contain variable definition that are not used :",checker6,UNUSED_DECALRED_VAR)
+    }
+	test1
 }
