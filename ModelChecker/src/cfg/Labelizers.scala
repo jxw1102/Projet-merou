@@ -115,16 +115,6 @@ case class VarDeclLabelizer(pattern: VarDeclPattern) extends Labelizer[CFGMetaVa
     }
 }
 
-
-
-//case class FunctionDeclLabelizer(pattern: FunctionDeclPattern) extends Labelizer[CFGMetaVar,ProgramNode,CFGVal] {
-//    override def test(t: ProgramNode) = t match {
-//        case Statement(decl: Decl,_,_) => pattern.matches(decl).toSet
-//        case _                         => Set()
-//    }
-//}
-
-
 /**
  * Labelizes every Statement node containing a VarDecl matching a given declaration pattern.
  * @note Returns an environement containing a CFGDef. Ask yourself which semantic you need

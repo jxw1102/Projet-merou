@@ -1,12 +1,15 @@
 digraph {
-"int (void) f()  at (3,1:1) 0x3505b70" -> "ReturnStmt(3)  at (2,5:12) 0x3505c30"
-"ReturnStmt(3)  at (2,5:12) 0x3505c30"
-"int (int, char **) main(int argc, char ** argv)  at (5:12,1:1) 0x35429b0" -> "int j  = (5 + f())  at (6,5:20) 0x3542c00"
-"int j  = (5 + f())  at (6,5:20) 0x3542c00" -> "if (j == 6) at (7,5:16) 0x3542cb0"
-"if (j == 6) at (7,5:16) 0x3542cb0" -> "for no_cond at (8,5:13) 0x3542cf0"
-"for no_cond at (8,5:13) 0x3542cf0" -> "for no_cond at (8,5:13) 0x3542cf0"
-"for no_cond at (8,5:13) 0x3542cf0" -> "int z  = 22  at (9,5:15) 0x3542db8"
-"int z  = 22  at (9,5:15) 0x3542db8" -> "if ((z - 20) == 19) at (10,5:20) 0x3542ed0"
-"if ((z - 20) == 19) at (10,5:20) 0x3542ed0" -> "f()  at (11,5:7) 0x3542f98"
-"f()  at (11,5:7) 0x3542f98"
+{main0x2f2f3e0 [label="int (void) f()  at (3,1:1) 0x2f2f3e0"]} -> {main0x2f2f590 [label="int (int, char **) main(int argc, char ** argv)  at (5:10,1:1) 0x2f2f590"]}
+{main0x2f2f590 [label="int (int, char **) main(int argc, char ** argv)  at (5:10,1:1) 0x2f2f590"]} -> {main0x2f2f4b0 [label="int argc  at (10,10:14) 0x2f2f4b0"]}
+{main0x2f2f4b0 [label="int argc  at (10,10:14) 0x2f2f4b0"]} -> {main0x2f2f510 [label="char ** argv  at (10,20:27) 0x2f2f510"]}
+{main0x2f2f510 [label="char ** argv  at (10,20:27) 0x2f2f510"]} -> {main0x2f2f620 [label="int j  = f()  at (6,5:15) 0x2f2f620"]}
+{main0x2f2f620 [label="int j  = f()  at (6,5:15) 0x2f2f620"]} -> {main0x2f2f760 [label="int i  = 3  at (7,10:18) 0x2f2f760"]}
+{main0x2f2f760 [label="int i  = 3  at (7,10:18) 0x2f2f760"]} -> {main0x2f2f858 [label="for (i < 5) at (7:8,5:14) 0x2f2f858"]}
+{main0x2f2f858 [label="for (i < 5) at (7:8,5:14) 0x2f2f858"]} -> {main0x2f2f838 [label="(i *= 2)  at (8,9:14) 0x2f2f838"]}
+{main0x2f2f858 [label="for (i < 5) at (7:8,5:14) 0x2f2f858"]} -> {main0x2f2f8e0 [label="f()  at (9,5:7) 0x2f2f8e0"]}
+{main0x2f2f838 [label="(i *= 2)  at (8,9:14) 0x2f2f838"]} -> {main0x2f2f7e8 [label="i++  at (7,26:27) 0x2f2f7e8"]}
+{main0x2f2f7e8 [label="i++  at (7,26:27) 0x2f2f7e8"]} -> {main0x2f2f858 [label="for (i < 5) at (7:8,5:14) 0x2f2f858"]}
+{main0x2f2f8e0 [label="f()  at (9,5:7) 0x2f2f8e0"]}
+{f0x2f2f3e0 [label="int (void) f()  at (3,1:1) 0x2f2f3e0"]} -> {f0x2f2f470 [label="ReturnStmt(int,3)  at (2,5:12) 0x2f2f470"]}
+{f0x2f2f470 [label="ReturnStmt(int,3)  at (2,5:12) 0x2f2f470"]}
 }

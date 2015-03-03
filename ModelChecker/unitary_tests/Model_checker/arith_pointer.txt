@@ -1,3 +1,91 @@
+<<<<<<< HEAD
+TranslationUnitDecl 0x35af140 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0x35af430 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'char *'
+|-FunctionDecl 0x35af530 <ModelChecker\unitary_tests\Model_checker\arith_pointer.cpp:1:1, line:3:1> line:1:5 f 'int (int, int)'
+| |-ParmVarDecl 0x35af470 <col:7, col:11> col:11 a 'int'
+| |-ParmVarDecl 0x35af4b0 <col:14, col:18> col:18 b 'int'
+| `-CompoundStmt 0x35af5d8 <col:20, line:3:1>
+|   `-ReturnStmt 0x35af5c8 <line:2:2, col:9>
+|     `-IntegerLiteral 0x35af5a8 <col:9> 'int' 1
+`-FunctionDecl 0x35af6e0 <line:5:1, line:26:1> line:5:5 main 'int (int, char **)'
+  |-ParmVarDecl 0x35af600 <col:10, col:14> col:14 argc 'int'
+  |-ParmVarDecl 0x35af660 <col:20, col:27> col:27 argv 'char **'
+  `-CompoundStmt 0x35f52a8 <col:33, line:26:1>
+    |-DeclStmt 0x35af820 <line:6:2, col:12>
+    | |-VarDecl 0x35af790 <col:2, col:7> col:7 used p 'int *'
+    | `-VarDecl 0x35af7e0 <col:2, col:11> col:11 q 'int *'
+    |-BinaryOperator 0x35af8a8 <line:7:2, col:10> 'int *' lvalue '='
+    | |-DeclRefExpr 0x35af830 <col:2> 'int *' lvalue Var 0x35af790 'p' 'int *'
+    | `-BinaryOperator 0x35af890 <col:6, col:10> 'int *' '+'
+    |   |-ImplicitCastExpr 0x35af880 <col:6> 'int *' <LValueToRValue>
+    |   | `-DeclRefExpr 0x35af848 <col:6> 'int *' lvalue Var 0x35af790 'p' 'int *'
+    |   `-IntegerLiteral 0x35af860 <col:10> 'int' 1
+    |-DeclStmt 0x35af970 <line:9:2, col:16>
+    | `-VarDecl 0x35af8e0 <col:2, col:15> col:7 r 'int *' cinit
+    |   `-BinaryOperator 0x35af958 <col:11, col:15> 'int *' '+'
+    |     |-ImplicitCastExpr 0x35af948 <col:11> 'int *' <LValueToRValue>
+    |     | `-DeclRefExpr 0x35af910 <col:11> 'int *' lvalue Var 0x35af790 'p' 'int *'
+    |     `-IntegerLiteral 0x35af928 <col:15> 'int' 1
+    |-DeclStmt 0x35af9e0 <line:11:2, col:14>
+    | `-VarDecl 0x35af9b0 <col:2, col:13> col:13 used s 'const int *'
+    |-BinaryOperator 0x35afae8 <line:12:2, col:18> 'const int *' lvalue '='
+    | |-DeclRefExpr 0x35af9f0 <col:2> 'const int *' lvalue Var 0x35af9b0 's' 'const int *'
+    | `-ConditionalOperator 0x35afac8 <col:6, col:18> 'const int *'
+    |   |-ImplicitCastExpr 0x35afaa8 <col:6> '_Bool' <IntegralToBoolean>
+    |   | `-IntegerLiteral 0x35afa08 <col:6> 'int' 0
+    |   |-ImplicitCastExpr 0x35afab8 <col:10> 'const int *' <NullToPointer>
+    |   | `-IntegerLiteral 0x35afa28 <col:10> 'int' 0
+    |   `-BinaryOperator 0x35afa90 <col:14, col:18> 'const int *' '+'
+    |     |-ImplicitCastExpr 0x35afa80 <col:14> 'const int *' <LValueToRValue>
+    |     | `-DeclRefExpr 0x35afa48 <col:14> 'const int *' lvalue Var 0x35af9b0 's' 'const int *'
+    |     `-IntegerLiteral 0x35afa60 <col:18> 'int' 1
+    |-DeclStmt 0x35afb88 <line:14:2, col:14>
+    | `-VarDecl 0x35afb10 <col:2, col:13> col:8 used f 'float' cinit
+    |   `-ImplicitCastExpr 0x35afb78 <col:12, col:13> 'float' <IntegralToFloating>
+    |     `-UnaryOperator 0x35afb60 <col:12, col:13> 'int' prefix '-'
+    |       `-IntegerLiteral 0x35afb40 <col:13> 'int' 3
+    |-CompoundAssignOperator 0x35afbe0 <line:16:2, col:7> 'float' lvalue '+=' ComputeLHSTy='float' ComputeResultTy='float'
+    | |-DeclRefExpr 0x35afb98 <col:2> 'float' lvalue Var 0x35afb10 'f' 'float'
+    | `-ImplicitCastExpr 0x35afbd0 <col:7> 'float' <IntegralToFloating>
+    |   `-IntegerLiteral 0x35afbb0 <col:7> 'int' 5
+    |-DeclStmt 0x35afdd8 <line:18:2, col:27>
+    | `-VarDecl 0x35afc40 <col:2, col:26> col:9 used arr 'double [4]' cinit
+    |   `-InitListExpr 0x35afd28 <col:17, col:26> 'double [4]'
+    |     |-ImplicitCastExpr 0x35afd50 <col:19> 'double' <IntegralToFloating>
+    |     | `-IntegerLiteral 0x35afc70 <col:19> 'int' 3
+    |     |-ImplicitCastExpr 0x35afd60 <col:21> 'double' <IntegralToFloating>
+    |     | `-IntegerLiteral 0x35afc90 <col:21> 'int' 2
+    |     |-ImplicitCastExpr 0x35afd78 <col:23> 'double' <IntegralToFloating>
+    |     | `-IntegerLiteral 0x35afcb0 <col:23> 'int' 1
+    |     `-ImplicitCastExpr 0x35afd98 <col:25> 'double' <IntegralToFloating>
+    |       `-IntegerLiteral 0x35afcd0 <col:25> 'int' 4
+    |-DeclStmt 0x35afec0 <line:19:2, col:19>
+    | `-VarDecl 0x35afe00 <col:2, col:18> col:9 a 'double' cinit
+    |   `-ImplicitCastExpr 0x35afeb0 <col:13, col:18> 'double' <LValueToRValue>
+    |     `-ArraySubscriptExpr 0x35afe98 <col:13, col:18> 'double' lvalue
+    |       |-ImplicitCastExpr 0x35afe88 <col:13> 'double *' <ArrayToPointerDecay>
+    |       | `-DeclRefExpr 0x35afe30 <col:13> 'double [4]' lvalue Var 0x35afc40 'arr' 'double [4]'
+    |       `-IntegerLiteral 0x35afe48 <col:17> 'int' 0
+    |-DeclStmt 0x35aff30 <line:20:2, col:10>
+    | `-VarDecl 0x35aff00 <col:2, col:9> col:9 used z 'float *'
+    |-DeclStmt 0x35affc0 <line:21:2, col:16>
+    | `-VarDecl 0x35aff60 <col:2, col:14> col:9 y 'float *' cinit
+    |   `-UnaryOperator 0x35affa8 <col:13, col:14> 'float *' postfix '++'
+    |     `-DeclRefExpr 0x35aff90 <col:13> 'float *' lvalue Var 0x35aff00 'z' 'float *'
+    |-DeclStmt 0x35f5180 <line:22:2, col:10>
+    | `-VarDecl 0x35f5150 <col:2, col:9> col:9 used x 'float *'
+    |-CompoundAssignOperator 0x35f51c8 <line:23:2, col:7> 'float *' lvalue '+=' ComputeLHSTy='float *' ComputeResultTy='float *'
+    | |-DeclRefExpr 0x35f5190 <col:2> 'float *' lvalue Var 0x35f5150 'x' 'float *'
+    | `-IntegerLiteral 0x35f51a8 <col:7> 'int' 3
+    |-BinaryOperator 0x35f5260 <line:24:2, col:10> 'float *' lvalue '='
+    | |-DeclRefExpr 0x35f51e8 <col:2> 'float *' lvalue Var 0x35f5150 'x' 'float *'
+    | `-BinaryOperator 0x35f5248 <col:6, col:10> 'float *' '+'
+    |   |-ImplicitCastExpr 0x35f5238 <col:6> 'float *' <LValueToRValue>
+    |   | `-DeclRefExpr 0x35f5200 <col:6> 'float *' lvalue Var 0x35f5150 'x' 'float *'
+    |   `-IntegerLiteral 0x35f5218 <col:10> 'int' 6
+    `-ReturnStmt 0x35f5298 <line:25:2, col:9>
+      `-IntegerLiteral 0x35f5278 <col:9> 'int' 0
+=======
 TranslationUnitDecl 0x1030090d0 <<invalid sloc>>
 |-TypedefDecl 0x103009610 <<invalid sloc>> __int128_t '__int128'
 |-TypedefDecl 0x103009670 <<invalid sloc>> __uint128_t 'unsigned __int128'
@@ -86,3 +174,4 @@ TranslationUnitDecl 0x1030090d0 <<invalid sloc>>
     |   `-IntegerLiteral 0x102839740 <col:10> 'int' 6
     `-ReturnStmt 0x102839810 <line:25:2, col:9>
       `-IntegerLiteral 0x1028397c8 <col:9> 'int' 0
+>>>>>>> 01a7449f3c14b7555e762a6b92e9c520b147eaf6
