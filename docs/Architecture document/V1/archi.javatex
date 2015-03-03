@@ -18,6 +18,7 @@ geometry[margin=0.9in]
 babel[english]
 ##
  commands ##
+js-html-css.listing
 java.listing
 ##
  documentSettings ##
@@ -45,14 +46,14 @@ version=3
   \hline
   Version & Date & Change  \\
   \hline
-  V3 & February $21^{th}$  & fixed the class diagrams, which did not respect the UML standard \\
+  V2 & February $21^{th}$  & fixed the class diagrams, which did not respect the UML standard \\
   & February $21^{th}$ & minor changes in explications \\
   & February $21^{th}$ & added the CTL part \\
   & February $21^{th}$ & changed the code presentation for it to be printable in black and white \\
   & February $21^{th}$ & changed most resources from png to pdf for better quality and scalability \\
   & February $22^{th}$ & added the merge part \\
   \hline
-  V4 & March $1^{st}$ & completed the merge part with patterns and labelizers \\
+  V3 & March $1^{st}$ & completed the merge part with patterns and labelizers \\
  \hline
 \end{tabular}
 \end{center}

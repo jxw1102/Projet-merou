@@ -57,20 +57,20 @@ object Properties {
      * Require manual checking. More generally, it detects the bad practice of giving the same name to
      * variables of the same type in different scopes.
      */
-    val HIDDEN_VAR_DEF     = Predicate(VarDefLabelizer(VarDefPattern(NotString(),UndefinedVar("X")))) &&
+    val HIDDEN_VAR_DEF = Predicate(VarDefLabelizer(VarDefPattern(NotString(),UndefinedVar("X")))) &&
     		EX(EF(Predicate(VarDefLabelizer(VarDefPattern(NotString(),UndefinedVar("X"))))))
     		
     /**
      * This property detects all the assignments in the CFG. It includes the = assignment as wel as compound assignment
      * operators (+=, *=, -=, /=).
      */
-    val ASSIGNMENT         = Predicate(MatchExprLabelizer(AssignmentPattern(UndefinedVar("X"),UndefinedVar("Y"))))
+    val ASSIGNMENT = Predicate(MatchExprLabelizer(AssignmentPattern(UndefinedVar("X"),UndefinedVar("Y"))))
     
     /**
      * This property detects all the nodes holding a literal expression. A literal expression is an expression which
      * all leaves are literals.
      */
-    val LITERAL_EXPR       = Predicate(MatchExprLabelizer(LiteralExprPattern(UndefinedVar("X"))))
+    val LITERAL_EXPR = Predicate(MatchExprLabelizer(LiteralExprPattern(UndefinedVar("X"))))
     
     /**
      * This property detects all the assignments of a literal expression to any variable.
@@ -92,7 +92,7 @@ object Properties {
     /**
      * This property detects all the flow-control nodes which condition is evaluated to the same value on every execution path.
      */
-    val INFEASIBLE_PATH    = {
+    val INFEASIBLE_PATH = {
         val literalAssignmentPattern = AssignmentPattern(UndefinedVar("X"),LiteralExprPattern(UndefinedVar("Y")))
         val literalExprPattern       = LiteralExprPattern(UndefinedVar("X"))
         val identityPattern          = BinaryOpPattern(UndefinedVar("X"),UndefinedVar("X"),DefinedString("=="))
