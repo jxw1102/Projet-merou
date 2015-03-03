@@ -1,4 +1,5 @@
 digraph {
+<<<<<<< HEAD
 {f0x26f7cb0 [label="int (int, int) f(int a, int b)  at (3,1:1) 0x26f7cb0"]} -> {f0x26f7b70 [label="int a  at (3,7:11) 0x26f7b70"]}
 {f0x26f7b70 [label="int a  at (3,7:11) 0x26f7b70"]} -> {f0x26f7be0 [label="int b  at (3,14:18) 0x26f7be0"]}
 {f0x26f7be0 [label="int b  at (3,14:18) 0x26f7be0"]} -> {f0x26f7d80 [label="ReturnStmt(int,1)  at (2,2:9) 0x26f7d80"]}
@@ -30,4 +31,30 @@ digraph {
 {h0x2735db0 [label="void (int) h(int a)  at (7:9,1:1) 0x2735db0"]} -> {h0x2735cf0 [label="int a  at (9,8:12) 0x2735cf0"]}
 {h0x2735cf0 [label="int a  at (9,8:12) 0x2735cf0"]} -> {h0x2735ea0 [label="(a = 0)  at (8,2:6) 0x2735ea0"]}
 {h0x2735ea0 [label="(a = 0)  at (8,2:6) 0x2735ea0"]}
+=======
+{main0x103009bd0 [label="int (int, int) f(int a, int b)  at (3,1:1) 0x103009bd0"]} -> {main0x1028388e0 [label="int (int, char **) main(int argc, char ** argv)  at (5:26,1:1) 0x1028388e0"]}
+{main0x1028388e0 [label="int (int, char **) main(int argc, char ** argv)  at (5:26,1:1) 0x1028388e0"]} -> {main0x103009cf0 [label="int argc  at (5,10:14) 0x103009cf0"]}
+{main0x103009cf0 [label="int argc  at (5,10:14) 0x103009cf0"]} -> {main0x102838810 [label="char ** argv  at (5,20:27) 0x102838810"]}
+{main0x102838810 [label="char ** argv  at (5,20:27) 0x102838810"]} -> {main0x1028389d0 [label="int * p   at (6,2:7) 0x1028389d0"]}
+{main0x1028389d0 [label="int * p   at (6,2:7) 0x1028389d0"]} -> {main0x102838a40 [label="int * q   at (6,2:11) 0x102838a40"]}
+{main0x102838a40 [label="int * q   at (6,2:11) 0x102838a40"]} -> {main0x102838b78 [label="(p = (p + 1))  at (7,2:10) 0x102838b78"]}
+{main0x102838b78 [label="(p = (p + 1))  at (7,2:10) 0x102838b78"]} -> {main0x102838bc0 [label="int * r  = (p + 1)  at (9,2:15) 0x102838bc0"]}
+{main0x102838bc0 [label="int * r  = (p + 1)  at (9,2:15) 0x102838bc0"]} -> {main0x102838d00 [label="const int * s   at (11,2:13) 0x102838d00"]}
+{main0x102838d00 [label="const int * s   at (11,2:13) 0x102838d00"]} -> {main0x102838ec0 [label="(s = (0 ? 0 : (s + 1)))  at (12,2:18) 0x102838ec0"]}
+{main0x102838ec0 [label="(s = (0 ? 0 : (s + 1)))  at (12,2:18) 0x102838ec0"]} -> {main0x102838f00 [label="float f  = -3  at (14,2:13) 0x102838f00"]}
+{main0x102838f00 [label="float f  = -3  at (14,2:13) 0x102838f00"]} -> {main0x102839028 [label="(f += 5)  at (16,2:7) 0x102839028"]}
+{main0x102839028 [label="(f += 5)  at (16,2:7) 0x102839028"]} -> {main0x1028390b0 [label="double [4] arr  = { 3,2,1,4 }  at (18,2:26) 0x1028390b0"]}
+{main0x1028390b0 [label="double [4] arr  = { 3,2,1,4 }  at (18,2:26) 0x1028390b0"]} -> {main0x102839320 [label="double a  = arr[0]  at (19,2:18) 0x102839320"]}
+{main0x102839320 [label="double a  = arr[0]  at (19,2:18) 0x102839320"]} -> {main0x1028394a0 [label="float * z   at (20,2:9) 0x1028394a0"]}
+{main0x1028394a0 [label="float * z   at (20,2:9) 0x1028394a0"]} -> {main0x102839530 [label="float * y  = z++  at (21,2:14) 0x102839530"]}
+{main0x102839530 [label="float * y  = z++  at (21,2:14) 0x102839530"]} -> {main0x102839600 [label="float * x   at (22,2:9) 0x102839600"]}
+{main0x102839600 [label="float * x   at (22,2:9) 0x102839600"]} -> {main0x1028396b8 [label="(x += 3)  at (23,2:7) 0x1028396b8"]}
+{main0x1028396b8 [label="(x += 3)  at (23,2:7) 0x1028396b8"]} -> {main0x1028397a0 [label="(x = (x + 6))  at (24,2:10) 0x1028397a0"]}
+{main0x1028397a0 [label="(x = (x + 6))  at (24,2:10) 0x1028397a0"]} -> {main0x102839810 [label="ReturnStmt(int,0)  at (25,2:9) 0x102839810"]}
+{main0x102839810 [label="ReturnStmt(int,0)  at (25,2:9) 0x102839810"]}
+{f0x103009bd0 [label="int (int, int) f(int a, int b)  at (3,1:1) 0x103009bd0"]} -> {f0x103009a90 [label="int a  at (1,7:11) 0x103009a90"]}
+{f0x103009a90 [label="int a  at (1,7:11) 0x103009a90"]} -> {f0x103009b00 [label="int b  at (1,14:18) 0x103009b00"]}
+{f0x103009b00 [label="int b  at (1,14:18) 0x103009b00"]} -> {f0x103009ca0 [label="ReturnStmt(int,1)  at (2,2:9) 0x103009ca0"]}
+{f0x103009ca0 [label="ReturnStmt(int,1)  at (2,2:9) 0x103009ca0"]}
+>>>>>>> 8b9b58389d6fed4db136c262e803d722f9a508fc
 }
