@@ -1,45 +1,80 @@
 digraph {
-{fruit0x103834940 [label="typedef enum _fruit:enum _fruit fruit  at (37:41,1:3) 0x103834940"]}
-{f0x102825fd0 [label="int (int, int) f(int a, int b)  at (5,1:1) 0x102825fd0"]} -> {f0x102825e90 [label="int a  at (3,7:11) 0x102825e90"]}
-{f0x102825e90 [label="int a  at (3,7:11) 0x102825e90"]} -> {f0x102825f00 [label="int b  at (3,14:18) 0x102825f00"]}
-{f0x102825f00 [label="int b  at (3,14:18) 0x102825f00"]} -> {f0x1028260a0 [label="ReturnStmt(int,10)  at (4,2:9) 0x1028260a0"]}
-{f0x1028260a0 [label="ReturnStmt(int,10)  at (4,2:9) 0x1028260a0"]}
-{main0x102825fd0 [label="int (int, int) f(int a, int b)  at (5,1:1) 0x102825fd0"]} -> {main0x103833c60 [label="float (void) fun()  at (13:15,1:1) 0x103833c60"]}
-{main0x103833c60 [label="float (void) fun()  at (13:15,1:1) 0x103833c60"]} -> {main0x102826130 [label="void (void) g()  at (7,1:12) 0x102826130"]}
-{main0x102826130 [label="void (void) g()  at (7,1:12) 0x102826130"]} -> {main0x103833ad0 [label="void (int) h(int a)  at (9:11,1:1) 0x103833ad0"]}
-{main0x103833ad0 [label="void (int) h(int a)  at (9:11,1:1) 0x103833ad0"]} -> {main0x10383d920 [label="int (int, char **) main(int argc, char **:char ** argv)  at (57:78,1:1) 0x10383d920"]}
-{main0x10383d920 [label="int (int, char **) main(int argc, char **:char ** argv)  at (57:78,1:1) 0x10383d920"]} -> {main0x10383d2b0 [label="int argc  at (57,10:14) 0x10383d2b0"]}
-{main0x10383d2b0 [label="int argc  at (57,10:14) 0x10383d2b0"]} -> {main0x10383d810 [label="char **:char ** argv  at (57,20:31) 0x10383d810"]}
-{main0x10383d810 [label="char **:char ** argv  at (57,20:31) 0x10383d810"]} -> {main0x10383d9e0 [label="char * s  = \"fuck you, bitch!\"  at (58,2:12) 0x10383d9e0"]}
-{main0x10383d9e0 [label="char * s  = \"fuck you, bitch!\"  at (58,2:12) 0x10383d9e0"]} -> {main0x10383dc20 [label="g()  at (59,2:4) 0x10383dc20"]}
-{main0x10383dc20 [label="g()  at (59,2:4) 0x10383dc20"]} -> {main0x10383dc60 [label="int i  = (f(5,6) + 3)  at (60,2:19) 0x10383dc60"]}
-{main0x10383dc60 [label="int i  = (f(5,6) + 3)  at (60,2:19) 0x10383dc60"]} -> {main0x10383df30 [label="f(3,4)  at (61,2:7) 0x10383df30"]}
-{main0x10383df30 [label="f(3,4)  at (61,2:7) 0x10383df30"]} -> {main0x10383df80 [label="int n  = sizeof((i * f(1,2)))  at (62,2:25) 0x10383df80"]}
-{main0x10383df80 [label="int n  = sizeof((i * f(1,2)))  at (62,2:25) 0x10383df80"]} -> {main0x10383e200 [label="int * list  = new int[10]  at (63,2:24) 0x10383e200"]}
-{main0x10383e200 [label="int * list  = new int[10]  at (63,2:24) 0x10383e200"]} -> {main0x10383ecc0 [label="double * ptr  = new double  at (64,2:20) 0x10383ecc0"]}
-{main0x10383ecc0 [label="double * ptr  = new double  at (64,2:20) 0x10383ecc0"]} -> {main0x10383efc0 [label="if fun() at (65:66,2:17) 0x10383efc0"]}
-{main0x10383efc0 [label="if fun() at (65:66,2:17) 0x10383efc0"]} -> {main0x10383eed8 [label="(i = 0)  at (65,13:17) 0x10383eed8"]}
-{main0x10383efc0 [label="if fun() at (65:66,2:17) 0x10383efc0"]} -> {main0x10383ef98 [label="fun()  at (66,13:17) 0x10383ef98"]}
-{main0x10383eed8 [label="(i = 0)  at (65,13:17) 0x10383eed8"]} -> {main0x10383f7c8 [label="while f(5,fun()) at (67:70,2:2) 0x10383f7c8"]}
-{main0x10383f7c8 [label="while f(5,fun()) at (67:70,2:2) 0x10383f7c8"]} -> {main0x10383f830 [label="delete list  at (71,2:11) 0x10383f830"]}
-{main0x10383f7c8 [label="while f(5,fun()) at (67:70,2:2) 0x10383f7c8"]} -> {main0x10383f300 [label="(f(1,6) + 1)  at (68,3:12) 0x10383f300"]}
-{main0x10383f830 [label="delete list  at (71,2:11) 0x10383f830"]} -> {main0x10383f898 [label="delete ptr  at (72,2:9) 0x10383f898"]}
-{main0x10383f898 [label="delete ptr  at (72,2:9) 0x10383f898"]} -> {main0x10383f8e0 [label="ReturnStmt(int,0)  at (77,2:9) 0x10383f8e0"]}
-{main0x10383f8e0 [label="ReturnStmt(int,0)  at (77,2:9) 0x10383f8e0"]}
-{main0x10383f300 [label="(f(1,6) + 1)  at (68,3:12) 0x10383f300"]} -> {main0x10383f770 [label="if (f(4,2) + fun()) at (69,3:37) 0x10383f770"]}
-{main0x10383f770 [label="if (f(4,2) + fun()) at (69,3:37) 0x10383f770"]} -> {main0x10383f7c8 [label="while f(5,fun()) at (67:70,2:2) 0x10383f7c8"]}
-{main0x10383f770 [label="if (f(4,2) + fun()) at (69,3:37) 0x10383f770"]} -> {main0x10383f748 [label="(5 * (i - (9 * fun())))  at (69,23:37) 0x10383f748"]}
-{main0x10383f748 [label="(5 * (i - (9 * fun())))  at (69,23:37) 0x10383f748"]} -> {main0x10383f7c8 [label="while f(5,fun()) at (67:70,2:2) 0x10383f7c8"]}
-{main0x10383ef98 [label="fun()  at (66,13:17) 0x10383ef98"]} -> {main0x10383f7c8 [label="while f(5,fun()) at (67:70,2:2) 0x10383f7c8"]}
-{color0x1038344d0 [label="enum color  at (29:33,1:1) 0x1038344d0"]}
-{pt_alias0x103834480 [label="typedef struct point:struct point pt_alias  at (27,1:22) 0x103834480"]}
-{_fruit0x103834750 [label="enum _fruit  at (37:41,9:1) 0x103834750"]}
-{g0x102826130 [label="void (void) g()  at (7,1:12) 0x102826130"]}
-{color_alias0x103834700 [label="typedef enum color:enum color color_alias  at (35,1:20) 0x103834700"]}
-{coordinate0x10383cfe0 [label="typedef struct _coordinate:struct _coordinate coordinate  at (43:48,1:3) 0x10383cfe0"]}
-{fun0x103833c60 [label="float (void) fun()  at (13:15,1:1) 0x103833c60"]} -> {fun0x103833d20 [label="ReturnStmt(float,1.000000e+00)  at (14,2:9) 0x103833d20"]}
-{fun0x103833d20 [label="ReturnStmt(float,1.000000e+00)  at (14,2:9) 0x103833d20"]}
-{h0x103833ad0 [label="void (int) h(int a)  at (9:11,1:1) 0x103833ad0"]} -> {h0x103833a10 [label="int a  at (9,8:12) 0x103833a10"]}
-{h0x103833a10 [label="int a  at (9,8:12) 0x103833a10"]} -> {h0x103833bc0 [label="(a = 0)  at (10,2:6) 0x103833bc0"]}
-{h0x103833bc0 [label="(a = 0)  at (10,2:6) 0x103833bc0"]}
+{timezone0x1028eb270 [label="long timezone   at (101,1:13) 0x1028eb270"]}
+{f0x103e682b0 [label="int (int, int) f(int a, int b)  at (5,1:1) 0x103e682b0"]} -> {f0x103e681b0 [label="int a  at (3,7:11) 0x103e681b0"]}
+{f0x103e681b0 [label="int a  at (3,7:11) 0x103e681b0"]} -> {f0x103e68220 [label="int b  at (3,14:18) 0x103e68220"]}
+{f0x103e68220 [label="int b  at (3,14:18) 0x103e68220"]} -> {f0x103e68380 [label="ReturnStmt(int,10)  at (4,2:9) 0x103e68380"]}
+{f0x103e68380 [label="ReturnStmt(int,10)  at (4,2:9) 0x103e68380"]}
+{operator_delete__0x1031e8450 [label="void (void *, void *) noexcept operator delete[](void * <col:58, col:63>, void * <col:65, col:70>)  at (331,83:83) 0x1031e8450"]} -> {operator_delete__0x1031e8350 [label="void * <col:58, col:63>  at (331,58:63) 0x1031e8350"]}
+{operator_delete__0x1031e8350 [label="void * <col:58, col:63>  at (331,58:63) 0x1031e8350"]} -> {operator_delete__0x1031e83c0 [label="void * <col:65, col:70>  at (331,65:70) 0x1031e83c0"]}
+{operator_delete__0x1031e83c0 [label="void * <col:65, col:70>  at (331,65:70) 0x1031e83c0"]}
+{daylight0x1028eb340 [label="int daylight   at (101,12:12) 0x1028eb340"]}
+{getdate_err0x1028eb140 [label="int getdate_err   at (99,1:12) 0x1028eb140"]}
+{main0x103ae98f0 [label="dev_t (__uint32_t, __uint32_t) makedev(__uint32_t:unsigned int _major, __uint32_t:unsigned int _minor)  at (147:150,1:1) 0x103ae98f0"]} -> {main0x1031e8450 [label="void (void *, void *) noexcept operator delete[](void * <col:58, col:63>, void * <col:65, col:70>)  at (331,83:83) 0x1031e8450"]}
+{main0x1031e8450 [label="void (void *, void *) noexcept operator delete[](void * <col:58, col:63>, void * <col:65, col:70>)  at (331,83:83) 0x1031e8450"]} -> {main0x1031e7ea0 [label="void *(std::size_t, void *) noexcept operator new[](std::size_t:unsigned long <col:55, col:66>, void * __p)  at (331,101:101) 0x1031e7ea0"]}
+{main0x1031e7ea0 [label="void *(std::size_t, void *) noexcept operator new[](std::size_t:unsigned long <col:55, col:66>, void * __p)  at (331,101:101) 0x1031e7ea0"]} -> {main0x103e682b0 [label="int (int, int) f(int a, int b)  at (5,1:1) 0x103e682b0"]}
+{main0x103e682b0 [label="int (int, int) f(int a, int b)  at (5,1:1) 0x103e682b0"]} -> {main0x103ae91b0 [label="__int32_t (__uint32_t) major(__uint32_t:unsigned int _x)  at (137:140,1:1) 0x103ae91b0"]}
+{main0x103ae91b0 [label="__int32_t (__uint32_t) major(__uint32_t:unsigned int _x)  at (137:140,1:1) 0x103ae91b0"]} -> {main0x103aea8c0 [label="int (int, const struct fd_set *) __darwin_fd_isset(int _n, const struct fd_set * _p)  at (52:56,1:1) 0x103aea8c0"]}
+{main0x103aea8c0 [label="int (int, const struct fd_set *) __darwin_fd_isset(int _n, const struct fd_set * _p)  at (52:56,1:1) 0x103aea8c0"]} -> {main0x103e68690 [label="float (void) fun()  at (13:15,1:1) 0x103e68690"]}
+{main0x103e68690 [label="float (void) fun()  at (13:15,1:1) 0x103e68690"]} -> {main0x103a5b540 [label="__uint16_t (__uint16_t) _OSSwapInt16(__uint16_t:unsigned short _data)  at (51,1:1) 0x103a5b540"]}
+{main0x103a5b540 [label="__uint16_t (__uint16_t) _OSSwapInt16(__uint16_t:unsigned short _data)  at (51,1:1) 0x103a5b540"]} -> {main0x103a5bdb0 [label="__uint64_t (__uint64_t) _OSSwapInt64(__uint64_t:unsigned long long _data)  at (36:75,36:1) 0x103a5bdb0"]}
+{main0x103a5bdb0 [label="__uint64_t (__uint64_t) _OSSwapInt64(__uint64_t:unsigned long long _data)  at (36:75,36:1) 0x103a5bdb0"]} -> {main0x1031e7b90 [label="void *(std::size_t, void *) noexcept operator new(std::size_t:unsigned long <col:55, col:66>, void * __p)  at (331,101:101) 0x1031e7b90"]}
+{main0x1031e7b90 [label="void *(std::size_t, void *) noexcept operator new(std::size_t:unsigned long <col:55, col:66>, void * __p)  at (331,101:101) 0x1031e7b90"]} -> {main0x1031e81f0 [label="void (void *, void *) noexcept operator delete(void * <col:58, col:63>, void * <col:65, col:70>)  at (331,83:83) 0x1031e81f0"]}
+{main0x1031e81f0 [label="void (void *, void *) noexcept operator delete(void * <col:58, col:63>, void * <col:65, col:70>)  at (331,83:83) 0x1031e81f0"]} -> {main0x103e683e0 [label="void (void) g()  at (7,1:12) 0x103e683e0"]}
+{main0x103e683e0 [label="void (void) g()  at (7,1:12) 0x103e683e0"]} -> {main0x103a5b960 [label="__uint32_t (__uint32_t) _OSSwapInt32(__uint32_t:unsigned int _data)  at (36:65,36:1) 0x103a5b960"]}
+{main0x103a5b960 [label="__uint32_t (__uint32_t) _OSSwapInt32(__uint32_t:unsigned int _data)  at (36:65,36:1) 0x103a5b960"]} -> {main0x103ae9510 [label="__int32_t (__uint32_t) minor(__uint32_t:unsigned int _x)  at (142:145,1:1) 0x103ae9510"]}
+{main0x103ae9510 [label="__int32_t (__uint32_t) minor(__uint32_t:unsigned int _x)  at (142:145,1:1) 0x103ae9510"]} -> {main0x1028eb270 [label="long timezone   at (101,1:13) 0x1028eb270"]}
+{main0x1028eb270 [label="long timezone   at (101,1:13) 0x1028eb270"]} -> {main0x1028eb140 [label="int getdate_err   at (99,1:12) 0x1028eb140"]}
+{main0x1028eb140 [label="int getdate_err   at (99,1:12) 0x1028eb140"]} -> {main0x1028eb0d0 [label="char *[] tzname   at (96,1:21) 0x1028eb0d0"]}
+{main0x1028eb0d0 [label="char *[] tzname   at (96,1:21) 0x1028eb0d0"]} -> {main0x103e68530 [label="void (int) h(int a)  at (9:11,1:1) 0x103e68530"]}
+{main0x103e68530 [label="void (int) h(int a)  at (9:11,1:1) 0x103e68530"]} -> {main0x1028eb340 [label="int daylight   at (101,12:12) 0x1028eb340"]}
+{main0x1028eb340 [label="int daylight   at (101,12:12) 0x1028eb340"]} -> {main0x103e6a600 [label="int (int, char **) main(int argc, char **:char ** argv)  at (53:81,1:1) 0x103e6a600"]}
+{main0x103e6a600 [label="int (int, char **) main(int argc, char **:char ** argv)  at (53:81,1:1) 0x103e6a600"]} -> {main0x103e6a440 [label="int argc  at (53,10:14) 0x103e6a440"]}
+{main0x103e6a440 [label="int argc  at (53,10:14) 0x103e6a440"]} -> {main0x103e6a4f0 [label="char **:char ** argv  at (53,20:31) 0x103e6a4f0"]}
+{main0x103e6a4f0 [label="char **:char ** argv  at (53,20:31) 0x103e6a4f0"]} -> {main0x103e6a6c0 [label="int i  = 0  at (74,2:10) 0x103e6a6c0"]}
+{main0x103e6a6c0 [label="int i  = 0  at (74,2:10) 0x103e6a6c0"]} -> {main0x103e6a7f0 [label="std::string:class std::__1::basic_string<char> s  = std::string:class std::__1::basic_string<char>(std::string:class std::__1::basic_string<char>(\"wtf!\"))  at (75,2:18) 0x103e6a7f0"]}
+{main0x103e6a7f0 [label="std::string:class std::__1::basic_string<char> s  = std::string:class std::__1::basic_string<char>(std::string:class std::__1::basic_string<char>(\"wtf!\"))  at (75,2:18) 0x103e6a7f0"]} -> {main0x103e713a0 [label="cout operator<< s operator<< endl  at (76,2:25) 0x103e713a0"]}
+{main0x103e713a0 [label="cout operator<< s operator<< endl  at (76,2:25) 0x103e713a0"]} -> {main0x103e732b0 [label="cin operator>> i  at (78,2:14) 0x103e732b0"]}
+{main0x103e732b0 [label="cin operator>> i  at (78,2:14) 0x103e732b0"]} -> {main0x103e73318 [label="ReturnStmt(int,0)  at (80,2:9) 0x103e73318"]}
+{main0x103e73318 [label="ReturnStmt(int,0)  at (80,2:9) 0x103e73318"]}
+{operator_new0x1031e7b90 [label="void *(std::size_t, void *) noexcept operator new(std::size_t:unsigned long <col:55, col:66>, void * __p)  at (331,101:101) 0x1031e7b90"]} -> {operator_new0x1031e7a10 [label="std::size_t:unsigned long <col:55, col:66>  at (331,55:66) 0x1031e7a10"]}
+{operator_new0x1031e7a10 [label="std::size_t:unsigned long <col:55, col:66>  at (331,55:66) 0x1031e7a10"]} -> {operator_new0x1031e7a80 [label="void * __p  at (331,68:74) 0x1031e7a80"]}
+{operator_new0x1031e7a80 [label="void * __p  at (331,68:74) 0x1031e7a80"]} -> {operator_new0x1031e7cd8 [label="ReturnStmt(void *,__p)  at (331,90:97) 0x1031e7cd8"]}
+{operator_new0x1031e7cd8 [label="ReturnStmt(void *,__p)  at (331,90:97) 0x1031e7cd8"]}
+{_OSSwapInt640x103a5bdb0 [label="__uint64_t (__uint64_t) _OSSwapInt64(__uint64_t:unsigned long long _data)  at (36:75,36:1) 0x103a5bdb0"]} -> {_OSSwapInt640x103a5bcf0 [label="__uint64_t:unsigned long long _data  at (71,5:23) 0x103a5bcf0"]}
+{_OSSwapInt640x103a5bcf0 [label="__uint64_t:unsigned long long _data  at (71,5:23) 0x103a5bcf0"]} -> {_OSSwapInt640x103a5c0e8 [label="ReturnStmt(unsigned long long,__builtin_bswap64(_data))  at (74,5:35) 0x103a5c0e8"]}
+{_OSSwapInt640x103a5c0e8 [label="ReturnStmt(unsigned long long,__builtin_bswap64(_data))  at (74,5:35) 0x103a5c0e8"]}
+{__darwin_fd_isset0x103aea8c0 [label="int (int, const struct fd_set *) __darwin_fd_isset(int _n, const struct fd_set * _p)  at (52:56,1:1) 0x103aea8c0"]} -> {__darwin_fd_isset0x103aea6b0 [label="int _n  at (53,19:23) 0x103aea6b0"]}
+{__darwin_fd_isset0x103aea6b0 [label="int _n  at (53,19:23) 0x103aea6b0"]} -> {__darwin_fd_isset0x103aea7b0 [label="const struct fd_set * _p  at (53,27:48) 0x103aea7b0"]}
+{__darwin_fd_isset0x103aea7b0 [label="const struct fd_set * _p  at (53,27:48) 0x103aea7b0"]} -> {__darwin_fd_isset0x103aeaf20 [label="ReturnStmt(int,(_p->fds_bits[(_n / (__int32_t:int * 8))] & (1 << (_n % (__int32_t:int * 8)))))  at (55,2:117) 0x103aeaf20"]}
+{__darwin_fd_isset0x103aeaf20 [label="ReturnStmt(int,(_p->fds_bits[(_n / (__int32_t:int * 8))] & (1 << (_n % (__int32_t:int * 8)))))  at (55,2:117) 0x103aeaf20"]}
+{g0x103e683e0 [label="void (void) g()  at (7,1:12) 0x103e683e0"]}
+{tzname0x1028eb0d0 [label="char *[] tzname   at (96,1:21) 0x1028eb0d0"]}
+{operator_new__0x1031e7ea0 [label="void *(std::size_t, void *) noexcept operator new[](std::size_t:unsigned long <col:55, col:66>, void * __p)  at (331,101:101) 0x1031e7ea0"]} -> {operator_new__0x1031e7da0 [label="std::size_t:unsigned long <col:55, col:66>  at (331,55:66) 0x1031e7da0"]}
+{operator_new__0x1031e7da0 [label="std::size_t:unsigned long <col:55, col:66>  at (331,55:66) 0x1031e7da0"]} -> {operator_new__0x1031e7e10 [label="void * __p  at (331,68:74) 0x1031e7e10"]}
+{operator_new__0x1031e7e10 [label="void * __p  at (331,68:74) 0x1031e7e10"]} -> {operator_new__0x1031e7fe8 [label="ReturnStmt(void *,__p)  at (331,90:97) 0x1031e7fe8"]}
+{operator_new__0x1031e7fe8 [label="ReturnStmt(void *,__p)  at (331,90:97) 0x1031e7fe8"]}
+{fun0x103e68690 [label="float (void) fun()  at (13:15,1:1) 0x103e68690"]} -> {fun0x103e68750 [label="ReturnStmt(float,1.000000e+00)  at (14,2:9) 0x103e68750"]}
+{fun0x103e68750 [label="ReturnStmt(float,1.000000e+00)  at (14,2:9) 0x103e68750"]}
+{_OSSwapInt320x103a5b960 [label="__uint32_t (__uint32_t) _OSSwapInt32(__uint32_t:unsigned int _data)  at (36:65,36:1) 0x103a5b960"]} -> {_OSSwapInt320x103a5b8a0 [label="__uint32_t:unsigned int _data  at (56,5:23) 0x103a5b8a0"]}
+{_OSSwapInt320x103a5b8a0 [label="__uint32_t:unsigned int _data  at (56,5:23) 0x103a5b8a0"]} -> {_OSSwapInt320x103a5bc98 [label="ReturnStmt(unsigned int,__builtin_bswap32(_data))  at (60,5:35) 0x103a5bc98"]}
+{_OSSwapInt320x103a5bc98 [label="ReturnStmt(unsigned int,__builtin_bswap32(_data))  at (60,5:35) 0x103a5bc98"]}
+{h0x103e68530 [label="void (int) h(int a)  at (9:11,1:1) 0x103e68530"]} -> {h0x103e684b0 [label="int a  at (9,8:12) 0x103e684b0"]}
+{h0x103e684b0 [label="int a  at (9,8:12) 0x103e684b0"]} -> {h0x103e68620 [label="(a = 0)  at (10,2:6) 0x103e68620"]}
+{h0x103e68620 [label="(a = 0)  at (10,2:6) 0x103e68620"]}
+{_OSSwapInt160x103a5b540 [label="__uint16_t (__uint16_t) _OSSwapInt16(__uint16_t:unsigned short _data)  at (51,1:1) 0x103a5b540"]} -> {_OSSwapInt160x103a5b480 [label="__uint16_t:unsigned short _data  at (47,5:23) 0x103a5b480"]}
+{_OSSwapInt160x103a5b480 [label="__uint16_t:unsigned short _data  at (47,5:23) 0x103a5b480"]} -> {_OSSwapInt160x103a5b850 [label="ReturnStmt(int,((_data << 8) | (_data >> 8)))  at (50,5:54) 0x103a5b850"]}
+{_OSSwapInt160x103a5b850 [label="ReturnStmt(int,((_data << 8) | (_data >> 8)))  at (50,5:54) 0x103a5b850"]}
+{major0x103ae91b0 [label="__int32_t (__uint32_t) major(__uint32_t:unsigned int _x)  at (137:140,1:1) 0x103ae91b0"]} -> {major0x103ae90f0 [label="__uint32_t:unsigned int _x  at (137,32:43) 0x103ae90f0"]}
+{major0x103ae90f0 [label="__uint32_t:unsigned int _x  at (137,32:43) 0x103ae90f0"]} -> {major0x103ae9438 [label="ReturnStmt(unsigned int,((_x >> 24) & 255))  at (139,2:50) 0x103ae9438"]}
+{major0x103ae9438 [label="ReturnStmt(unsigned int,((_x >> 24) & 255))  at (139,2:50) 0x103ae9438"]}
+{operator_delete0x1031e81f0 [label="void (void *, void *) noexcept operator delete(void * <col:58, col:63>, void * <col:65, col:70>)  at (331,83:83) 0x1031e81f0"]} -> {operator_delete0x1031e8070 [label="void * <col:58, col:63>  at (331,58:63) 0x1031e8070"]}
+{operator_delete0x1031e8070 [label="void * <col:58, col:63>  at (331,58:63) 0x1031e8070"]} -> {operator_delete0x1031e80e0 [label="void * <col:65, col:70>  at (331,65:70) 0x1031e80e0"]}
+{operator_delete0x1031e80e0 [label="void * <col:65, col:70>  at (331,65:70) 0x1031e80e0"]}
+{makedev0x103ae98f0 [label="dev_t (__uint32_t, __uint32_t) makedev(__uint32_t:unsigned int _major, __uint32_t:unsigned int _minor)  at (147:150,1:1) 0x103ae98f0"]} -> {makedev0x103ae9770 [label="__uint32_t:unsigned int _major  at (147,30:41) 0x103ae9770"]}
+{makedev0x103ae9770 [label="__uint32_t:unsigned int _major  at (147,30:41) 0x103ae9770"]} -> {makedev0x103ae97e0 [label="__uint32_t:unsigned int _minor  at (147,49:60) 0x103ae97e0"]}
+{makedev0x103ae97e0 [label="__uint32_t:unsigned int _minor  at (147,49:60) 0x103ae97e0"]} -> {makedev0x103ae9b90 [label="ReturnStmt(unsigned int,((_major << 24) | _minor))  at (149,2:44) 0x103ae9b90"]}
+{makedev0x103ae9b90 [label="ReturnStmt(unsigned int,((_major << 24) | _minor))  at (149,2:44) 0x103ae9b90"]}
+{minor0x103ae9510 [label="__int32_t (__uint32_t) minor(__uint32_t:unsigned int _x)  at (142:145,1:1) 0x103ae9510"]} -> {minor0x103ae9490 [label="__uint32_t:unsigned int _x  at (142,32:43) 0x103ae9490"]}
+{minor0x103ae9490 [label="__uint32_t:unsigned int _x  at (142,32:43) 0x103ae9490"]} -> {minor0x103ae9718 [label="ReturnStmt(unsigned int,(_x & 16777215))  at (144,2:36) 0x103ae9718"]}
+{minor0x103ae9718 [label="ReturnStmt(unsigned int,(_x & 16777215))  at (144,2:36) 0x103ae9718"]}
 }

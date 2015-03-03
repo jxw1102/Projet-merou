@@ -41,8 +41,9 @@ class ProgramNodeFactory(rootNodes: Iterable[Decl], labelNodes: Map[String,Sourc
         res += "main" -> res.filterKeys(_ != "main").values.map(_.value).foldLeft(main)((next,decl) => decl match {
             case Statement(VarDecl(x,y,z)       ,a,b) => next << new GNode(Statement(VarDecl     (x,y,z)  ,a,b))
             case Statement(FunctionDecl(x,y,z,t),a,b) => next << new GNode(Statement(FunctionDecl(x,y,z,t),a,b))
-            case _ => next
+            case _                                    => next
         })
+        
         Program(res.toMap)
     }
     
