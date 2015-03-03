@@ -32,30 +32,35 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[String,String]) {
     private val concreteNodeExpected = (node: ASTNode) => throw new IllegalArgumentException(node + " should be a ConcreteASTNode")
     private val conversionFailed     = (node: ASTNode) => throw new ConversionFailedException("BinaryOperator " + node.mkString)
     private def setAndReturn[T <: SCN](node: T, range: CodeRange, id: String) = { SourceCodeNode(node,range,id); node }
+    private val declRefRegex = "\\([A-Za-z\\d_]+ 0x[\\da-f]+ .+\\)".r
     
     // general facade for handling most kind of nodes
     private def handleASTNode(node: ASTNode): SCN = node match {
            case ConcreteASTNode(_,typeOf,_,_,_) => typeOf match {
-               case "CompoundStmt"   => compoundStmt(node)
-               case "IfStmt"         => ifStmt      (node)
-               case "ForStmt"        => forStmt     (node)
-               case "WhileStmt"      => whileStmt   (node)
-               case "DoStmt"         => doWhileStmt (node)
-               case "DeclStmt"       => declStmt    (node)
-               case "VarDecl"        => varDecl     (node)
-               case "FunctionDecl"   => functionDecl(node)
-               case "ReturnStmt"     => returnStmt  (node)
-               case "BreakStmt"      => breakStmt   (node)
-               case "ContinueStmt"   => continueStmt(node)
-               case "SwitchStmt"     => switchStmt  (node)
-               case "LabelStmt"      => labelStmt   (node)
-               case "GotoStmt"       => gotoStmt    (node)
-               case "CaseStmt"       => caseStmt    (node)
-               case "DefaultStmt"    => defaultStmt (node)
-               case "NullStmt"       => nullStmt    (node)
-               case _                => handleExpr  (node)
+               case "VarDecl"            => varDecl     (node)
+               case "FunctionDecl"       => functionDecl(node)
+               case "TypedefDecl"        => typedefDecl (node)
+               case "EnumDecl"           => enumDecl    (node)
+               case "EnumConstantDecl"   => enumConstantDecl(node)
+               case "FieldDecl"          => fieldDecl   (node)
+               case "CompoundStmt"       => compoundStmt(node)
+               case "IfStmt"             => ifStmt      (node)
+               case "ForStmt"            => forStmt     (node)
+               case "WhileStmt"          => whileStmt   (node)
+               case "DoStmt"             => doWhileStmt (node)
+               case "DeclStmt"           => declStmt    (node)
+               case "ReturnStmt"         => returnStmt  (node)
+               case "BreakStmt"          => breakStmt   (node)
+               case "ContinueStmt"       => continueStmt(node)
+               case "SwitchStmt"         => switchStmt  (node)
+               case "LabelStmt"          => labelStmt   (node)
+               case "GotoStmt"           => gotoStmt    (node)
+               case "CaseStmt"           => caseStmt    (node)
+               case "DefaultStmt"        => defaultStmt (node)
+               case "NullStmt"           => nullStmt    (node)
+               case _                    => handleExpr  (node)
            }
-           case _                    => concreteNodeExpected(node)
+           case _                        => concreteNodeExpected(node)
     }
     
     private def lookFor[T](n: ASTNode, convert: ASTNode => T) = n match {
@@ -69,6 +74,13 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[String,String]) {
             case "UnaryOperator"              => unaryOperator            (node)
             case "BinaryOperator"             => binaryOperator           (node)
             case "CallExpr"                   => callExpr                 (node)
+            case "UnaryExprOrTypeTraitExpr"   => unaryExprOrTypeTraitExpr (node)
+            case "CXXNewExpr"                 => newExpr                  (node)
+            case "CXXDeleteExpr"              => deleteExpr               (node)
+            case "CXXConstructExpr"           => constructExpr            (node)
+            case "CXXTemporaryObjectExpr"     => temporaryObjectExpr      (node)
+            case "CXXOperatorCallExpr"        => operatorCallExpr         (node)
+            case "MemberExpr"                 => memberExpr               (node)
             case "DeclRefExpr"                => declRefExpr              (node)
             case "ArraySubscriptExpr"         => arraySubscriptExpr       (node)
             case "InitListExpr"               => initListExpr             (node)
@@ -76,7 +88,10 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[String,String]) {
             case "CompoundAssignOperator"     => compoundAssignOperator   (node)
             case x if x.contains("Literal")   => literal                  (node)
             case x if x.endsWith("CastExpr")  => handleExpr               (node.children(0))
+            case "ExprWithCleanups"           => handleExpr               (node.children(0))
             case "ParenExpr"                  => handleExpr               (node.children(0))
+            case "MaterializeTemporaryExpr"   => handleExpr               (node.children(0))
+            case "CXXBindTemporaryExpr"       => handleExpr               (node.children(0))
         }
         case _                                => concreteNodeExpected(node)
     }
@@ -118,9 +133,15 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[String,String]) {
     
     private def functionDecl(node: ASTNode) = node match {
         case ConcreteASTNode(_,_,id,codeRange,data) => 
-            val dataList      = data.dataList
-            val args          = node.children.take(node.children.length - 1).map(parmVarDecl).toList 
-            val res           = FunctionDecl(dataList.get(-2),dataList.last,args,compoundStmt(node.children.last))
+            val children    = node.children.filterNot(_.isInstanceOf[OtherASTNode])
+            node.children.clear()
+            node.children ++= children
+            var dataList    = data.dataList
+            if (dataList.last == "inline") dataList = dataList.dropRight(1)
+            if (dataList.last == "static") dataList = dataList.dropRight(1)
+            val params      = node.children.take(node.children.length - 1).map(parmVarDecl).toList
+            val funname     = if (dataList.get(-3) == "operator") "operator " + dataList.get(-2) else dataList.get(-2)
+            val res         = FunctionDecl(funname,dataList.last,params,compoundStmt(node.children.last))
             setAndReturn(res,codeRange,id)
         case _ => concreteNodeExpected(node)
     }
@@ -153,8 +174,41 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[String,String]) {
         case ConcreteASTNode(_,_,id,codeRange,data) => 
             var expr     = if (node.children.isEmpty) None else Some(node.children.map(handleExpr).head)
             val dataList = data.dataList
-            val args     = (if (dataList.last == "cinit") List(-3,-2) else List(-2,-1)).map(dataList.get(_))
+            val args     = ((dataList.last,dataList.get(-2)) match { 
+                case ("cinit","static")          => List(-4,-3)
+                case ("extern",_)                => List(-3,-2)
+                case ("cinit",_) | (_,"static")  => List(-3,-2)
+                case _                           => List(-2,-1)
+            }).map(dataList.get(_))
             SourceCodeNode(VarDecl(args.head,args.last,expr),codeRange,id)
+        case _ => concreteNodeExpected(node)
+    }
+    
+    private def typedefDecl(node: ASTNode) = node match {
+        case ConcreteASTNode(_,_,id,codeRange,data) => 
+            val dataList = data.dataList
+            SourceCodeNode(TypedefDecl(dataList.get(-2),dataList.last),codeRange,id)
+        case _ => concreteNodeExpected(node)
+    }
+    
+    private def enumDecl(node: ASTNode) = node match {
+        case ConcreteASTNode(_,_,id,codeRange,data) => 
+            val dataList = data.dataList
+            SourceCodeNode(EnumDecl(dataList.last),codeRange,id)
+        case _ => concreteNodeExpected(node)
+    }
+    
+    private def enumConstantDecl(node: ASTNode) = node match {
+        case ConcreteASTNode(_,_,id,codeRange,data) => 
+            val dataList = data.dataList
+            SourceCodeNode(EnumConstantDecl(dataList.get(-2),dataList.last),codeRange,id)
+        case _ => concreteNodeExpected(node)
+    }
+    
+    private def fieldDecl(node: ASTNode) = node match {
+        case ConcreteASTNode(_,_,id,codeRange,data) => 
+            val dataList = data.dataList
+            SourceCodeNode(FieldDecl(dataList.get(-2),dataList.last),codeRange,id)
         case _ => concreteNodeExpected(node)
     }
     
@@ -209,7 +263,11 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[String,String]) {
     
     private def declRefExpr(node: ASTNode) = node match {
         case ConcreteASTNode(_,_,id,codeRange,data) => 
-            val dataList = data.dataList
+            var dataList = data.dataList
+            declRefRegex.findFirstIn(dataList.last) match {
+                case Some(_) => dataList = dataList.dropRight(1)
+                case _       =>
+            }
             val decl     = DeclRefExpr(dataList.last,dataList.get(-2),dataList.get(-3))
             setAndReturn(decl,codeRange,id)
         case _ => concreteNodeExpected(node)
@@ -219,6 +277,64 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[String,String]) {
         case ConcreteASTNode(_,_,id,codeRange,data) => 
             val children = node.children.map(handleExpr).toList
             setAndReturn(CallExpr(data.dataList.get(-1),children.head.asInstanceOf[DeclRefExpr],children.tail),codeRange,id)
+        case _ => concreteNodeExpected(node)
+    }
+    
+    private def memberExpr(node: ASTNode) = node match {
+        case ConcreteASTNode(_,_,id,codeRange,data) => 
+            val children = node.children.map(handleExpr).toList
+            setAndReturn(MemberExpr(data.dataList.get(-4),children.head,data.dataList.get(-2)),codeRange,id)
+        case _ => concreteNodeExpected(node)
+    }
+    
+    private def newExpr(node: ASTNode) = node match {
+        case ConcreteASTNode(_,_,id,codeRange,data) => 
+            val children = node.children.map(handleExpr).toList
+            val cntExpr = if(children.isEmpty || children.head.isInstanceOf[CXXConstructExpr]) None else Some(children.head)
+            setAndReturn(CXXNewExpr(data.dataList.last,cntExpr),codeRange,id)
+        case _ => concreteNodeExpected(node)
+    }
+    
+    private def deleteExpr(node: ASTNode) = node match {
+        case ConcreteASTNode(_,_,id,codeRange,data) => 
+            val children = node.children.map(handleExpr).toList
+            setAndReturn(CXXDeleteExpr(data.dataList.last,children.last),codeRange,id)
+        case _ => concreteNodeExpected(node)
+    }
+    
+    private def constructExpr(node: ASTNode) = node match {
+        case ConcreteASTNode(_,_,id,codeRange,data) => 
+            val children = node.children.map(handleExpr).toList
+            val cntExpr = if(children.isEmpty) None else Some(children)
+            var dataList = data.dataList
+            if (dataList.last == "elidable") dataList = dataList.dropRight(1)
+            setAndReturn(CXXConstructExpr(dataList.last,dataList.get(-2),children),codeRange,id)
+        case _ => concreteNodeExpected(node)
+    }
+    
+    private def operatorCallExpr(node: ASTNode) = node match {
+        case ConcreteASTNode(_,_,id,codeRange,data) => 
+            val children = node.children.map(handleExpr).toSeq
+            val cntExpr = if(children.isEmpty) None else Some(children)
+            val dataList = data.dataList
+            setAndReturn(CXXOperatorCallExpr(dataList.get(-2),children(0),children(1),children(2)),codeRange,id)
+        case _ => concreteNodeExpected(node)
+    }
+    
+    private def temporaryObjectExpr(node: ASTNode) = node match {
+        case ConcreteASTNode(_,_,id,codeRange,data) => 
+            val children = node.children.map(handleExpr).toList
+            val cntExpr = if(children.isEmpty) None else Some(children)
+            setAndReturn(CXXTemporaryObjectExpr(data.dataList.last,children),codeRange,id)
+        case _ => concreteNodeExpected(node)
+    }
+    
+    private def unaryExprOrTypeTraitExpr(node: ASTNode) = node match {
+        case ConcreteASTNode(_,_,id,codeRange,data) => 
+            val children = node.children.map(handleExpr).toList
+            val list     = node.children.map(handleExpr).toList
+            val expr     = if (list.isEmpty) None else Some(list.last)
+            setAndReturn(UnaryExprOrTypeTraitExpr(data.dataList.get(-2),data.dataList.get(-1),expr),codeRange,id)
         case _ => concreteNodeExpected(node)
     }
     
