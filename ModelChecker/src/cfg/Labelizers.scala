@@ -115,6 +115,16 @@ case class VarDeclLabelizer(pattern: VarDeclPattern) extends Labelizer[CFGMetaVa
     }
 }
 
+
+
+//case class FunctionDeclLabelizer(pattern: FunctionDeclPattern) extends Labelizer[CFGMetaVar,ProgramNode,CFGVal] {
+//    override def test(t: ProgramNode) = t match {
+//        case Statement(decl: Decl,_,_) => pattern.matches(decl).toSet
+//        case _                         => Set()
+//    }
+//}
+
+
 /**
  * Labelizes every Statement node containing a VarDecl matching a given declaration pattern.
  * @note Returns an environement containing a CFGDef. Ask yourself which semantic you need
@@ -127,13 +137,19 @@ case class VarDefLabelizer(pattern: VarDefPattern) extends Labelizer[CFGMetaVar,
     }
 }
 
-//case class UnusedLabelizer(pattern: UndefinedVar) extends Labelizer[CFGMetaVar,ProgramNode,CFGVal] {
-//    override def test(t: ProgramNode) = {
-//        val x = ConvertNodes.getAllExprs(t).filter(_.isInstanceOf[DeclRefExpr]).toSet 
-//        if(x.isEmpty) None 
-//        else {
-//        	val unused: Set[CFGVal] = x.map { case elt: DeclRefExpr => CFGDecl(elt.targetId, elt.typeOf, elt.targetName)}
-//        	Some(new BindingsEnv -- (pattern.name -> unused))
-//        }
-//    }
-//}
+case class UseLabelizer(pattern: StringPattern) extends Labelizer[CFGMetaVar,ProgramNode,CFGVal] {
+    private def foldRec (exprs: List[Expr])    = exprs.foldLeft(Set[Env]())((res,e) => res ++ recMatch(e))
+    private def recMatch(expr: Expr): Set[Env] = expr match {
+        case DeclRefExpr(id,targetName,targetId) => pattern.matches(targetName) match {
+            case Some(BindingsEnv(bind)) => println(expr + " : : " + expr.getClass)
+                val stringToCFGDecl = bind.mapValues(x => CFGDecl(targetId, expr.getType, targetName))
+                Set((new BindingsEnv ++ (stringToCFGDecl.toSeq: _*)))
+            case _                       => Set()
+        }
+        case _                           => foldRec(expr.getSubExprs)
+    }
+    override def test   (t: ProgramNode)       = t match {
+        case Statement(VarDecl(name,typeOf,expr),_,_) => foldRec(expr.toList)
+        case _                                        => foldRec(ConvertNodes.getExpr(t).toList)
+    }
+}

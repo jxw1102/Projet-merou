@@ -24,7 +24,8 @@ import ast.model.DeclRefExpr
  * @author Xiaowen Ji      
  */
 case class Program(val decls: Map[String,GraphNode[ProgramNode]]) {
-    override def toString = decls.map { case (k,v) => v.toDot(n => k + n.id,n => n.toString) }
+                                                                   // node name cannot contain symbols
+    override def toString = decls.map { case (k,v) => v.toDot(n => k.replaceAll("[^a-zA-Z0-9_]","_") + n.id,n => n.toString) }
                                  .addString(new StringBuilder)
                                  .toString
 }
@@ -44,7 +45,7 @@ abstract class SourceCodeNode {
 }
 
 object SourceCodeNode {
-    def apply(node: SourceCodeNode, codeRange: CodeRange, id: String) = { node.codeRange = codeRange; node.id = id; node }
+    def apply[T <: SourceCodeNode](node: T, codeRange: CodeRange, id: String) = { node.codeRange = codeRange; node.id = id; node }
 }
 
 /**
@@ -78,6 +79,7 @@ final case class If        (e: Expr             , cr: CodeRange, _id: String) ex
 final case class For       (e: Option[Expr]     , cr: CodeRange, _id: String) extends ProgramNode(_id)
 final case class While     (e: Expr             , cr: CodeRange, _id: String) extends ProgramNode(_id)
 final case class Statement (stmt: SourceCodeNode, cr: CodeRange, _id: String) extends ProgramNode(_id)
+final case class Identifier(s: String           , cr: CodeRange, _id: String) extends ProgramNode(_id)
 final case class Expression(e: Expr             , cr: CodeRange, _id: String) extends ProgramNode(_id)
 final case class Switch    (e: Expr             , cr: CodeRange, _id: String) extends ProgramNode(_id)
 // only used during the construction of the graph, should never be used in an actual CFG

@@ -50,7 +50,7 @@ class GraphNode[N](val value: N) {
     def toDot             = addString(new StringBuilder,MSet())(_.toString).toString
     def toDot(name: N => String, label: N => String) = {
         def escape     (s   : String) = s.replaceAll("\"","\\\\\"")
-    	def formatValue(node: GNode ) = "{%s [label=\"%s\"]}".format(escape(name(node.value)),escape(label(node.value)))
+        def formatValue(node: GNode ) = "{%s [label=\"%s\"]}".format(escape(name(node.value)),escape(label(node.value)))
         addString(new StringBuilder,MSet())(formatValue(_)).toString
     }
     

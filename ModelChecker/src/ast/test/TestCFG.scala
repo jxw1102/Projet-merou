@@ -17,7 +17,7 @@ import ast.Program
  */
 object TestCFG extends App {
     def process(filePath: String, fileName: String, dot: String="dot") = {
-        val cmd       = "clang -Xclang -ast-dump -std=c++11 -fsyntax-only " + filePath
+        val cmd       = "clang -Xclang -ast-dump -std=c++11 -fsyntax-only -w " + filePath
         val basePath  = filePath.substring(0,filePath.lastIndexOf(fileName))
         val clangPath = basePath + fileName + ".txt"
         println(clangPath)
@@ -41,11 +41,11 @@ object TestCFG extends App {
         cfg
     }
     
-    val folder = "dev"
+    val folder = "for"
     new File("ModelChecker/unitary_tests/ast/%s/".format(folder)).listFiles.filter(_.getName.endsWith("cpp")).foreach { file => 
         val name = file.getName
         val s    = name.substring(0,name.lastIndexOf('.'))
-            
+        
         // generate the Clang AST and print it in a file
         process(file.getPath,s)
     }

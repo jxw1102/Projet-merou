@@ -26,3 +26,19 @@ final case class FunctionDecl(_name: String, typeName: String, args: List[ParamV
 final case class ParamVarDecl(_name: String, typeName: String) extends Decl(_name,typeName) {
     override def toString = "%s %s".format(typeName,name)
 }
+
+final case class TypedefDecl(alias: String, original: String) extends Decl(alias,original) {
+    override def toString = "typedef %s %s".format(original,alias)
+}
+
+final case class EnumDecl(typeName: String) extends Decl(typeName,typeName) {
+    override def toString = "enum %s".format(typeName)
+}
+
+final case class EnumConstantDecl(_name: String, typeName: String) extends Decl(_name,typeName) {
+    override def toString = "%s %s".format(typeName,name)
+}
+
+final case class FieldDecl(_name: String, typeName: String) extends Decl(_name,typeName) {
+    override def toString = "%s %s".format(typeName,name)
+}
