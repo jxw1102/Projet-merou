@@ -61,5 +61,9 @@
 \contentsline {section}{\numberline {IV.1}Context}{14}
 \contentsline {subsection}{\numberline {IV.1.1}Motivations}{14}
 \contentsline {paragraph}{}{14}
+\contentsline {subsection}{\numberline {IV.1.2}Objectives}{14}
 \contentsline {paragraph}{}{14}
-\contentsline {subsubsection}{}{14}
+\contentsline {section}{\numberline {IV.2}Definitions}{14}
+\contentsline {subsection}{\numberline {IV.2.1}The AST - \textsc {Abstract Syntax Tree}}{14}
+\contentsline {paragraph}{}{14}
+\contentsline {paragraph}{}{15}

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.5.25)  27 FEB 2015 14:18
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.5.25)  3 MAR 2015 10:46
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1012,48 +1012,71 @@ Package pdftex.def Info: data/logo.png used on input line 689.
 ]
 File: data/logo.png Graphic file (type png)
  <use data/logo.png>
-Package pdftex.def Info: data/logo.png used on input line 738.
+Package pdftex.def Info: data/logo.png used on input line 736.
 (pdftex.def)             Requested size: 113.82446pt x 20.37598pt.
  [13]
 Part IV.
+LaTeX Font Info:    Try loading font information for T1+cmtt on input line 786.
+
+(/usr/local/texlive/2014/texmf-dist/tex/latex/base/t1cmtt.fd
+File: t1cmtt.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+)
 File: data/logo.png Graphic file (type png)
+
 <use data/logo.png>
-Package pdftex.def Info: data/logo.png used on input line 770.
+Package pdftex.def Info: data/logo.png used on input line 795.
 (pdftex.def)             Requested size: 113.82446pt x 20.37598pt.
  [14
 
-] (./projetLongReport.aux) ) 
+] <data/ifClang.png, id=79, 861.2175pt x 368.37625pt>
+File: data/ifClang.png Graphic file (type png)
+
+<use data/ifClang.png>
+Package pdftex.def Info: data/ifClang.png used on input line 796.
+(pdftex.def)             Requested size: 516.73448pt x 221.02744pt.
+
+Overfull \hbox (21.94138pt too wide) in paragraph at lines 796--797
+ [] 
+ []
+
+File: data/logo.png Graphic file (type png)
+<use data/logo.png>
+Package pdftex.def Info: data/logo.png used on input line 825.
+(pdftex.def)             Requested size: 113.82446pt x 20.37598pt.
+ [15 <./data/ifClang.png>] (./projetLongReport.aux) ) 
 Here is how much of TeX's memory you used:
- 15858 strings out of 493117
- 293659 string characters out of 6135433
- 366088 words of memory out of 5000000
- 18963 multiletter control sequences out of 15000+600000
- 21054 words of font info for 43 fonts, out of 8000000 for 9000
+ 15952 strings out of 493117
+ 295088 string characters out of 6135433
+ 369088 words of memory out of 5000000
+ 19051 multiletter control sequences out of 15000+600000
+ 22057 words of font info for 45 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 62i,16n,72p,556b,693s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/local/texlive/2014/texmf-dist/fonts/enc/dvips
-/cm-super/cm-super-t1.enc}{/usr/local/texlive/2014/texmf-dist/fonts/enc/dvips/c
-m-super/cm-super-ts1.enc}{/usr/local/texlive/2014/texmf-dist/fonts/enc/dvips/ba
-se/8r.enc}</usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cm
-mi7.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmr1
-0.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/cm-super/sfbx1000.
-pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pf
-b></usr/local/texlive/2014/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb>
-</usr/local/texlive/2014/texmf-dist/fonts/type1/public/cm-super/sfbx2074.pfb></
-usr/local/texlive/2014/texmf-dist/fonts/type1/public/cm-super/sfbx2488.pfb></us
-r/local/texlive/2014/texmf-dist/fonts/type1/public/cm-super/sfcc1000.pfb></usr/
-local/texlive/2014/texmf-dist/fonts/type1/public/cm-super/sfcc1200.pfb></usr/lo
-cal/texlive/2014/texmf-dist/fonts/type1/public/cm-super/sfrm0500.pfb></usr/loca
-l/texlive/2014/texmf-dist/fonts/type1/public/cm-super/sfrm0900.pfb></usr/local/
-texlive/2014/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb></usr/local/te
-xlive/2014/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></usr/local/texl
-ive/2014/texmf-dist/fonts/type1/public/cm-super/sfti1000.pfb></usr/local/texliv
-e/2014/texmf-dist/fonts/type1/public/cm-super/sfxc1000.pfb></usr/local/texlive/
-2014/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb>
-Output written on projetLongReport.pdf (15 pages, 574331 bytes).
+ 62i,16n,72p,556b,1264s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/local/texlive/2014/t
+exmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}{/usr/local/texlive/2014/tex
+mf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}{/usr/local/texlive/2014/texm
+f-dist/fonts/enc/dvips/base/8r.enc}</usr/local/texlive/2014/texmf-dist/fonts/ty
+pe1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2014/texmf-dist/fonts/type
+1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/
+public/cm-super/sfbx1000.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/pu
+blic/cm-super/sfbx1200.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/publ
+ic/cm-super/sfbx1440.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public
+/cm-super/sfbx2074.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/c
+m-super/sfbx2488.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/cm-
+super/sfcc1000.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/cm-su
+per/sfcc1200.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/cm-supe
+r/sfrm0500.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/cm-super/
+sfrm0900.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/cm-super/sf
+rm1000.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/cm-super/sfrm
+1200.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/cm-super/sfti10
+00.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/cm-super/sftt1000
+.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/cm-super/sfxc1000.p
+fb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/cm-super/sfxc1200.pfb
+></usr/local/texlive/2014/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb>
+Output written on projetLongReport.pdf (16 pages, 776003 bytes).
 PDF statistics:
- 132 PDF objects out of 1000 (max. 8388607)
- 92 compressed objects within 1 object stream
+ 145 PDF objects out of 1000 (max. 8388607)
+ 100 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 28 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 33 words of extra memory for PDF output out of 10000 (max. 10000000)
 
