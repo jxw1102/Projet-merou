@@ -16,6 +16,12 @@ import ast.Program
  * @author David Courtinot
  */
 object TestCFG extends App {
+    /**
+     * Performs the CFG generation. 
+     * @param filePath path of the C++ source code file
+     * @param fileName file name of the cpp file
+     * @param dot path of the dot application
+     * */
     def process(filePath: String, fileName: String, dot: String="dot") = {
         val cmd       = "clang -Xclang -ast-dump -std=c++11 -fsyntax-only -w " + filePath
         val basePath  = filePath.substring(0,filePath.lastIndexOf(fileName))

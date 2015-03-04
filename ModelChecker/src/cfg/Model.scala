@@ -83,8 +83,8 @@ object ConvertNodes {
     /**
      * Returns a conversion function from ProgramNode to the Set[CFGVal] likely to be extracted
      * by Pattern(s) matching
+     * @todo mettre à jour avec les nouveaux types de valeurs
      */
-    // TODO : mettre à jour avec les nouveaux types de valeurs
     def convert: (ProgramNode => Set[CFGVal]) = (p: ProgramNode) => p match {
         case If        (expr,_,_)                        => getAllExpr(expr)
         case While     (expr,_,_)                        => getAllExpr(expr)

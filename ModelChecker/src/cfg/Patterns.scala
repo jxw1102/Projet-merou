@@ -136,7 +136,7 @@ case class LiteralExprPattern(metavar: UndefinedVar) extends AtomicExprPattern {
 /**
  * Matches any BinaryOp expression which operands and operator symbol match a given pattern.
  */
-case class BinaryOpPattern(left: AtomicExprPattern, right: AtomicExprPattern, op: StringPattern=NotString()) extends ExprPattern { 
+case class BinaryOpPattern(left: ExprPattern, right: ExprPattern, op: StringPattern=NotString()) extends ExprPattern { 
     import ExprPattern._
     override def matches(expr: Expr) = expr match {
     	case BinaryOp(_,l,r,operator) => intersection(intersection(op.matches(operator),left.matches(l)),right.matches(r))
@@ -147,7 +147,7 @@ case class BinaryOpPattern(left: AtomicExprPattern, right: AtomicExprPattern, op
 /**
  * Matches any CompoundAssignOp expression which operands and operator symbol match a given pattern.
  */
-case class CompoundAssignOpPattern(left: AtomicExprPattern, right: AtomicExprPattern, op: StringPattern=NotString()) extends ExprPattern { 
+case class CompoundAssignOpPattern(left: ExprPattern, right: ExprPattern, op: StringPattern=NotString()) extends ExprPattern { 
 	import ExprPattern._
 	override def matches (expr: Expr) = expr match {
 		case CompoundAssignOp(_,l,r,operator) => intersection(intersection(op.matches(operator),left.matches(l)),right.matches(r))
@@ -160,7 +160,7 @@ case class CompoundAssignOpPattern(left: AtomicExprPattern, right: AtomicExprPat
  * @pre if op is a DefinedString, passing any other value than "=", "+=", "-=", "*=", "/=" will result
  *      in an IllegalArgumentException to be thrown
  */
-case class AssignmentPattern(left: AtomicExprPattern, right: AtomicExprPattern, op: StringPattern=NotString()) extends ExprPattern {
+case class AssignmentPattern(left: ExprPattern, right: ExprPattern, op: StringPattern=NotString()) extends ExprPattern {
     import ExprPattern._
     private val patterns: List[ExprPattern] = op match {
         case DefinedString("=")                       => List(BinaryOpPattern        (left,right,op))
@@ -177,7 +177,7 @@ case class AssignmentPattern(left: AtomicExprPattern, right: AtomicExprPattern, 
 /**
  * Matches any assignment expression which operands and operator symbol match a given pattern.
  */
-case class UnaryOpPattern(operand: AtomicExprPattern, op: StringPattern=NotString()) extends ExprPattern {
+case class UnaryOpPattern(operand: ExprPattern, op: StringPattern=NotString()) extends ExprPattern {
     override def matches(expr: Expr) = expr match {
     	case UnaryOp(_,operand,operator,_) => ExprPattern.intersection(op.matches(operator),this.operand.matches(operand))
         case _                             => None
@@ -198,7 +198,7 @@ case class PointerExperPattern(metavar: UndefinedVar) extends ExprPattern {
  */
 case class CallExprPattern(
         name : StringPattern, 
-        params: Option[List[AtomicExprPattern]]=None,
+        params: Option[List[ExprPattern]]=None,
         typeOf: StringPattern=NotString()) extends ExprPattern {
     
     private def matchesParams(paramsFun : List[Expr]): Option[Env] = params match {
@@ -271,7 +271,10 @@ case class VarDeclPattern(typeOf: StringPattern, name: StringPattern)
  */
 case class VarDefPattern(typeOf: StringPattern, name: StringPattern) 
 	extends VarDeclMatcher(typeOf,name)(decl => CFGDef(decl.typeOf,decl.name))
-    
+
+/**
+ * Matches any CXXNewExpr which type and countExpression match a given pattern.
+ */
 case class CXXNewExprPattern(
         typeOf: StringPattern=NotString(),
         countExpr: Option[AtomicExprPattern]=None) extends ExprPattern {
@@ -285,6 +288,9 @@ case class CXXNewExprPattern(
     }
 }
 
+/**
+ * Matches any CXXDeleteExpr which the delete target match a given pattern.
+ */
 case class CXXDeleteExprPattern(target: Option[AtomicExprPattern]=None) extends ExprPattern {
     
     override def matches(expr: Expr) = expr match {

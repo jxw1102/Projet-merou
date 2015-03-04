@@ -1,0 +1,187 @@
+\documentclass{report}
+\usepackage[T1]{fontenc}
+\usepackage{color}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{eurosym}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{listings}
+\usepackage{epigraph}
+\usepackage{setspace}
+\usepackage[some]{background}
+\usepackage{gensymb}
+\usepackage{tikz}
+\usepackage{fancyhdr}
+\usepackage[margin=0.9in]{geometry}
+\usepackage[english]{babel}
+\lstdefinelanguage{scala}{
+morekeywords={%
+abstract,case,catch,class,def,do,else,extends,%
+false,final,finally,for,forSome,if,implicit,import,lazy,%
+match,new,null,object,override,package,private,protected,%
+return,sealed,super,this,throw,trait,true,try,type,%
+val,var,while,with,yield},
+otherkeywords={=>,<-,<\%,<:,>:,\#,@},
+sensitive=true,
+morecomment=[l]{//},
+morecomment=[n]{/*}{*/},
+morestring=[b]",
+morestring=[b]',
+morestring=[b]"""
+}[keywords,comments,strings]
+
+\lstset{
+float=hbp,
+language=scala,
+basicstyle=\ttfamily\small\color{colBasic},
+upquote=true,
+aboveskip={1.5\baselineskip},
+columns=fullflexible,
+showstringspaces=false,
+extendedchars=true,
+breaklines=true,
+showtabs=false,
+showspaces=false,
+frame=trbl, 
+tabsize=4,
+numbers=left,
+breakautoindent=true,
+extendedchars=true,
+showstringspaces=false,
+identifierstyle=\ttfamily,
+frameround=ffff,
+captionpos=b,
+xrightmargin=0cm,
+xleftmargin=0cm,
+backgroundcolor=\color{colBackground},
+keywordstyle=\bf\color{colKeyword},
+commentstyle=\color{colComment},
+identifierstyle=\color{colIdent}, 
+stringstyle=\color{colString},}\definecolor{colBasic}{rgb}{0.7,0.44,0.23}
+\definecolor{colKeyword}{rgb}{0.58,0.15,0.5}
+\definecolor{colBackground}{rgb}{0.15,0.15,0.15}
+\definecolor{colComment}{rgb}{0.4,0.4,0.4}
+\definecolor{colString}{rgb}{0.9,0.4,0}
+\definecolor{colIdent}{rgb}{1,0.75,0.75}
+
+
+\begin{document}
+\renewcommand{\chaptername}{Chapter}
+\renewcommand{\thechapter}{\Roman{chapter}}
+
+\pagestyle{fancy}
+%\usepackage{lmodern}
+%\usepackage{xspace}
+%\usepackage{hyperref}
+%\usepackage{fancyhdr}
+
+% header style
+\pagestyle{fancy}
+\renewcommand{\headrulewidth}{1pt}
+\fancyhead[L]{March $04^{th}$ 2015}
+\fancyhead[R]{\textbf{Reference :} model-checking.guide - Version 0}
+
+% Redefine the plain page style
+\fancypagestyle{plain}{%
+  \fancyhf{}%
+  \renewcommand{\headrulewidth}{1pt}
+  \fancyhead[L]{February $12^{th}$ 2015}
+  \fancyhead[R]{\textbf{Reference :} model-checking.guide - Version 0}
+  \fancyfoot[C]{\thepage}
+}
+
+% title page
+\definecolor{sup_strip_color}{rgb}{0.70,0.70,0.70}
+\definecolor{inf_strip_color}{rgb}{0.00,0.00,0.00}
+
+\DeclareFixedFont{\bigsf}{T1}{phv}{b}{n}{0.7cm}
+
+\makeatletter                       
+\def\printauthor{%                  
+    {{\large \@author}}}              
+\makeatother
+
+\author{Zohour \textsc{Abouakil} ~\\ Sofia \textsc{Boutahar} ~\\ David \textsc{Courtinot} ~\\ Xiaowen \textsc{Ji} ~\\ Fabien \textsc{Sauce}}
+
+\begin{titlepage}
+
+\newgeometry{left=1cm,right=4cm,bottom=0cm}
+\begin{tikzpicture}[overlay,remember picture]
+% the black stripe with the title
+\node[
+  fill=inf_strip_color,
+  anchor=north west,
+  text width=\paperwidth,
+  text height=2cm,
+  text depth=2cm,
+  inner xsep=1cm,
+  font=\color{white}\bigsf 
+  ] 
+ at ([yshift=-2.5cm]current page.north west) (blackrect) {User guide - Version 0};
+% the khaki stripe
+\path[fill=sup_strip_color] 
+  (blackrect.north west) rectangle ++(\paperwidth,2.5cm);
+\end{tikzpicture}
+
+\vspace*{4.5cm}
+
+\noindent
+\begin{minipage}{0.35\linewidth}
+    \begin{flushright}
+        \printauthor
+    \end{flushright}
+\end{minipage} \hspace{15pt}
+%
+\begin{minipage}{0.02\linewidth}
+    \rule{1pt}{175pt}
+\end{minipage} \hspace{-10pt}
+%
+\begin{minipage}{0.6\linewidth}
+\vspace{5pt}
+\newenvironment{test}{\begin{center}}{\end{center}}
+\hspace{10pt}
+\begin{minipage}{\linewidth} 
+\textbf{Reference :} model-checking.guide ~\\
+March $04^{th}$ 2015
+\end{minipage}
+\end{minipage}
+
+\vspace{8cm}
+\begin{minipage}{0.20\linewidth}
+    \begin{flushright}
+       
+        \begin{tabular}{ll}
+     \textit{Signatures} & \\
+            & \textbf{Project manager - Zohour \textsc{Abouakil} :} \\
+            & \textbf{Quality responsible - David \textsc{Courtinot} :} \\
+            & \textbf{Customers - David \textsc{Doose} - Julien \textsc{Brunel} :} \\
+        \end{tabular}
+    \end{flushright}
+\end{minipage}
+\end{titlepage}
+\restoregeometry
+
+\tableofcontents
+\newgeometry{left=2.1cm,right=2.1cm}
+
+
+\chapter{What our program provide}
+
+    \chapter{How to express a CTL expression}
+    A CTL expression is formed by predicate and temporal connector. Temporal connectors are expressed the same as in paper. But the predicate we ha to give more details.
+    
+    \section{The predicate structure}
+        \subsection{Predicate and labelizer}
+        
+        \subsection{Pattern}
+        In some case,the predicate have to verify some expressions that can contain undefined variables, that we call Metavariable. This is why we created the pattern that can be used with defined and undefined variables. 
+        \subsection{UndefinedPattern}
+        \subsection{}
+    % labelizer 
+    \section{Implemented predicate}
+
+
+    \chapter{How can I create a test}
+    \chapter{Exemple of properties}
+\end{document}

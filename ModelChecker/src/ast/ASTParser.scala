@@ -48,6 +48,12 @@ class ASTParser {
     }
     
     private var currentLine = 1
+    
+    /**
+     * Parses the AST file and generate a ASTNode tree.
+     * @param path path of the AST file
+     * @return ASTParserResult(rootNode, id->label)
+     * */
     def parseFile(path: String) = {
         currentLine   = 0
         // skip first lines
@@ -96,6 +102,8 @@ class ASTParser {
 /**
  * Contains the result of the parsing : the root node, always to be ignored, and a map mapping 
  * the labels' id to the id of the node they point to.
+ * @tparam root root node of the tree
+ * @tparam labels (id->label) map for LabelStmts
  * 
  */
 final class ASTParserResult(val root: ASTNode, val labels: Map[String,String])
@@ -108,7 +116,7 @@ sealed abstract class ASTNode(_depth: Int) {
     val children = ArrayBuffer[ASTNode]()
     
     def mkString = addString(new StringBuilder).toString
-    def addString(sb: StringBuilder): StringBuilder = {
+    private def addString(sb: StringBuilder): StringBuilder = {
         sb.append("  " * depth + this + "\n")
         for (child <- children) child.addString(sb)
         sb
@@ -116,11 +124,11 @@ sealed abstract class ASTNode(_depth: Int) {
 }
 /**
  * Represents all the nodes in the AST which correspond to a Clang class. 
- * @param _depth node depth
- * @param ofType node type
- * @param id node id (ex: 0x12345a7f9)
- * @param pos code range (ex: <line:3:4, col:5:6>
- * @param data string after code range
+ * @tparam _depth node depth
+ * @tparam ofType node type
+ * @tparam id node id (ex: 0x12345a7f9)
+ * @tparam pos code range (ex: <line:3:4, col:5:6>
+ * @tparam data string after code range
  */
 final case class ConcreteASTNode(_depth: Int, ofType: String, id: String, pos: CodeRange, data: String) extends ASTNode(_depth) {
     override def equals(that: Any) = that match { case ConcreteASTNode(_,_,_id,_,_) => id == _id; case _ => false }
@@ -155,6 +163,9 @@ final case class ColPointer(col: Int)             extends CodePointer
 object CodePointer {
     val lineReg = new Regex("line:(\\d+)(:(\\d+))?", "line", "", "col")
     val colReg = new Regex("col:(\\d+)", "col")
+    /**
+     * Parses a string of code position and return a CodePointer instance.
+     * */
     def parse(s: String) = {
         val line = lineReg.findAllIn(s)
         if (line.nonEmpty) {

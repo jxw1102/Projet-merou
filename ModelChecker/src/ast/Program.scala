@@ -86,7 +86,7 @@ final case class Switch    (e: Expr             , cr: CodeRange, _id: String) ex
 // only used during the construction of the graph, should never be used in an actual CFG
 private[ast] final case class Empty(              cr: CodeRange, _id: String) extends ProgramNode(_id)
 
-class CFGNode(value: ProgramNode) extends GraphNode[ProgramNode](value) {
-    override def equals(that: Any) = that match { case x: CFGNode => value == x.value case _ => false }
-    override def hashCode          = value.hashCode
-}
+//class CFGNode(value: ProgramNode) extends GraphNode[ProgramNode](value) {
+//    override def equals(that: Any) = that match { case x: CFGNode => value == x.value case _ => false }
+//    override def hashCode          = value.hashCode
+//}
