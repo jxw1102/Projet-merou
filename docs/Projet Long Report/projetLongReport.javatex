@@ -657,21 +657,17 @@ of the variable \textcolor{blue}{b} to \textcolor{blue}{17}.
 CFG - Control Flow Graph
 ##
 >>>>> paragraph ##
-A control flow graph \textsc{CFG} is a graph representation of 
-all paths that might be traversed through a program during 
-its execution. We do have some restrictions, 
-for example we won't create several nodes for a single expression 
-even if in reality an expression should be a graph. This is shown 
-in the example below.
-
+The CFG is a graph representing all the possible execution paths. We do have some restrictions, for example
+we won't create several nodes for a single expression even if in reality an expression should be a graph.
+This is shown in the example below.
 ##
 >>>>> image ##
-data/codeCFG.png;
+data/codeCFG.jpg;
 An example of a CFG (a doWhile block here);
-0.8
+0.4
 ##
 >>>>> paragraph ##
-We can clearly see in the example above the
+We can clearly see in the above example the
 CFG representing all the possible execution paths of the C/C++ program.
 ##
 >>>> subsection ##
@@ -715,12 +711,11 @@ the XML version of the Clang AST.
 However, this type of output is no longer supported by the newest
  versions of the Clang compiler and all the existing tools
 provide partial support at best. Hence, we decided to use the
- regular AST file and parse it line by line with a custom parser. 
-
+ regular AST file and parse it line by line with a custom parser.
 ##
 >>>>> paragraph ##
 We identified three main kinds of nodes in the AST. 
-Each one is associated to a specific class which extends 
+Each one is associated to a specific class which extends
 ##
 >>>>> list ##
 Nodes consist of a type name, an id, a code pointer pointing 
