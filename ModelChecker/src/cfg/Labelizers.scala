@@ -126,14 +126,3 @@ case class VarDefLabelizer(pattern: VarDefPattern) extends Labelizer[CFGMetaVar,
         case _                         => Set()
     }
 }
-
-//case class UnusedLabelizer(pattern: UndefinedVar) extends Labelizer[CFGMetaVar,ProgramNode,CFGVal] {
-//    override def test(t: ProgramNode) = {
-//        val x = ConvertNodes.getAllExprs(t).filter(_.isInstanceOf[DeclRefExpr]).toSet 
-//        if(x.isEmpty) None 
-//        else {
-//        	val unused: Set[CFGVal] = x.map { case elt: DeclRefExpr => CFGDecl(elt.targetId, elt.typeOf, elt.targetName)}
-//        	Some(new BindingsEnv -- (pattern.name -> unused))
-//        }
-//    }
-//}

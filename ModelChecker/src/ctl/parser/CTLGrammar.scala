@@ -129,7 +129,9 @@ class CTLGrammar extends JavaTokenParsers  {
   lazy val exp2: Parser[E] = exp1 ~ ("++"|"--")                                                          ^^ { case x ~ op => UnaryOp("",x, op,OpPosition("postfix")) } |
                                                             opt("!"|"~"|"--"|"++"|"*"|"&"|"-"|"+") ~ exp1 ^^ { case None ~ right => right
                                                                                                                                                                 case Some(op) ~ exp => UnaryOp("",exp, op,OpPosition("prefix")) }                                      
-  lazy val exp1: Parser[E] =  funcall |parenth |
+  lazy val exp1: Parser[E] =  rep("[A-Z]".r) ^^ { case x => DeclRefExpr("","METAVAR","")} | 
+                    funcall |
+                    parenth |
                     floatingPointNumber ^^ { case x => if (x.toInt == x.toDouble) Literal("double", x) else Literal("int", x) } |
                     ident   ^^ { case id => DeclRefExpr("",id,"") }
                     

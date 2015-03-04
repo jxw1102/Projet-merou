@@ -1,6 +1,5 @@
 -9
 -9-9
-.end.
 sofia(poisson,bleu)
 x++
 (x)
@@ -30,7 +29,7 @@ x = a && b
 david *= a * b
 g *= *s * b
 g *= *s * *b
-a += ++a+++a+a++
+a += ++a + ++a + a++
 Y!= x
 j <<= 12
 A || B && C
