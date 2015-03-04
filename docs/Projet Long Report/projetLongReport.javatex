@@ -719,8 +719,8 @@ provide partial support at best. Hence, we decided to use the
 
 ##
 >>>>> paragraph ##
-We identified three main kinds of nodes in the AST. 
-Each one is associated to a specific class which extends 
+We identified three main types of nodes in the AST. 
+Each one is associated to a specific class which extends ASTNode.
 ##
 >>>>> list ##
 Nodes consist of a type name, an id, a code pointer pointing 
@@ -741,6 +741,14 @@ accordingly to the class hierarchy we present in the next part.
 data/AST_classes;
 Class hierarchy for the output format of the ASTParser;
 0.6
+##
+>>>> subsection ##
+From ASTNode to SourceCodeNode
+##
+>>>>> paragraph ##
+The \textbf{SourceCodeNode} class represents a tree data-structure
+ which is still close enough to the AST but with a higher abstraction
+ and some removed low-level information.
 ##
 >>> section ##
 Model checking
