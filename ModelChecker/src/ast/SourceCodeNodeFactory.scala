@@ -32,6 +32,7 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[String,String]) {
     private val concreteNodeExpected = (node: ASTNode) => throw new IllegalArgumentException(node + " should be a ConcreteASTNode")
     private val conversionFailed     = (node: ASTNode) => throw new ConversionFailedException("BinaryOperator " + node.mkString)
     private def setAndReturn[T <: SCN](node: T, range: CodeRange, id: String) = { SourceCodeNode(node,range,id); node }
+    private val declRefRegex = "\\([A-Za-z\\d_]+ 0x[\\da-f]+ .+\\)".r
     
     // general facade for handling most kind of nodes
     private def handleASTNode(node: ASTNode): SCN = node match {
@@ -76,6 +77,9 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[String,String]) {
             case "UnaryExprOrTypeTraitExpr"   => unaryExprOrTypeTraitExpr (node)
             case "CXXNewExpr"                 => newExpr                  (node)
             case "CXXDeleteExpr"              => deleteExpr               (node)
+            case "CXXConstructExpr"           => constructExpr            (node)
+            case "CXXTemporaryObjectExpr"     => temporaryObjectExpr      (node)
+            case "CXXOperatorCallExpr"        => operatorCallExpr         (node)
             case "MemberExpr"                 => memberExpr               (node)
             case "DeclRefExpr"                => declRefExpr              (node)
             case "ArraySubscriptExpr"         => arraySubscriptExpr       (node)
@@ -84,7 +88,10 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[String,String]) {
             case "CompoundAssignOperator"     => compoundAssignOperator   (node)
             case x if x.contains("Literal")   => literal                  (node)
             case x if x.endsWith("CastExpr")  => handleExpr               (node.children(0))
+            case "ExprWithCleanups"           => handleExpr               (node.children(0))
             case "ParenExpr"                  => handleExpr               (node.children(0))
+            case "MaterializeTemporaryExpr"   => handleExpr               (node.children(0))
+            case "CXXBindTemporaryExpr"       => handleExpr               (node.children(0))
         }
         case _                                => concreteNodeExpected(node)
     }
@@ -256,7 +263,11 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[String,String]) {
     
     private def declRefExpr(node: ASTNode) = node match {
         case ConcreteASTNode(_,_,id,codeRange,data) => 
-            val dataList = data.dataList
+            var dataList = data.dataList
+            declRefRegex.findFirstIn(dataList.last) match {
+                case Some(_) => dataList = dataList.dropRight(1)
+                case _       =>
+            }
             val decl     = DeclRefExpr(dataList.last,dataList.get(-2),dataList.get(-3))
             setAndReturn(decl,codeRange,id)
         case _ => concreteNodeExpected(node)
@@ -272,22 +283,49 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[String,String]) {
     private def memberExpr(node: ASTNode) = node match {
         case ConcreteASTNode(_,_,id,codeRange,data) => 
             val children = node.children.map(handleExpr).toList
-            setAndReturn(MemberExpr(data.dataList.get(-4),children.head.asInstanceOf[DeclRefExpr],data.dataList.get(-2)),codeRange,id)
+            setAndReturn(MemberExpr(data.dataList.get(-4),children.head,data.dataList.get(-2)),codeRange,id)
         case _ => concreteNodeExpected(node)
     }
     
     private def newExpr(node: ASTNode) = node match {
         case ConcreteASTNode(_,_,id,codeRange,data) => 
             val children = node.children.map(handleExpr).toList
-            val cntExpr = if(children.isEmpty) None else Some(children.last)
-            setAndReturn(CXXNewExpr(data.dataList.get(-1),data.dataList.last,cntExpr),codeRange,id)
+            val cntExpr = if(children.isEmpty || children.head.isInstanceOf[CXXConstructExpr]) None else Some(children.head)
+            setAndReturn(CXXNewExpr(data.dataList.last,cntExpr),codeRange,id)
         case _ => concreteNodeExpected(node)
     }
     
     private def deleteExpr(node: ASTNode) = node match {
         case ConcreteASTNode(_,_,id,codeRange,data) => 
             val children = node.children.map(handleExpr).toList
-            setAndReturn(CXXDeleteExpr(data.dataList.get(-1),data.dataList.last,children.last),codeRange,id)
+            setAndReturn(CXXDeleteExpr(data.dataList.last,children.last),codeRange,id)
+        case _ => concreteNodeExpected(node)
+    }
+    
+    private def constructExpr(node: ASTNode) = node match {
+        case ConcreteASTNode(_,_,id,codeRange,data) => 
+            val children = node.children.map(handleExpr).toList
+            val cntExpr = if(children.isEmpty) None else Some(children)
+            var dataList = data.dataList
+            if (dataList.last == "elidable") dataList = dataList.dropRight(1)
+            setAndReturn(CXXConstructExpr(dataList.last,dataList.get(-2),children),codeRange,id)
+        case _ => concreteNodeExpected(node)
+    }
+    
+    private def operatorCallExpr(node: ASTNode) = node match {
+        case ConcreteASTNode(_,_,id,codeRange,data) => 
+            val children = node.children.map(handleExpr).toSeq
+            val cntExpr = if(children.isEmpty) None else Some(children)
+            val dataList = data.dataList
+            setAndReturn(CXXOperatorCallExpr(dataList.get(-2),children(0),children(1),children(2)),codeRange,id)
+        case _ => concreteNodeExpected(node)
+    }
+    
+    private def temporaryObjectExpr(node: ASTNode) = node match {
+        case ConcreteASTNode(_,_,id,codeRange,data) => 
+            val children = node.children.map(handleExpr).toList
+            val cntExpr = if(children.isEmpty) None else Some(children)
+            setAndReturn(CXXTemporaryObjectExpr(data.dataList.last,children),codeRange,id)
         case _ => concreteNodeExpected(node)
     }
     

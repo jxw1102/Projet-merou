@@ -126,3 +126,20 @@ case class VarDefLabelizer(pattern: VarDefPattern) extends Labelizer[CFGMetaVar,
         case _                         => Set()
     }
 }
+
+case class UseLabelizer(pattern: StringPattern) extends Labelizer[CFGMetaVar,ProgramNode,CFGVal] {
+    private def foldRec (exprs: List[Expr])    = exprs.foldLeft(Set[Env]())((res,e) => res ++ recMatch(e))
+    private def recMatch(expr: Expr): Set[Env] = expr match {
+        case DeclRefExpr(id,targetName,targetId) => pattern.matches(targetName) match {
+            case Some(BindingsEnv(bind)) => println(expr + " : : " + expr.getClass)
+                val stringToCFGDecl = bind.mapValues(x => CFGDecl(targetId, expr.getType, targetName))
+                Set((new BindingsEnv ++ (stringToCFGDecl.toSeq: _*)))
+            case _                       => Set()
+        }
+        case _                           => foldRec(expr.getSubExprs)
+    }
+    override def test   (t: ProgramNode)       = t match {
+        case Statement(VarDecl(name,typeOf,expr),_,_) => foldRec(expr.toList)
+        case _                                        => foldRec(ConvertNodes.getExpr(t).toList)
+    }
+}

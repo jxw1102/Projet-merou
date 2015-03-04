@@ -34,6 +34,8 @@ case class Program(val decls: Map[String,GraphNode[ProgramNode]]) {
  * Abstract type for the high-level representation of the source code
  */
 abstract class SourceCodeNode {
+    def apply[T <: SourceCodeNode](node: T, codeRange: CodeRange, id: String) = { node.codeRange = codeRange; node.id = id; node }
+    
     private[this] var _codeRange: Option[CodeRange] = None
     private[this] var _id       : Option[String]    = None
     
@@ -45,7 +47,7 @@ abstract class SourceCodeNode {
 }
 
 object SourceCodeNode {
-    def apply(node: SourceCodeNode, codeRange: CodeRange, id: String) = { node.codeRange = codeRange; node.id = id; node }
+    def apply[T <: SourceCodeNode](node: T, codeRange: CodeRange, id: String) = { node.codeRange = codeRange; node.id = id; node }
 }
 
 /**
@@ -79,7 +81,6 @@ final case class If        (e: Expr             , cr: CodeRange, _id: String) ex
 final case class For       (e: Option[Expr]     , cr: CodeRange, _id: String) extends ProgramNode(_id)
 final case class While     (e: Expr             , cr: CodeRange, _id: String) extends ProgramNode(_id)
 final case class Statement (stmt: SourceCodeNode, cr: CodeRange, _id: String) extends ProgramNode(_id)
-final case class Identifier(s: String           , cr: CodeRange, _id: String) extends ProgramNode(_id)
 final case class Expression(e: Expr             , cr: CodeRange, _id: String) extends ProgramNode(_id)
 final case class Switch    (e: Expr             , cr: CodeRange, _id: String) extends ProgramNode(_id)
 // only used during the construction of the graph, should never be used in an actual CFG

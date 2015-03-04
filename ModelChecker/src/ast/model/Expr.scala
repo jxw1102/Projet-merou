@@ -1,5 +1,7 @@
 package ast.model
 
+import scala.collection.mutable.StringBuilder
+
 /**
  * Classes used to represent expressions within the program
  * @author Sofia Boutahar
@@ -45,8 +47,11 @@ sealed abstract class Expr(typeOf: String) extends ForInitializer {
         case CallExpr           (_,ref,params) => "%s(%s)".format(ref.targetName,params.mkString(","))
         case MemberExpr         (_,t,m)        => "%s%s".format(t,m)
         case UnaryExprOrTypeTraitExpr(_,v,e)   => e match { case Some(ex) => "%s(%s)".format(v,ex); case None => v }
-        case CXXNewExpr(_,t,c)                 => val tp = t.substring(0, t.length()-2); c match { case Some(cnt) => "new %s[%s]".format(tp,cnt); case None => "new %s".format(tp) }
-        case CXXDeleteExpr(_,_,c)              => "delete %s".format(c)
+        case CXXNewExpr(t,c)                   => val tp = t.substring(0, t.length()-2); c match { case Some(cnt) => "new %s[%s]".format(tp,cnt); case None => "new %s".format(tp) }
+        case CXXDeleteExpr(_,c)                => "delete %s".format(c)
+        case CXXConstructExpr(_,s,p)           => "%s%s".format(s,p.mkString("(", ",", ")"))
+        case CXXTemporaryObjectExpr(_,p)       => p.mkString("(", ",", ")")
+        case CXXOperatorCallExpr(_,o,l,r)      => "%s %s %s".format(l,o,r)
     }
 }
 final case class BinaryOp           (typeOf: String, left: Expr, right: Expr, operator: String)        extends Expr(typeOf)
@@ -58,11 +63,13 @@ final case class ConditionalOperator(typeOf: String, exprs: (Expr,Expr,Expr))   
 final case class ArraySubscriptExpr (typeOf: String, exprs: (Expr, Expr))                              extends Expr(typeOf)
 final case class InitListExpr       (typeOf: String, exprs: List[Expr])                                extends Expr(typeOf)
 final case class CallExpr           (typeOf: String, ref: DeclRefExpr, params: List[Expr])             extends Expr(typeOf)
-final case class MemberExpr         (typeOf: String, target: DeclRefExpr, member: String)              extends Expr(typeOf)
+final case class MemberExpr         (typeOf: String, target: Expr, member: String)                     extends Expr(typeOf)
 final case class UnaryExprOrTypeTraitExpr(typeOf: String, value: String, expr: Option[Expr])           extends Expr(typeOf)
-final case class CXXNewExpr         (typeOf: String, typeName: String, count: Option[Expr])            extends Expr(typeOf)
-final case class CXXDeleteExpr      (typeOf: String, typeName: String, target: Expr)                   extends Expr(typeOf)
-final case class CXXConstructExpr   (typeOf: String, typeName: String, target: Expr)                   extends Expr(typeOf)
+final case class CXXNewExpr         (typeOf: String, count: Option[Expr])                              extends Expr(typeOf)
+final case class CXXDeleteExpr      (typeOf: String, target: Expr)                                     extends Expr(typeOf)
+final case class CXXConstructExpr   (typeOf: String, source: String, params: List[Expr])               extends Expr(typeOf)
+final case class CXXTemporaryObjectExpr(typeOf: String, params: List[Expr])                            extends Expr(typeOf)
+final case class CXXOperatorCallExpr(typeOf: String, operator: Expr, left: Expr, right: Expr)          extends Expr(typeOf)
 
 sealed abstract class OpPosition 
 object OpPosition {
@@ -70,4 +77,3 @@ object OpPosition {
 }
 final case object Postfix extends OpPosition
 final case object Prefix  extends OpPosition
-

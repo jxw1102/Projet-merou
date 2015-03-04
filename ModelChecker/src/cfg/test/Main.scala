@@ -8,6 +8,8 @@ import ast.ProgramNode
 import cfg.CFGMetaVar
 import cfg.CFGVal
 import cfg.Properties._
+import ctl.BindingsEnv
+import ctl.NegBinding
 
 /**
  * This class enables to test the properties defined in cfg.Properties
@@ -19,8 +21,15 @@ object Main extends App {
 	type Checker = ModelChecker[CFGMetaVar,ProgramNode,CFGVal]
 	
 	def printTest(msg: String, checker: Checker, test: CTL) = println(msg + checker.evalExpr(test).mkString("\n\t","\n\t","\n"))
+	
+	// do not display results with negative bindings
+	def printPositiveBindings(msg: String, checker: Checker, test: CTL) = println(msg + checker.evalExpr(test).filterNot(_._2 match {
+        case BindingsEnv(b) => b.count(_._2 match { case NegBinding(x) => true; case _ => false }) > 0
+        case _              => false
+    }).mkString("\n\t","\n\t","\n"))
+    
 	def loadChecker(testName: String) = {
-		val file = new File("unitary_tests/Model_checker/%s.cpp".format(testName))
+		val file = new File("ModelChecker/unitary_tests/Model_checker/%s.cpp".format(testName))
 		val name = file.getName
 		val s    = name.substring(0,name.lastIndexOf('.'))
 		
@@ -71,5 +80,23 @@ object Main extends App {
 		printTest("Following lines contain an arithmetic expression involving a pointer :",checker5,ARITHMETIC_POINTER)
 	}
 	
-	test7
+    lazy val checker6 = loadChecker("unused_var")
+    lazy val test8 = {
+        println("Testing the UNUSED_DECALRED_VAR property...")
+        printTest("Following lines contain variable definition that are not used :",checker6,UNUSED_DECLARED_VAR)
+    }
+    
+    lazy val checker7 = loadChecker("file_operation")
+    lazy val test9 = {
+        println("Testing the NON_PAIRED_FUNCTION_CALL property...")
+        printPositiveBindings("Following lines contain non-closed files :",checker7,NON_PAIRED_FUNCTION_CALL("fopen","fclose"))
+    }
+    
+    lazy val checker8 = loadChecker("memory")
+    lazy val test10 = {
+        println("Testing the NEW_WITHOUT_DELETE property...")
+        printPositiveBindings("Following lines will cause memory leaks :",checker8,NEW_WITHOUT_DELETE)
+    }
+    
+    test10
 }

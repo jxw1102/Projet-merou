@@ -16,6 +16,9 @@ import ast.model.CompoundAssignOp
 import ast.model.ParamVarDecl
 import ast.model.Literal
 import ctl.Top
+import ast.model.FunctionDecl
+import ast.model.CXXNewExpr
+import ast.model.CXXDeleteExpr
 
 /**
  * This file contains all the Pattern definitions for our CFG. Patterns enable to analyze the expression(s)
@@ -238,6 +241,10 @@ sealed class VarDeclMatcher(typeOf: StringPattern, name: StringPattern)(convert:
     
     override def matches(decl: Decl): Option[Env] = decl match {
         case VarDecl(declName,typeName,_) =>
+            typeOf.matches(typeName) match {
+                case None => None
+                case env  => ExprPattern.intersection(env,matchDecl(decl))
+            }
             typeOf match {
                 case DefinedString(value) if value == typeName        => matchDecl(decl)
                 case NotString    (not)   if !(not contains typeName) => matchDecl(decl)
@@ -264,11 +271,44 @@ case class VarDeclPattern(typeOf: StringPattern, name: StringPattern)
  */
 case class VarDefPattern(typeOf: StringPattern, name: StringPattern) 
 	extends VarDeclMatcher(typeOf,name)(decl => CFGDef(decl.typeOf,decl.name))
+    
+case class CXXNewExprPattern(
+        typeOf: StringPattern=NotString(),
+        countExpr: Option[AtomicExprPattern]=None) extends ExprPattern {
+    
+    override def matches(expr: Expr) = expr match {
+        case CXXNewExpr(t,c) => (countExpr,c) match {
+            case (Some(a),Some(b)) => ExprPattern.intersection(typeOf.matches(t),a.matches(b))
+            case _                 => typeOf.matches(t)
+        }
+        case _               => None
+    }
+}
 
-//case class FunctionDeclPattern(name: StringPattern, args: Option[List[ParamVarDeclPattern]]) extends DeclPattern {
+case class CXXDeleteExprPattern(target: Option[AtomicExprPattern]=None) extends ExprPattern {
+    
+    override def matches(expr: Expr) = expr match {
+        case CXXDeleteExpr(_,tgt) => target match {
+            case Some(t) => t.matches(tgt)
+            case _       => None
+        }
+        case _                    => None
+    }
+}
+
+//case class FunctionDeclPattern(nameFun: StringPattern, typeOf: StringPattern, argsFun: Option[List[String]]) extends DeclPattern {
 //    private def matchDecl(decl: Decl): Option[Env] = (name.matches(decl.name),name) match {
-//        case (Some(_),UndefinedVar(x))  => Some(new BindingsEnv ++ (x -> CFGDecl(decl.id.get,decl.typeOf,decl.name)))
-//        case (Some(_),DefinedString(_)) => Some(new BindingsEnv)
-//        case (None,_)    => None
+//        case (Some(_),UndefinedVar(x))  => Some(Top ++ (x -> convert(decl)))
+//        case (Some(_),DefinedString(_)) => Some(Top)
+//        case _                          => None
+//    }
+//    
+//    override def matches(decl: Decl) = decl match {
+//        case FunctionDecl(name,typeName,args,_) => 
+//            typeOf.matches(typeName) match {
+//                case None      => None
+//                case Some(env) => ExprPattern.intersection(Some(env),matchDecl(decl))
+//            }    
+//        case _                                  => None
 //    }
 //}

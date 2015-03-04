@@ -14,11 +14,7 @@ import ctl._
 
 object Properties {
     type CTL = CtlExpr[CFGMetaVar,ProgramNode,CFGVal]
-    
-//    val FIND_FUNCTION_PARAMS = Predicate(FindExprLabelizer(CallExprPattern(UndefinedVar("X"), Some(List(UndefinedVar("Y"),UndefinedVar("Z"))))))
-//    val UNUSED_VAR       = (Predicate(VarDeclLabelizer(VarDeclPattern(None, UndefinedVar("X")))) 
-//              && AX(AG(Predicate(UnusedLabelizer(UndefinedVar("X"))))))
-    
+
     /**
      * Macro predicate to compute the conjunction of pattern-based predicates for each If, While, For,
      * and Switch node
@@ -57,20 +53,20 @@ object Properties {
      * Require manual checking. More generally, it detects the bad practice of giving the same name to
      * variables of the same type in different scopes.
      */
-    val HIDDEN_VAR_DEF     = Predicate(VarDefLabelizer(VarDefPattern(NotString(),UndefinedVar("X")))) &&
+    val HIDDEN_VAR_DEF = Predicate(VarDefLabelizer(VarDefPattern(NotString(),UndefinedVar("X")))) &&
     		EX(EF(Predicate(VarDefLabelizer(VarDefPattern(NotString(),UndefinedVar("X"))))))
     		
     /**
      * This property detects all the assignments in the CFG. It includes the = assignment as wel as compound assignment
      * operators (+=, *=, -=, /=).
      */
-    val ASSIGNMENT         = Predicate(MatchExprLabelizer(AssignmentPattern(UndefinedVar("X"),UndefinedVar("Y"))))
+    val ASSIGNMENT = Predicate(MatchExprLabelizer(AssignmentPattern(UndefinedVar("X"),UndefinedVar("Y"))))
     
     /**
      * This property detects all the nodes holding a literal expression. A literal expression is an expression which
      * all leaves are literals.
      */
-    val LITERAL_EXPR       = Predicate(MatchExprLabelizer(LiteralExprPattern(UndefinedVar("X"))))
+    val LITERAL_EXPR = Predicate(MatchExprLabelizer(LiteralExprPattern(UndefinedVar("X"))))
     
     /**
      * This property detects all the assignments of a literal expression to any variable.
@@ -92,11 +88,33 @@ object Properties {
     /**
      * This property detects all the flow-control nodes which condition is evaluated to the same value on every execution path.
      */
-    val INFEASIBLE_PATH    = {
+    val INFEASIBLE_PATH = {
         val literalAssignmentPattern = AssignmentPattern(UndefinedVar("X"),LiteralExprPattern(UndefinedVar("Y")))
         val literalExprPattern       = LiteralExprPattern(UndefinedVar("X"))
         val identityPattern          = BinaryOpPattern(UndefinedVar("X"),UndefinedVar("X"),DefinedString("=="))
         anyFlowControlNodes(literalAssignmentPattern) || anyFlowControlNodes(literalExprPattern) || 
         anyFlowControlNodes(identityPattern)          || Predicate(ForLabelizer(None))
     }
+    
+    val UNUSED_DECLARED_VAR = {
+        val declaredVariable = Predicate(VarDeclLabelizer(VarDeclPattern(NotString(),UndefinedVar("X"))))
+        val usedVariable     = Predicate(UseLabelizer(UndefinedVar("X")))
+        declaredVariable && AG(!usedVariable)
+    }
+    
+    
+    val NON_PAIRED_FUNCTION_CALL = (f1: String, f2: String) => {
+        val fun1       = Predicate(FindExprLabelizer(CallExprPattern(DefinedString(f1))))
+        val assignment = Predicate(MatchExprLabelizer(AssignmentPattern(UndefinedVar("X"),UndefinedVar("Y"),DefinedString("="))))
+        val fun2       = Predicate(FindExprLabelizer(CallExprPattern(DefinedString(f2),Some(List(UndefinedVar("X"))))))
+        ((!assignment && fun1) || (fun1 && assignment && EX(EG(!fun2)))) && !(fun1 && fun2)
+    }
+    
+    val NEW_WITHOUT_DELETE = {
+        val alloc      = Predicate(FindExprLabelizer(CXXNewExprPattern()))
+        val assignment = Predicate(MatchExprLabelizer(AssignmentPattern(UndefinedVar("X"),UndefinedVar("Y"),DefinedString("="))))
+        val dealloc    = Predicate(FindExprLabelizer(CXXDeleteExprPattern(Some(UndefinedVar("X")))))
+        ((!assignment && alloc) || (alloc && assignment && EX(EG(!dealloc)))) && !(alloc && dealloc)
+    }
+    
 }

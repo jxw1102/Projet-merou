@@ -1,22 +1,11 @@
 package cfg
 
 import scala.reflect.runtime.universe
-import ast.Expression
-import ast.For
-import ast.If
-import ast.ProgramNode
-import ast.Statement
-import ast.While
+import ast._
 import ast.model._
-import ctl.BindingsEnv
-import ctl.Bottom
-import ctl.ConvertEnv
-import ctl.Environment
-import ctl.Labelizer
-import ctl.MetaVariable
-import ctl.TypeOf
-import ctl.Value
+import ctl._
 import ast.Switch
+import ast.SourceCodeNode
 
 /**
  * This file contains the model we are going to use to link the AST classes with the CTL ones.
@@ -81,14 +70,14 @@ object ConvertNodes {
      * Returns the single expression contained by a node, if any.
      */
     def getExpr(p: ProgramNode): Option[Expr] = p match {
-        case If        (expr,_,_)                       => Some(expr)
-        case While     (expr,_,_)                       => Some(expr)
-        case Expression(expr,_,_)                       => Some(expr)
-        case Switch    (expr,_,_)                       => Some(expr)
-        case For       (Some(expr),_,_)                 => Some(expr)
+        case If        (expr,_,_)                        => Some(expr)
+        case While     (expr,_,_)                        => Some(expr)
+        case Expression(expr,_,_)                        => Some(expr)
+        case Switch    (expr,_,_)                        => Some(expr)
+        case For       (Some(expr),_,_)                  => Some(expr)
         // see comment in the convert method
-        case Statement (VarDecl(name,typeOf,expr),_,id) => expr.map(BinaryOp(typeOf,DeclRefExpr(typeOf,name,id),_,"="))
-        case _                                          => None
+        case Statement (VarDecl(name,typeOf,expr),cr,id) => expr.map(BinaryOp(typeOf,SourceCodeNode(DeclRefExpr(typeOf,name,id),cr,id),_,"="))
+        case _                                           => None
     }
     
     /**
@@ -97,16 +86,16 @@ object ConvertNodes {
      */
     // TODO : mettre à jour avec les nouveaux types de valeurs
     def convert: (ProgramNode => Set[CFGVal]) = (p: ProgramNode) => p match {
-        case If        (expr,_,_)                       => getAllExpr(expr)
-        case While     (expr,_,_)                       => getAllExpr(expr)
-        case Expression(expr,_,_)                       => getAllExpr(expr)
-        case Switch    (expr,_,_)                       => getAllExpr(expr)
-        case For       (Some(expr),_,_)                 => getAllExpr(expr)
-        case Statement (VarDecl(name,typeOf,expr),_,id) => 
+        case If        (expr,_,_)                        => getAllExpr(expr)
+        case While     (expr,_,_)                        => getAllExpr(expr)
+        case Expression(expr,_,_)                        => getAllExpr(expr)
+        case Switch    (expr,_,_)                        => getAllExpr(expr)
+        case For       (Some(expr),_,_)                  => getAllExpr(expr)
+        case Statement (VarDecl(name,typeOf,expr),cr,id) => 
             // for a VarDecl node, we instantiate an artificial assignment because the expr attribute
             // only represents the right part of the assignment included in the declaration
             Set(CFGDecl(p.id,typeOf,name),CFGDef(typeOf,name)) ++ 
-            expr.map(e => CFGExpr(BinaryOp(typeOf,DeclRefExpr(typeOf,name,id),e,"=")))
+            expr.map(e => CFGExpr(BinaryOp(typeOf,SourceCodeNode(DeclRefExpr(typeOf,name,id),cr,id),e,"=")))
         case _                                          => Set()
     }
 }

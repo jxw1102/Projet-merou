@@ -1,0 +1,6 @@
+# Latex files
+test-strategy.pdf
+*.aux
+*.toc
+*.orig
+*.synctex
