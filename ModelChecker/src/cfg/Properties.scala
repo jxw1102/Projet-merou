@@ -107,14 +107,14 @@ object Properties {
         val fun1       = Predicate(FindExprLabelizer(CallExprPattern(DefinedString(f1))))
         val assignment = Predicate(MatchExprLabelizer(AssignmentPattern(UndefinedVar("X"),UndefinedVar("Y"),DefinedString("="))))
         val fun2       = Predicate(FindExprLabelizer(CallExprPattern(DefinedString(f2),Some(List(UndefinedVar("X"))))))
-        (!assignment && fun1) || (fun1 && assignment && EX(EG(!fun2)))
+        ((!assignment && fun1) || (fun1 && assignment && EX(EG(!fun2)))) && !(fun1 && fun2)
     }
     
     val NEW_WITHOUT_DELETE = {
-//        val alloc      = Predicate(FindExprLabelizer(CXXNewExprPattern(DefinedString(f1))))
-//        val assignment = Predicate(MatchExprLabelizer(AssignmentPattern(UndefinedVar("X"),UndefinedVar("Y"),DefinedString("="))))
-//        val dealloc    = Predicate(FindExprLabelizer(CXXDeleteExprPattern(DefinedString(f2),Some(List(UndefinedVar("X"))))))
-//        fun1 && assignment && EX(EG(!fun2))
+        val alloc      = Predicate(FindExprLabelizer(CXXNewExprPattern()))
+        val assignment = Predicate(MatchExprLabelizer(AssignmentPattern(UndefinedVar("X"),UndefinedVar("Y"),DefinedString("="))))
+        val dealloc    = Predicate(FindExprLabelizer(CXXDeleteExprPattern(Some(UndefinedVar("X")))))
+        ((!assignment && alloc) || (alloc && assignment && EX(EG(!dealloc)))) && !(alloc && dealloc)
     }
     
 }

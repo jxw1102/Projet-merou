@@ -24,10 +24,9 @@ object Main extends App {
 	
 	// do not display results with negative bindings
 	def printPositiveBindings(msg: String, checker: Checker, test: CTL) = println(msg + checker.evalExpr(test).filterNot(_._2 match {
-        case BindingsEnv(b) => b.count(p => p._2 match { case NegBinding(x) => true; case _ => false }) > 0
+        case BindingsEnv(b) => b.count(_._2 match { case NegBinding(x) => true; case _ => false }) > 0
         case _              => false
     }).mkString("\n\t","\n\t","\n"))
-    
     
 	def loadChecker(testName: String) = {
 		val file = new File("ModelChecker/unitary_tests/Model_checker/%s.cpp".format(testName))
@@ -90,13 +89,13 @@ object Main extends App {
     lazy val checker7 = loadChecker("file_operation")
     lazy val test9 = {
         println("Testing the NON_PAIRED_FUNCTION_CALL property...")
-        printPositiveBindings("Following lines contain non-closed files :",checker6,NON_PAIRED_FUNCTION_CALL("fopen","fclose"))
+        printPositiveBindings("Following lines contain non-closed files :",checker7,NON_PAIRED_FUNCTION_CALL("fopen","fclose"))
     }
     
     lazy val checker8 = loadChecker("memory")
     lazy val test10 = {
         println("Testing the NEW_WITHOUT_DELETE property...")
-//        printPositiveBindings("Following lines will cause memory leaks :",checker7,NEW_WITHOUT_DELETE)
+        printPositiveBindings("Following lines will cause memory leaks :",checker8,NEW_WITHOUT_DELETE)
     }
     
     test10

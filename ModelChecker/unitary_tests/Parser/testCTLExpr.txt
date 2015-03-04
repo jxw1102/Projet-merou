@@ -1,0 +1,49 @@
+A [AX( f(x) ) U f(x) ] AND exists x((E [sofia U A [exists y(f(x)) U sofia ]] OR sofia)) 
+exists x(AX(A [exists sofia(2) U AX(sofia)]))
+2 OR 5 OR 7 
+(2 OR 5) AND 19 OR 7 
+2 OR 5 AND 19 OR 7
+exists x(AX(A [exists expr(2) U AX(expr)])) 
+f(b) OR exists x(g(x) AND AX(f(x)))
+exists k(*5 * ((*f(x)+ 4) - 1) && 3|| *13 + f(x) + 4)
+(2 OR 5) OR 7
+2 OR 5 OR 7
+A [AX( f(x) ) U f == (x != 4) ] AND exists x((E [expr U A [exists y(f(x)) U expr ]] OR poisson))
+exists x(AX(A [exists a(f(a+2)) U NOT(AX(x++ + x))]))
+AX(NOT(x+3+4+y++)) OR EX(f(4)) OR exists a(f(a) AND exists x(g(a,x)))
+AX(NOT(x))
+AX(NOT(while(x+++y || y+z++)))
+X
+AX(X)
+a = 5 + 4
+call(f) + f() 
+f(x) AND AX(call(g) || g(x,y))
+f(X) AND AX(call(g) || g(x,y))
+EX(call(g) || literalExp(B) || pointerExp(XAB))
+5-4 op(A) 3 - 2 + 1 op(UE) 14
+5 + 4 op(A) 6
+5 notin(=,+) 6 notin(*) 7
+5 notin(=,+) X+7 notin(*) 7
+5 notin(=,+) (X+7) notin(*) 7
+ass( b = 5 - 4 notin(*,-,+,%) f(47) )
+b = X + 5
+if(b = X + 5)
+while( ass(b = 5) )
+def(bjr)
+decl(bjr, xiny)
+if(4) AND while(4) AND switch(4)
+.end.
+
+
+
+Predicate(IfLabelizer    (pattern)) && Predicate(WhileLabelizer (pattern))    &&
+        Predicate(SwitchLabelizer(pattern)) && Predicate(ForLabelizer(Some(pattern))) 
+
+
+
+
+
+f(x) AND AX(X?4)
+
+AX( (while(x) || if(y)) )
+celui ci ne marche pas mais c'est normal cette syntaxe n'est pas souhaité ! (?)

@@ -1,108 +1,20 @@
 digraph {
-<<<<<<< HEAD
-{main0x2dcf4f0 [label="int (int) f(int q)  at (3,1:1) 0x2dcf4f0"]} -> {main0x2dcf6e0 [label="int (int, char **) main(int argc, char ** argv)  at (5:34,1:1) 0x2dcf6e0"]}
-{main0x2dcf6e0 [label="int (int, char **) main(int argc, char ** argv)  at (5:34,1:1) 0x2dcf6e0"]} -> {main0x2dcf600 [label="int argc  at (34,10:14) 0x2dcf600"]}
-{main0x2dcf600 [label="int argc  at (34,10:14) 0x2dcf600"]} -> {main0x2dcf660 [label="char ** argv  at (34,20:27) 0x2dcf660"]}
-{main0x2dcf660 [label="char ** argv  at (34,20:27) 0x2dcf660"]} -> {main0x2dcf770 [label="int j  = 0  at (6,2:10) 0x2dcf770"]}
-{main0x2dcf770 [label="int j  = 0  at (6,2:10) 0x2dcf770"]} -> {main0x2dcf7d0 [label="int q  = 2  at (6,2:17) 0x2dcf7d0"]}
-{main0x2dcf7d0 [label="int q  = 2  at (6,2:17) 0x2dcf7d0"]} -> {main0x2dcf850 [label="int j  = 3  at (9,3:11) 0x2dcf850"]}
-{main0x2dcf850 [label="int j  = 3  at (9,3:11) 0x2dcf850"]} -> {main0x2dcf8c0 [label="float j  = 1.500000e+01  at (11,4:14) 0x2dcf8c0"]}
-{main0x2dcf8c0 [label="float j  = 1.500000e+01  at (11,4:14) 0x2dcf8c0"]} -> {main0x2dcf930 [label="float j   at (13,5:11) 0x2dcf930"]}
-{main0x2dcf930 [label="float j   at (13,5:11) 0x2dcf930"]} -> {main0x2dcf980 [label="int j  = 18  at (15,6:14) 0x2dcf980"]}
-{main0x2dcf980 [label="int j  = 18  at (15,6:14) 0x2dcf980"]} -> {main0x2dcfb68 [label="if (j == 2) at (20:21,5:9) 0x2dcfb68"]}
-{main0x2dcfb68 [label="if (j == 2) at (20:21,5:9) 0x2dcfb68"]} -> {main0x2dcfb38 [label="f(q)  at (21,6:9) 0x2dcfb38"]}
-{main0x2dcfb68 [label="if (j == 2) at (20:21,5:9) 0x2dcfb68"]} -> {main0x2dcfcc8 [label="if false at (23:30,5:5) 0x2dcfcc8"]}
-{main0x2dcfb38 [label="f(q)  at (21,6:9) 0x2dcfb38"]} -> {main0x2dcfcc8 [label="if false at (23:30,5:5) 0x2dcfcc8"]}
-{main0x2dcfcc8 [label="if false at (23:30,5:5) 0x2dcfcc8"]} -> {main0x2dcfc98 [label="while true at (27:29,6:6) 0x2dcfc98"]}
-{main0x2dcfcc8 [label="if false at (23:30,5:5) 0x2dcfcc8"]} -> {main0x2dcfbd0 [label="(q = 7)  at (24,6:10) 0x2dcfbd0"]}
-{main0x2dcfc98 [label="while true at (27:29,6:6) 0x2dcfc98"]} -> {main0x2dcfc20 [label="int k  = 0  at (28,7:15) 0x2dcfc20"]}
-{main0x2dcfc98 [label="while true at (27:29,6:6) 0x2dcfc98"]} -> {main0x2dcfd00 [label="int k   at (32,5:9) 0x2dcfd00"]}
-{main0x2dcfc20 [label="int k  = 0  at (28,7:15) 0x2dcfc20"]} -> {main0x2dcfc98 [label="while true at (27:29,6:6) 0x2dcfc98"]}
-{main0x2dcfd00 [label="int k   at (32,5:9) 0x2dcfd00"]} -> {main0x2dcfd60 [label="ReturnStmt(int,0)  at (33,5:12) 0x2dcfd60"]}
-{main0x2dcfd60 [label="ReturnStmt(int,0)  at (33,5:12) 0x2dcfd60"]}
-{main0x2dcfbd0 [label="(q = 7)  at (24,6:10) 0x2dcfbd0"]} -> {main0x2dcfd00 [label="int k   at (32,5:9) 0x2dcfd00"]}
-{f0x2dcf4f0 [label="int (int) f(int q)  at (3,1:1) 0x2dcf4f0"]} -> {f0x2dcf470 [label="int q  at (3,7:11) 0x2dcf470"]}
-{f0x2dcf470 [label="int q  at (3,7:11) 0x2dcf470"]} -> {f0x2dcf5c8 [label="ReturnStmt(int,(q + 2))  at (2,5:14) 0x2dcf5c8"]}
-{f0x2dcf5c8 [label="ReturnStmt(int,(q + 2))  at (2,5:14) 0x2dcf5c8"]}
-=======
-{timezone0x1028eac70 [label="long timezone   at (101,1:13) 0x1028eac70"]}
-{operator_delete__0x1029fd650 [label="void (void *, void *) noexcept operator delete[](void * <col:58, col:63>, void * <col:65, col:70>)  at (331,83:83) 0x1029fd650"]} -> {operator_delete__0x1029fd550 [label="void * <col:58, col:63>  at (331,58:63) 0x1029fd550"]}
-{operator_delete__0x1029fd550 [label="void * <col:58, col:63>  at (331,58:63) 0x1029fd550"]} -> {operator_delete__0x1029fd5c0 [label="void * <col:65, col:70>  at (331,65:70) 0x1029fd5c0"]}
-{operator_delete__0x1029fd5c0 [label="void * <col:65, col:70>  at (331,65:70) 0x1029fd5c0"]}
-{daylight0x1028ead40 [label="int daylight   at (101,12:12) 0x1028ead40"]}
-{getdate_err0x1028eab40 [label="int getdate_err   at (99,1:12) 0x1028eab40"]}
-{main0x103ce98f0 [label="dev_t (__uint32_t, __uint32_t) makedev(__uint32_t:unsigned int _major, __uint32_t:unsigned int _minor)  at (147:150,1:1) 0x103ce98f0"]} -> {main0x1029fd650 [label="void (void *, void *) noexcept operator delete[](void * <col:58, col:63>, void * <col:65, col:70>)  at (331,83:83) 0x1029fd650"]}
-{main0x1029fd650 [label="void (void *, void *) noexcept operator delete[](void * <col:58, col:63>, void * <col:65, col:70>)  at (331,83:83) 0x1029fd650"]} -> {main0x1029fd0a0 [label="void *(std::size_t, void *) noexcept operator new[](std::size_t:unsigned long <col:55, col:66>, void * __p)  at (331,101:101) 0x1029fd0a0"]}
-{main0x1029fd0a0 [label="void *(std::size_t, void *) noexcept operator new[](std::size_t:unsigned long <col:55, col:66>, void * __p)  at (331,101:101) 0x1029fd0a0"]} -> {main0x103ce91b0 [label="__int32_t (__uint32_t) major(__uint32_t:unsigned int _x)  at (137:140,1:1) 0x103ce91b0"]}
-{main0x103ce91b0 [label="__int32_t (__uint32_t) major(__uint32_t:unsigned int _x)  at (137:140,1:1) 0x103ce91b0"]} -> {main0x103cea8c0 [label="int (int, const struct fd_set *) __darwin_fd_isset(int _n, const struct fd_set * _p)  at (52:56,1:1) 0x103cea8c0"]}
-{main0x103cea8c0 [label="int (int, const struct fd_set *) __darwin_fd_isset(int _n, const struct fd_set * _p)  at (52:56,1:1) 0x103cea8c0"]} -> {main0x103c5b540 [label="__uint16_t (__uint16_t) _OSSwapInt16(__uint16_t:unsigned short _data)  at (51,1:1) 0x103c5b540"]}
-{main0x103c5b540 [label="__uint16_t (__uint16_t) _OSSwapInt16(__uint16_t:unsigned short _data)  at (51,1:1) 0x103c5b540"]} -> {main0x103c5bdb0 [label="__uint64_t (__uint64_t) _OSSwapInt64(__uint64_t:unsigned long long _data)  at (36:75,36:1) 0x103c5bdb0"]}
-{main0x103c5bdb0 [label="__uint64_t (__uint64_t) _OSSwapInt64(__uint64_t:unsigned long long _data)  at (36:75,36:1) 0x103c5bdb0"]} -> {main0x1029fcd90 [label="void *(std::size_t, void *) noexcept operator new(std::size_t:unsigned long <col:55, col:66>, void * __p)  at (331,101:101) 0x1029fcd90"]}
-{main0x1029fcd90 [label="void *(std::size_t, void *) noexcept operator new(std::size_t:unsigned long <col:55, col:66>, void * __p)  at (331,101:101) 0x1029fcd90"]} -> {main0x1029fd3f0 [label="void (void *, void *) noexcept operator delete(void * <col:58, col:63>, void * <col:65, col:70>)  at (331,83:83) 0x1029fd3f0"]}
-{main0x1029fd3f0 [label="void (void *, void *) noexcept operator delete(void * <col:58, col:63>, void * <col:65, col:70>)  at (331,83:83) 0x1029fd3f0"]} -> {main0x103c5b960 [label="__uint32_t (__uint32_t) _OSSwapInt32(__uint32_t:unsigned int _data)  at (36:65,36:1) 0x103c5b960"]}
-{main0x103c5b960 [label="__uint32_t (__uint32_t) _OSSwapInt32(__uint32_t:unsigned int _data)  at (36:65,36:1) 0x103c5b960"]} -> {main0x103ce9510 [label="__int32_t (__uint32_t) minor(__uint32_t:unsigned int _x)  at (142:145,1:1) 0x103ce9510"]}
-{main0x103ce9510 [label="__int32_t (__uint32_t) minor(__uint32_t:unsigned int _x)  at (142:145,1:1) 0x103ce9510"]} -> {main0x1028eac70 [label="long timezone   at (101,1:13) 0x1028eac70"]}
-{main0x1028eac70 [label="long timezone   at (101,1:13) 0x1028eac70"]} -> {main0x1028eab40 [label="int getdate_err   at (99,1:12) 0x1028eab40"]}
-{main0x1028eab40 [label="int getdate_err   at (99,1:12) 0x1028eab40"]} -> {main0x1028eaad0 [label="char *[] tzname   at (96,1:21) 0x1028eaad0"]}
-{main0x1028eaad0 [label="char *[] tzname   at (96,1:21) 0x1028eaad0"]} -> {main0x1028ead40 [label="int daylight   at (101,12:12) 0x1028ead40"]}
-{main0x1028ead40 [label="int daylight   at (101,12:12) 0x1028ead40"]} -> {main0x10596c2f0 [label="int (int, char **) main(int argc, char ** argv)  at (34,1:1) 0x10596c2f0"]}
-{main0x10596c2f0 [label="int (int, char **) main(int argc, char ** argv)  at (34,1:1) 0x10596c2f0"]} -> {main0x10596c1b0 [label="int argc  at (5,10:14) 0x10596c1b0"]}
-{main0x10596c1b0 [label="int argc  at (5,10:14) 0x10596c1b0"]} -> {main0x10596c220 [label="char ** argv  at (5,20:27) 0x10596c220"]}
-{main0x10596c220 [label="char ** argv  at (5,20:27) 0x10596c220"]} -> {main0x10596c3b0 [label="int secret   at (6,2:6) 0x10596c3b0"]}
-{main0x10596c3b0 [label="int secret   at (6,2:6) 0x10596c3b0"]} -> {main0x10596c420 [label="int guess   at (6,2:14) 0x10596c420"]}
-{main0x10596c420 [label="int guess   at (6,2:14) 0x10596c420"]} -> {main0x10596c6c0 [label="srand(time())  at (7,2:18) 0x10596c6c0"]}
-{main0x10596c6c0 [label="srand(time())  at (7,2:18) 0x10596c6c0"]} -> {main0x10596c880 [label="(secret = ((rand() % 10) + 1))  at (7,25:25) 0x10596c880"]}
-{main0x10596c880 [label="(secret = ((rand() % 10) + 1))  at (7,25:25) 0x10596c880"]} -> {main0x10596e790 [label="cin operator>> guess  at (9,2:14) 0x10596e790"]}
-{main0x10596e790 [label="cin operator>> guess  at (9,2:14) 0x10596e790"]} -> {main0x10596e7f0 [label="FILE * file  = fopen(\"myfile.txt\",\"w\")  at (11,2:38) 0x10596e7f0"]}
-{main0x10596e7f0 [label="FILE * file  = fopen(\"myfile.txt\",\"w\")  at (11,2:38) 0x10596e7f0"]} -> {main0x10596ea30 [label="FILE * f2  = fopen(\"myfile2.txt\",\"w\")  at (12,2:37) 0x10596ea30"]}
-{main0x10596ea30 [label="FILE * f2  = fopen(\"myfile2.txt\",\"w\")  at (12,2:37) 0x10596ea30"]} -> {main0x10596ee60 [label="fclose(fopen(\"myfile3.txt\",\"w\"))  at (14,2:34) 0x10596ee60"]}
-{main0x10596ee60 [label="fclose(fopen(\"myfile3.txt\",\"w\"))  at (14,2:34) 0x10596ee60"]} -> {main0x10596f0a8 [label="if (guess < secret) at (16:19,2:2) 0x10596f0a8"]}
-{main0x10596f0a8 [label="if (guess < secret) at (16:19,2:2) 0x10596f0a8"]} -> {main0x10596eff8 [label="fclose(file)  at (17,3:14) 0x10596eff8"]}
-{main0x10596f0a8 [label="if (guess < secret) at (16:19,2:2) 0x10596f0a8"]} -> {main0x10596f260 [label="if fopen(\"test1\",\"r\") at (21,2:25) 0x10596f260"]}
-{main0x10596eff8 [label="fclose(file)  at (17,3:14) 0x10596eff8"]} -> {main0x10596f060 [label="ReturnStmt(int,1)  at (18,3:10) 0x10596f060"]}
-{main0x10596f060 [label="ReturnStmt(int,1)  at (18,3:10) 0x10596f060"]}
-{main0x10596f260 [label="if fopen(\"test1\",\"r\") at (21,2:25) 0x10596f260"]} -> {main0x105975500 [label="cout operator<< \"blabla\" operator<< endl  at (23,2:32) 0x105975500"]}
-{main0x105975500 [label="cout operator<< \"blabla\" operator<< endl  at (23,2:32) 0x105975500"]} -> {main0x105975608 [label="fclose(f2)  at (25,2:11) 0x105975608"]}
-{main0x105975608 [label="fclose(f2)  at (25,2:11) 0x105975608"]} -> {main0x105975710 [label="fclose(file)  at (26,2:13) 0x105975710"]}
-{main0x105975710 [label="fclose(file)  at (26,2:13) 0x105975710"]} -> {main0x105975770 [label="FILE * a  = (1 + fopen(\"test2\",\"r\"))  at (28,2:34) 0x105975770"]}
-{main0x105975770 [label="FILE * a  = (1 + fopen(\"test2\",\"r\"))  at (28,2:34) 0x105975770"]} -> {main0x105975a48 [label="fclose(a)  at (29,2:10) 0x105975a48"]}
-{main0x105975a48 [label="fclose(a)  at (29,2:10) 0x105975a48"]} -> {main0x105975b88 [label="fopen(\"blabla\",\"w\")  at (31,2:21) 0x105975b88"]}
-{main0x105975b88 [label="fopen(\"blabla\",\"w\")  at (31,2:21) 0x105975b88"]} -> {main0x105975c10 [label="ReturnStmt(int,0)  at (33,2:9) 0x105975c10"]}
-{main0x105975c10 [label="ReturnStmt(int,0)  at (33,2:9) 0x105975c10"]}
-{operator_new0x1029fcd90 [label="void *(std::size_t, void *) noexcept operator new(std::size_t:unsigned long <col:55, col:66>, void * __p)  at (331,101:101) 0x1029fcd90"]} -> {operator_new0x1029fcc10 [label="std::size_t:unsigned long <col:55, col:66>  at (331,55:66) 0x1029fcc10"]}
-{operator_new0x1029fcc10 [label="std::size_t:unsigned long <col:55, col:66>  at (331,55:66) 0x1029fcc10"]} -> {operator_new0x1029fcc80 [label="void * __p  at (331,68:74) 0x1029fcc80"]}
-{operator_new0x1029fcc80 [label="void * __p  at (331,68:74) 0x1029fcc80"]} -> {operator_new0x1029fced8 [label="ReturnStmt(void *,__p)  at (331,90:97) 0x1029fced8"]}
-{operator_new0x1029fced8 [label="ReturnStmt(void *,__p)  at (331,90:97) 0x1029fced8"]}
-{_OSSwapInt640x103c5bdb0 [label="__uint64_t (__uint64_t) _OSSwapInt64(__uint64_t:unsigned long long _data)  at (36:75,36:1) 0x103c5bdb0"]} -> {_OSSwapInt640x103c5bcf0 [label="__uint64_t:unsigned long long _data  at (71,5:23) 0x103c5bcf0"]}
-{_OSSwapInt640x103c5bcf0 [label="__uint64_t:unsigned long long _data  at (71,5:23) 0x103c5bcf0"]} -> {_OSSwapInt640x103c5c0e8 [label="ReturnStmt(unsigned long long,__builtin_bswap64(_data))  at (74,5:35) 0x103c5c0e8"]}
-{_OSSwapInt640x103c5c0e8 [label="ReturnStmt(unsigned long long,__builtin_bswap64(_data))  at (74,5:35) 0x103c5c0e8"]}
-{__darwin_fd_isset0x103cea8c0 [label="int (int, const struct fd_set *) __darwin_fd_isset(int _n, const struct fd_set * _p)  at (52:56,1:1) 0x103cea8c0"]} -> {__darwin_fd_isset0x103cea6b0 [label="int _n  at (53,19:23) 0x103cea6b0"]}
-{__darwin_fd_isset0x103cea6b0 [label="int _n  at (53,19:23) 0x103cea6b0"]} -> {__darwin_fd_isset0x103cea7b0 [label="const struct fd_set * _p  at (53,27:48) 0x103cea7b0"]}
-{__darwin_fd_isset0x103cea7b0 [label="const struct fd_set * _p  at (53,27:48) 0x103cea7b0"]} -> {__darwin_fd_isset0x103ceaf20 [label="ReturnStmt(int,(_p->fds_bits[(_n / (__int32_t:int * 8))] & (1 << (_n % (__int32_t:int * 8)))))  at (55,2:117) 0x103ceaf20"]}
-{__darwin_fd_isset0x103ceaf20 [label="ReturnStmt(int,(_p->fds_bits[(_n / (__int32_t:int * 8))] & (1 << (_n % (__int32_t:int * 8)))))  at (55,2:117) 0x103ceaf20"]}
-{tzname0x1028eaad0 [label="char *[] tzname   at (96,1:21) 0x1028eaad0"]}
-{operator_new__0x1029fd0a0 [label="void *(std::size_t, void *) noexcept operator new[](std::size_t:unsigned long <col:55, col:66>, void * __p)  at (331,101:101) 0x1029fd0a0"]} -> {operator_new__0x1029fcfa0 [label="std::size_t:unsigned long <col:55, col:66>  at (331,55:66) 0x1029fcfa0"]}
-{operator_new__0x1029fcfa0 [label="std::size_t:unsigned long <col:55, col:66>  at (331,55:66) 0x1029fcfa0"]} -> {operator_new__0x1029fd010 [label="void * __p  at (331,68:74) 0x1029fd010"]}
-{operator_new__0x1029fd010 [label="void * __p  at (331,68:74) 0x1029fd010"]} -> {operator_new__0x1029fd1e8 [label="ReturnStmt(void *,__p)  at (331,90:97) 0x1029fd1e8"]}
-{operator_new__0x1029fd1e8 [label="ReturnStmt(void *,__p)  at (331,90:97) 0x1029fd1e8"]}
-{_OSSwapInt320x103c5b960 [label="__uint32_t (__uint32_t) _OSSwapInt32(__uint32_t:unsigned int _data)  at (36:65,36:1) 0x103c5b960"]} -> {_OSSwapInt320x103c5b8a0 [label="__uint32_t:unsigned int _data  at (56,5:23) 0x103c5b8a0"]}
-{_OSSwapInt320x103c5b8a0 [label="__uint32_t:unsigned int _data  at (56,5:23) 0x103c5b8a0"]} -> {_OSSwapInt320x103c5bc98 [label="ReturnStmt(unsigned int,__builtin_bswap32(_data))  at (60,5:35) 0x103c5bc98"]}
-{_OSSwapInt320x103c5bc98 [label="ReturnStmt(unsigned int,__builtin_bswap32(_data))  at (60,5:35) 0x103c5bc98"]}
-{_OSSwapInt160x103c5b540 [label="__uint16_t (__uint16_t) _OSSwapInt16(__uint16_t:unsigned short _data)  at (51,1:1) 0x103c5b540"]} -> {_OSSwapInt160x103c5b480 [label="__uint16_t:unsigned short _data  at (47,5:23) 0x103c5b480"]}
-{_OSSwapInt160x103c5b480 [label="__uint16_t:unsigned short _data  at (47,5:23) 0x103c5b480"]} -> {_OSSwapInt160x103c5b850 [label="ReturnStmt(int,((_data << 8) | (_data >> 8)))  at (50,5:54) 0x103c5b850"]}
-{_OSSwapInt160x103c5b850 [label="ReturnStmt(int,((_data << 8) | (_data >> 8)))  at (50,5:54) 0x103c5b850"]}
-{major0x103ce91b0 [label="__int32_t (__uint32_t) major(__uint32_t:unsigned int _x)  at (137:140,1:1) 0x103ce91b0"]} -> {major0x103ce90f0 [label="__uint32_t:unsigned int _x  at (137,32:43) 0x103ce90f0"]}
-{major0x103ce90f0 [label="__uint32_t:unsigned int _x  at (137,32:43) 0x103ce90f0"]} -> {major0x103ce9438 [label="ReturnStmt(unsigned int,((_x >> 24) & 255))  at (139,2:50) 0x103ce9438"]}
-{major0x103ce9438 [label="ReturnStmt(unsigned int,((_x >> 24) & 255))  at (139,2:50) 0x103ce9438"]}
-{operator_delete0x1029fd3f0 [label="void (void *, void *) noexcept operator delete(void * <col:58, col:63>, void * <col:65, col:70>)  at (331,83:83) 0x1029fd3f0"]} -> {operator_delete0x1029fd270 [label="void * <col:58, col:63>  at (331,58:63) 0x1029fd270"]}
-{operator_delete0x1029fd270 [label="void * <col:58, col:63>  at (331,58:63) 0x1029fd270"]} -> {operator_delete0x1029fd2e0 [label="void * <col:65, col:70>  at (331,65:70) 0x1029fd2e0"]}
-{operator_delete0x1029fd2e0 [label="void * <col:65, col:70>  at (331,65:70) 0x1029fd2e0"]}
-{makedev0x103ce98f0 [label="dev_t (__uint32_t, __uint32_t) makedev(__uint32_t:unsigned int _major, __uint32_t:unsigned int _minor)  at (147:150,1:1) 0x103ce98f0"]} -> {makedev0x103ce9770 [label="__uint32_t:unsigned int _major  at (147,30:41) 0x103ce9770"]}
-{makedev0x103ce9770 [label="__uint32_t:unsigned int _major  at (147,30:41) 0x103ce9770"]} -> {makedev0x103ce97e0 [label="__uint32_t:unsigned int _minor  at (147,49:60) 0x103ce97e0"]}
-{makedev0x103ce97e0 [label="__uint32_t:unsigned int _minor  at (147,49:60) 0x103ce97e0"]} -> {makedev0x103ce9b90 [label="ReturnStmt(unsigned int,((_major << 24) | _minor))  at (149,2:44) 0x103ce9b90"]}
-{makedev0x103ce9b90 [label="ReturnStmt(unsigned int,((_major << 24) | _minor))  at (149,2:44) 0x103ce9b90"]}
-{minor0x103ce9510 [label="__int32_t (__uint32_t) minor(__uint32_t:unsigned int _x)  at (142:145,1:1) 0x103ce9510"]} -> {minor0x103ce9490 [label="__uint32_t:unsigned int _x  at (142,32:43) 0x103ce9490"]}
-{minor0x103ce9490 [label="__uint32_t:unsigned int _x  at (142,32:43) 0x103ce9490"]} -> {minor0x103ce9718 [label="ReturnStmt(unsigned int,(_x & 16777215))  at (144,2:36) 0x103ce9718"]}
-{minor0x103ce9718 [label="ReturnStmt(unsigned int,(_x & 16777215))  at (144,2:36) 0x103ce9718"]}
->>>>>>> 214a97b3ab900e270a5fc14f511aa5df4dab1503
+{main0x102825ed0 [label="int (void) f()  at (0,21:21) 0x102825ed0"]} -> {main0x102874210 [label="int (int, char **) main(int argc, char ** argv)  at (4:18,1:1) 0x102874210"]}
+{main0x102874210 [label="int (int, char **) main(int argc, char ** argv)  at (4:18,1:1) 0x102874210"]} -> {main0x102825fe0 [label="int argc  at (4,10:14) 0x102825fe0"]}
+{main0x102825fe0 [label="int argc  at (4,10:14) 0x102825fe0"]} -> {main0x1028260b0 [label="char ** argv  at (4,20:27) 0x1028260b0"]}
+{main0x1028260b0 [label="char ** argv  at (4,20:27) 0x1028260b0"]} -> {main0x1028742d0 [label="int secret   at (5,2:6) 0x1028742d0"]}
+{main0x1028742d0 [label="int secret   at (5,2:6) 0x1028742d0"]} -> {main0x102874340 [label="int guess   at (5,2:14) 0x102874340"]}
+{main0x102874340 [label="int guess   at (5,2:14) 0x102874340"]} -> {main0x1028744a8 [label="((secret = 10) , (guess = 8))  at (6,2:23) 0x1028744a8"]}
+{main0x1028744a8 [label="((secret = 10) , (guess = 8))  at (6,2:23) 0x1028744a8"]} -> {main0x102874510 [label="int * list  = new int[(10 + f())]  at (8,2:28) 0x102874510"]}
+{main0x102874510 [label="int * list  = new int[(10 + f())]  at (8,2:28) 0x102874510"]} -> {main0x102874c70 [label="char * c  = new char  at (9,2:16) 0x102874c70"]}
+{main0x102874c70 [label="char * c  = new char  at (9,2:16) 0x102874c70"]} -> {main0x102874d78 [label="new double  at (10,2:6) 0x102874d78"]}
+{main0x102874d78 [label="new double  at (10,2:6) 0x102874d78"]} -> {main0x102874f40 [label="if (guess < secret) at (11:14,2:2) 0x102874f40"]}
+{main0x102874f40 [label="if (guess < secret) at (11:14,2:2) 0x102874f40"]} -> {main0x102874fb0 [label="delete list  at (15,2:11) 0x102874fb0"]}
+{main0x102874f40 [label="if (guess < secret) at (11:14,2:2) 0x102874f40"]} -> {main0x102874eb0 [label="delete list  at (12,3:12) 0x102874eb0"]}
+{main0x102874fb0 [label="delete list  at (15,2:11) 0x102874fb0"]} -> {main0x102874ff8 [label="ReturnStmt(int,0)  at (17,2:9) 0x102874ff8"]}
+{main0x102874ff8 [label="ReturnStmt(int,0)  at (17,2:9) 0x102874ff8"]}
+{main0x102874eb0 [label="delete list  at (12,3:12) 0x102874eb0"]} -> {main0x102874ef8 [label="ReturnStmt(int,1)  at (13,3:10) 0x102874ef8"]}
+{main0x102874ef8 [label="ReturnStmt(int,1)  at (13,3:10) 0x102874ef8"]}
+{f0x102825ed0 [label="int (void) f()  at (0,21:21) 0x102825ed0"]} -> {f0x102825f90 [label="ReturnStmt(int,2)  at (0,11:18) 0x102825f90"]}
+{f0x102825f90 [label="ReturnStmt(int,2)  at (0,11:18) 0x102825f90"]}
 }

@@ -17,6 +17,8 @@ import ast.model.ParamVarDecl
 import ast.model.Literal
 import ctl.Top
 import ast.model.FunctionDecl
+import ast.model.CXXNewExpr
+import ast.model.CXXDeleteExpr
 
 /**
  * This file contains all the Pattern definitions for our CFG. Patterns enable to analyze the expression(s)
@@ -134,7 +136,7 @@ case class LiteralExprPattern(metavar: UndefinedVar) extends AtomicExprPattern {
 /**
  * Matches any BinaryOp expression which operands and operator symbol match a given pattern.
  */
-case class BinaryOpPattern(left: AtomicExprPattern, right: AtomicExprPattern, op: StringPattern=NotString()) extends ExprPattern { 
+case class BinaryOpPattern(left: ExprPattern, right: ExprPattern, op: StringPattern=NotString()) extends ExprPattern { 
     import ExprPattern._
     override def matches(expr: Expr) = expr match {
     	case BinaryOp(_,l,r,operator) => intersection(intersection(op.matches(operator),left.matches(l)),right.matches(r))
@@ -145,7 +147,7 @@ case class BinaryOpPattern(left: AtomicExprPattern, right: AtomicExprPattern, op
 /**
  * Matches any CompoundAssignOp expression which operands and operator symbol match a given pattern.
  */
-case class CompoundAssignOpPattern(left: AtomicExprPattern, right: AtomicExprPattern, op: StringPattern=NotString()) extends ExprPattern { 
+case class CompoundAssignOpPattern(left: ExprPattern, right: ExprPattern, op: StringPattern=NotString()) extends ExprPattern { 
 	import ExprPattern._
 	override def matches (expr: Expr) = expr match {
 		case CompoundAssignOp(_,l,r,operator) => intersection(intersection(op.matches(operator),left.matches(l)),right.matches(r))
@@ -158,7 +160,7 @@ case class CompoundAssignOpPattern(left: AtomicExprPattern, right: AtomicExprPat
  * @pre if op is a DefinedString, passing any other value than "=", "+=", "-=", "*=", "/=" will result
  *      in an IllegalArgumentException to be thrown
  */
-case class AssignmentPattern(left: AtomicExprPattern, right: AtomicExprPattern, op: StringPattern=NotString()) extends ExprPattern {
+case class AssignmentPattern(left: ExprPattern, right: ExprPattern, op: StringPattern=NotString()) extends ExprPattern {
     import ExprPattern._
     private val patterns: List[ExprPattern] = op match {
         case DefinedString("=")                       => List(BinaryOpPattern        (left,right,op))
@@ -175,7 +177,7 @@ case class AssignmentPattern(left: AtomicExprPattern, right: AtomicExprPattern, 
 /**
  * Matches any assignment expression which operands and operator symbol match a given pattern.
  */
-case class UnaryOpPattern(operand: AtomicExprPattern, op: StringPattern=NotString()) extends ExprPattern {
+case class UnaryOpPattern(operand: ExprPattern, op: StringPattern=NotString()) extends ExprPattern {
     override def matches(expr: Expr) = expr match {
     	case UnaryOp(_,operand,operator,_) => ExprPattern.intersection(op.matches(operator),this.operand.matches(operand))
         case _                             => None
@@ -196,7 +198,7 @@ case class PointerExperPattern(metavar: UndefinedVar) extends ExprPattern {
  */
 case class CallExprPattern(
         name : StringPattern, 
-        params: Option[List[AtomicExprPattern]]=None,
+        params: Option[List[ExprPattern]]=None,
         typeOf: StringPattern=NotString()) extends ExprPattern {
     
     private def matchesParams(paramsFun : List[Expr]): Option[Env] = params match {
@@ -270,34 +272,29 @@ case class VarDeclPattern(typeOf: StringPattern, name: StringPattern)
 case class VarDefPattern(typeOf: StringPattern, name: StringPattern) 
 	extends VarDeclMatcher(typeOf,name)(decl => CFGDef(decl.typeOf,decl.name))
     
-//case class CXXNewExprPattern(
-//        name : StringPattern, 
-//        params: Option[List[AtomicExprPattern]]=None,
-//        typeOf: StringPattern=NotString()) extends ExprPattern {
-//    
-//    private def matchesParams(paramsFun : List[Expr]): Option[Env] = params match {
-//        case None        => Some(Top)
-//        case Some(value) =>
-//            if (paramsFun.size != value.size) None 
-//            else value.zip(paramsFun).foldLeft[Option[Env]](Some(Top)) { 
-//                case (acc,(pe,e)) => if (acc.isEmpty) None else ExprPattern.intersection(acc,pe.matches(e)) 
-//            }
-//    }
-//    
-//    private def matchFun(ref: DeclRefExpr): Option[Env] = (name.matches(ref.targetName),name) match {
-//        case (Some(_),UndefinedVar(x))  => Some(Top ++ (x -> CFGExpr(ref)))
-//        case (Some(_),DefinedString(_)) => Some(Top)
-//        case _                          => None
-//    }
-//    
-//    override def matches(expr: Expr) = expr match {
-//        case CallExpr(rtn,ref,paramsFun) => typeOf.matches(rtn) match {
-//            case Some(_) => ExprPattern.intersection(matchFun(ref),matchesParams(paramsFun)) 
-//            case _       => None
-//        } 
-//        case _                           => None
-//   }
-//}
+case class CXXNewExprPattern(
+        typeOf: StringPattern=NotString(),
+        countExpr: Option[AtomicExprPattern]=None) extends ExprPattern {
+    
+    override def matches(expr: Expr) = expr match {
+        case CXXNewExpr(t,c) => (countExpr,c) match {
+            case (Some(a),Some(b)) => ExprPattern.intersection(typeOf.matches(t),a.matches(b))
+            case _                 => typeOf.matches(t)
+        }
+        case _               => None
+    }
+}
+
+case class CXXDeleteExprPattern(target: Option[AtomicExprPattern]=None) extends ExprPattern {
+    
+    override def matches(expr: Expr) = expr match {
+        case CXXDeleteExpr(_,tgt) => target match {
+            case Some(t) => t.matches(tgt)
+            case _       => None
+        }
+        case _                    => None
+    }
+}
 
 //case class FunctionDeclPattern(nameFun: StringPattern, typeOf: StringPattern, argsFun: Option[List[String]]) extends DeclPattern {
 //    private def matchDecl(decl: Decl): Option[Env] = (name.matches(decl.name),name) match {

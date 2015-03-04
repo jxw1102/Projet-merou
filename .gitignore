@@ -22,3 +22,6 @@ docs/**/*.log
 docs/**/*.aux
 docs/**/*.toc
 
+# fab package
+ModelChecker/src/fabPackage/*
+

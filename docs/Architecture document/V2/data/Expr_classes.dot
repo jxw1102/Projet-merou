@@ -1,0 +1,31 @@
+digraph hierarchy {
+	node[shape=record,style=filled,fillcolor=gray95]
+	edge[dir=back, arrowtail=empty]
+	
+    // nodes
+    BinaryOp [label="{BinaryOp|left, right: Expr\noperator: String}"]     
+    UnaryOp [label="{UnaryOp|operand: Expr\noperator: String\npos: OpPosition}"]
+    Literal [label="{Literal|typeName: String\nvalue: String}"]
+    DeclRefExpr [label="{DeclRefExpr|targetType: String\ntargetName: String\ntargetId: String\nrefType: String}"]
+    InitListExpr [label="{InitListExpr|exprs: List[Expr]}"]
+    ArraySubscriptExpr [label="{ArraySubscriptExpr|exprs: (Expr,Expr)}"]
+    CallExpr [label="{CallExpr|returnType: String\nparams: List[Expr]}"]
+    
+    // links    
+    OpPosition -> Postfix
+    OpPosition -> Prefix
+    Expr -> CallExpr    
+    Expr -> ArraySubscriptExpr    
+    Expr -> BinaryOp    
+    Expr -> UnaryOp    
+    Expr -> DeclRefExpr    
+    Expr -> InitListExpr    
+    Expr -> Literal
+	
+	BinaryOp -> Expr [arrowtail=odiamond]
+	UnaryOp -> Expr [arrowtail=odiamond]
+	CallExpr -> Expr [arrowtail=odiamond]
+	InitListExpr -> Expr [arrowtail=odiamond]
+	ArraySubscriptExpr -> Expr [arrowtail=odiamond]
+	UnaryOp -> OpPosition [arrowtail=odiamond]
+}

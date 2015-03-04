@@ -1,0 +1,55 @@
+-9
+-9-9
+sofia(poisson,bleu)
+x++
+(x)
+- ( h )
+!s
+9 + !5
+9 + &5
+9 + ++5
+++e
+--4
+-8
+-8-9
++5
+++4
+9
+x++ % 8
+x-- + o + ghjgj
+++a
+++A + !B
+h||n
+d *= -a*b
+X==1
+a & b
+a && b
+x += a & b
+x = a && b
+david *= a * b
+g *= *s * b
+g *= *s * *b
+a += ++a + ++a + a++
+Y!= x
+j <<= 12
+A || B && C
+j |= k
+b = david | sofia
+f(a,s)
+f(9 + sofia)
+f(9)
+x = a && b
+x += a & b
+X==1
+f == (x != 4)
+a >> 4
+b < 51
+y <<= 10
+x = y <= 10
+a <= 2
+a >= 2
+myVar = 4 + (if ( y < 50 ) )
+if(f == (x != 4))
+x = while(x+4)
+bjr=4+(if( f(y) ))
+.end.

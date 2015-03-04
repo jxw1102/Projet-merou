@@ -1,0 +1,37 @@
+digraph hierarchy {
+	node[shape=record,style=filled,fillcolor=gray95]
+	edge[dir=back, arrowtail=empty]
+	
+    // nodes
+	Ctl [label="CtlExpr[M \<: MetaVariable,N,V \<: Value]"]
+    And [label="{And[M \<: MetaVariable,N,V \<: Value]|left: CtrlExpr[M,N,V]\nright: CtrlExpr[M,N,V]}"]
+    Or [label="{Or[M \<: MetaVariable,N,V \<: Value]|left: CtrlExpr[M,N,V]\nright: CtrlExpr[M,N,V]}"]
+    AU [label="{AU[M \<: MetaVariable,N,V \<: Value]|left: CtrlExpr[M,N,V]\nright: CtrlExpr[M,N,V]}"]
+    EU [label="{EU[M \<: MetaVariable,N,V \<: Value]|left: CtrlExpr[M,N,V]\nright: CtrlExpr[M,N,V]}"]
+   
+    AX [label="{AX[M \<: MetaVariable,N,V \<: Value]|op: CtrlExpr[M,N,V]}"]
+    EX [label="{EX[M \<: MetaVariable,N,V \<: Value]|op: CtrlExpr[M,N,V]}"]
+    Not [label="{Not[M \<: MetaVariable,N,V \<: Value]|op: CtrlExpr[M,N,V]}"]
+    
+	Exists [label="{Exists[M \<: MetaVariable,N,V \<: Value]|varType: (M,TypeOf[V])\nop: CtrlExpr[M,N,V]}"]
+    Predicate [label="{Predicate[M \<: MetaVariable,N,V \<: Value]|label: Labelizer[M,N,V]}"]
+
+	TypeOf [label="{TypeOf[V]||cast(n: V): Boolean}"]
+	NoType [label="NoType[V]"]
+	Labelizer [label="{Labelizer[M \<: MetaVariable,N,V \<: Value]|| abstract test(n: N): Set[Environment[M,V]]}"]
+	
+	// links
+	Ctl -> And
+	Ctl -> Or
+	Ctl -> AU
+	Ctl -> EU
+	Ctl -> AX
+	Ctl -> EX
+	Ctl -> Not
+	Ctl -> Exists
+	Ctl -> Predicate
+	TypeOf -> NoType
+	
+	Predicate -> Labelizer [arrowtail=odiamond]
+	Exists -> TypeOf [arrowtail=odiamond]
+}
