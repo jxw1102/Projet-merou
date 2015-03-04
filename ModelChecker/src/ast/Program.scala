@@ -21,7 +21,7 @@ import ast.model.DeclRefExpr
  * of the source code to the root node of its corresponding CFG.
  * @author David Courtinot 
  * @author Sofia Boutahar
- * @author Xiaowen Ji      
+ * @author Xiaowen Ji
  */
 case class Program(val decls: Map[String,GraphNode[ProgramNode]]) {
                                                                    // node name cannot contain symbols

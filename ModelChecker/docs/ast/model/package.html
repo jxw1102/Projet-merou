@@ -1,0 +1,905 @@
+<!DOCTYPE html >
+<html>
+        <head>
+          <title>model - ast.model</title>
+          <meta name="description" content="model - ast.model" />
+          <meta name="keywords" content="model ast.model" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../lib/template.js"></script>
+      <script type="text/javascript" src="../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../index.html';
+            var hash = 'ast.model.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img src="../../lib/package_big.png" />
+        <p id="owner"><a href="../package.html" class="extype" name="ast">ast</a></p>
+        <h1>model</h1><span class="permalink">
+      <a href="../../index.html#ast.model.package" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">model</span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="ast.model.ArraySubscriptExpr" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ArraySubscriptExprextendsExprwithProductwithSerializable"></a>
+      <a id="ArraySubscriptExpr:ArraySubscriptExpr"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="ArraySubscriptExpr.html"><span class="name">ArraySubscriptExpr</span></a><span class="params">(<span name="typeOf">typeOf: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="exprs">exprs: (<a href="Expr.html" class="extype" name="ast.model.Expr">Expr</a>, <a href="Expr.html" class="extype" name="ast.model.Expr">Expr</a>)</span>)</span><span class="result"> extends <a href="Expr.html" class="extype" name="ast.model.Expr">Expr</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#ast.model.package@ArraySubscriptExprextendsExprwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="ast.model.BinaryOp" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="BinaryOpextendsExprwithProductwithSerializable"></a>
+      <a id="BinaryOp:BinaryOp"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="BinaryOp.html"><span class="name">BinaryOp</span></a><span class="params">(<span name="typeOf">typeOf: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="left">left: <a href="Expr.html" class="extype" name="ast.model.Expr">Expr</a></span>, <span name="right">right: <a href="Expr.html" class="extype" name="ast.model.Expr">Expr</a></span>, <span name="operator">operator: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <a href="Expr.html" class="extype" name="ast.model.Expr">Expr</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#ast.model.package@BinaryOpextendsExprwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="ast.model.BreakStmt" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="BreakStmtextendsStmtwithJumpStmtwithProductwithSerializable"></a>
+      <a id="BreakStmt:BreakStmt"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="BreakStmt.html"><span class="name">BreakStmt</span></a><span class="params">()</span><span class="result"> extends <a href="Stmt.html" class="extype" name="ast.model.Stmt">Stmt</a> with <a href="JumpStmt.html" class="extype" name="ast.model.JumpStmt">JumpStmt</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#ast.model.package@BreakStmtextendsStmtwithJumpStmtwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="ast.model.CXXConstructExpr" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CXXConstructExprextendsExprwithProductwithSerializable"></a>
+      <a id="CXXConstructExpr:CXXConstructExpr"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="CXXConstructExpr.html"><span class="name">CXXConstructExpr</span></a><span class="params">(<span name="typeOf">typeOf: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="source">source: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="params">params: <span class="extype" name="scala.List">List</span>[<a href="Expr.html" class="extype" name="ast.model.Expr">Expr</a>]</span>)</span><span class="result"> extends <a href="Expr.html" class="extype" name="ast.model.Expr">Expr</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#ast.model.package@CXXConstructExprextendsExprwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="ast.model.CXXDeleteExpr" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CXXDeleteExprextendsExprwithProductwithSerializable"></a>
+      <a id="CXXDeleteExpr:CXXDeleteExpr"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="CXXDeleteExpr.html"><span class="name">CXXDeleteExpr</span></a><span class="params">(<span name="typeOf">typeOf: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="target">target: <a href="Expr.html" class="extype" name="ast.model.Expr">Expr</a></span>)</span><span class="result"> extends <a href="Expr.html" class="extype" name="ast.model.Expr">Expr</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#ast.model.package@CXXDeleteExprextendsExprwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="ast.model.CXXNewExpr" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CXXNewExprextendsExprwithProductwithSerializable"></a>
+      <a id="CXXNewExpr:CXXNewExpr"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="CXXNewExpr.html"><span class="name">CXXNewExpr</span></a><span class="params">(<span name="typeOf">typeOf: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="count">count: <span class="extype" name="scala.Option">Option</span>[<a href="Expr.html" class="extype" name="ast.model.Expr">Expr</a>]</span>)</span><span class="result"> extends <a href="Expr.html" class="extype" name="ast.model.Expr">Expr</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#ast.model.package@CXXNewExprextendsExprwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="ast.model.CXXOperatorCallExpr" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CXXOperatorCallExprextendsExprwithProductwithSerializable"></a>
+      <a id="CXXOperatorCallExpr:CXXOperatorCallExpr"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="CXXOperatorCallExpr.html"><span class="name">CXXOperatorCallExpr</span></a><span class="params">(<span name="typeOf">typeOf: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="operator">operator: <a href="Expr.html" class="extype" name="ast.model.Expr">Expr</a></span>, <span name="left">left: <a href="Expr.html" class="extype" name="ast.model.Expr">Expr</a></span>, <span name="right">right: <a href="Expr.html" class="extype" name="ast.model.Expr">Expr</a></span>)</span><span class="result"> extends <a href="Expr.html" class="extype" name="ast.model.Expr">Expr</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#ast.model.package@CXXOperatorCallExprextendsExprwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="ast.model.CXXTemporaryObjectExpr" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CXXTemporaryObjectExprextendsExprwithProductwithSerializable"></a>
+      <a id="CXXTemporaryObjectExpr:CXXTemporaryObjectExpr"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="CXXTemporaryObjectExpr.html"><span class="name">CXXTemporaryObjectExpr</span></a><span class="params">(<span name="typeOf">typeOf: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="params">params: <span class="extype" name="scala.List">List</span>[<a href="Expr.html" class="extype" name="ast.model.Expr">Expr</a>]</span>)</span><span class="result"> extends <a href="Expr.html" class="extype" name="ast.model.Expr">Expr</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#ast.model.package@CXXTemporaryObjectExprextendsExprwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="ast.model.CallExpr" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CallExprextendsExprwithProductwithSerializable"></a>
+      <a id="CallExpr:CallExpr"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="CallExpr.html"><span class="name">CallExpr</span></a><span class="params">(<span name="typeOf">typeOf: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="ref">ref: <a href="DeclRefExpr.html" class="extype" name="ast.model.DeclRefExpr">DeclRefExpr</a></span>, <span name="params">params: <span class="extype" name="scala.List">List</span>[<a href="Expr.html" class="extype" name="ast.model.Expr">Expr</a>]</span>)</span><span class="result"> extends <a href="Expr.html" class="extype" name="ast.model.Expr">Expr</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#ast.model.package@CallExprextendsExprwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="ast.model.CaseStmt" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CaseStmtextendsStmtwithProductwithSerializable"></a>
+      <a id="CaseStmt:CaseStmt"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="CaseStmt.html"><span class="name">CaseStmt</span></a><span class="params">(<span name="condition">condition: <a href="Expr.html" class="extype" name="ast.model.Expr">Expr</a></span>, <span name="body">body: <a href="Stmt.html" class="extype" name="ast.model.Stmt">Stmt</a></span>)</span><span class="result"> extends <a href="Stmt.html" class="extype" name="ast.model.Stmt">Stmt</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#ast.model.package@CaseStmtextendsStmtwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="ast.model.CompoundAssignOp" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CompoundAssignOpextendsExprwithProductwithSerializable"></a>
+      <a id="CompoundAssignOp:CompoundAssignOp"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="CompoundAssignOp.html"><span class="name">CompoundAssignOp</span></a><span class="params">(<span name="typeOf">typeOf: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="left">left: <a href="Expr.html" class="extype" name="ast.model.Expr">Expr</a></span>, <span name="right">right: <a href="Expr.html" class="extype" name="ast.model.Expr">Expr</a></span>, <span name="operator">operator: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <a href="Expr.html" class="extype" name="ast.model.Expr">Expr</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#ast.model.package@CompoundAssignOpextendsExprwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="ast.model.CompoundStmt" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CompoundStmtextendsStmtwithProductwithSerializable"></a>
+      <a id="CompoundStmt:CompoundStmt"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="CompoundStmt.html"><span class="name">CompoundStmt</span></a><span class="params">(<span name="elts">elts: <span class="extype" name="scala.List">List</span>[<a href="../SourceCodeNode.html" class="extype" name="ast.SourceCodeNode">SourceCodeNode</a>]</span>)</span><span class="result"> extends <a href="Stmt.html" class="extype" name="ast.model.Stmt">Stmt</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#ast.model.package@CompoundStmtextendsStmtwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="ast.model.ConditionalOperator" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ConditionalOperatorextendsExprwithProductwithSerializable"></a>
+      <a id="ConditionalOperator:ConditionalOperator"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="ConditionalOperator.html"><span class="name">ConditionalOperator</span></a><span class="params">(<span name="typeOf">typeOf: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="exprs">exprs: (<a href="Expr.html" class="extype" name="ast.model.Expr">Expr</a>, <a href="Expr.html" class="extype" name="ast.model.Expr">Expr</a>, <a href="Expr.html" class="extype" name="ast.model.Expr">Expr</a>)</span>)</span><span class="result"> extends <a href="Expr.html" class="extype" name="ast.model.Expr">Expr</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#ast.model.package@ConditionalOperatorextendsExprwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="ast.model.ContinueStmt" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ContinueStmtextendsStmtwithJumpStmtwithProductwithSerializable"></a>
+      <a id="ContinueStmt:ContinueStmt"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="ContinueStmt.html"><span class="name">ContinueStmt</span></a><span class="params">()</span><span class="result"> extends <a href="Stmt.html" class="extype" name="ast.model.Stmt">Stmt</a> with <a href="JumpStmt.html" class="extype" name="ast.model.JumpStmt">JumpStmt</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#ast.model.package@ContinueStmtextendsStmtwithJumpStmtwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="ast.model.Decl" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="DeclextendsSourceCodeNode"></a>
+      <a id="Decl:Decl"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="Decl.html"><span class="name">Decl</span></a><span class="result"> extends <a href="../SourceCodeNode.html" class="extype" name="ast.SourceCodeNode">SourceCodeNode</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#ast.model.package@DeclextendsSourceCodeNode" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Classes used to represent main kinds of declarations within the program.</p><div class="fullcomment"><div class="comment cmt"><p>Classes used to represent main kinds of declarations within the program. They most often correspond to a specific
+Clang class.</p></div></div>
+    </li><li name="ast.model.DeclRefExpr" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="DeclRefExprextendsExprwithProductwithSerializable"></a>
+      <a id="DeclRefExpr:DeclRefExpr"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="DeclRefExpr.html"><span class="name">DeclRefExpr</span></a><span class="params">(<span name="typeOf">typeOf: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="targetName">targetName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="targetId">targetId: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <a href="Expr.html" class="extype" name="ast.model.Expr">Expr</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#ast.model.package@DeclRefExprextendsExprwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="ast.model.DeclStmt" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="DeclStmtextendsStmtwithForInitializerwithProductwithSerializable"></a>
+      <a id="DeclStmt:DeclStmt"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="DeclStmt.html"><span class="name">DeclStmt</span></a><span class="params">(<span name="decls">decls: <span class="extype" name="scala.List">List</span>[<a href="../SourceCodeNode.html" class="extype" name="ast.SourceCodeNode">SourceCodeNode</a>]</span>)</span><span class="result"> extends <a href="Stmt.html" class="extype" name="ast.model.Stmt">Stmt</a> with <a href="ForInitializer.html" class="extype" name="ast.model.ForInitializer">ForInitializer</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#ast.model.package@DeclStmtextendsStmtwithForInitializerwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="ast.model.DefaultStmt" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="DefaultStmtextendsStmtwithProductwithSerializable"></a>
+      <a id="DefaultStmt:DefaultStmt"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="DefaultStmt.html"><span class="name">DefaultStmt</span></a><span class="params">(<span name="body">body: <a href="Stmt.html" class="extype" name="ast.model.Stmt">Stmt</a></span>)</span><span class="result"> extends <a href="Stmt.html" class="extype" name="ast.model.Stmt">Stmt</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#ast.model.package@DefaultStmtextendsStmtwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="ast.model.DoWhileStmt" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="DoWhileStmtextendsStmtwithProductwithSerializable"></a>
+      <a id="DoWhileStmt:DoWhileStmt"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="DoWhileStmt.html"><span class="name">DoWhileStmt</span></a><span class="params">(<span name="condition">condition: <a href="Expr.html" class="extype" name="ast.model.Expr">Expr</a></span>, <span name="body">body: <a href="Stmt.html" class="extype" name="ast.model.Stmt">Stmt</a></span>)</span><span class="result"> extends <a href="Stmt.html" class="extype" name="ast.model.Stmt">Stmt</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#ast.model.package@DoWhileStmtextendsStmtwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="ast.model.EnumConstantDecl" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="EnumConstantDeclextendsDeclwithProductwithSerializable"></a>
+      <a id="EnumConstantDecl:EnumConstantDecl"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="EnumConstantDecl.html"><span class="name">EnumConstantDecl</span></a><span class="params">(<span name="_name">_name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="typeName">typeName: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <a href="Decl.html" class="extype" name="ast.model.Decl">Decl</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#ast.model.package@EnumConstantDeclextendsDeclwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="ast.model.EnumDecl" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="EnumDeclextendsDeclwithProductwithSerializable"></a>
+      <a id="EnumDecl:EnumDecl"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="EnumDecl.html"><span class="name">EnumDecl</span></a><span class="params">(<span name="typeName">typeName: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <a href="Decl.html" class="extype" name="ast.model.Decl">Decl</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#ast.model.package@EnumDeclextendsDeclwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="ast.model.Expr" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ExprextendsStmtwithForInitializer"></a>
+      <a id="Expr:Expr"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">sealed abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="Expr.html"><span class="name">Expr</span></a><span class="result"> extends <a href="Stmt.html" class="extype" name="ast.model.Stmt">Stmt</a> with <a href="ForInitializer.html" class="extype" name="ast.model.ForInitializer">ForInitializer</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#ast.model.package@ExprextendsStmtwithForInitializer" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Classes used to represent expressions within the program</p>
+    </li><li name="ast.model.FieldDecl" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="FieldDeclextendsDeclwithProductwithSerializable"></a>
+      <a id="FieldDecl:FieldDecl"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="FieldDecl.html"><span class="name">FieldDecl</span></a><span class="params">(<span name="_name">_name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="typeName">typeName: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <a href="Decl.html" class="extype" name="ast.model.Decl">Decl</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#ast.model.package@FieldDeclextendsDeclwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="ast.model.ForInitializer" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ForInitializerextendsStmt"></a>
+      <a id="ForInitializer:ForInitializer"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ForInitializer.html"><span class="name">ForInitializer</span></a><span class="result"> extends <a href="Stmt.html" class="extype" name="ast.model.Stmt">Stmt</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#ast.model.package@ForInitializerextendsStmt" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="ast.model.ForStmt" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ForStmtextendsStmtwithProductwithSerializable"></a>
+      <a id="ForStmt:ForStmt"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="ForStmt.html"><span class="name">ForStmt</span></a><span class="params">(<span name="init">init: <span class="extype" name="scala.Option">Option</span>[<a href="../SourceCodeNode.html" class="extype" name="ast.SourceCodeNode">SourceCodeNode</a>]</span>, <span name="cond">cond: <span class="extype" name="scala.Option">Option</span>[<a href="Expr.html" class="extype" name="ast.model.Expr">Expr</a>]</span>, <span name="update">update: <span class="extype" name="scala.Option">Option</span>[<a href="Expr.html" class="extype" name="ast.model.Expr">Expr</a>]</span>, <span name="body">body: <a href="Stmt.html" class="extype" name="ast.model.Stmt">Stmt</a></span>)</span><span class="result"> extends <a href="Stmt.html" class="extype" name="ast.model.Stmt">Stmt</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#ast.model.package@ForStmtextendsStmtwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="ast.model.FunctionDecl" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="FunctionDeclextendsDeclwithProductwithSerializable"></a>
+      <a id="FunctionDecl:FunctionDecl"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="FunctionDecl.html"><span class="name">FunctionDecl</span></a><span class="params">(<span name="_name">_name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="typeName">typeName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="args">args: <span class="extype" name="scala.List">List</span>[<a href="ParamVarDecl.html" class="extype" name="ast.model.ParamVarDecl">ParamVarDecl</a>]</span>, <span name="body">body: <a href="CompoundStmt.html" class="extype" name="ast.model.CompoundStmt">CompoundStmt</a></span>)</span><span class="result"> extends <a href="Decl.html" class="extype" name="ast.model.Decl">Decl</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#ast.model.package@FunctionDeclextendsDeclwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="ast.model.GotoStmt" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="GotoStmtextendsStmtwithJumpStmtwithProductwithSerializable"></a>
+      <a id="GotoStmt:GotoStmt"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="GotoStmt.html"><span class="name">GotoStmt</span></a><span class="params">(<span name="label">label: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <a href="Stmt.html" class="extype" name="ast.model.Stmt">Stmt</a> with <a href="JumpStmt.html" class="extype" name="ast.model.JumpStmt">JumpStmt</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#ast.model.package@GotoStmtextendsStmtwithJumpStmtwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="ast.model.IfStmt" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="IfStmtextendsStmtwithProductwithSerializable"></a>
+      <a id="IfStmt:IfStmt"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="IfStmt.html"><span class="name">IfStmt</span></a><span class="params">(<span name="condition">condition: <a href="Expr.html" class="extype" name="ast.model.Expr">Expr</a></span>, <span name="body">body: <a href="Stmt.html" class="extype" name="ast.model.Stmt">Stmt</a></span>, <span name="elseStmt">elseStmt: <span class="extype" name="scala.Option">Option</span>[<a href="Stmt.html" class="extype" name="ast.model.Stmt">Stmt</a>]</span>)</span><span class="result"> extends <a href="Stmt.html" class="extype" name="ast.model.Stmt">Stmt</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#ast.model.package@IfStmtextendsStmtwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="ast.model.InitListExpr" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="InitListExprextendsExprwithProductwithSerializable"></a>
+      <a id="InitListExpr:InitListExpr"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="InitListExpr.html"><span class="name">InitListExpr</span></a><span class="params">(<span name="typeOf">typeOf: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="exprs">exprs: <span class="extype" name="scala.List">List</span>[<a href="Expr.html" class="extype" name="ast.model.Expr">Expr</a>]</span>)</span><span class="result"> extends <a href="Expr.html" class="extype" name="ast.model.Expr">Expr</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#ast.model.package@InitListExprextendsExprwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="ast.model.JumpStmt" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="JumpStmtextendsStmt"></a>
+      <a id="JumpStmt:JumpStmt"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">sealed </span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="JumpStmt.html"><span class="name">JumpStmt</span></a><span class="result"> extends <a href="Stmt.html" class="extype" name="ast.model.Stmt">Stmt</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#ast.model.package@JumpStmtextendsStmt" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="ast.model.LabelStmt" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="LabelStmtextendsStmtwithProductwithSerializable"></a>
+      <a id="LabelStmt:LabelStmt"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="LabelStmt.html"><span class="name">LabelStmt</span></a><span class="params">(<span name="label">label: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="stmt">stmt: <a href="Stmt.html" class="extype" name="ast.model.Stmt">Stmt</a></span>)</span><span class="result"> extends <a href="Stmt.html" class="extype" name="ast.model.Stmt">Stmt</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#ast.model.package@LabelStmtextendsStmtwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="ast.model.Literal" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="LiteralextendsExprwithProductwithSerializable"></a>
+      <a id="Literal:Literal"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Literal.html"><span class="name">Literal</span></a><span class="params">(<span name="typeOf">typeOf: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="value">value: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <a href="Expr.html" class="extype" name="ast.model.Expr">Expr</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#ast.model.package@LiteralextendsExprwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="ast.model.MemberExpr" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MemberExprextendsExprwithProductwithSerializable"></a>
+      <a id="MemberExpr:MemberExpr"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="MemberExpr.html"><span class="name">MemberExpr</span></a><span class="params">(<span name="typeOf">typeOf: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="target">target: <a href="Expr.html" class="extype" name="ast.model.Expr">Expr</a></span>, <span name="member">member: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <a href="Expr.html" class="extype" name="ast.model.Expr">Expr</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#ast.model.package@MemberExprextendsExprwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="ast.model.NullStmt" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="NullStmtextendsStmtwithProductwithSerializable"></a>
+      <a id="NullStmt:NullStmt"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="NullStmt.html"><span class="name">NullStmt</span></a><span class="params">()</span><span class="result"> extends <a href="Stmt.html" class="extype" name="ast.model.Stmt">Stmt</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#ast.model.package@NullStmtextendsStmtwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="ast.model.OpPosition" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="OpPositionextendsAnyRef"></a>
+      <a id="OpPosition:OpPosition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">sealed abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="OpPosition.html"><span class="name">OpPosition</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#ast.model.package@OpPositionextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="ast.model.ParamVarDecl" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ParamVarDeclextendsDeclwithProductwithSerializable"></a>
+      <a id="ParamVarDecl:ParamVarDecl"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="ParamVarDecl.html"><span class="name">ParamVarDecl</span></a><span class="params">(<span name="_name">_name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="typeName">typeName: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <a href="Decl.html" class="extype" name="ast.model.Decl">Decl</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#ast.model.package@ParamVarDeclextendsDeclwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="ast.model.ReturnStmt" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ReturnStmtextendsStmtwithJumpStmtwithProductwithSerializable"></a>
+      <a id="ReturnStmt:ReturnStmt"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="ReturnStmt.html"><span class="name">ReturnStmt</span></a><span class="params">(<span name="returnType">returnType: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="expr">expr: <a href="Expr.html" class="extype" name="ast.model.Expr">Expr</a></span>)</span><span class="result"> extends <a href="Stmt.html" class="extype" name="ast.model.Stmt">Stmt</a> with <a href="JumpStmt.html" class="extype" name="ast.model.JumpStmt">JumpStmt</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#ast.model.package@ReturnStmtextendsStmtwithJumpStmtwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="ast.model.Stmt" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="StmtextendsSourceCodeNode"></a>
+      <a id="Stmt:Stmt"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="Stmt.html"><span class="name">Stmt</span></a><span class="result"> extends <a href="../SourceCodeNode.html" class="extype" name="ast.SourceCodeNode">SourceCodeNode</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#ast.model.package@StmtextendsSourceCodeNode" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Classes used to represent main kinds of statements within the program.</p><div class="fullcomment"><div class="comment cmt"><p>Classes used to represent main kinds of statements within the program. They most often correspond to a specific
+Clang class.</p></div></div>
+    </li><li name="ast.model.SwitchStmt" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SwitchStmtextendsStmtwithProductwithSerializable"></a>
+      <a id="SwitchStmt:SwitchStmt"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="SwitchStmt.html"><span class="name">SwitchStmt</span></a><span class="params">(<span name="expr">expr: <a href="Expr.html" class="extype" name="ast.model.Expr">Expr</a></span>, <span name="body">body: <a href="CompoundStmt.html" class="extype" name="ast.model.CompoundStmt">CompoundStmt</a></span>)</span><span class="result"> extends <a href="Stmt.html" class="extype" name="ast.model.Stmt">Stmt</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#ast.model.package@SwitchStmtextendsStmtwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="ast.model.TypedefDecl" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="TypedefDeclextendsDeclwithProductwithSerializable"></a>
+      <a id="TypedefDecl:TypedefDecl"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="TypedefDecl.html"><span class="name">TypedefDecl</span></a><span class="params">(<span name="alias">alias: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="original">original: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <a href="Decl.html" class="extype" name="ast.model.Decl">Decl</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#ast.model.package@TypedefDeclextendsDeclwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="ast.model.UnaryExprOrTypeTraitExpr" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="UnaryExprOrTypeTraitExprextendsExprwithProductwithSerializable"></a>
+      <a id="UnaryExprOrTypeTraitExpr:UnaryExprOrTypeTraitExpr"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="UnaryExprOrTypeTraitExpr.html"><span class="name">UnaryExprOrTypeTraitExpr</span></a><span class="params">(<span name="typeOf">typeOf: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="value">value: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="expr">expr: <span class="extype" name="scala.Option">Option</span>[<a href="Expr.html" class="extype" name="ast.model.Expr">Expr</a>]</span>)</span><span class="result"> extends <a href="Expr.html" class="extype" name="ast.model.Expr">Expr</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#ast.model.package@UnaryExprOrTypeTraitExprextendsExprwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="ast.model.UnaryOp" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="UnaryOpextendsExprwithProductwithSerializable"></a>
+      <a id="UnaryOp:UnaryOp"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="UnaryOp.html"><span class="name">UnaryOp</span></a><span class="params">(<span name="typeOf">typeOf: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="operand">operand: <a href="Expr.html" class="extype" name="ast.model.Expr">Expr</a></span>, <span name="operator">operator: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="pos">pos: <a href="OpPosition.html" class="extype" name="ast.model.OpPosition">OpPosition</a></span>)</span><span class="result"> extends <a href="Expr.html" class="extype" name="ast.model.Expr">Expr</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#ast.model.package@UnaryOpextendsExprwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="ast.model.VarDecl" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="VarDeclextendsDeclwithProductwithSerializable"></a>
+      <a id="VarDecl:VarDecl"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="VarDecl.html"><span class="name">VarDecl</span></a><span class="params">(<span name="_name">_name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="typeName">typeName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="value">value: <span class="extype" name="scala.Option">Option</span>[<a href="Expr.html" class="extype" name="ast.model.Expr">Expr</a>]</span>)</span><span class="result"> extends <a href="Decl.html" class="extype" name="ast.model.Decl">Decl</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#ast.model.package@VarDeclextendsDeclwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="ast.model.WhileStmt" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="WhileStmtextendsStmtwithProductwithSerializable"></a>
+      <a id="WhileStmt:WhileStmt"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="WhileStmt.html"><span class="name">WhileStmt</span></a><span class="params">(<span name="condition">condition: <a href="Expr.html" class="extype" name="ast.model.Expr">Expr</a></span>, <span name="body">body: <a href="Stmt.html" class="extype" name="ast.model.Stmt">Stmt</a></span>)</span><span class="result"> extends <a href="Stmt.html" class="extype" name="ast.model.Stmt">Stmt</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#ast.model.package@WhileStmtextendsStmtwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="ast.model.OpPosition" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="OpPosition"></a>
+      <a id="OpPosition:OpPosition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="OpPosition$.html"><span class="name">OpPosition</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#ast.model.package@OpPosition" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="ast.model.Postfix" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Postfix"></a>
+      <a id="Postfix:Postfix"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Postfix$.html"><span class="name">Postfix</span></a><span class="result"> extends <a href="OpPosition.html" class="extype" name="ast.model.OpPosition">OpPosition</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#ast.model.package@Postfix" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="ast.model.Prefix" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Prefix"></a>
+      <a id="Prefix:Prefix"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Prefix$.html"><span class="name">Prefix</span></a><span class="result"> extends <a href="OpPosition.html" class="extype" name="ast.model.OpPosition">OpPosition</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#ast.model.package@Prefix" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

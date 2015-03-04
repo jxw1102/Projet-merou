@@ -40,7 +40,7 @@ sealed abstract class Environment[M <: MetaVariable, V <: Value] {
     
     /**
      * Retrieve the positive binding of key m
-     * @throws NoSuchElementException iff there is no positive binding associated to m
+     * @throws NoSuchElementException if there is no positive binding associated to m
      */
     def apply(m: M): V
     

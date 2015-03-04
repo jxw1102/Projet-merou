@@ -47,8 +47,10 @@ class ProgramNodeFactory(rootNodes: Iterable[Decl], labelNodes: Map[String,Sourc
         Program(res.toMap)
     }
     
-    // this method removes all the Empty nodes used for construction and updates the links in
-    // consequence. It is called just before returning the result.
+    /**
+     * this method removes all the Empty nodes used for construction and updates the links in 
+     * consequence. It is called just before returning the result.
+     * */
     private def clean(node: GNode, explored: Set[GNode]): Unit = {
         if (explored contains node) return
 
@@ -63,8 +65,9 @@ class ProgramNodeFactory(rootNodes: Iterable[Decl], labelNodes: Map[String,Sourc
         next.foreach(clean(_,explored))
     }
     
-    
-     // general facade for handling the SourceCodeNode(s)
+    /**
+     * general facade for handling the SourceCodeNode(s)
+     * */
     private def handle(node: SourceCodeNode, next: Option[GNode], exit: Option[GNode], entry: Option[GNode]): GNode = 
         node match {
             case IfStmt      (_,_,_)   => handleIf          (node,next,exit,entry)
@@ -90,7 +93,9 @@ class ProgramNodeFactory(rootNodes: Iterable[Decl], labelNodes: Map[String,Sourc
     }
     private def emptyNode(range: CodeRange, id: String) = new GNode(Empty(range,id))
     
-    // general facade for converting SourceCodeNode to a fresh and unlinked GNode
+    /**
+     * general facade for converting SourceCodeNode to a fresh and unlinked GNode
+     * */
     private def toGraphNode(node: SourceCodeNode) = (node,node.codeRange.get,node.id.get) match {
         case (ForStmt(init,cond,update,body),range,id) => new GNode(For       (cond,range,id))
         case (DoWhileStmt(cond,body)        ,range,id) => new GNode(While     (cond,range,id))

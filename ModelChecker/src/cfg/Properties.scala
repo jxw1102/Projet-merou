@@ -96,13 +96,18 @@ object Properties {
         anyFlowControlNodes(identityPattern)          || Predicate(ForLabelizer(None))
     }
     
+    /**
+     * This property detects all unused variables.
+     */
     val UNUSED_DECLARED_VAR = {
         val declaredVariable = Predicate(VarDeclLabelizer(VarDeclPattern(NotString(),UndefinedVar("X"))))
         val usedVariable     = Predicate(UseLabelizer(UndefinedVar("X")))
         declaredVariable && AG(!usedVariable)
     }
     
-    
+    /**
+     * This property detects all functions that should be used in pairs.
+     */
     val NON_PAIRED_FUNCTION_CALL = (f1: String, f2: String) => {
         val fun1       = Predicate(FindExprLabelizer(CallExprPattern(DefinedString(f1))))
         val assignment = Predicate(MatchExprLabelizer(AssignmentPattern(UndefinedVar("X"),UndefinedVar("Y"),DefinedString("="))))
@@ -110,6 +115,9 @@ object Properties {
         ((!assignment && fun1) || (fun1 && assignment && EX(EG(!fun2)))) && !(fun1 && fun2)
     }
     
+    /**
+     * This property detects all operations which will cause a memory leak.
+     */
     val NEW_WITHOUT_DELETE = {
         val alloc      = Predicate(FindExprLabelizer(CXXNewExprPattern()))
         val assignment = Predicate(MatchExprLabelizer(AssignmentPattern(UndefinedVar("X"),UndefinedVar("Y"),DefinedString("="))))

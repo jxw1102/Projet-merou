@@ -70,9 +70,6 @@ class ASTParser {
                             case x if x.endsWith("Operator") => cnode
                             case x if x.contains("Literal") => cnode
                             case "VarDecl" | "FunctionDecl" | "ParmVarDecl" | "ExprWithCleanups" => cnode
-//                                | "CXXRecordDecl" | "CXXConstructorDecl" | "CXXDestructorDecl" | "CXXMethodDecl" | "CXXCtorInitializer"
-//                                | "FieldDecl" | "EnumDecl" | "EnumConstantDecl" => cnode
-//                            case "TypedefDecl" => cnode
                             case _           => OtherASTNode(indent/2,data)
                         }
                     case (None,None,data,indent,_) =>
@@ -99,6 +96,7 @@ class ASTParser {
 /**
  * Contains the result of the parsing : the root node, always to be ignored, and a map mapping 
  * the labels' id to the id of the node they point to.
+ * 
  */
 final class ASTParserResult(val root: ASTNode, val labels: Map[String,String])
 
@@ -118,6 +116,11 @@ sealed abstract class ASTNode(_depth: Int) {
 }
 /**
  * Represents all the nodes in the AST which correspond to a Clang class. 
+ * @param _depth node depth
+ * @param ofType node type
+ * @param id node id (ex: 0x12345a7f9)
+ * @param pos code range (ex: <line:3:4, col:5:6>
+ * @param data string after code range
  */
 final case class ConcreteASTNode(_depth: Int, ofType: String, id: String, pos: CodeRange, data: String) extends ASTNode(_depth) {
     override def equals(that: Any) = that match { case ConcreteASTNode(_,_,_id,_,_) => id == _id; case _ => false }
@@ -135,8 +138,6 @@ final case class OtherASTNode(_depth:Int, data: String) extends ASTNode(_depth)
 
 /**
  * Represents a piece of code between the lineMin:colMin and lineMax:colMax characters.
- * @pre 0 < lineMin < lineMax
- * @pre 0 < colMin < colMax
  */
 final case class CodeRange(lineMin: Int, lineMax: Int, colMin: Int, colMax: Int) {
     val lineRange = lineMin to lineMax
@@ -146,8 +147,6 @@ final case class CodeRange(lineMin: Int, lineMax: Int, colMin: Int, colMax: Int)
 
 /**
  * Represents a single source code pointer of the form line:i:j or col:j.
- * @pre i > 0
- * @pre j > 0
  */
 sealed abstract class CodePointer
 final case class LinePointer(line: Int, col: Int) extends CodePointer

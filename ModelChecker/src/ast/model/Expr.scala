@@ -10,6 +10,10 @@ sealed abstract class Expr(typeOf: String) extends ForInitializer {
     val getType   = typeOf
     def isPointer = typeOf.last == '*' 
     
+    /**
+     * Unfold an expression and make all its sub-expressions into a list
+     * @return a list of sub-expressions
+     * */
     def getSubExprs = this match {
         case BinaryOp           (_,l,r,_)      => List(l,r)     
         case UnaryOp            (_,op,_,_)     => List(op)
@@ -21,6 +25,9 @@ sealed abstract class Expr(typeOf: String) extends ForInitializer {
         case _                                 => List()
     }    
     
+    /**
+     * Match if two Exprs are equals
+     * */
     def matches(that: Expr): Boolean = (this,that) match {
         case (BinaryOp(_,xl,xr,xo),BinaryOp(_,yl,yr,yo))                 => (xo == yo) && (xl matches yl) && (xr matches yr)
         case (UnaryOp(_,xopd,xopr,xkind),UnaryOp(_,yopd,yopr,ykind))     => (xkind == ykind) && (xopr == yopr) && (xopd matches yopd)
