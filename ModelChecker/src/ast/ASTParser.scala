@@ -65,15 +65,13 @@ class ASTParser {
                         val cnode = ConcreteASTNode(indent/2,id.group(1),id.group(2),codeRange,data)
                         id.group(1) match {
                             case "LabelStmt" => labels += cnode.id -> cnode.data.dataList.last; cnode
-                            case x if x.endsWith("Stmt") => cnode
-                            case x if x.endsWith("Expr") => cnode
+                            case x if x.endsWith("Stmt"    ) => cnode
+                            case x if x.endsWith("Expr"    ) => cnode
                             case x if x.endsWith("Operator") => cnode
-                            case x if x.contains("Literal") => cnode
-                            case "VarDecl" | "FunctionDecl" | "ParmVarDecl" | "ExprWithCleanups" => cnode
-//                                | "CXXRecordDecl" | "CXXConstructorDecl" | "CXXDestructorDecl" | "CXXMethodDecl" | "CXXCtorInitializer"
-//                                | "FieldDecl" | "EnumDecl" | "EnumConstantDecl" => cnode
-//                            case "TypedefDecl" => cnode
-                            case _           => OtherASTNode(indent/2,data)
+                            case x if x.contains("Literal" ) => cnode
+                            case x if x.endsWith("Decl"    ) => cnode
+                            case "ExprWithCleanups"          => cnode
+                            case _                           => OtherASTNode(indent/2,data)
                         }
                     case (None,None,data,indent,_) =>
                         data match {
