@@ -1,0 +1,29 @@
+digraph hierarchy {
+	node[shape=record,style=filled,fillcolor=gray95]
+	edge[dir=back, arrowtail=empty]
+
+    // nodes
+	-1 [label="{Labelizer[CFGMetaVar, ProgramNode, CFGVal]||test(n: ProgramNode): Set[Env]}"]
+	0 [label="CFGLabelizer"]	
+	1 [label="{IfLabelizer|pattern: ExprPattern}"]
+	2[label="{ForLabelizer|pattern: Option[ExprPattern]}"]
+	3 [label="{WhileLabelizer|pattern: ExprPattern}"]
+	4 [label="{SwitchLabelizer|pattern: ExprPattern}"]
+	5 [label="{ExpressionLabelizer|pattern: ExprPattern}"]
+	6 [label="{FindExprLabelizer|pattern: ExprPattern}"]
+	7 [label="{MatchExprLabelizer|pattern: ExprPattern}"]
+	8 [label="{VarDeclLabelizer|pattern: VarDeclPattern}"]
+	9 [label="{VarDefLabelizer|pattern: VarDefPattern}"]
+	
+    // links  
+	-1 -> 0
+	0  -> 1
+	0  -> 2
+	0  -> 3
+	0  -> 4
+	0  -> 5
+	0  -> 6
+	0  -> 7
+	0  -> 8
+	0  -> 9
+}

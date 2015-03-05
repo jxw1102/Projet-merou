@@ -284,7 +284,7 @@ case class CXXNewExprPattern(
             case (Some(a),Some(b)) => ExprPattern.intersection(typeOf.matches(t),a.matches(b))
             case _                 => typeOf.matches(t)
         }
-        case _               => None
+        case _ => None
     }
 }
 
@@ -292,13 +292,12 @@ case class CXXNewExprPattern(
  * Matches any CXXDeleteExpr which the delete target match a given pattern.
  */
 case class CXXDeleteExprPattern(target: Option[AtomicExprPattern]=None) extends ExprPattern {
-    
     override def matches(expr: Expr) = expr match {
         case CXXDeleteExpr(_,tgt) => target match {
             case Some(t) => t.matches(tgt)
             case _       => None
         }
-        case _                    => None
+        case _ => None
     }
 }
 

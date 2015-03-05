@@ -10,6 +10,12 @@ int main(int argc, char** argv) {
 	
 	x + y + 2 + f();
 	
+	if (x > 2) {
+		int r = 3;
+	} else {
+		int r = 2;
+		r++;
+	}
 	return 0;
 	
 }

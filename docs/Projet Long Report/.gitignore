@@ -4,3 +4,5 @@ projetLongReport.pdf
 *.toc
 *.orig
 *.synctex
+*.swap
+*.tex

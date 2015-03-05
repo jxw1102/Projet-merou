@@ -1,0 +1,22 @@
+digraph hierarchy {
+	node[shape=record,style=filled,fillcolor=gray95]
+	edge[dir=back, arrowtail=empty]
+	
+    // nodes
+    PN [label="{ProgramNode|id: String}"]    
+    If [label="{If|cond: Expr\ncodeRange: CodeRange}"]     
+    For [label="{For|cond: Expr\ncodeRange: CodeRange}"]    
+    While [label="{While|cond: Expr\ncodeRange: CodeRange}"]    
+    Expression [label="{Expression|expr: Expr|codeRange: CodeRange}"]    
+    Switch [label="{Switch|expr: Expr|codeRange: CodeRange}"]    
+    Statement [label="{Statement|stmt: Stmt\ncodeRange: CodeRange}"]
+    GraphNode [label="{GraphNode[N]|value: N\nstates: Set[GraphNode[N]]\nprev: Set[GraphNode[N]]\nnext: Set[GraphNode[N]]|bindNext(GraphNode[N]): GraphNode[N]\nbindPrev(GraphNode[N]): GraphNode[N]\nmkString: String}"]
+    
+    // links    
+    PN -> If
+    PN -> Expression
+    PN -> Switch
+    PN -> For
+    PN -> While
+    PN -> Statement
+}

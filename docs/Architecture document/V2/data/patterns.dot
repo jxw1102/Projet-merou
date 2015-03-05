@@ -1,0 +1,45 @@
+digraph hierarchy {
+	node[shape=record,style=filled,fillcolor=gray95]
+	edge[dir=back, arrowtail=empty]
+
+    // nodes
+    Pat [label="{Pattern|type Env = Environment[CFGMetaVar,CFGVal]}"]
+	Convert [label="ConvertEnv"]
+	DeclPat [label="{DeclPattern||matches(decl: Decl): Option[Env]}"]
+	StringPat [label="{StringPattern||matches(s: String): Option[Env]}"]
+	ExprPat [label="{ExprPattern||matches(expr: Expr): Option[Env]}"]
+	AtomicPat [label="AtomicExprPattern"]
+	Undef [label="{UndefinedVar|name: CFGMetaVar}"]
+	DefExpr [label="{DefinedExpr|expr: Expr}"]
+	DefString [label="{DefinedString|s: String}"]
+	NotString [label="{NotString|not: Set[String]}"]
+	Lit [label="{LiteralExprPattern|metavar: UndefinedVar}"]
+	VarDeclMatch [label="{VarDeclMatcher|typeOf: StringPattern\nname: StringPattern\nconvert: Decl =\> CFGVal}"]
+	VarDeclPat [label="{VarDeclPattern}"]
+	VarDefPat [label="{VarDefPattern}"]	   
+	Pointer [label="{PointerExprPattern|metavar: UndefinedVar}"]
+	   
+    // links    
+    Convert -> Pat
+	
+	Pat -> DeclPat
+	Pat -> StringPat
+	Pat -> ExprPat
+	
+	StringPat -> DefString
+	StringPat -> NotString
+	StringPat -> Undef
+	
+	ExprPat -> DefExpr
+	ExprPat -> Undef
+	ExprPat -> AtomicPat
+	
+	AtomicPat -> Lit
+	AtomicPat -> Undef
+	AtomicPat -> Pointer
+		
+	DeclPat -> Undef
+	DeclPat -> VarDeclMatch
+	VarDeclMatch -> VarDeclPat
+	VarDeclMatch -> VarDefPat
+}

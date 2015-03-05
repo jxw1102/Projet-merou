@@ -103,5 +103,5 @@ object Main extends App {
         printPositiveBindings("Following lines will cause memory leaks :",checker8,NEW_WITHOUT_DELETE)
     }
     
-    test10
+    test8
 }
