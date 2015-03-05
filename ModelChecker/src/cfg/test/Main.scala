@@ -4,7 +4,7 @@ import ctl.ModelChecker
 import cfg.ConvertNodes
 import ctl.CtlExpr
 import java.io.File
-import ast.ProgramNode
+import ast.model.ProgramNode
 import cfg.CFGMetaVar
 import cfg.CFGVal
 import cfg.Properties._

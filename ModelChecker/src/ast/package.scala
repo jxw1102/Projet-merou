@@ -1,3 +1,7 @@
+/**
+ * This package contains all the classes needed to model the Clang AST (well, only a small
+ * part of it but it is sufficient to play with purely imperative C++).
+ */
 package object ast {
     /**
      * Enables to split the 'data' field of the ConcreteASTNode(s)

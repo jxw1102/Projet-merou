@@ -1,18 +1,8 @@
 package ctl.parser
 
 import scala.util.parsing.combinator._
-import ast.ProgramNode
-import ast.model.BinaryOp
-import ast.model.CallExpr
-import ast.model.DeclRefExpr
-import ast.model.Expr
-import ast.model.CompoundAssignOp
 import ast.model._
-import ast.model.Literal
-import ast.model.OpPosition
-import ast.model.UnaryOp
 import ctl._
-import ctl.CtlExpr
 import cfg._
 import scala.io.Source
 

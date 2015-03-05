@@ -2,7 +2,7 @@ package ctl.test
 
 import scala.annotation.migration
 import scala.reflect.runtime.universe
-
+import graph.GraphNode
 import ctl._
 
 /**

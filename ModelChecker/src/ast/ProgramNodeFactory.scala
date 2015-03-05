@@ -7,7 +7,7 @@ import scala.collection.mutable.Set
 import ast.model._
 import ast.model.DoWhileStmt
 import ast.model.ForStmt
-import ctl.GraphNode
+import graph.GraphNode
 
 /**
  * This class performs the conversion from SourceCodeNode to ProgramNode and the transformation from AST to

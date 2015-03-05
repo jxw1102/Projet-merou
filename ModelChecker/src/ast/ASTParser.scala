@@ -102,6 +102,7 @@ class ASTParser {
 /**
  * Contains the result of the parsing : the root node, always to be ignored, and a map mapping 
  * the labels' id to the id of the node they point to.
+ * @constructor
  * @tparam root root node of the tree
  * @tparam labels (id->label) map for LabelStmts
  * 

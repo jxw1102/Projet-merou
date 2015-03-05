@@ -2,7 +2,7 @@ package cfg
 
 import scala.reflect.runtime.universe
 
-import ast.ProgramNode
+import ast.model.ProgramNode
 import ctl._
 
 /**

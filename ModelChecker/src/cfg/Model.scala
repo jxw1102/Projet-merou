@@ -4,8 +4,6 @@ import scala.reflect.runtime.universe
 import ast._
 import ast.model._
 import ctl._
-import ast.Switch
-import ast.SourceCodeNode
 
 /**
  * This file contains the model we are going to use to link the AST classes with the CTL ones.

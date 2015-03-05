@@ -1,24 +1,9 @@
 package cfg
 
 import scala.reflect.runtime.universe
-import ast.Expression
-import ast.For
-import ast.If
-import ast.ProgramNode
-import ast.Statement
-import ast.While
+import ast._
 import ast.model._
-import ctl.BindingsEnv
-import ctl.Bottom
-import ctl.ConvertEnv
-import ctl.Environment
-import ctl.Labelizer
-import ctl.MetaVariable
-import ctl.TypeOf
-import ctl.Value
-import ctl.PosBinding
-import ast.Switch
-import ctl.Top
+import ctl._
 
 /**
  * This file contains all the Labelizer(s) we defined on a CFG. They allow for the evaluation of some base 

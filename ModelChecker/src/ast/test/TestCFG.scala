@@ -6,7 +6,7 @@ import scala.sys.process._
 import ast.ASTParser
 import ast.ProgramNodeFactory
 import ast.SourceCodeNodeFactory
-import ast.Program
+import ast.model.Program
 
 /**
  * This class enables automated test of the AST to CFG transformation. Everything is handled from

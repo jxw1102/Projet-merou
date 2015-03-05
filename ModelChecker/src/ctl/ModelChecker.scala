@@ -1,6 +1,7 @@
 package ctl
 
 import scala.reflect.runtime.universe._
+import graph.GraphNode
 
 /**
  * The ModelChecker implements the model-checking algorithm and is able to apply CTL expressions on a graph. To construct 
