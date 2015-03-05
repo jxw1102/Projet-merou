@@ -23,7 +23,7 @@ class GraphNode[N](val value: N) {
     def next = _next
     
     /**
-     * states contains all the states of the graph reachable from this GraphNode.
+     * State contains all the states of the graph reachable from this GraphNode.
      */
     lazy val states = getStates(Set())
     private def getStates(set: Set[GNode]): Set[GNode] = {
@@ -35,18 +35,19 @@ class GraphNode[N](val value: N) {
     }
     
     /**
-     * Creates a bidirectional binding from nodes this and v : this <- v
+     * Create a bidirectional binding from nodes this and v : this <- v
      * @return the head v of the link, in order to be able to chain the << calls
      */
     def <<(v: GNode) = { _prev += v; v._next += this; v }
     
     /**
-     * Creates a bidirectional binding from nodes this and v : this -> v
+     * Create a bidirectional binding from nodes this and v : this -> v
      * @return the head this of the link, in order to be able to chain the >> calls
      */
     def >>(v: GNode) = { _next += v; v._prev += this; v } 
     
     override def toString = value.toString
+    
     def toDot             = addString(new StringBuilder,MSet())(_.toString).toString
     def toDot(name: N => String, label: N => String) = {
         def escape     (s   : String) = s.replaceAll("\"","\\\\\"")
@@ -54,7 +55,10 @@ class GraphNode[N](val value: N) {
         addString(new StringBuilder,MSet())(formatValue(_)).toString
     }
     
-    def addString(sb: StringBuilder, set: MSet[GNode])(convert: GNode => String): StringBuilder = {
+    /**
+     * Search in CFG and print all arcs
+     * */
+    private def addString(sb: StringBuilder, set: MSet[GNode])(convert: GNode => String): StringBuilder = {
         if (set contains this) sb 
         else if (_next.isEmpty) sb.append(convert(this) + "\n")
         else {
@@ -62,6 +66,6 @@ class GraphNode[N](val value: N) {
             _next.foreach(node => sb.append("%s -> %s\n".format(convert(this),convert(node))))
             _next.filterNot(set contains _).foreach(_.addString(sb,set)(convert))
             sb
-        }   
+        }
     }
 }

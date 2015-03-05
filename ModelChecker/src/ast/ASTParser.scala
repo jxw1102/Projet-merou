@@ -48,6 +48,12 @@ class ASTParser {
     }
     
     private var currentLine = 1
+    
+    /**
+     * Parses the AST file and generate a ASTNode tree.
+     * @param path path of the AST file
+     * @return ASTParserResult(rootNode, id->label)
+     * */
     def parseFile(path: String) = {
         currentLine   = 0
         // skip first lines
@@ -65,13 +71,12 @@ class ASTParser {
                         val cnode = ConcreteASTNode(indent/2,id.group(1),id.group(2),codeRange,data)
                         id.group(1) match {
                             case "LabelStmt" => labels += cnode.id -> cnode.data.dataList.last; cnode
-                            case x if x.endsWith("Stmt"    ) => cnode
-                            case x if x.endsWith("Expr"    ) => cnode
+                            case x if x.endsWith("Stmt") => cnode
+                            case x if x.endsWith("Expr") => cnode
                             case x if x.endsWith("Operator") => cnode
-                            case x if x.contains("Literal" ) => cnode
-                            case x if x.endsWith("Decl"    ) => cnode
-                            case "ExprWithCleanups"          => cnode
-                            case _                           => OtherASTNode(indent/2,data)
+                            case x if x.contains("Literal") => cnode
+                            case "VarDecl" | "FunctionDecl" | "ParmVarDecl" | "ExprWithCleanups" => cnode
+                            case _           => OtherASTNode(indent/2,data)
                         }
                     case (None,None,data,indent,_) =>
                         data match {
@@ -97,6 +102,9 @@ class ASTParser {
 /**
  * Contains the result of the parsing : the root node, always to be ignored, and a map mapping 
  * the labels' id to the id of the node they point to.
+ * @tparam root root node of the tree
+ * @tparam labels (id->label) map for LabelStmts
+ * 
  */
 final class ASTParserResult(val root: ASTNode, val labels: Map[String,String])
 
@@ -108,7 +116,7 @@ sealed abstract class ASTNode(_depth: Int) {
     val children = ArrayBuffer[ASTNode]()
     
     def mkString = addString(new StringBuilder).toString
-    def addString(sb: StringBuilder): StringBuilder = {
+    private def addString(sb: StringBuilder): StringBuilder = {
         sb.append("  " * depth + this + "\n")
         for (child <- children) child.addString(sb)
         sb
@@ -116,6 +124,11 @@ sealed abstract class ASTNode(_depth: Int) {
 }
 /**
  * Represents all the nodes in the AST which correspond to a Clang class. 
+ * @tparam _depth node depth
+ * @tparam ofType node type
+ * @tparam id node id (ex: 0x12345a7f9)
+ * @tparam pos code range (ex: <line:3:4, col:5:6>
+ * @tparam data string after code range
  */
 final case class ConcreteASTNode(_depth: Int, ofType: String, id: String, pos: CodeRange, data: String) extends ASTNode(_depth) {
     override def equals(that: Any) = that match { case ConcreteASTNode(_,_,_id,_,_) => id == _id; case _ => false }
@@ -133,8 +146,6 @@ final case class OtherASTNode(_depth:Int, data: String) extends ASTNode(_depth)
 
 /**
  * Represents a piece of code between the lineMin:colMin and lineMax:colMax characters.
- * @pre 0 < lineMin < lineMax
- * @pre 0 < colMin < colMax
  */
 final case class CodeRange(lineMin: Int, lineMax: Int, colMin: Int, colMax: Int) {
     val lineRange = lineMin to lineMax
@@ -144,8 +155,6 @@ final case class CodeRange(lineMin: Int, lineMax: Int, colMin: Int, colMax: Int)
 
 /**
  * Represents a single source code pointer of the form line:i:j or col:j.
- * @pre i > 0
- * @pre j > 0
  */
 sealed abstract class CodePointer
 final case class LinePointer(line: Int, col: Int) extends CodePointer
@@ -154,6 +163,9 @@ final case class ColPointer(col: Int)             extends CodePointer
 object CodePointer {
     val lineReg = new Regex("line:(\\d+)(:(\\d+))?", "line", "", "col")
     val colReg = new Regex("col:(\\d+)", "col")
+    /**
+     * Parses a string of code position and return a CodePointer instance.
+     * */
     def parse(s: String) = {
         val line = lineReg.findAllIn(s)
         if (line.nonEmpty) {

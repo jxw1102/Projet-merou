@@ -20,9 +20,14 @@ object Main extends App {
 	type CTL     = CtlExpr[CFGMetaVar,ProgramNode,CFGVal]
 	type Checker = ModelChecker[CFGMetaVar,ProgramNode,CFGVal]
 	
+    /**
+     * Performs the model checking and prints its results.
+     * */
 	def printTest(msg: String, checker: Checker, test: CTL) = println(msg + checker.evalExpr(test).mkString("\n\t","\n\t","\n"))
 	
-	// do not display results with negative bindings
+    /**
+     * Performs the model checking and prints only the results without negative bindings
+     * */
 	def printPositiveBindings(msg: String, checker: Checker, test: CTL) = println(msg + checker.evalExpr(test).filterNot(_._2 match {
         case BindingsEnv(b) => b.count(_._2 match { case NegBinding(x) => true; case _ => false }) > 0
         case _              => false

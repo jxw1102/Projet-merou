@@ -271,7 +271,10 @@ case class VarDeclPattern(typeOf: StringPattern, name: StringPattern)
  */
 case class VarDefPattern(typeOf: StringPattern, name: StringPattern) 
 	extends VarDeclMatcher(typeOf,name)(decl => CFGDef(decl.typeOf,decl.name))
-    
+
+/**
+ * Matches any CXXNewExpr which type and countExpression match a given pattern.
+ */
 case class CXXNewExprPattern(
         typeOf: StringPattern=NotString(),
         countExpr: Option[AtomicExprPattern]=None) extends ExprPattern {
@@ -285,6 +288,9 @@ case class CXXNewExprPattern(
     }
 }
 
+/**
+ * Matches any CXXDeleteExpr which the delete target match a given pattern.
+ */
 case class CXXDeleteExprPattern(target: Option[AtomicExprPattern]=None) extends ExprPattern {
     override def matches(expr: Expr) = expr match {
         case CXXDeleteExpr(_,tgt) => target match {

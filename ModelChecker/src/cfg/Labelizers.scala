@@ -131,7 +131,7 @@ case class UseLabelizer(pattern: StringPattern) extends Labelizer[CFGMetaVar,Pro
     private def foldRec (exprs: List[Expr])    = exprs.foldLeft(Set[Env]())((res,e) => res ++ recMatch(e))
     private def recMatch(expr: Expr): Set[Env] = expr match {
         case DeclRefExpr(id,targetName,targetId) => pattern.matches(targetName) match {
-            case Some(BindingsEnv(bind)) =>
+            case Some(BindingsEnv(bind)) => println(expr + " : : " + expr.getClass)
                 val stringToCFGDecl = bind.mapValues(x => CFGDecl(targetId, expr.getType, targetName))
                 Set((new BindingsEnv ++ (stringToCFGDecl.toSeq: _*)))
             case _                       => Set()

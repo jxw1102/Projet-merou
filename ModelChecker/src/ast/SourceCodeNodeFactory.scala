@@ -10,16 +10,20 @@ import ast.model._
  * @author Sofia Boutahar
  * @author Xiaowen Ji
  * @author David Courtinot
+ * @tparam root root node of ASTNode tree
+ * @tparam labels (id->label) map for LabelStmts
  */
 class SourceCodeNodeFactory(root: ASTNode, labels: Map[String,String]) {
     type SCN = SourceCodeNode 
     
     /**
-     * labelNodes maps the id of the labels to their corresponding SourceCodeNode conversion
+     * Maps the id of the labels to their corresponding SourceCodeNode conversion
      */
     private val labelNodes = Map[String,SCN]()
     
-    // the result of the whole AST's transformation is lazily computed
+    /**
+     * The result of the whole AST's transformation, which is lazily computed
+     * */
     lazy val result = new SourceCodeResult(root.children.map(handleASTNode).map(_.asInstanceOf[Decl]),labelNodes)
     
     /**
@@ -34,7 +38,9 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[String,String]) {
     private def setAndReturn[T <: SCN](node: T, range: CodeRange, id: String) = { SourceCodeNode(node,range,id); node }
     private val declRefRegex = "\\([A-Za-z\\d_]+ 0x[\\da-f]+ .+\\)".r
     
-    // general facade for handling most kind of nodes
+    /**
+     * General facade for handling most kind of nodes
+     * */
     private def handleASTNode(node: ASTNode): SCN = node match {
            case ConcreteASTNode(_,typeOf,_,_,_) => typeOf match {
                case "VarDecl"            => varDecl     (node)
@@ -63,12 +69,17 @@ class SourceCodeNodeFactory(root: ASTNode, labels: Map[String,String]) {
            case _                        => concreteNodeExpected(node)
     }
     
+    /**
+     * Finds an optional node and make a conversion
+     * */
     private def lookFor[T](n: ASTNode, convert: ASTNode => T) = n match {
         case NullASTNode(_) => None
         case x              => Some(convert(n))
     }
     
-    // general facade for handling expression nodes
+    /**
+     * General facade for handling expression nodes
+     * */
     private def handleExpr(node: ASTNode): Expr = node match {
         case ConcreteASTNode(_,typeOf,_,_,_) => typeOf match {
             case "UnaryOperator"              => unaryOperator            (node)

@@ -14,5 +14,7 @@ int main(int argc, char **argv) {
 	}
 	delete[] list;
 
+	delete new long;
+
 	return 0;
 }
