@@ -743,6 +743,144 @@ The \textbf{SourceCodeNode} class represents a tree data-structure
  which is still close enough to the AST but with a higher abstraction
  and some removed low-level information.
 ##
+>>>>> subsubsection ##
+Decl class hierarchy: 
+
+##
+>>>>>> paragraph ##
+For the Decl part, which represents the different type 
+of declarations in the code, we just associated each high-level 
+Clang Decl class to a 
+Scala class extending our Decl class, as it is shown in the previous
+ figure.
+##
+>>>>> subsubsection ##
+Stmt Class hierarchy
+##
+>>>>>> paragraph ##
+Stmt is a Clang abstraction of a statement in a program which an be any expression
+ or any flow-control structure.
+ As it was not presented as a priority by the client, 
+we decided to skip the C++ object oriented part 
+so that we focus exclusively on the imperative part. 
+Inspired by the Clang API, we came up with the following class hierarchy.
+##
+>>>>> subsubsection ##
+
+##
+>>>>> image ##
+data/basic_Stmt_classes;
+Stmt class hierarchy 1/2;
+0.5
+##
+>>>>> paragraph ##
+\hspace*{3cm}These are the most basic statement classes that we use
+##
+>>>>> image ##
+data/flow_control_Stmt_classes;
+Stmt class hierarchy 2/2;
+0.5
+##
+>>>>> paragraph ##
+\space{3cm} These classes are used for the flow control.
+##
+>>>>> subsubsection ##
+Expr class hierarchy
+##
+>>>>>> paragraph ##
+The Expr class is the only class that is unchanged after the conversion.
+Our predicates are based on the Expr classes.
+##
+>>>>>> image ##
+data/Expr_classes;
+Expr class hierarchy;
+0.5
+##
+>>>>>> paragraph ##
+we should note that our model does not strictly represents a C++
+ code. For example, we do not prevent an \textit{if} to contain the
+ instruction \textit{break}. We felt that this kind of refinement would
+ unnecessarily complicate the task without adding anything more to
+ the CFG analysis. 
+Since the code has already been semantically checked by the Clang 
+compiler, and given our future needs, we thought it would be wiser 
+to aim for a simple model.
+##
+>>>>> subsubsection ##
+Important notes
+##
+>>>>>> paragraph ##
+
+##
+>>>>>> list ##
+To represent the CFG of our input programs accurately, 
+we should take into consideration the fail-fast mechanism in 
+the evaluation of boolean conjunctions/disjunctions.
+The importance of this mechanism for our project is illustrated in 
+the figure below.;
+However, since the evaluation's order of the expressions is not
+ completely specified specified in C++ (unlike Java which evaluates
+ from left to right), we will ignore in spite of the fact that we know that 
+ it will surely change the result for a certain kind of
+ treatments especially for some expressions that contain side-effect
+ sub-expressions like increments and assignments etc..
+##
+>>>>>> image ##
+data/fail-fast;
+On the left, the associated code. On the center, we didn't take into account the fail-fast for the CFG, and finally on the right we consider the fail-fast;
+0.7
+##
+>>>>>> paragraph ##
+The figure above illustrates what we loose by ignoring that kind of 
+things : 
+Actually, if we try to
+assert the property \textit {<< variable s is always initialized when g(s) is called >>},
+ the first CFG will not allow us to conclude
+(or it will conclude \textbf {true}, erroneously) 
+while the second one allows us
+to state that there are executions, according to the value of x,
+where $g$ is called with an uninitialized parameter
+(assuming that the left child is always a successful test and 
+the right child is a failed test).
+ It is not really a problem, as
+we could argue that it is fine to use
+ fail-fast most of the times but that it is 
+safer not to use it for a critical program.
+##
+>>>>>> paragraph ##
+Finally, we chose to make all the classes as
+ case-classes to enable the powerful Scala pattern-matching.
+Most algorithms are recursive, the parsing of the AST being 
+the only exception.
+##
+>>>> subsection ##
+SourceCodeNode to CFG
+##
+>>>>> paragraph ##
+Considering that \textbf{Stmt} and \textbf{Decl} children 
+classes were partly low-level elements of the code 
+that are not important
+in the CFG, we decided to perform a last step of 
+transformation from a \textbf{SourceCodeNode} class to a \textbf{ProgramNode} class, 
+which is a simpler and higher level abstraction of the code.
+The \textbf{ProgramNode} objects will be the values of 
+the nodes of the actual graph, represented by the class \textbf{GraphNode[T]}.
+##
+>>>>> paragraph ##
+\textbf{GraphNode} is actually a generic type,
+ completely independent of all the classes we introduced so far.
+Basically, it represents any oriented unweighted graph. 
+The conversion from a \textbf{SourceCodeNode} to
+a \textbf{ProgramNode} is handled on the fly 
+while constructing the CFG (GraphNode[ProgramNode]), 
+which consists in creating the links between the various nodes 
+of the graph.
+##
+>>>>> image ##
+data/CFG_classes;
+ProgramNode class hierarchy and GraphNode;
+0.5
+##
 >>> section ##
 Model checking
 ##
@@ -882,13 +1020,7 @@ we introduced the TypeOf class which defines a cast operation. This way, incompa
 >>>> subsection ##
 Model checker
 ##
->>>>> paragroaph ##
-The only interesting thing to mention here is the use of a conversion method for computing the Val set of all possible values.
-In order to compute Val, all the nodes of the graph are traversed. For each node, we call the converter that returns all the values of type V a given node is likely to add to the environment. Note that 
-a single node can introduce several values in the environment (for example a node f(5,6) would inject 5 and 6 when applying a f(x,y) labelizer), that's why the converter must return a Set[V]. We could have defined
-the conversion as an abstract method of GraphNode, but we thought it was more convenient to do it externally. It is exactly the same difference as
-Comparable and Comparator in Java : Comparable defines the comparison operation directly on the class, it is useful when a natural order exists but it enables only one implementation
-of the comparison whereas we can define as many Comparator(s) as we want for the same type.
+>>>>> template[] ##
 ##
 >>> section ##
 Merge
