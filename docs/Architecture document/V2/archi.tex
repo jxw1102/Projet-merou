@@ -261,7 +261,7 @@ in various abstract representations to end with a graph model that we are able t
 you can see below a simple C/C++ code and its AST representation. The AST is provided by the Clang API, which performs the first step of our
 transformation chain.
 
-\begin{lstlisting}[language=java]
+\begin{lstlisting}[language=java]
 int main() {
     int a = 5;
     if (a > 6) {
@@ -360,12 +360,12 @@ with a custom parser.
 \item nodes consisting in an type name, an id, a code pointer pointing the relevant lines of the code and some
 metadata that depend on the type of the node. These are represented by the ConcreteASTNode class.\vspace{1mm}
 \item < < <NULL> > > children, represented by the NullASTNode class.\vspace{1mm}
-\item other kind of nodes, prior to class declaration for example. These are represented by OtherASTNode.\vspace{1mm}
+\item other kind of nodes, as special nodes coming just before class declarations for example. These are represented by OtherASTNode.\vspace{1mm}
 \end{itemize}
 
 \paragraph{}
-\hspace{4mm}The file will be parsed and converted in a tree data-structure which nodes are of type ASTNode. The ASTNode objects
-will then be converted in Stmt or Decl accordingly to the class hierarchy we present in the next part.
+\hspace{4mm}The file will be parsed and converted into a tree data-structure which nodes are of type ASTNode. The ASTNode objects
+will then be converted into Stmt or Decl accordingly to the class hierarchy we present in the next part.
 
 \begin{center}
 \includegraphics[scale=0.6]{data/AST_classes}
@@ -389,7 +389,7 @@ our Decl class, as it is shown in the previous figure.
 \paragraph{}
 \hspace{4mm}Stmt is a Clang asbtraction of a statement in a program (any expression, any flow-control structure). As it was not presented as a priority by the client, we have decided to skip the C++ object oriented 
 part in order to focus exclusively on the imperative part. Inspired by the Clang API, we came up
- with the following class hierarchy :
+ with the following class hierarchy.
 
 \begin{center}
 \includegraphics[scale=0.5]{data/basic_Stmt_classes}
@@ -431,9 +431,9 @@ we will ignore that even if it will surely change the result for certain kind of
 \hspace{4mm}Just to see what we are losing by ignoring that kind of things is illustrated in the figure above : if we try to
 assert the property \textit {<< variable s is always initialized when g(s) is called >>}, the first CFG will not allow us to conclude
 (or it will conclude \textbf {true}, erroneously) while the second allows us
-to state that there are executions, according to the value of x,
+to state that there are executions, depending on the value of x,
 where $g$ is called with an uninitialized parameter
-(assuming that the left son is always a successful test and the right son is a failed test). It is not really a problem, as
+(assuming that the left child is always a successful test and the right child is a failed test). It is not really a problem, as
 we could argue that it is fine to use fail-fast most of the times but that it is safer not to use it for a critical program.
 
 \paragraph{}
@@ -461,12 +461,12 @@ consists in creating the links between the various nodes of the graph.
 \chapter{Model checking}
 
 \paragraph{}
-\hspace{4mm}The biggest problem we ran into in this part was to achieved a high level of genericity while keeping
+\hspace{4mm}The biggest problem we ran into in this part was to achieve a high level of genericity while keeping
 a simple architecture, not overly complicated to use for a specific case. We also had to ensure that the architecture is
 free of any dependance of any kind with the CFG part.
 
 \paragraph{}
-\hspace{4mm}We have identified three kind of entities involved in model checking, each of them corresponds to a generic type :
+\hspace{4mm}We have identified three kinds of entities involved in model checking, each of them corresponds to a generic type :
 
 \vspace{1.5mm}
 \begin{itemize}
@@ -477,14 +477,14 @@ free of any dependance of any kind with the CFG part.
 
 \paragraph{}
 \hspace{4mm}One could wonder why we chose using (M <: MetaVariable,V <: Value) instead of 
-just (M,V) or (MetaVariable,Value). Here are the advantages of the proposed solution compared to the two others :
+just (M,V) or (MetaVariable,Value). Here are the advantages of the proposed solution compared to the other two :
 
 \vspace{1.5mm}
 \begin{itemize}
 \item \textbf{(M <: MetaVariable,V <: Value) vs (M,V)} : more evolutive, we can imagine adding
 operations on MetaVariable and Value in the future. This is an advantage for developing new features on the CTL part.\vspace{1mm}
 \item \textbf{(M <: MetaVariable,V <: Value) vs (MetaVariable,Value)} : more accurate type. This enables the developer using the model checker to
-specialize these generic classes in a more powerful way than it would be in the second case, because the access to specific methods of M and V would be lost.
+specialize these generic classes in a more powerful way than he could in the second case, because the access to specific methods of M and V would be lost.
 This is an advantage for using the CTL part in any kind of application.\vspace{1mm}
 \end{itemize}
 
@@ -536,12 +536,12 @@ The Environment class contains all the abstract operations between or on environ
 
 \paragraph{}
 \hspace{4mm}The $\bot$ environment was a bit tricky to represent. Indeed, environments depend on generic types
-M and V, which implies that Environment must be a generic class. Thus, BottomEnv also must to be generic. However, 
+M and V, which implies that Environment must be a generic class. Thus, BottomEnv also have to be generic. However, 
 considering the mathematical definition of $\bot$, it would be poor design to represent it with a regular class instead of a singleton.
 
 \paragraph{}
 \hspace{4mm}We want all self-contradictory environment of the same generic type to be equal, and if possible we would like two self-contradictory environments of
-different generic types not being equal, to keep the type consistency. As Scala does not allow a singleton to be generic (which is quite logical by the way=,
+different generic types not being equal, to keep the type consistency. As Scala does not allow a singleton to be generic (which is quite logical by the way),
 we have had to use reflexivity to implement the singleton pattern without using the \textbf{object} keyword. We also used some implicit definitions to allow nice syntax using 
 the Bottom object to fetch the BottomEnv singleton of the appropriate type given the context.
 
@@ -551,7 +551,7 @@ the Bottom object to fetch the BottomEnv singleton of the appropriate type given
 \hspace{4mm}Having defined the MetaVarBinding class and its children case-classes, it seems natural to use a single Map[M,MetaVarBinding[V]] map to
 represent the bindings. The only real design problem we have got here was the fact that the reflexivity used to solve the BottomEnv problem
 was infectious. We have had to use TypeTag(s) in some generic methods and in the BindingsEnv constructor. Thus, any external code
-calling the main constructor was forced using TypeTag(s) also. To address this issue, we made the main constructor private and declared and secondary constructor
+calling the main constructor was forced using TypeTag(s) also. To address this issue, we made the main constructor private and declared a secondary constructor
 TypeTag-free creating an empty BindingsEnv object. The user then has to add bindings to this environment using the ++ and - - methods.
 
 \section{CTL expressions}
@@ -574,9 +574,9 @@ a combination of the other operators.
 
 \paragraph{}
 \hspace{4mm}To enable to make generic predicates, we simply defined a generic class Predicate that wraps a Labelizer. A Labelizer
-defines a \textit{test} method that takes an object of type N (the type of the GraphNode(s)) and returns an Option[Environment[M,V]].
-If the predicate is not verified by the input node, this method must return None, otherwise it returns the set of positive bindings that make the node
-match the predicate. This set is possibly empty if the predicate does not involve any meta-variable.
+defines a \textit{test} method that takes an object of type N (the type of the GraphNode(s)) and returns a Set[Environment[M,V]].
+If the predicate is not verified by the input node, this method must return an empty Set, otherwise it returns the set of all environments that make the node
+match the predicate. This set is possibly empty if the predicate does not involve any meta-variable, for example.
 
 \subsection{$\exists$ quantifier}
 
@@ -592,10 +592,10 @@ we introduced the TypeOf class which defines a cast operation. This way, incompa
 \section{Model checker}
 
 \paragraph{}
-\hspace{4mm}The only interesting thing to mention here is the use of a conversion method for compute the Val set of all possible values.
+\hspace{4mm}The only interesting thing to mention here is the use of a conversion method for computing the Val set of all possible values.
 In order to compute Val, all the nodes of the graph are traversed. For each node, we call the converter that returns all the values of type V a given node is likely to add to the environment. Note that 
 a single node can introduce several values in the environment (for example a node f(5,6) would inject 5 and 6 when applying a f(x,y) labelizer), that's why the converter must return a Set[V]. We could have defined
-the conversion as an abstract method of the GraphNode, but we thought it was more convenient to do it externally. It is exactly the same difference as
+the conversion as an abstract method of GraphNode, but we thought it was more convenient to do it externally. It is exactly the same difference as
 Comparable and Comparator in Java : Comparable defines the comparison operation directly on the class, it is useful when a natural order exists but it enables only one implementation
 of the comparison whereas we can define as many Comparator(s) as we want for the same type.
 
@@ -604,7 +604,7 @@ of the comparison whereas we can define as many Comparator(s) as we want for the
 \section{Choice of M, N and V}
 
 \paragraph{}
-\hspace{4mm}Considering the kind of predicates we wanted to use and the types of node we were using (as a recall, type N will be ProgramNode for the CFG), it was kind
+\hspace{4mm}Considering the kind of predicates we wanted to use and the types of nodes we were using (as a recall, type N will be ProgramNode for the CFG), it was kind
 of obvious that we would need Expr values in our environment, so we introduced the type CFGExpr, which simply wraps an Expr object. However, it was not so easy determining what other kinds
 of values would be required. To solve this question, we thought about the labelizers and properties we wanted to be able to implement to deduce our needs. 
 Two important properties led us to introduce types CFGDecl and CFGExpr :

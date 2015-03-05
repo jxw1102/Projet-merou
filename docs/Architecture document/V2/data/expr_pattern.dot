@@ -8,8 +8,7 @@ digraph hierarchy {
 	2[label="{UnaryOpPattern|operand: AtomicExprPattern\nop: StringPattern}"]
 	3 [label="{BinaryOpPattern|left: AssignmentPattern\nright: AtomicExprPattern\nop: StringPattern}"]
 	4 [label="{CompoundAssignOpPattern|left: AtomicExprPattern\nright: AtomicExprPattern\nop: StringPattern}"]
-	5 [label="{PointerExprPattern|metavar: UndefinedVar}"]
-	6 [label="{CallExprPattern|name: StringPattern\nparams: Option[List[AtomicExprPattern]]\ntypeOf: StringPattern}"]
+	5 [label="{CallExprPattern|name: StringPattern\nparams: Option[List[AtomicExprPattern]]\ntypeOf: StringPattern}"]
 	
     // links    
 	0 -> 1
@@ -17,5 +16,4 @@ digraph hierarchy {
 	0 -> 3
 	0 -> 4
 	0 -> 5
-	0 -> 6
 }

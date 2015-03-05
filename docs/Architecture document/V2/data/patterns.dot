@@ -17,6 +17,7 @@ digraph hierarchy {
 	VarDeclMatch [label="{VarDeclMatcher|typeOf: StringPattern\nname: StringPattern\nconvert: Decl =\> CFGVal}"]
 	VarDeclPat [label="{VarDeclPattern}"]
 	VarDefPat [label="{VarDefPattern}"]	   
+	Pointer [label="{PointerExprPattern|metavar: UndefinedVar}"]
 	   
     // links    
     Convert -> Pat
@@ -34,6 +35,8 @@ digraph hierarchy {
 	ExprPat -> AtomicPat
 	
 	AtomicPat -> Lit
+	AtomicPat -> Undef
+	AtomicPat -> Pointer
 		
 	DeclPat -> Undef
 	DeclPat -> VarDeclMatch
