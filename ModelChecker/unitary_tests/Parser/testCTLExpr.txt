@@ -36,6 +36,28 @@ if(4) AND while(4) AND switch(4)
 <...f(y+14)*7-t
 4 notin(+) 6
 4 notinU(+)
+
+<...5+6
+<...f(y+14)*7-t
+<...f(y+14)*7
+f(y+14)*7
+<...7-t
+<5+6>
+<...7+t
+<...t+7
+4notinU(+,-,*,%)
+notinU(+,=)f(x)
+--f(x)
+f(x)--
+++6
+c+V
+assign(X,Y,=)
+assign(X,Y)
+
+call(Z,notin(void))
+3 notin(+,-) 5
+5 notin(=,+,void) 6 notin(*) 7
+call(Z,notin(void,+))
 .end.
 
 

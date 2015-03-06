@@ -1,10 +1,11 @@
-package ctl.parser
+package cfg.parser
 
 import scala.util.parsing.combinator._
 import ast.model._
 import ctl._
 import cfg._
 import scala.io.Source
+//import scala.reflect.runtime.universe
 
 
 /**
@@ -52,6 +53,8 @@ class CTLGrammarPattern extends JavaTokenParsers  {
                                                    "E" ~> "[" ~> ctl3 ~ ("U" ~> ctl3 <~ "]")                 ^^ { case x ~ y => EU(x,y) }           |
                                                    "AX"  ~> "(" ~> ctl3 <~ ")"                                           ^^  { case x => AX(x) }                              |
                                                    "EX" ~> ctl3                                                                     ^^  { case x => EX(x)}                               |
+                                                   "AF" ~> ctl3                                                                     ^^  { case x => AF(x)}                               |
+                                                   "EF" ~> ctl3                                                                     ^^  { case x => EF(x)}                                |
                                                    ((("exists" ~>  ident) <~ "(") ~ ctl5 <~ ")") ^^ { case x ~ y => Exists( (CFGMetaVar(x),CFGExpr) , y) }                           | //CFGExpr ou new NoType[V]
                                                    "NOT" ~> "(" ~> ctl5 <~ ")" ^^ { case x => !x }                                                                             | ctl2
 //  lazy val ctl2:Parser[CtlExpr[M,N,V]] = ctl1 | exp14 ^^ { case x => Predicate(ExpressionLabelizer(x)) } /* DefinedExpr(x)*/
@@ -68,9 +71,9 @@ class CTLGrammarPattern extends JavaTokenParsers  {
                                                               "switch" ~> "(" ~> exp14 <~ ")" ^^ { case exp => SwitchLabelizer(exp)} |
                                                                "<..." ~> exp14 ^^ {case exp => FindExprLabelizer(exp) } |
                                                                "<" ~> exp14 <~ ">" ^^ {case exp => MatchExprLabelizer(exp) } |
-                                                               "def" ~> "(" ~> stringIdent  ~ opt(","~>stringIdent) <~ ")" ^^ { case x ~ None      => VarDefLabelizer(VarDefPattern(DefinedString(""), x))
+                                                               "def" ~> "(" ~> (stringIdent|undefinedVar)  ~ opt(","~>stringIdent) <~ ")" ^^ { case x ~ None      => VarDefLabelizer(VarDefPattern(NotString(), x))
                                                                                                                                                                            case x ~ Some(y) => VarDefLabelizer(VarDefPattern(y, x)) } |
-                                                               "decl" ~> "(" ~> stringIdent ~ opt(","~>stringIdent) <~ ")" ^^ {case x ~None        => VarDeclLabelizer(VarDeclPattern(DefinedString(""), x)) 
+                                                               "decl" ~> "(" ~> (stringIdent|undefinedVar) ~ opt(","~>stringIdent) <~ ")" ^^ {case x ~None        => VarDeclLabelizer(VarDeclPattern(NotString(), x)) 
                                                                                                                                                                            case x ~ Some(y) => VarDeclLabelizer(VarDeclPattern(y, x)) } |
                                                               exp14 ^^ { case x => ExpressionLabelizer(x)} 
   
@@ -162,7 +165,7 @@ class CTLGrammarPattern extends JavaTokenParsers  {
   lazy val notinU:Parser[Set[String]] =  ("notinU" ~> "(" ~> "" ~> expNotin ~ rep("," ~> expNotin) <~ ")") ^^ { case exp ~ list =>  (exp::list).toSet }
 //  lazy val str = ("str" <~ "(") ~ undefinedVar <~ ")"
 //  lazy val notin = "notin" ~ "(" ~ "" ~ expNotin ~ rep("," ~ expNotin) ~ ")"
-  lazy val expNotin = ("="|"+"|"-"|"*"|"/"|"%"|"void")
+  lazy val expNotin = ("="|"++"|"--"|"*"|"/"|"%"|"+"|"-"|"void")
                 
   lazy val exp2: Parser[EP] = exp1 ~ ("++"|"--"|notinU)                                                     ^^ { 
   case exp ~ (set:Set[String]) =>  UnaryOpPattern(exp, NotString(set))
@@ -196,11 +199,11 @@ class CTLGrammarPattern extends JavaTokenParsers  {
 
 }
 
- object MyParseree extends CTLGrammarPattern{
+object P extends CTLGrammarPattern{
   def calculate(expression: String) = parseAll(ctl, expression)
   
   def main(args : Array[String]) = {
-         var numTest = 0
+    var numTest = 0
          var errors = 0
          var filename = "ModelChecker/unitary_tests/Parser/properties.txt"
 //         var filename = "ModelChecker/unitary_tests/Parser/testCTLExpr.txt"
@@ -221,5 +224,4 @@ class CTLGrammarPattern extends JavaTokenParsers  {
           })
       if (errors == 0) println("All tests ran successfully :) !") 
   }
-    
-  }
+}
