@@ -46,6 +46,8 @@ version=3
   \hline
   Version & Date & Change  \\
   \hline
+  V1 & February $12^{th}$  & first version \\
+  \hline
   V2 & February $21^{th}$  & fixed the class diagrams, which did not respect the UML standard \\
   & February $21^{th}$ & minor changes in explications \\
   & February $21^{th}$ & added the CTL part \\

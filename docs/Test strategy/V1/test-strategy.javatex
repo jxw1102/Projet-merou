@@ -50,6 +50,8 @@ version=2
   \hline
   Version & Date & Change  \\
   \hline
+  V1 & February $16^{th}$ & first version \\
+  \hline
   V2 & March $1^{rd}$  & Added the configuration of the tests \\
   & March $1^{rd}$  & Minor redaction fixes \\
   & March $1^{rd}$  & Added more detailed explanations in all the parts \\
@@ -276,6 +278,7 @@ The following snippet illustrates this strategy :
 scala
 // when executed, it calls the Clang API on hidden_var_def.cpp, parses the AST file, convert it into a CFG,
 // and generate a dot graph to help visualizing
+// checker1 will not be evaluated until a statement explicitely queries its value
 lazy val checker1 = loadChecker("hidden_var_def")
 lazy val test1 = {
 	println("Testing the HIDDEN_VAR_DEF property...")

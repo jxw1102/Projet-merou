@@ -5,8 +5,6 @@ import scala.collection.mutable.Map
 import scala.collection.mutable.Set
 
 import ast.model._
-import ast.model.DoWhileStmt
-import ast.model.ForStmt
 import graph.GraphNode
 
 /**
