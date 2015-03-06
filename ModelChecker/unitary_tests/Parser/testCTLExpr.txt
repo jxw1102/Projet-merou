@@ -21,10 +21,10 @@ f(x) AND AX(call(g) || g(x,y))
 f(X) AND AX(call(g) || g(x,y))
 EX(call(g) || literalExp(B) || pointerExp(XAB))
 5-4 op(A) 3 - 2 + 1 op(UE) 14
-5 + 4 op(A) 6
+5 + 4 op(A) 6 op(XB) 5
 5 notin(=,+) 6 notin(*) 7
 5 notin(=,+) X+7 notin(*) 7
-5 notin(=,+) (X+7) notin(*) 7
+5 notin(=,+,%) (X+7) notin(*) 7
 ass( b = 5 - 4 notin(*,-,+,%) f(47) )
 b = X + 5
 if(b = X + 5)
@@ -32,12 +32,11 @@ while( ass(b = 5) )
 def(bjr)
 decl(bjr, xiny)
 if(4) AND while(4) AND switch(4)
+<c=5+f(y+14)>
+<...f(y+14)*7-t
+4 notin(+) 6
+4 notinU(+)
 .end.
-
-
-
-Predicate(IfLabelizer    (pattern)) && Predicate(WhileLabelizer (pattern))    &&
-        Predicate(SwitchLabelizer(pattern)) && Predicate(ForLabelizer(Some(pattern))) 
 
 
 
