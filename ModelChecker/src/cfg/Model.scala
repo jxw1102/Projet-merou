@@ -62,7 +62,17 @@ object CFGString extends TypeOf[CFGVal] { override def cast(n: CFGVal) = n match
  * ConvertNodes contains various methods enabling to fetch expressions contained by a CFGNode of any kind.
  */
 object ConvertNodes {
-    private def getAllExpr(expr: Expr): Set[CFGVal] = expr.getSubExprs.map(CFGExpr(_)).toSet + CFGExpr(expr)
+	private def getAllVal   (expr: Expr): Set[CFGVal] = getAllExpr(expr) ++ getAllString(expr)
+	// this method is called recursively on the sub-expressions as the FindExprLabelizer may extract any of the sub-expressions
+    private def getAllExpr  (expr: Expr): Set[CFGVal] = expr.getSubExprs.flatMap(getAllExpr(_)).toSet + CFGExpr(expr)
+    private def getAllString(expr: Expr): Set[CFGVal] = expr match {
+		case BinaryOp        (_,_,_,op    ) => Set(op)
+		case CompoundAssignOp(_,_,_,op    ) => Set(op)
+		case UnaryOp         (_,_,op    ,_) => Set(op)
+		case CallExpr        (typeOf,ref,_) => Set(typeOf,ref.targetName)
+		case CXXNewExpr      (typeOf    ,_) => Set(typeOf)
+		case _                              => Set()
+	}
     
     /**
      * Returns the single expression contained by a node, if any.
@@ -81,19 +91,19 @@ object ConvertNodes {
     /**
      * Returns a conversion function from ProgramNode to the Set[CFGVal] likely to be extracted
      * by Pattern(s) matching
-     * @todo mettre à jour avec les nouveaux types de valeurs
      */
     def convert: (ProgramNode => Set[CFGVal]) = (p: ProgramNode) => p match {
-        case If        (expr,_,_)                        => getAllExpr(expr)
-        case While     (expr,_,_)                        => getAllExpr(expr)
-        case Expression(expr,_,_)                        => getAllExpr(expr)
-        case Switch    (expr,_,_)                        => getAllExpr(expr)
-        case For       (Some(expr),_,_)                  => getAllExpr(expr)
+        case If        (expr,_,_)                        => getAllVal(expr)
+        case While     (expr,_,_)                        => getAllVal(expr)
+        case Expression(expr,_,_)                        => getAllVal(expr)
+        case Switch    (expr,_,_)                        => getAllVal(expr)
+        case For       (Some(expr),_,_)                  => getAllVal(expr)
         case Statement (VarDecl(name,typeOf,expr),cr,id) => 
             // for a VarDecl node, we instantiate an artificial assignment because the expr attribute
             // only represents the right part of the assignment included in the declaration
             Set(CFGDecl(p.id,typeOf,name),CFGDef(typeOf,name)) ++ 
-            expr.map(e => CFGExpr(BinaryOp(typeOf,SourceCodeNode(DeclRefExpr(typeOf,name,id),cr,id),e,"=")))
+            expr.map(e => CFGExpr(BinaryOp(typeOf,SourceCodeNode(DeclRefExpr(typeOf,name,id),cr,id),e,"="))) ++ 
+            Set(CFGString(name),CFGString(typeOf))
         case _                                          => Set()
     }
 }

@@ -1,0 +1,28 @@
+digraph hierarchy {
+	node[shape=record,style=filled,fillcolor=gray95]
+	edge[dir=back, arrowtail=empty]
+
+    // nodes
+    Pat [label="{Pattern|type Env = Environment[CFGMetaVar,CFGVal]}"]
+	DeclPat [label="{DeclPattern||matches(decl: Decl): Option[Env]}"]
+	StringPat [label="{StringPattern||matches(s: String): Option[Env]}"]
+	ExprPat [label="{ExprPattern||matches(expr: Expr): Option[Env]}"]
+	Undef [label="{UndefinedVar|name: CFGMetaVar}"]
+	DefExpr [label="{DefinedExpr|expr: Expr}"]
+	DefString [label="{DefinedString|s: String}"]
+	NotString [label="{NotString|not: Set[String]}"]
+	   
+    // links    
+	Pat -> DeclPat
+	Pat -> StringPat
+	Pat -> ExprPat
+	
+	StringPat -> DefString
+	StringPat -> NotString
+	StringPat -> Undef
+	
+	ExprPat -> DefExpr
+	ExprPat -> Undef
+	
+	DeclPat -> Undef
+}

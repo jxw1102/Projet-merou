@@ -71,18 +71,22 @@ object ExprPattern {
     }
 }
 
-// Right now, we are not willing to make ExprPattern a recursive structure
-// The aim of this trait is to avoid that by allowing only them to be composed
-// to make composed patterns (one level of recursivity).
-// To allow deeper recursivity, just replace AtomicExprPattern with ExprPattern everywhere
-// you want to allow it.
-trait AtomicExprPattern extends ExprPattern
+/*  ***************************************************************
+ *  This code and comment will probably become completely obsolete
+ *  ***************************************************************
+ *	// Right now, we are not willing to make ExprPattern a recursive structure
+ *	// The aim of this trait is to avoid that by allowing only them to be composed
+ *	// to make composed patterns (one level of recursivity).
+ *	// To allow deeper recursivity, just replace AtomicExprPattern with ExprPattern everywhere
+ *	// you want to allow it.
+ *	//trait AtomicExprPattern extends ExprPattern
+ */
 
 /**
  * Represents the most general Pattern : it matches anything, returning a positive binding between
  * a given meta-variable and the matched value.
  */
-case class UndefinedVar (name: CFGMetaVar) extends AtomicExprPattern with DeclPattern with StringPattern {
+case class UndefinedVar (name: CFGMetaVar) extends ExprPattern with DeclPattern with StringPattern {
     override def matches(expr: Expr  ) = Some(new BindingsEnv ++ (name -> expr))
     override def matches(decl: Decl  ) = Some(new BindingsEnv ++ (name -> decl))
     override def matches(s   : String) = Some(new BindingsEnv ++ (name -> s))
@@ -91,7 +95,7 @@ case class UndefinedVar (name: CFGMetaVar) extends AtomicExprPattern with DeclPa
 /**
  * Matches an expression iff it exactly matches the expression used to construct the DefinedExpr object
  */
-case class DefinedExpr  (expr: Expr) extends AtomicExprPattern {
+case class DefinedExpr  (expr: Expr) extends ExprPattern {
     override def matches(e: Expr) = if (e matches expr) Some(Top) else None
 }
 
@@ -120,7 +124,7 @@ object NotString {
 /**
  * Matches any expression which all leaves are literals.
  */
-case class LiteralExprPattern(metavar: UndefinedVar) extends AtomicExprPattern {  
+case class LiteralExprPattern(metavar: UndefinedVar) extends ExprPattern {  
     private def forallLiteral(exprs: List[Expr]) = if (exprs.isEmpty) false else exprs.forall(isAllLiteral(_))
     
     // we need to treat CallExpr separately because its sub-expressions list contains the DeclRefExpr of
@@ -221,7 +225,7 @@ case class CallExprPattern(
             case Some(_) => ExprPattern.intersection(matchFun(ref),matchesParams(paramsFun)) 
             case _       => None
         } 
-        case _                           => None
+        case _           => None
    }
 }
 
@@ -277,27 +281,27 @@ case class VarDefPattern(typeOf: StringPattern, name: StringPattern)
  */
 case class CXXNewExprPattern(
         typeOf: StringPattern=NotString(),
-        countExpr: Option[AtomicExprPattern]=None) extends ExprPattern {
+        countExpr: Option[ExprPattern]=None) extends ExprPattern {
     
     override def matches(expr: Expr) = expr match {
         case CXXNewExpr(t,c) => (countExpr,c) match {
             case (Some(a),Some(b)) => ExprPattern.intersection(typeOf.matches(t),a.matches(b))
             case _                 => typeOf.matches(t)
         }
-        case _ => None
+        case _                     => None
     }
 }
 
 /**
  * Matches any CXXDeleteExpr which the delete target match a given pattern.
  */
-case class CXXDeleteExprPattern(target: Option[AtomicExprPattern]=None) extends ExprPattern {
+case class CXXDeleteExprPattern(target: Option[ExprPattern]=None) extends ExprPattern {
     override def matches(expr: Expr) = expr match {
         case CXXDeleteExpr(_,tgt) => target match {
             case Some(t) => t.matches(tgt)
             case _       => None
         }
-        case _ => None
+        case _           => None
     }
 }
 

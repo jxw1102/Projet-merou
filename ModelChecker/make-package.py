@@ -14,7 +14,6 @@ def print_usage():
 def make_jar(folder,build,packages):
     root = os.getcwd()
     os.chdir(folder)
-    print("current",os.getcwd())
     call([ "jar","-cf","../release/tmp/" + build[1:] + "-" + folder + ".jar" ] + packages)
     os.chdir(root)
 

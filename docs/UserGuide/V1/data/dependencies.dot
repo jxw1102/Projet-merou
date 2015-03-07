@@ -1,0 +1,19 @@
+digraph {
+	ast_test   [label="ast.test"  ]
+	cfg_test   [label="cfg.test"  ]
+	ctl_test   [label="ctl.test"  ]
+	cfg_parser [label="cfg.parser"]
+	ast_model  [label="ast.model" ]
+	graphm     [label="graph"     ]
+	combinator [label="scala.util.parsing.combinator",color=red,shape=box]
+	ast -> graphm
+	ast -> ast_model
+	ast_test -> ast
+	cfg -> ast
+	cfg -> ctl
+	cfg_parser -> cfg
+	cfg_test -> cfg
+	ctl -> graphm
+	ctl_test -> ctl
+	cfg_parser -> combinator
+}
