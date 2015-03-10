@@ -112,7 +112,7 @@ object Properties {
         val fun1       = Predicate(FindExprLabelizer(CallExprPattern(DefinedString(f1))))
         val assignment = Predicate(MatchExprLabelizer(AssignmentPattern(UndefinedVar("X"),UndefinedVar("Y"),DefinedString("="))))
         val fun2       = Predicate(FindExprLabelizer(CallExprPattern(DefinedString(f2),Some(List(UndefinedVar("X"))))))
-        ((!assignment && fun1) || (fun1 && assignment && EX(EG(!fun2)))) && !(fun1 && fun2)
+        (!assignment && fun1 && !fun2) || (fun1 && assignment && EX(EG(!fun2)))
     }
     
     /**
@@ -122,7 +122,7 @@ object Properties {
         val alloc      = Predicate(FindExprLabelizer(CXXNewExprPattern()))
         val assignment = Predicate(MatchExprLabelizer(AssignmentPattern(UndefinedVar("X"),UndefinedVar("Y"),DefinedString("="))))
         val dealloc    = Predicate(FindExprLabelizer(CXXDeleteExprPattern(Some(UndefinedVar("X")))))
-        ((!assignment && alloc) || (alloc && assignment && EX(EG(!dealloc)))) && !(alloc && dealloc)
+        (!assignment && alloc && !dealloc) || (alloc && assignment && EX(EG(!dealloc)))
     }
     
 }
