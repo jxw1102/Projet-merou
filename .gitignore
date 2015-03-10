@@ -15,7 +15,8 @@ bin
 .classpath
 
 # AST files
-ModelChecker/unitary_tests/**/*.txt
+ModelChecker/unitary_tests/Model_checker/*.txt
+ModelChecker/unitary_tests/ast/*.txt
 
 # Latex files
 docs/**/*.log
