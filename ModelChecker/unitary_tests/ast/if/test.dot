@@ -1,7 +1,11 @@
 digraph {
-"int a  = 5  at 0xcdc4e0 " -> "if (a > 6) at 0xcdc630 "
-"if (a > 6) at 0xcdc630 " -> "int b  = 17  at 0xcdc6b0 "
-"if (a > 6) at 0xcdc630 " -> "int c  = 5  at 0xcdc5b0 "
-"int c  = 5  at 0xcdc5b0 " -> "(c *= 5)  at 0xcdc5f8 "
-"(c *= 5)  at 0xcdc5f8 " -> "int b  = 17  at 0xcdc6b0 "
+{main0x3b5d6f0 [label="int (void) main()  at (8,1:1) 0x3b5d6f0"]} -> {main0x3b5d790 [label="int a  = 5  at (2,5:13) 0x3b5d790"]}
+{main0x3b5d790 [label="int a  = 5  at (2,5:13) 0x3b5d790"]} -> {main0x3b5d7f0 [label="int c  = 5  at (2,5:20) 0x3b5d7f0"]}
+{main0x3b5d7f0 [label="int c  = 5  at (2,5:20) 0x3b5d7f0"]} -> {main0x3b5d960 [label="if (a > 6) at (3:6,5:10) 0x3b5d960"]}
+{main0x3b5d960 [label="if (a > 6) at (3:6,5:10) 0x3b5d960"]} -> {main0x3b5d8f8 [label="(c = 5)  at (4,9:13) 0x3b5d8f8"]}
+{main0x3b5d960 [label="if (a > 6) at (3:6,5:10) 0x3b5d960"]} -> {main0x3b5d948 [label="(c = 8)  at (6,6:10) 0x3b5d948"]}
+{main0x3b5d8f8 [label="(c = 5)  at (4,9:13) 0x3b5d8f8"]} -> {main0x3b5d990 [label="int b  = (a + c)  at (7,5:17) 0x3b5d990"]}
+{main0x3b5d990 [label="int b  = (a + c)  at (7,5:17) 0x3b5d990"]}
+{main0x3b5d948 [label="(c = 8)  at (6,6:10) 0x3b5d948"]} -> {main0x3b5d990 [label="int b  = (a + c)  at (7,5:17) 0x3b5d990"]}
+{main0x3b5d990 [label="int b  = (a + c)  at (7,5:17) 0x3b5d990"]}
 }

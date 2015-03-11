@@ -1,12 +1,14 @@
 digraph {
-"int a  = 5  at 0x2e7c4b0 " -> "while (a > 5) at 0x2e7c748 "
-"while (a > 5) at 0x2e7c748 " -> "if (a > 6) at 0x2e7c710 "
-"while (a > 5) at 0x2e7c748 " -> "int b  = 17  at 0x2e7c7c0 "
-"if (a > 6) at 0x2e7c710 " -> "while (a > 5) at 0x2e7c748 "
-"if (a > 6) at 0x2e7c710 " -> "while (a < 6) at 0x2e7c6f8 "
-"while (a < 6) at 0x2e7c6f8 " -> "while (a > 5) at 0x2e7c748 "
-"while (a < 6) at 0x2e7c6f8 " -> "if (a > 6) at 0x2e7c650 "
-"if (a > 6) at 0x2e7c650 " -> "while (a > 5) at 0x2e7c748 "
-"if (a > 6) at 0x2e7c650 " -> "int c  = 5  at 0x2e7c6d0 "
-"int c  = 5  at 0x2e7c6d0 " -> "while (a < 6) at 0x2e7c6f8 "
+{main0xd0e2c0 [label="int (void) main()  at (13,1:1) 0xd0e2c0"]} -> {main0xd0e360 [label="int a  = 5  at (2,5:13) 0xd0e360"]}
+{main0xd0e360 [label="int a  = 5  at (2,5:13) 0xd0e360"]} -> {main0xd0e648 [label="while (a > 5) at (3:11,5:5) 0xd0e648"]}
+{main0xd0e648 [label="while (a > 5) at (3:11,5:5) 0xd0e648"]} -> {main0xd0e610 [label="if (a > 6) at (4:10,9:9) 0xd0e610"]}
+{main0xd0e648 [label="while (a > 5) at (3:11,5:5) 0xd0e648"]} -> {main0xd0e670 [label="int b  = 17  at (12,5:13) 0xd0e670"]}
+{main0xd0e610 [label="if (a > 6) at (4:10,9:9) 0xd0e610"]} -> {main0xd0e648 [label="while (a > 5) at (3:11,5:5) 0xd0e648"]}
+{main0xd0e610 [label="if (a > 6) at (4:10,9:9) 0xd0e610"]} -> {main0xd0e5f8 [label="while (a < 6) at (6:10,14:9) 0xd0e5f8"]}
+{main0xd0e5f8 [label="while (a < 6) at (6:10,14:9) 0xd0e5f8"]} -> {main0xd0e648 [label="while (a > 5) at (3:11,5:5) 0xd0e648"]}
+{main0xd0e5f8 [label="while (a < 6) at (6:10,14:9) 0xd0e5f8"]} -> {main0xd0e550 [label="if (a > 6) at (7:8,13:17) 0xd0e550"]}
+{main0xd0e550 [label="if (a > 6) at (7:8,13:17) 0xd0e550"]} -> {main0xd0e648 [label="while (a > 5) at (3:11,5:5) 0xd0e648"]}
+{main0xd0e550 [label="if (a > 6) at (7:8,13:17) 0xd0e550"]} -> {main0xd0e580 [label="int c  = 5  at (9,13:21) 0xd0e580"]}
+{main0xd0e580 [label="int c  = 5  at (9,13:21) 0xd0e580"]} -> {main0xd0e5f8 [label="while (a < 6) at (6:10,14:9) 0xd0e5f8"]}
+{main0xd0e670 [label="int b  = 17  at (12,5:13) 0xd0e670"]}
 }
