@@ -1,93 +1,95 @@
-package cfg
+//forallFlowControlNodes
+if(x) AND while(x) AND switch(x) AND for(x)
 
-import scala.reflect.runtime.universe
+//anyFlowControlNodes
+if(x) OR while(x) OR switch(x) OR for(x)
 
-import ast.model.ProgramNode
-import ctl._
-
-/**
- * This class contains some pre-defined properties constructed with basic labelizers. It includes some
- * of the MISRAC++ rules.
- * @author Zohour Abouakil
- * @author David Courtinot
- */
-
-object Properties {
-    type CTL = CtlExpr[CFGMetaVar,ProgramNode,CFGVal]
-
-    /**
-     * Macro predicate to compute the conjunction of pattern-based predicates for each If, While, For,
-     * and Switch node
-     */
-    def forallFlowControlNodes(pattern: ExprPattern) = 
-    	Predicate(IfLabelizer    (pattern)) && Predicate(WhileLabelizer (pattern))    &&
-        Predicate(SwitchLabelizer(pattern)) && Predicate(ForLabelizer(Some(pattern))) 
+//function_unused_value
+<...call(Z,notin(void))
+exists X(X)
+NOT( exists X(exists Y(assign(X,Y)  )) )
+<...Z(...,notin(void)) AND exists X(X) AND NOT( exists X(exists Y(assign(X,Y)  )) )
         
-	/**
-	* Macro predicate to compute the disjunction of a pattern-based predicate for each If, While, For,
-	* and Switch node
-	*/
-    def anyFlowControlNodes(pattern: ExprPattern) = 
-    	Predicate(IfLabelizer    (pattern)) || Predicate(WhileLabelizer (pattern))    ||
-        Predicate(SwitchLabelizer(pattern)) || Predicate(ForLabelizer(Some(pattern))) 
-    
-    /**
-     * Detects all function call returning a value that is unused. Any expression which is not stored or used
-     * for a test is considered unused. This property will return all the unused expressions containing a function
-     * call.
-     */
+//hidden var def
+def(X) AND EX(EF(def(X)))
+
+//assignment
+<assign(X,Y)>
+
+//literal_expr
+<literalExp(X)>
+
+//literal_assignment
+< assign(X, literalExp(Y))>
+
+//arithmetic_pointer
+<...pointerExp(Z)
+//compoundassign BIZARD
+<...X notin(=) Y
+<...X notinU(--,++)
+<...pointerExp(Z) AND (<...X notin(=) Y OR <...X notinU(--,++))
+
+//infeasible_path
+assign(X,literalExp(Y))
+literalExp(X)
+X == X
+for()
+if(assign(X,literalExp(Y))) OR while(assign(X,literalExp(Y))) OR switch(assign(X,literalExp(Y))) OR for(assign(X,literalExp(Y))) OR if(literalExp(X)) OR while(literalExp(X)) OR switch(literalExp(X)) OR for(literalExp(X)) OR if(X == X) OR while(X == X) OR switch(X == X) OR for(X == X) OR for()
+
+//unused_declared_var
+decl(X)
+use(X)
+decl(X) AND AG(NOT(use(X)))
+
+//non_paired_function_call
+<...f1(...)
+<assign(X,Y,=)>
+<...f2(X)
+( (NOT(ass) AND fun1) OR ( fun1 AND ass AND EX(EG(NOT(fun2))) ) ) AND NOT(fun1 AND fun2)
+( (NOT(<assign(X,Y,=)>) AND <...f1(...)) OR ( <...f1(...) AND <assign(X,Y,=)> AND EX(EG(NOT(<...f2(X)))) ) ) AND NOT(<...f1(...) AND <...f2(X))
+
+//new_without_delete
+<...CXXNew()
+<assign(X,Y,=)>
+<...CXXDelete(X)
+((NOT(ass) AND alloc) OR (alloc AND ass AND EX(EG(NOT(dealloc))))) AND NOT(alloc AND dealloc)
+((NOT(<assign(X,Y,=)>) AND <...CXXNew()) OR (<...CXXNew() AND <assign(X,Y,=)> AND EX(EG(NOT(<...CXXDelete(X)))))) AND NOT(<...CXXNew() AND <...CXXDelete(X))
+f(X) AND AX(g(X,Y))
+.end.
+  
+  
+  /**********************************************************************************************************************************************/
+  
+  
+  
+  
+  
     val FUNCTION_UNUSED_VALUE =  {
         val nonVoidFunctionCall: CTL = Predicate(FindExprLabelizer(CallExprPattern(UndefinedVar("Z"),None,NotString("void"))))
         val existsExpr         : CTL = Exists(("X",CFGExpr),Predicate(ExpressionLabelizer(UndefinedVar("X"))))
         val notAssignment      : CTL = Not(Exists(("X",CFGExpr),(Exists(("Y",CFGExpr),
                 Predicate(ExpressionLabelizer(AssignmentPattern(UndefinedVar("X"),UndefinedVar("Y"))))))))
         nonVoidFunctionCall && existsExpr && notAssignment
-    }
+        
     
-    /**
-     * Detects all hidden variable definitions. May also return false positive results in cases such as
-     * 
-     * { int x; }
-     * int x;
-     * 
-     * Require manual checking. More generally, it detects the bad practice of giving the same name to
-     * variables of the same type in different scopes.
-     */
     val HIDDEN_VAR_DEF = Predicate(VarDefLabelizer(VarDefPattern(NotString(),UndefinedVar("X")))) &&
-    		EX(EF(Predicate(VarDefLabelizer(VarDefPattern(NotString(),UndefinedVar("X"))))))
-    		
-    /**
-     * This property detects all the assignments in the CFG. It includes the = assignment as wel as compound assignment
-     * operators (+=, *=, -=, /=).
-     */
+                    EX(EF(Predicate(VarDefLabelizer(VarDefPattern(NotString(),UndefinedVar("X"))))))
+                    
     val ASSIGNMENT = Predicate(MatchExprLabelizer(AssignmentPattern(UndefinedVar("X"),UndefinedVar("Y"))))
     
-    /**
-     * This property detects all the nodes holding a literal expression. A literal expression is an expression which
-     * all leaves are literals.
-     */
     val LITERAL_EXPR = Predicate(MatchExprLabelizer(LiteralExprPattern(UndefinedVar("X"))))
     
-    /**
-     * This property detects all the assignments of a literal expression to any variable.
-     */
     val LITERAL_ASSIGNMENT = Predicate(MatchExprLabelizer(AssignmentPattern(UndefinedVar("X"),LiteralExprPattern(UndefinedVar("Y")))))
     
-    /**
-     * This property detects any arithmetic expression involving a pointer type. Only assignments and increment/decrement operators
-     * are allowed.
-     */
+    
     val ARITHMETIC_POINTER = {
         val pointerExpr        = Predicate(FindExprLabelizer(PointerExperPattern    (UndefinedVar("Z"))))
         val compoundAssign     = Predicate(FindExprLabelizer(CompoundAssignOpPattern(UndefinedVar("X"),UndefinedVar("Y"))))
         val arithmeticBinaryOp = Predicate(FindExprLabelizer(BinaryOpPattern        (UndefinedVar("X"),UndefinedVar("Y"),NotString("="))))
         val arithmeticUnaryOp  = Predicate(FindExprLabelizer(UnaryOpPattern         (UndefinedVar("X"),NotString("--","++"))))
         pointerExpr && (compoundAssign || arithmeticBinaryOp || arithmeticUnaryOp)
-    }
-    
-    /**
-     * This property detects all the flow-control nodes which condition is evaluated to the same value on every execution path.
-     */
+        
+        
     val INFEASIBLE_PATH = {
         val literalAssignmentPattern = AssignmentPattern(UndefinedVar("X"),LiteralExprPattern(UndefinedVar("Y")))
         val literalExprPattern       = LiteralExprPattern(UndefinedVar("X"))
@@ -96,33 +98,25 @@ object Properties {
         anyFlowControlNodes(identityPattern)          || Predicate(ForLabelizer(None))
     }
     
-    /**
-     * This property detects all unused variables.
-     */
+
+    
     val UNUSED_DECLARED_VAR = {
         val declaredVariable = Predicate(VarDeclLabelizer(VarDeclPattern(NotString(),UndefinedVar("X"))))
         val usedVariable     = Predicate(UseLabelizer(UndefinedVar("X")))
         declaredVariable && AG(!usedVariable)
     }
-    
-    /**
-     * This property detects all functions that should be used in pairs.
-     */
+
     val NON_PAIRED_FUNCTION_CALL = (f1: String, f2: String) => {
         val fun1       = Predicate(FindExprLabelizer(CallExprPattern(DefinedString(f1))))
         val assignment = Predicate(MatchExprLabelizer(AssignmentPattern(UndefinedVar("X"),UndefinedVar("Y"),DefinedString("="))))
         val fun2       = Predicate(FindExprLabelizer(CallExprPattern(DefinedString(f2),Some(List(UndefinedVar("X"))))))
-        (!assignment && fun1 && !fun2) || (fun1 && assignment && EX(EG(!fun2)))
+        ((!assignment && fun1) || (fun1 && assignment && EX(EG(!fun2)))) && !(fun1 && fun2)
     }
     
-    /**
-     * This property detects all operations which will cause a memory leak.
-     */
     val NEW_WITHOUT_DELETE = {
         val alloc      = Predicate(FindExprLabelizer(CXXNewExprPattern()))
         val assignment = Predicate(MatchExprLabelizer(AssignmentPattern(UndefinedVar("X"),UndefinedVar("Y"),DefinedString("="))))
         val dealloc    = Predicate(FindExprLabelizer(CXXDeleteExprPattern(Some(UndefinedVar("X")))))
-        (!assignment && alloc && !dealloc) || (alloc && assignment && EX(EG(!dealloc)))
+        ((!assignment && alloc) || (alloc && assignment && EX(EG(!dealloc)))) && !(alloc && dealloc)
     }
-    
-}
+                  

@@ -10,6 +10,17 @@ import cfg.CFGVal
 import cfg.Properties._
 import ctl.BindingsEnv
 import ctl.NegBinding
+import cfg.DefinedString
+import cfg.UndefinedVar
+import cfg.MatchExprLabelizer
+import cfg.CallExprPattern
+import cfg.AssignmentPattern
+import cfg.FindExprLabelizer
+import ctl.Predicate
+import ctl.EX
+import ctl.Not
+import ctl.MetaVariable
+import ctl.Value
 
 /**
  * This class enables to test the properties defined in cfg.Properties
@@ -103,5 +114,12 @@ object Main extends App {
         printPositiveBindings("Following lines will cause memory leaks :",checker8,NEW_WITHOUT_DELETE)
     }
     
-    test8
+    lazy val checker9 = loadChecker("cmemory")
+    lazy val test11 = {
+        println("Testing the NON_PAIRED_FUNCTION_CALL property...")
+        printPositiveBindings("Following lines contain memory leaks :",checker9,NON_PAIRED_FUNCTION_CALL("malloc","free"))
+    }
+    
+    test11
+    
 }

@@ -1,0 +1,59 @@
+(<...call(malloc) AND NOT(<assign(X,Y,=)>) AND NOT(<...free(X)) ) OR ( <...call(malloc) AND <assign(X,Y,=)> AND EX(EG(NOT(<...free(X)))) ) 
+
+//forallFlowControlNodes
+if(x) AND while(x) AND switch(x) AND for(x)
+
+//anyFlowControlNodes
+if(x) OR while(x) OR switch(x) OR for(x)
+
+//function_unused_value
+<...call(Z,notin(void))
+exists X(X)
+NOT( exists X(exists Y(assign(X,Y)  )) )
+<...call(Z,notin(void)) AND exists X(X) AND NOT( exists X(exists Y(assign(X,Y)  )) )
+        
+//hidden var def
+def(X) AND EX(EF(def(X)))
+
+//assignment
+<assign(X,Y)>
+
+//literal_expr
+<literalExp(X)>
+
+//literal_assignment
+< assign(X, literalExp(Y))>
+
+//arithmetic_pointer
+<...pointerExp(Z)
+//compoundassign BIZARD
+<...X notin(=) Y
+<...X notinU(--,++)
+<...pointerExp(Z) AND (<...X notin(=) Y OR <...X notinU(--,++))
+
+//infeasible_path
+assign(X,literalExp(Y))
+literalExp(X)
+X == X
+for()
+if(assign(X,literalExp(Y))) OR while(assign(X,literalExp(Y))) OR switch(assign(X,literalExp(Y))) OR for(assign(X,literalExp(Y))) OR if(literalExp(X)) OR while(literalExp(X)) OR switch(literalExp(X)) OR for(literalExp(X)) OR if(X == X) OR while(X == X) OR switch(X == X) OR for(X == X) OR for()
+
+//unused_declared_var
+decl(X)
+use(X)
+decl(X) AND AG(NOT(use(X)))
+
+//non_paired_function_call
+<...call(f1)
+<assign(X,Y,=)>
+<...f2(X)
+( (NOT(ass) AND fun1) OR ( fun1 AND ass AND EX(EG(NOT(fun2))) ) ) AND NOT(fun1 AND fun2)
+( (NOT(<assign(X,Y,=)>) AND <...call(f1)) OR ( <...call(f1) AND <assign(X,Y,=)> AND EX(EG(NOT(<...f2(X)))) ) ) AND NOT(<...call(f1) AND <...f2(X))
+
+//new_without_delete
+<...CXXNew()
+<assign(X,Y,=)>
+<...CXXDelete(X)
+((NOT(ass) AND alloc) OR (alloc AND ass AND EX(EG(NOT(dealloc))))) AND NOT(alloc AND dealloc)
+((NOT(<assign(X,Y,=)>) AND <...CXXNew()) OR (<...CXXNew() AND <assign(X,Y,=)> AND EX(EG(NOT(<...CXXDelete(X)))))) AND NOT(<...CXXNew() AND <...CXXDelete(X))
+.end.
