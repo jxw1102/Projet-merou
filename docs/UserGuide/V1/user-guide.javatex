@@ -401,3 +401,136 @@ is the same as between VarDeclPattern and VarDefPattern.
 	\end{itemize}
 \end{itemize}
 ##
+> chapter ##
+CTL parser
+##
+>> section ##
+Syntax
+##
+>>> paragraph ##
+Les commentaires ( // ) et sauts de lignes sont autorisés.
+Cependant le parser lit ligne par ligne donc une expression CTL ne peut s'écrire sur plusieurs lignes.
+Le fichier doit se terminer par la ligne ".end."
+##
+>>> subsection ##
+CTL
+##
+>>>> subsubsection ##
+n-ary operators
+##
+>>>>> paragraph ##
+OR, AND
+##
+>>>> subsubsection ##
+binary operators
+##
+>>>>> paragraph ##
+A [ \_ U \_ ], E [ \_ U \_ ]
+##
+>>>> subsubsection ##
+unary operators
+##
+>>>>> paragraph ##
+AX( \_ ), AF( \_ ), AG( \_ ), EX( \_ ), EF( \_ ), EG( \_ )
+##
+>>>> paragraph ##
+Ces operateurs peuvent donc contenir dans les "\_"de nouvelles expressions CTL ou des labelizer ; 
+il est egalement possible d'écrire directement un labelizer sans passer par un operateur CTL
+##
+>>>> subsubsection ##
+example
+##
+>>>>> paragraph ##
+A [AX( f(x) ) U f(x) ] AND exists x((E [merou U A [exists y(f(x)) U merou ]] OR merou))
+##
+>>> subsection ##
+Labelizer
+##
+>>>> paragraph ##
+if( exp ), while( exp ), switch( exp ), for( opt(exp) ) : dans le for, l'expression est optionnelle \\
+<... exp : FindExprLabelelizer(exp) \\
+< exp > : MatchExprLabelizer(exp) \\
+def(id1, opt(id2)), decl(id1, opt(id2)) : VarDefPattern & VarDeclPattern (id2 est optionel) \\
+use(id) : UseLabelizer(id) \\
+exp : ExpressionLabelizer -- Il est egalement possible d’ecrire directement une expression \\
+##
+>>>> subsubsection ##
+example
+##
+>>>>> paragraph ##
+<... 5 + x ; <g *= *s * b>
+##
+>>> subsection ##
+Expression Labelizer
+##
+>>>> paragraph ##
+Dans les expressions, il y a deux types d'ident : expIdent (eId) qui commence par une minuscule, et undefinedVar (uV) 
+qui est composé uniquement de majuscules. Tous les operateurs N-aires et binaires (à l'exception de ceux mentionnés) 
+sont des BinaryOpPattern et sont composés d'exp
+##
+>>>> subsubsection ##
+n-ary operators
+##
+>>>>> paragraph ##
+||, &&, |, \^\ , &, +, -, *, /, \%, op(uV), notin( \_ )  \\
+notin peut contenir un ou plusieurs symboles (separés par une virgule) parmi =,++,--,+,-,*,/,\%,void
+##
+>>>> subsubsection ##
+binary operators
+##
+>>>>> paragraph ##
+eId = exp \\
+	assign(eId, exp, opt(+=,-=,*=,/=,\%=,&=,|=,\^=,<<=,>>=) ) : AssignmentPattern \\
+	eId (+=,-=,*=,/=,\%=,&=,|=,\^=,<<=,>>=) exp : CompoundAssignOpPattern \\
+	==, !=, <=, >=, <, >, <<, >>
+##
+>>>> subsubsection ##
+unary operators
+##
+>>>>> paragraph ##
+exp (++, --, notin(\_)) : UnaryOpPattern \\
+(!, ~, ++, --, +, -, *, &, notin(\_)) exp : UnaryOpPattern \\
+literalExp( uV ), pointerExp( uV ) : LiteralExprPattern, PointerExprPattern \\
+CXXNew( opt(eId, exp) ), CXXDelete( opt(exp) ) : CXXNewExprPattern/CXXDeleteExprPattern
+##
+>>>> subsubsection ##
+function c	all
+##
+>>>>> paragraph ##
+Pour la fonctionCall, l’ident peut etre un eId ou uV, de plus, nous aimerions pouvoir specifier si nous voulons 
+matcher un nombre precis d’argument ou si le nombre d’arguments est négligeable : \\
+ident(arg1, arg2, \_) - pouvant contenir 0 ou plusieurs arguments. Matchera le nombre exact d’argument \\
+ident(…,opt(typeOf) - indique que nous regardons pas les arguments ; typeOf specifiant le type de la fonction et pouvant etre un notin
+##
+>>>> subsubsection ##
+example
+##
+>>>>> paragraph ##
+a + b op(W) c notin(=,*,-) d \\
+assign(X,Y,=) \\
+f(x,y) || g(…)
+##
+>> section ##
+Operator priority
+##
+>>> paragraph ##
+Ce parser lit de gauche a droite : a OR b OR c <=> a OR ( b OR c ) \\
+CTL est au plus haut niveau, puis nous avons Labelizer, puis les Expressions. \\
+Pour la partie CTL, le OR est l'operateur lu en premier, suivi de AND puis tous les autres au même "niveau". \\
+Ex : x AND y OR z <=> ( x AND y ) OR z \\
+A noter que seul Exists et NOT peuvent contenir les operateur OR et AND : \\
+AX ( x AND y) => IMPOSSSIBLE \\
+Exists x( y OR NOT(a AND b)) => OK \\
+Ensuite les Labelizer sont tous au même niveau. \\
+Pour les Expressions, nous nous sommes basé sur le tablau d'ordre d'operations C++ qui suit : 
+##
+>>> image ##
+data/orderOperation;
+Order between differents operators in C++ code.;
+0.65
+##
+>>> paragraph ##
+Les op( uV ) et notin( \_ ) etant entre les priorités du niveau 2 (unary) et 3 (multiplication..)
+Et les literalExp, pointerExp et CXX étant au niveau 1 (avec fonction call... etc)
+
+##

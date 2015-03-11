@@ -183,10 +183,14 @@ class CTLGrammarPattern extends JavaTokenParsers  {
         expIdent   
   
   lazy val funcall: Parser[EP] = 
-        ("call" ~> "(" ~> (stringIdent|undefinedVar)) ~ opt("," ~> (notin|stringIdent)) <~ ")" ^^ {
+//        ("call" ~> "(" ~> (stringIdent|undefinedVar)) ~ opt("," ~> (notin|stringIdent)) <~ ")" ^^ {
+//                  case ident ~ None => CallExprPattern(ident, None)
+//                  case ident ~ Some(ident2:StringPattern) => CallExprPattern(ident, None,ident2)
+//                  case ident ~ Some(set:Set[String]) => CallExprPattern(ident, None,NotString(set)) } | //ici il peut y avoir plusieur argument ou aucun
+        ((stringIdent|undefinedVar) <~ "("<~ "...") ~ opt("," ~> (notin|stringIdent)) <~ ")" ^^ {
                   case ident ~ None => CallExprPattern(ident, None)
                   case ident ~ Some(ident2:StringPattern) => CallExprPattern(ident, None,ident2)
-                  case ident ~ Some(set:Set[String]) => CallExprPattern(ident, None,NotString(set)) } | //ici il peut y avoir plusieur argument ou aucun
+                  case ident ~ Some(set:Set[String]) => CallExprPattern(ident, None,NotString(set)) } |
         ((stringIdent|undefinedVar) <~ "(") ~ opt(exp14 ~ rep(","~>exp14)) <~ ")" ^^ {
                   case  ident ~ None=> CallExprPattern(ident, Some(Nil))
                   case ident ~ Some(exp ~ list) => CallExprPattern(ident, Some(exp::list))}
@@ -228,9 +232,9 @@ object P extends CTLGrammarPattern{
   def main(args : Array[String]) = {
     var numTest = 0
          var errors = 0
-//         var filename = "ModelChecker/unitary_tests/Parser/properties.txt"
-//         var filename = "ModelChecker/unitary_tests/Parser/testC/TLExpr.txt"
-         var filename = "ModelChecker/unitary_tests/Parser/testExpr.txt"
+         var filename = "ModelChecker/unitary_tests/Parser/prop.txt"
+//         var filename = "ModelChecker/unitary_tests/Parser/testCTLExpr.txt"
+//         var filename = "ModelChecker/unitary_tests/Parser/testExpr.txt"
          Source.fromFile(filename).getLines.takeWhile(_ != ".end.").foreach(line => 
           try {
               numTest += 1

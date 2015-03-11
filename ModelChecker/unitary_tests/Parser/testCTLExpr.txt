@@ -3,6 +3,7 @@ exists x(AX(A [exists sofia(2) U AX(sofia)]))
 2 OR 5 OR 7 
 (2 OR 5) AND 19 OR 7 
 2 OR 5 AND 19 OR 7
+2 OR 5 AND 19 OR 7
 exists x(AX(A [exists expr(2) U AX(expr)])) 
 f(b) OR exists x(g(x) AND AX(f(x)))
 exists k(*5 * ((*f(x)+ 4) - 1) && 3|| *13 + f(x) + 4)
@@ -17,9 +18,9 @@ X
 AX(X)
 a = 5 + 4
 call(f) + f() 
-f(x) AND AX(call(g) || g(x,y))
-f(X) AND AX(call(g) || g(x,y))
-EX(call(g) || literalExp(B) || pointerExp(XAB))
+f(x) AND AX(g(...) || g(x,y))
+f(X) AND AX(g(...) || g(x,y))
+EX(g(...,int) || literalExp(B) || pointerExp(XAB))
 5-4 op(A) 3 - 2 + 1 op(UE) 14
 5 + 4 op(A) 6 op(XB) 5
 5 notin(=,+) 6 notin(*) 7
@@ -54,10 +55,10 @@ c+V
 assign(X,Y,=)
 assign(X,Y)
 
-call(Z,notin(void))
+Z(...,notin(void))
 3 notin(+,-) 5
 5 notin(=,+,void) 6 notin(*) 7
-call(Z,notin(void,+))
+Z(...,notin(void,+))
 .end.
 
 
