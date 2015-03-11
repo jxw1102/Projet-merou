@@ -1,0 +1,41 @@
+TranslationUnitDecl 0xdaf060 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0xdaf350 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'char *'
+`-FunctionDecl 0xdaf3c0 <ModelChecker\unitary_tests\ast\while\doWhile_continue_break.cpp:1:1, line:13:1> line:1:5 main 'int (void)'
+  `-CompoundStmt 0xdaf7d0 <col:12, line:13:1>
+    |-DeclStmt 0xdaf4b0 <line:2:5, col:14>
+    | `-VarDecl 0xdaf460 <col:5, col:13> col:9 used a 'int' cinit
+    |   `-IntegerLiteral 0xdaf490 <col:13> 'int' 5
+    |-DoStmt 0xdaf748 <line:3:5, line:11:19>
+    | |-CompoundStmt 0xdaf6d0 <line:3:8, line:11:5>
+    | | `-IfStmt 0xdaf6b0 <line:4:9, line:10:9>
+    | |   |-<<<NULL>>>
+    | |   |-BinaryOperator 0xdaf508 <line:4:13, col:17> '_Bool' '>'
+    | |   | |-ImplicitCastExpr 0xdaf4f8 <col:13> 'int' <LValueToRValue>
+    | |   | | `-DeclRefExpr 0xdaf4c0 <col:13> 'int' lvalue Var 0xdaf460 'a' 'int'
+    | |   | `-IntegerLiteral 0xdaf4d8 <col:17> 'int' 6
+    | |   |-ContinueStmt 0xdaf520 <line:5:13>
+    | |   `-WhileStmt 0xdaf698 <line:6:14, line:10:9>
+    | |     |-<<<NULL>>>
+    | |     |-BinaryOperator 0xdaf570 <line:6:21, col:25> '_Bool' '<'
+    | |     | |-ImplicitCastExpr 0xdaf560 <col:21> 'int' <LValueToRValue>
+    | |     | | `-DeclRefExpr 0xdaf528 <col:21> 'int' lvalue Var 0xdaf460 'a' 'int'
+    | |     | `-IntegerLiteral 0xdaf540 <col:25> 'int' 6
+    | |     `-CompoundStmt 0xdaf680 <col:28, line:10:9>
+    | |       |-IfStmt 0xdaf5f0 <line:7:13, line:8:17>
+    | |       | |-<<<NULL>>>
+    | |       | |-BinaryOperator 0xdaf5d0 <line:7:17, col:21> '_Bool' '>'
+    | |       | | |-ImplicitCastExpr 0xdaf5c0 <col:17> 'int' <LValueToRValue>
+    | |       | | | `-DeclRefExpr 0xdaf588 <col:17> 'int' lvalue Var 0xdaf460 'a' 'int'
+    | |       | | `-IntegerLiteral 0xdaf5a0 <col:21> 'int' 6
+    | |       | |-BreakStmt 0xdaf5e8 <line:8:17>
+    | |       | `-<<<NULL>>>
+    | |       `-DeclStmt 0xdaf670 <line:9:13, col:22>
+    | |         `-VarDecl 0xdaf620 <col:13, col:21> col:17 c 'int' cinit
+    | |           `-IntegerLiteral 0xdaf650 <col:21> 'int' 5
+    | `-BinaryOperator 0xdaf730 <line:11:14, col:18> '_Bool' '>'
+    |   |-ImplicitCastExpr 0xdaf720 <col:14> 'int' <LValueToRValue>
+    |   | `-DeclRefExpr 0xdaf6e4 <col:14> 'int' lvalue Var 0xdaf460 'a' 'int'
+    |   `-IntegerLiteral 0xdaf700 <col:18> 'int' 5
+    `-DeclStmt 0xdaf7c0 <line:12:5, col:15>
+      `-VarDecl 0xdaf770 <col:5, col:13> col:9 b 'int' cinit
+        `-IntegerLiteral 0xdaf7a0 <col:13> 'int' 17

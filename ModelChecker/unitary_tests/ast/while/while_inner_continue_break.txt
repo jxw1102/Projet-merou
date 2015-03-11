@@ -1,0 +1,42 @@
+TranslationUnitDecl 0x352df60 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0x352e250 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'char *'
+`-FunctionDecl 0x352e2c0 <ModelChecker\unitary_tests\ast\while\while_inner_continue_break.cpp:1:1, line:13:1> line:1:5 main 'int (void)'
+  `-CompoundStmt 0x352e6d0 <col:12, line:13:1>
+    |-DeclStmt 0x352e3b0 <line:2:5, col:14>
+    | `-VarDecl 0x352e360 <col:5, col:13> col:9 used a 'int' cinit
+    |   `-IntegerLiteral 0x352e390 <col:13> 'int' 5
+    |-WhileStmt 0x352e648 <line:3:5, line:11:5>
+    | |-<<<NULL>>>
+    | |-BinaryOperator 0x352e408 <line:3:12, col:16> '_Bool' '>'
+    | | |-ImplicitCastExpr 0x352e3f8 <col:12> 'int' <LValueToRValue>
+    | | | `-DeclRefExpr 0x352e3c0 <col:12> 'int' lvalue Var 0x352e360 'a' 'int'
+    | | `-IntegerLiteral 0x352e3d8 <col:16> 'int' 5
+    | `-CompoundStmt 0x352e630 <col:19, line:11:5>
+    |   `-IfStmt 0x352e610 <line:4:9, line:10:9>
+    |     |-<<<NULL>>>
+    |     |-BinaryOperator 0x352e468 <line:4:13, col:17> '_Bool' '>'
+    |     | |-ImplicitCastExpr 0x352e458 <col:13> 'int' <LValueToRValue>
+    |     | | `-DeclRefExpr 0x352e420 <col:13> 'int' lvalue Var 0x352e360 'a' 'int'
+    |     | `-IntegerLiteral 0x352e438 <col:17> 'int' 6
+    |     |-ContinueStmt 0x352e480 <line:5:13>
+    |     `-WhileStmt 0x352e5f8 <line:6:14, line:10:9>
+    |       |-<<<NULL>>>
+    |       |-BinaryOperator 0x352e4d0 <line:6:21, col:25> '_Bool' '<'
+    |       | |-ImplicitCastExpr 0x352e4c0 <col:21> 'int' <LValueToRValue>
+    |       | | `-DeclRefExpr 0x352e488 <col:21> 'int' lvalue Var 0x352e360 'a' 'int'
+    |       | `-IntegerLiteral 0x352e4a0 <col:25> 'int' 6
+    |       `-CompoundStmt 0x352e5e0 <col:28, line:10:9>
+    |         |-IfStmt 0x352e550 <line:7:13, line:8:17>
+    |         | |-<<<NULL>>>
+    |         | |-BinaryOperator 0x352e530 <line:7:17, col:21> '_Bool' '>'
+    |         | | |-ImplicitCastExpr 0x352e520 <col:17> 'int' <LValueToRValue>
+    |         | | | `-DeclRefExpr 0x352e4e8 <col:17> 'int' lvalue Var 0x352e360 'a' 'int'
+    |         | | `-IntegerLiteral 0x352e500 <col:21> 'int' 6
+    |         | |-BreakStmt 0x352e548 <line:8:17>
+    |         | `-<<<NULL>>>
+    |         `-DeclStmt 0x352e5d0 <line:9:13, col:22>
+    |           `-VarDecl 0x352e580 <col:13, col:21> col:17 c 'int' cinit
+    |             `-IntegerLiteral 0x352e5b0 <col:21> 'int' 5
+    `-DeclStmt 0x352e6c0 <line:12:5, col:15>
+      `-VarDecl 0x352e670 <col:5, col:13> col:9 b 'int' cinit
+        `-IntegerLiteral 0x352e6a0 <col:13> 'int' 17

@@ -1,0 +1,29 @@
+TranslationUnitDecl 0xd5f140 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0xd5f430 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'char *'
+`-FunctionDecl 0xd5f4a0 <ModelChecker\unitary_tests\ast\while\doWhile.cpp:1:1, line:11:1> line:1:5 main 'int (void)'
+  `-CompoundStmt 0xd5f7e0 <col:12, line:11:1>
+    |-DeclStmt 0xd5f590 <line:2:5, col:14>
+    | `-VarDecl 0xd5f540 <col:5, col:13> col:9 used a 'int' cinit
+    |   `-IntegerLiteral 0xd5f570 <col:13> 'int' 5
+    |-DoStmt 0xd5f750 <line:3:5, line:9:19>
+    | |-CompoundStmt 0xd5f6d8 <line:3:8, line:9:5>
+    | | `-IfStmt 0xd5f6b8 <line:4:9, line:8:9>
+    | |   |-<<<NULL>>>
+    | |   |-BinaryOperator 0xd5f5e8 <line:4:13, col:17> '_Bool' '>'
+    | |   | |-ImplicitCastExpr 0xd5f5d8 <col:13> 'int' <LValueToRValue>
+    | |   | | `-DeclRefExpr 0xd5f5a0 <col:13> 'int' lvalue Var 0xd5f540 'a' 'int'
+    | |   | `-IntegerLiteral 0xd5f5b8 <col:17> 'int' 6
+    | |   |-BinaryOperator 0xd5f638 <line:5:13, col:17> 'int' lvalue '='
+    | |   | |-DeclRefExpr 0xd5f600 <col:13> 'int' lvalue Var 0xd5f540 'a' 'int'
+    | |   | `-IntegerLiteral 0xd5f618 <col:17> 'int' 5
+    | |   `-CompoundStmt 0xd5f6a0 <line:6:14, line:8:9>
+    | |     `-BinaryOperator 0xd5f688 <line:7:13, col:17> 'int' lvalue '='
+    | |       |-DeclRefExpr 0xd5f650 <col:13> 'int' lvalue Var 0xd5f540 'a' 'int'
+    | |       `-IntegerLiteral 0xd5f668 <col:17> 'int' 3
+    | `-BinaryOperator 0xd5f738 <line:9:14, col:18> '_Bool' '>'
+    |   |-ImplicitCastExpr 0xd5f728 <col:14> 'int' <LValueToRValue>
+    |   | `-DeclRefExpr 0xd5f6ec <col:14> 'int' lvalue Var 0xd5f540 'a' 'int'
+    |   `-IntegerLiteral 0xd5f708 <col:18> 'int' 5
+    `-DeclStmt 0xd5f7d0 <line:10:5, col:15>
+      `-VarDecl 0xd5f780 <col:5, col:13> col:9 b 'int' cinit
+        `-IntegerLiteral 0xd5f7b0 <col:13> 'int' 17

@@ -1,0 +1,16 @@
+TranslationUnitDecl 0x112f140 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0x112f430 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'char *'
+`-FunctionDecl 0x112f4a0 <ModelChecker\unitary_tests\ast\while\doWhile_-.cpp:1:1, line:7:1> line:1:5 main 'int (void)'
+  `-CompoundStmt 0x112f6a0 <col:12, line:7:1>
+    |-DeclStmt 0x112f590 <line:2:5, col:14>
+    | `-VarDecl 0x112f540 <col:5, col:13> col:9 used a 'int' cinit
+    |   `-IntegerLiteral 0x112f570 <col:13> 'int' 5
+    |-DoStmt 0x112f610 <line:3:5, line:5:19>
+    | |-CompoundStmt 0x112f5a0 <line:3:8, line:5:5>
+    | `-BinaryOperator 0x112f5f8 <col:14, col:18> '_Bool' '>'
+    |   |-ImplicitCastExpr 0x112f5e8 <col:14> 'int' <LValueToRValue>
+    |   | `-DeclRefExpr 0x112f5b0 <col:14> 'int' lvalue Var 0x112f540 'a' 'int'
+    |   `-IntegerLiteral 0x112f5c8 <col:18> 'int' 5
+    `-DeclStmt 0x112f690 <line:6:5, col:15>
+      `-VarDecl 0x112f640 <col:5, col:13> col:9 b 'int' cinit
+        `-IntegerLiteral 0x112f670 <col:13> 'int' 17

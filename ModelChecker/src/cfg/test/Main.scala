@@ -33,6 +33,17 @@ import cfg.CFGVal
 import cfg.Properties._
 import ctl.BindingsEnv
 import ctl.NegBinding
+import cfg.DefinedString
+import cfg.UndefinedVar
+import cfg.MatchExprLabelizer
+import cfg.CallExprPattern
+import cfg.AssignmentPattern
+import cfg.FindExprLabelizer
+import ctl.Predicate
+import ctl.EX
+import ctl.Not
+import ctl.MetaVariable
+import ctl.Value
 
 /**
  * This class enables to test the properties defined in cfg.Properties
@@ -57,7 +68,7 @@ object Main extends App {
     }).mkString("\n\t","\n\t","\n"))
     
 	def loadChecker(testName: String) = {
-		val file = new File("ModelChecker/unitary_tests/Model_checker/%s.cpp".format(testName))
+		val file = new File("unitary_tests/Model_checker/%s.cpp".format(testName))
 		val name = file.getName
 		val s    = name.substring(0,name.lastIndexOf('.'))
 		
@@ -117,7 +128,7 @@ object Main extends App {
     lazy val checker7 = loadChecker("file_operation")
     lazy val test9 = {
         println("Testing the NON_PAIRED_FUNCTION_CALL property...")
-        printPositiveBindings("Following lines contain non-closed files :",checker7,NON_PAIRED_FUNCTION_CALL("fopen","fclose"))
+        printPositiveBindings("Following lines contain non-closed files :",checker7,CLOSED_RESOURCES)
     }
     
     lazy val checker8 = loadChecker("memory")
@@ -126,5 +137,12 @@ object Main extends App {
         printPositiveBindings("Following lines will cause memory leaks :",checker8,NEW_WITHOUT_DELETE)
     }
     
-    test8
+    lazy val checker9 = loadChecker("cmemory")
+    lazy val test11 = {
+        println("Testing the NON_PAIRED_FUNCTION_CALL property...")
+        printPositiveBindings("Following lines contain memory leaks :",checker9,FREED_MEMORY)
+    }
+    
+    test11
+    
 }

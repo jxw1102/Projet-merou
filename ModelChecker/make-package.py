@@ -40,6 +40,11 @@ def main():
 
     if "-src" in sys.argv:
         make_jar("src",build,packages)
+		
+	# license files
+    shutil.copyfile("../LICENSE.txt","release/tmp/LICENSE.txt")
+    shutil.copyfile("../THIRD_PARTY.txt","release/tmp/THIRD_PARTY.txt")
+    shutil.copyfile("../NOTICE.txt","release/tmp/NOTICE.txt")
     
     # package the sub-jars together
     os.chdir("release")

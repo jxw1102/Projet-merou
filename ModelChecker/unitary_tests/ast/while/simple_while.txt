@@ -1,0 +1,36 @@
+TranslationUnitDecl 0x3f7f080 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0x3f7f370 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'char *'
+|-FunctionDecl 0x3f7f460 <ModelChecker\unitary_tests\ast\while\simple_while.cpp:1:1, col:31> col:6 used printf 'void (char *, int)'
+| |-ParmVarDecl 0x3f7f3b0 <col:13, col:19> col:19 s 'char *'
+| |-ParmVarDecl 0x3f7f3f0 <col:22, col:26> col:26 b 'int'
+| `-CompoundStmt 0x3f7f4d8 <col:29, col:31>
+`-FunctionDecl 0x3f7f530 <line:3:1, line:10:1> line:3:5 main 'int (void)'
+  `-CompoundStmt 0x3f7f970 <col:12, line:10:1>
+    |-DeclStmt 0x3f7f690 <line:4:5, col:21>
+    | |-VarDecl 0x3f7f5d0 <col:5, col:13> col:9 used a 'int' cinit
+    | | `-IntegerLiteral 0x3f7f600 <col:13> 'int' 1
+    | `-VarDecl 0x3f7f630 <col:5, col:20> col:16 used b 'int' cinit
+    |   `-IntegerLiteral 0x3f7f660 <col:20> 'int' 1
+    |-WhileStmt 0x3f7f7d0 <line:5:5, line:8:5>
+    | |-<<<NULL>>>
+    | |-BinaryOperator 0x3f7f6e8 <line:5:12, col:16> '_Bool' '<'
+    | | |-ImplicitCastExpr 0x3f7f6d8 <col:12> 'int' <LValueToRValue>
+    | | | `-DeclRefExpr 0x3f7f6a0 <col:12> 'int' lvalue Var 0x3f7f630 'b' 'int'
+    | | `-IntegerLiteral 0x3f7f6b8 <col:16> 'int' 100
+    | `-CompoundStmt 0x3f7f7b8 <col:21, line:8:5>
+    |   |-CompoundAssignOperator 0x3f7f740 <line:6:3, col:8> 'int' lvalue '+=' ComputeLHSTy='int' ComputeResultTy='int'
+    |   | |-DeclRefExpr 0x3f7f700 <col:3> 'int' lvalue Var 0x3f7f630 'b' 'int'
+    |   | `-ImplicitCastExpr 0x3f7f730 <col:8> 'int' <LValueToRValue>
+    |   |   `-DeclRefExpr 0x3f7f718 <col:8> 'int' lvalue Var 0x3f7f5d0 'a' 'int'
+    |   `-BinaryOperator 0x3f7f7a0 <line:7:3, col:8> 'int' lvalue '='
+    |     |-DeclRefExpr 0x3f7f760 <col:3> 'int' lvalue Var 0x3f7f5d0 'a' 'int'
+    |     `-ImplicitCastExpr 0x3f7f790 <col:8> 'int' <LValueToRValue>
+    |       `-DeclRefExpr 0x3f7f778 <col:8> 'int' lvalue Var 0x3f7f630 'b' 'int'
+    `-CallExpr 0x3f7f918 <line:9:5, col:18> 'void'
+      |-ImplicitCastExpr 0x3f7f908 <col:5> 'void (*)(char *, int)' <FunctionToPointerDecay>
+      | `-DeclRefExpr 0x3f7f8d4 <col:5> 'void (char *, int)' lvalue Function 0x3f7f460 'printf' 'void (char *, int)'
+      |-ImplicitCastExpr 0x3f7f950 <col:12> 'char *' <NoOp>
+      | `-ImplicitCastExpr 0x3f7f940 <col:12> 'const char *' <ArrayToPointerDecay>
+      |   `-StringLiteral 0x3f7f878 <col:12> 'const char [3]' lvalue "%d"
+      `-ImplicitCastExpr 0x3f7f960 <col:17> 'int' <LValueToRValue>
+        `-DeclRefExpr 0x3f7f89c <col:17> 'int' lvalue Var 0x3f7f630 'b' 'int'

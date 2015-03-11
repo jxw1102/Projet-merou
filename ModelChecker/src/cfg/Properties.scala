@@ -128,15 +128,23 @@ object Properties {
         declaredVariable && AG(!usedVariable)
     }
     
-    /**
-     * This property detects all functions that should be used in pairs.
-     */
-    val NON_PAIRED_FUNCTION_CALL = (f1: String, f2: String) => {
+    // factorized code for CLOSED_RESOURCES and FREED_MEMORY
+    private val MEMORY_LEAK = (f1: String, f2: String) => {
         val fun1       = Predicate(FindExprLabelizer(CallExprPattern(DefinedString(f1))))
         val assignment = Predicate(MatchExprLabelizer(AssignmentPattern(UndefinedVar("X"),UndefinedVar("Y"),DefinedString("="))))
         val fun2       = Predicate(FindExprLabelizer(CallExprPattern(DefinedString(f2),Some(List(UndefinedVar("X"))))))
-        ((!assignment && fun1) || (fun1 && assignment && EX(EG(!fun2)))) && !(fun1 && fun2)
+        (!assignment && fun1 && !fun2) || (fun1 && assignment && EX(EG(!fun2)))
     }
+    
+    /**
+     * This property detects the files that are opened and never closed on a particular execution path
+     */
+    val CLOSED_RESOURCES = MEMORY_LEAK("fopen" ,"fclose")
+    
+    /**
+     * This property detects the variables that are allocated dynamically with malloc but never released on a particular execution path
+     */
+    val FREED_MEMORY     = MEMORY_LEAK("malloc","free"  )
     
     /**
      * This property detects all operations which will cause a memory leak.
@@ -145,7 +153,6 @@ object Properties {
         val alloc      = Predicate(FindExprLabelizer(CXXNewExprPattern()))
         val assignment = Predicate(MatchExprLabelizer(AssignmentPattern(UndefinedVar("X"),UndefinedVar("Y"),DefinedString("="))))
         val dealloc    = Predicate(FindExprLabelizer(CXXDeleteExprPattern(Some(UndefinedVar("X")))))
-        ((!assignment && alloc) || (alloc && assignment && EX(EG(!dealloc)))) && !(alloc && dealloc)
+        (!assignment && alloc && !dealloc) || (alloc && assignment && EX(EG(!dealloc)))
     }
-    
 }
