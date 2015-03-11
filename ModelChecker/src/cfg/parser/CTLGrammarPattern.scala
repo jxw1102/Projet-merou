@@ -228,9 +228,9 @@ object P extends CTLGrammarPattern{
   def main(args : Array[String]) = {
     var numTest = 0
          var errors = 0
-//         var filename = "ModelChecker/unitary_tests/Parser/properties.txt"
+         var filename = "ModelChecker/unitary_tests/Parser/properties.txt"
 //         var filename = "ModelChecker/unitary_tests/Parser/testC/TLExpr.txt"
-         var filename = "ModelChecker/unitary_tests/Parser/testExpr.txt"
+//         var filename = "ModelChecker/unitary_tests/Parser/testExpr.txt"
          Source.fromFile(filename).getLines.takeWhile(_ != ".end.").foreach(line => 
           try {
               numTest += 1

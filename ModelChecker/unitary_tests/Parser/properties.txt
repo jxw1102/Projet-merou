@@ -1,3 +1,5 @@
+(<...call(malloc) AND NOT(<assign(X,Y,=)>) AND NOT(<...free(X)) ) OR ( <...call(malloc) AND <assign(X,Y,=)> AND EX(EG(NOT(<...free(X)))) ) 
+
 //forallFlowControlNodes
 if(x) AND while(x) AND switch(x) AND for(x)
 
@@ -55,67 +57,3 @@ decl(X) AND AG(NOT(use(X)))
 ((NOT(ass) AND alloc) OR (alloc AND ass AND EX(EG(NOT(dealloc))))) AND NOT(alloc AND dealloc)
 ((NOT(<assign(X,Y,=)>) AND <...CXXNew()) OR (<...CXXNew() AND <assign(X,Y,=)> AND EX(EG(NOT(<...CXXDelete(X)))))) AND NOT(<...CXXNew() AND <...CXXDelete(X))
 .end.
-  
-  
-  /**********************************************************************************************************************************************/
-  
-  
-  
-  
-  
-    val FUNCTION_UNUSED_VALUE =  {
-        val nonVoidFunctionCall: CTL = Predicate(FindExprLabelizer(CallExprPattern(UndefinedVar("Z"),None,NotString("void"))))
-        val existsExpr         : CTL = Exists(("X",CFGExpr),Predicate(ExpressionLabelizer(UndefinedVar("X"))))
-        val notAssignment      : CTL = Not(Exists(("X",CFGExpr),(Exists(("Y",CFGExpr),
-                Predicate(ExpressionLabelizer(AssignmentPattern(UndefinedVar("X"),UndefinedVar("Y"))))))))
-        nonVoidFunctionCall && existsExpr && notAssignment
-        
-    
-    val HIDDEN_VAR_DEF = Predicate(VarDefLabelizer(VarDefPattern(NotString(),UndefinedVar("X")))) &&
-                    EX(EF(Predicate(VarDefLabelizer(VarDefPattern(NotString(),UndefinedVar("X"))))))
-                    
-    val ASSIGNMENT = Predicate(MatchExprLabelizer(AssignmentPattern(UndefinedVar("X"),UndefinedVar("Y"))))
-    
-    val LITERAL_EXPR = Predicate(MatchExprLabelizer(LiteralExprPattern(UndefinedVar("X"))))
-    
-    val LITERAL_ASSIGNMENT = Predicate(MatchExprLabelizer(AssignmentPattern(UndefinedVar("X"),LiteralExprPattern(UndefinedVar("Y")))))
-    
-    
-    val ARITHMETIC_POINTER = {
-        val pointerExpr        = Predicate(FindExprLabelizer(PointerExperPattern    (UndefinedVar("Z"))))
-        val compoundAssign     = Predicate(FindExprLabelizer(CompoundAssignOpPattern(UndefinedVar("X"),UndefinedVar("Y"))))
-        val arithmeticBinaryOp = Predicate(FindExprLabelizer(BinaryOpPattern        (UndefinedVar("X"),UndefinedVar("Y"),NotString("="))))
-        val arithmeticUnaryOp  = Predicate(FindExprLabelizer(UnaryOpPattern         (UndefinedVar("X"),NotString("--","++"))))
-        pointerExpr && (compoundAssign || arithmeticBinaryOp || arithmeticUnaryOp)
-        
-        
-    val INFEASIBLE_PATH = {
-        val literalAssignmentPattern = AssignmentPattern(UndefinedVar("X"),LiteralExprPattern(UndefinedVar("Y")))
-        val literalExprPattern       = LiteralExprPattern(UndefinedVar("X"))
-        val identityPattern          = BinaryOpPattern(UndefinedVar("X"),UndefinedVar("X"),DefinedString("=="))
-        anyFlowControlNodes(literalAssignmentPattern) || anyFlowControlNodes(literalExprPattern) || 
-        anyFlowControlNodes(identityPattern)          || Predicate(ForLabelizer(None))
-    }
-    
-
-    
-    val UNUSED_DECLARED_VAR = {
-        val declaredVariable = Predicate(VarDeclLabelizer(VarDeclPattern(NotString(),UndefinedVar("X"))))
-        val usedVariable     = Predicate(UseLabelizer(UndefinedVar("X")))
-        declaredVariable && AG(!usedVariable)
-    }
-
-    val NON_PAIRED_FUNCTION_CALL = (f1: String, f2: String) => {
-        val fun1       = Predicate(FindExprLabelizer(CallExprPattern(DefinedString(f1))))
-        val assignment = Predicate(MatchExprLabelizer(AssignmentPattern(UndefinedVar("X"),UndefinedVar("Y"),DefinedString("="))))
-        val fun2       = Predicate(FindExprLabelizer(CallExprPattern(DefinedString(f2),Some(List(UndefinedVar("X"))))))
-        ((!assignment && fun1) || (fun1 && assignment && EX(EG(!fun2)))) && !(fun1 && fun2)
-    }
-    
-    val NEW_WITHOUT_DELETE = {
-        val alloc      = Predicate(FindExprLabelizer(CXXNewExprPattern()))
-        val assignment = Predicate(MatchExprLabelizer(AssignmentPattern(UndefinedVar("X"),UndefinedVar("Y"),DefinedString("="))))
-        val dealloc    = Predicate(FindExprLabelizer(CXXDeleteExprPattern(Some(UndefinedVar("X")))))
-        ((!assignment && alloc) || (alloc && assignment && EX(EG(!dealloc)))) && !(alloc && dealloc)
-    }
-                  
