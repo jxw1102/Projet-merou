@@ -68,7 +68,7 @@ object Main extends App {
     }).mkString("\n\t","\n\t","\n"))
     
 	def loadChecker(testName: String) = {
-		val file = new File("unitary_tests/Model_checker/%s.cpp".format(testName))
+		val file = new File("ModelChecker/unitary_tests/Model_checker/%s.cpp".format(testName))
 		val name = file.getName
 		val s    = name.substring(0,name.lastIndexOf('.'))
 		

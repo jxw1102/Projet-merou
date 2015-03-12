@@ -53,3 +53,6 @@ if(f == (x != 4))
 x = while(x+4)
 bjr=4+(if( f(y) ))
 .end.
+
+AX( \_ ), AF( \_ ), AG( \_ ), EX( \_ ), EF( \_ ), EG( \_ )
+Exists ident( \_ ), NOT( \_ )

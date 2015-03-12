@@ -3,6 +3,7 @@ fontenc[T1]
 color
 amssymb
 mathrsfs
+pdfpages
 amsmath
 eurosym
 graphicx
@@ -469,6 +470,9 @@ Task planning
 Our sprint backlog was maintained as a spreadsheet. 
 During the Scrum sprint, each team member was requested to 
 keep the sprint backlog updated.
+##
+>>>>>> latex ##
+\includepdf[pages={1-}]{data/planning.pdf}
 ##
 >>> section ##
 Risk management
@@ -1382,6 +1386,36 @@ int main(int argc, char** argv) {
 	return 0;
 }
 ##
+>>>>> paragraph ##
+
+##
+>>> section ##
+Extension : Parser CTL
+##
+>>>> paragraph ##
+In order to allow a user using this application without having to enter a CTL property into a scala code, we developped a CTL Parser. \\
+Hence, we just have to write in a console or a text file some CTL property following the CTL syntaxe of our parser, and then start the 
+application on a C++ code. The CTL syntax of our parser is almost identique to the real CTL syntax (AND and OR for the logicals CTL operators 
+and some labels name for an assignmentPattern, literal and few others. \\
+The syntax is quite complete because we needed to make sure to enable the user to express everything he needs.
+##
+>>>> subsection ##
+Example
+##
+>>>>> paragraph ##
+Let's take a simple CTL expression : f(x) AND AX g(x,y) \\
+If we would have needed to write it into the scala language in order to test it on some code, we would have written the following line :
+##
+>>>>> list ##
+And(Predicate(ExpressionLabelizer(CallExprPattern(DefinedString(f),Some(List(UndefinedVar(X)))))), \\
+AX(Predicate(ExpressionLabelizer(CallExprPattern(DefinedString(g),Some(List(UndefinedVar(X), UndefinedVar(Y))))))))
+##
+>>>>> paragraph ##
+And thank to the CTL parser, the user will only have to enter the following property :
+##
+>>>>> list ##
+f(X) AND AX(g(X,Y))
+##
 >> latex ##
 \chapter* {Conclusion}
 ##
@@ -1393,6 +1427,14 @@ also learnt from some of our mistakes, as the lack of a clear version system. In
 we would have had a better vision of our progress if we had associated each test passed or failed to a specific version of the code. It reduces the risk of forgetting
 to run the code against older tests when a new version is pushed. The repartition of the work was also something interesting as we had to deal with different strong skills
 and ways of approaching a problem among the members of the team.
+##
+>>> paragraph ##
+Moreover, we are satisfied of our organization since we met our initial requirements and objectives. Except for some documents
+in exceptional circumstances, we always delivered what we have promised to deliver at time. Being reliable, 
+especially with the clients, was our highest priority so that we never break a promise. We also realized 
+that no matter how well one plans something, the unexpected can always happen, therefore we have had,
+sometimes, to be flexible and reconsider our plan, particularly about our design that once appeared 
+unadapted when we faced some issues that could not be foreseen (or at least not trivially) before starting the implementation.
 ##
 >>> paragraph ##
 From a technical point a view, the project was really exciting and all of us enjoyed praticing Scala. The subject itself was interesting, quite theoretic but

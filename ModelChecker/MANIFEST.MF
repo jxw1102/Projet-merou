@@ -1,0 +1,2 @@
+Main-Class: run.Run
+Class-Path: scala-parser-combinators_2.11-1.0.3.jar scala-library.jar scala-reflect.jar

@@ -9,3 +9,7 @@ scalac -sourcepath src -d bin $(find src/ -name '*.scala')
 
 mkdir release
 jar -cf release/doc.jar doc
+
+cd bin
+jar -cfm ../merou.jar ../MANIFEST.MF *
+cd ..
