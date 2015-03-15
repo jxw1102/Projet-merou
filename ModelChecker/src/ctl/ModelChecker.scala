@@ -98,7 +98,7 @@ class ModelChecker[M <: MetaVariable: TypeTag, N, V <: Value: TypeTag](private v
     private[ctl] def SAT_AU                 = SAT_UU(preA)(_,_)
     private[ctl] def SAT_EU                 = SAT_UU(preE)(_,_)
     
-    // this methods enables to factorize the code of SAT_AU and SAT_EU
+    // this method enables to factorize the code of SAT_AU and SAT_EU
     private[ctl] def SAT_UU(f: CheckerResult => CheckerResult)(T1: CheckerResult , T2: CheckerResult) = {
         var (w,y,x) = (T1,T2,T2)
         do {

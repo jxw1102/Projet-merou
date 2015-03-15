@@ -25,8 +25,6 @@
 package ctl
 
 import scala.reflect.runtime.universe._
-import java.util.function.Consumer
-
 
 /**
  * This file defines the CTL language that we will be using for evaluating properties on any graph.

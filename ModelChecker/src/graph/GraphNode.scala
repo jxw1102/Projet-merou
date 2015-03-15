@@ -24,12 +24,6 @@
 package graph
 
 import collection.mutable.{Set => MSet, HashSet => MHSet}
-import scala.collection.mutable.{HashSet => MHSet}
-import scala.collection.mutable.{Set => MSet}
-import scala.collection.mutable.{HashSet => MHSet}
-import scala.collection.mutable.{Set => MSet}
-import scala.collection.mutable.{HashSet => MHSet}
-import scala.collection.mutable.{Set => MSet}
 
 /**
  * This class represents an oriented unweighted graph
@@ -71,16 +65,13 @@ class GraphNode[N](val value: N) {
     
     override def toString = value.toString
     
-    def toDot             = addString(new StringBuilder,MSet())(_.toString).toString
+    def toDot = addString(new StringBuilder,MSet())(_.toString).toString
     def toDot(name: N => String, label: N => String) = {
         def escape     (s   : String) = s.replaceAll("\"","\\\\\"")
         def formatValue(node: GNode ) = "{%s [label=\"%s\"]}".format(escape(name(node.value)),escape(label(node.value)))
         addString(new StringBuilder,MSet())(formatValue(_)).toString
     }
     
-    /**
-     * Search in CFG and print all arcs
-     * */
     private def addString(sb: StringBuilder, set: MSet[GNode])(convert: GNode => String): StringBuilder = {
         if (set contains this) sb 
         else if (_next.isEmpty) sb.append(convert(this) + "\n")

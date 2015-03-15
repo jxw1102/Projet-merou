@@ -322,8 +322,7 @@ anything with no constraint and captures the whole entity as a group.\vspace{1mm
 
 \subsubsection{Use-cases and examples}
 
-\paragraph{}
-\hspace{4mm}title=DefinedString
+\paragraph{DefinedString}
 You can use it when you want to get the definition of all the variables of a specific
  type (let's say int), which will be noted \lstinline|DefinedSring("int")|. This will have to be composed with a VarDefPattern, as we will see it.
 
@@ -332,14 +331,12 @@ You can use it when you want to get the function calls which return type is
 different from \lstinline[language=java]|void| or \lstinline[language=java]|void *|, which will be expressed with 
 \lstinline|NotString("void","void *")|. This will have to be composed with a CallExprPattern.
 
-\paragraph{}
-\hspace{4mm}title=DefinedExpr
+\paragraph{DefinedExpr}
 You can use it if you want to find all the expressions using a variable called \textit{x} : \lstinline|DefinedExpr(DeclRefExpr("","x","",""))|.
 \textbf{Be careful}, the match operation on a DefinedExpr will always ignore the type of the expression as well as the Clang id. Consequently,
 it is for example impossible to find all expressions using a variable called \textit{x} of type \lstinline|double|.
 
-\paragraph{}
-\hspace{4mm}title=UndefinedVar
+\paragraph{UndefinedVar}
 Use it when you want to return a binding between a meta-variable and the value of a "matched group" (cf regex).
 
 \subsection{Composed patterns}
@@ -354,8 +351,7 @@ For now, let's just focus on the recursive expression patterns.
 \paragraph{}
 \hspace{4mm}The recursive expression patterns are listed below :
 
-\paragraph{}
-\hspace{4mm}title=CompoundAssignOpPattern, BinaryOpPattern and UnaryOpPattern
+\paragraph{CompoundAssignOpPattern, BinaryOpPattern and UnaryOpPattern}
 These patterns respectively match CompoundAssignOp, BinaryOp and UnaryOp expressions.
 \begin{itemize}	
     \item{\textbf{Syntax : }} 
@@ -370,8 +366,7 @@ These patterns respectively match CompoundAssignOp, BinaryOp and UnaryOp express
 	\lstinline|BinaryOp(Literal("int", "3"), Literal("int", "2"), "==")| matches \lstinline|BinaryOpPattern(UndefinedVar("X"), Literal("int", "2"), "==")| and returns the environment \{ X $\rightarrow$ \lstinline|CFGExpr(Literal("int", "3"))| \}.
 \end{itemize}
 
-\paragraph{}
-\hspace{4mm}title=AssignmentPattern
+\paragraph{AssignmentPattern}
 This pattern is a convenient pattern to represent assignments. It basically uses CompoundAssignOpPattern and BinaryOpPattern.
 \begin{itemize}	
 	\item{\textbf{Syntax : }} AssignmentPattern(left: ExprPattern, right: ExprPattern, op: StringPattern=NotString()). ~\\~\\
@@ -384,8 +379,7 @@ This pattern is a convenient pattern to represent assignments. It basically uses
 	\end{itemize}
 \end{itemize}
 
-\paragraph{}
-\hspace{4mm}title=CallExprPattern
+\paragraph{CallExprPattern}
 It matches a function call (CallExpr) and takes three arguments : 
 \begin{itemize}
 	\item{\textbf{Syntax : }} ~\\~\\
@@ -464,8 +458,7 @@ an ExprPattern taken as a parameter.
 			 in the \textit{for} statement. In this case, \textit{pattern} has to be None.
 \end{itemize}
 
-\paragraph{}
-\hspace{4mm}title=FindExprLabelizer, MatchExprLabelizer
+\paragraph{FindExprLabelizer, MatchExprLabelizer}
 Those two labelizers ignore the type of the node and simply focus on the expression it contains, if any.
 If the given pattern is matched, those labelizers could accept For, While etc. and even Statement nodes (indeed, a variable declaration can contain an assignment).
 The difference between them is that Find will try to find a match in every sub-expression of the input expression whereas the Match will stop at the root of the expression.
@@ -496,7 +489,7 @@ This labelizer returns all the variables (in form of a CFGDecl) which value is u
 	\end{itemize}
 \end{itemize}
 
-\paragraph{VarDeclLabelizer and VarDefLabelizer }
+\paragraph{VarDeclLabelizer and VarDefLabelizer}
 Those labelizers only recognize Statement nodes containing a variable declaration (VarDecl). The difference between them
 is the same as between VarDeclPattern and VarDefPattern.
 \begin{itemize}
@@ -506,122 +499,5 @@ is the same as between VarDeclPattern and VarDefPattern.
 		 \item VarDefLabelizer(pattern: VarDefPattern)
 	\end{itemize}
 \end{itemize}
-
-\chapter{CTL parser}
-
-\section{Syntax}
-
-\paragraph{}
-\hspace{4mm}Les commentaires ( // ) et sauts de lignes sont autorisés.
-Cependant le parser lit ligne par ligne donc une expression CTL ne peut s'écrire sur plusieurs lignes.
-Le fichier doit se terminer par la ligne ".end."
-
-\subsection{CTL}
-
-\subsubsection{n-ary operators}
-
-\paragraph{}
-\hspace{4mm}OR, AND
-
-\subsubsection{binary operators}
-
-\paragraph{}
-\hspace{4mm}A [ \_ U \_ ], E [ \_ U \_ ]
-
-\subsubsection{unary operators}
-
-\paragraph{}
-\hspace{4mm}AX( \_ ), AF( \_ ), AG( \_ ), EX( \_ ), EF( \_ ), EG( \_ )
-
-\paragraph{}
-\hspace{4mm}Ces operateurs peuvent donc contenir dans les "\_"de nouvelles expressions CTL ou des labelizer ; 
-il est egalement possible d'écrire directement un labelizer sans passer par un operateur CTL
-
-\subsubsection{example}
-
-\paragraph{}
-\hspace{4mm}A [AX( f(x) ) U f(x) ] AND exists x((E [merou U A [exists y(f(x)) U merou ]] OR merou))
-
-\subsection{Labelizer}
-
-\paragraph{}
-\hspace{4mm}if( exp ), while( exp ), switch( exp ), for( opt(exp) ) : dans le for, l'expression est optionnelle \\
-<... exp : FindExprLabelelizer(exp) \\
-< exp > : MatchExprLabelizer(exp) \\
-def(id1, opt(id2)), decl(id1, opt(id2)) : VarDefPattern \& VarDeclPattern (id2 est optionel) \\
-use(id) : UseLabelizer(id) \\
-exp : ExpressionLabelizer -- Il est egalement possible d’ecrire directement une expression \\
-
-\subsubsection{example}
-
-\paragraph{}
-\hspace{4mm}<... 5 + x ; <g *= *s * b>
-
-\subsection{Expression Labelizer}
-
-\paragraph{}
-\hspace{4mm}Dans les expressions, il y a deux types d'ident : expIdent (eId) qui commence par une minuscule, et undefinedVar (uV) 
-qui est composé uniquement de majuscules. Tous les operateurs N-aires et binaires (à l'exception de ceux mentionnés) 
-sont des BinaryOpPattern et sont composés d'exp
-
-\subsubsection{n-ary operators}
-
-\paragraph{}
-\hspace{4mm}||, \&\&, |, \^\ , \&, +, -, *, /, \%, op(uV), notin( \_ )  \\
-notin peut contenir un ou plusieurs symboles (separés par une virgule) parmi =,++,--,+,-,*,/,\%,void
-
-\subsubsection{binary operators}
-
-\paragraph{}
-\hspace{4mm}eId = exp \\
-	assign(eId, exp, opt(+=,-=,*=,/=,\%=,\&=,|=,\^=,<<=,>>=) ) : AssignmentPattern \\
-	eId (+=,-=,*=,/=,\%=,\&=,|=,\^=,<<=,>>=) exp : CompoundAssignOpPattern \\
-	==, !=, <=, >=, <, >, <<, >>
-
-\subsubsection{unary operators}
-
-\paragraph{}
-\hspace{4mm}exp (++, --, notin(\_)) : UnaryOpPattern \\
-(!, ~, ++, --, +, -, *, \&, notin(\_)) exp : UnaryOpPattern \\
-literalExp( uV ), pointerExp( uV ) : LiteralExprPattern, PointerExprPattern \\
-CXXNew( opt(eId, exp) ), CXXDelete( opt(exp) ) : CXXNewExprPattern/CXXDeleteExprPattern
-
-\subsubsection{function c	all}
-
-\paragraph{}
-\hspace{4mm}Pour la fonctionCall, l’ident peut etre un eId ou uV, de plus, nous aimerions pouvoir specifier si nous voulons 
-matcher un nombre precis d’argument ou si le nombre d’arguments est négligeable : \\
-ident(arg1, arg2, \_) - pouvant contenir 0 ou plusieurs arguments. Matchera le nombre exact d’argument \\
-ident(…,opt(typeOf) - indique que nous regardons pas les arguments ; typeOf specifiant le type de la fonction et pouvant etre un notin
-
-\subsubsection{example}
-
-\paragraph{}
-\hspace{4mm}a + b op(W) c notin(=,*,-) d \\
-assign(X,Y,=) \\
-f(x,y) || g(…)
-
-\section{Operator priority}
-
-\paragraph{}
-\hspace{4mm}Ce parser lit de gauche a droite : a OR b OR c <=> a OR ( b OR c ) \\
-CTL est au plus haut niveau, puis nous avons Labelizer, puis les Expressions. \\
-Pour la partie CTL, le OR est l'operateur lu en premier, suivi de AND puis tous les autres au même "niveau". \\
-Ex : x AND y OR z <=> ( x AND y ) OR z \\
-A noter que seul Exists et NOT peuvent contenir les operateur OR et AND : \\
-AX ( x AND y) => IMPOSSSIBLE \\
-Exists x( y OR NOT(a AND b)) => OK \\
-Ensuite les Labelizer sont tous au même niveau. \\
-Pour les Expressions, nous nous sommes basé sur le tablau d'ordre d'operations C++ qui suit : 
-
-\begin{center}
-\includegraphics[scale=0.65]{data/orderOperation}
-~\\~\\Figure III.1 - Order between differents operators in C++ code.
-\end{center}
-
-\paragraph{}
-\hspace{4mm}Les op( uV ) et notin( \_ ) etant entre les priorités du niveau 2 (unary) et 3 (multiplication..)
-Et les literalExp, pointerExp et CXX étant au niveau 1 (avec fonction call... etc)
-
 
 \end{document}
